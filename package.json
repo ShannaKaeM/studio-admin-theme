@@ -1,0 +1,32 @@
+{
+  "name": "shadow-plugin-boilerplate",
+  "version": "1.0.0",
+  "description": "WordPress plugin boilerplate with React Shadow DOM and Raycast design system",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "react",
+    "shadow-dom",
+    "boilerplate",
+    "raycast"
+  ],
+  "author": "Your Name",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.1.0"
+  },
+  "dependencies": {
+    "@r2wc/react-to-web-component": "^2.0.3",
+    "framer-motion": "^11.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
