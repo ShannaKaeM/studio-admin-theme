@@ -1,18 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Tabs from '@radix-ui/react-tabs';
+import * as Switch from '@radix-ui/react-switch';
+import * as Label from '@radix-ui/react-label';
 import { ShadowStyles } from './ShadowStyles';
 
-export function ShadowApp() {
+export function ShadowApp(props = {}) {
+  // Extract props passed from PHP/server-side
+  const {
+    userRole = 'guest',
+    siteUrl = window.location.origin,
+    userId = 0,
+    settings = {},
+    apiNonce = '',
+    pluginVersion = '1.0.0',
+    isAdmin = false,
+    theme = 'dark'
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [enableNotifications, setEnableNotifications] = useState(settings.notifications || false);
 
-  // Demo commands to show the boilerplate is working
+  // Demo commands that show server data integration
   const commands = [
     {
       id: 'working',
       title: 'Shadow Plugin Boilerplate is Working! 🎉',
       description: 'The React Shadow DOM architecture is successfully loaded',
       icon: '✅'
+    },
+    {
+      id: 'props',
+      title: `Server Props Working - User: ${userRole}`,
+      description: `Received data from PHP: Site URL, User ID: ${userId}, Admin: ${isAdmin ? 'Yes' : 'No'}`,
+      icon: '🔗'
+    },
+    {
+      id: 'radix',
+      title: 'Radix UI Components Active',
+      description: 'Dialog, Tabs, Switch components loaded and styled',
+      icon: '⚡'
     },
     {
       id: 'styles',
@@ -28,8 +57,8 @@ export function ShadowApp() {
     },
     {
       id: 'api',
-      title: 'WordPress API Ready',
-      description: 'REST endpoints configured and ready for data',
+      title: `WordPress API Ready - Nonce: ${apiNonce ? 'Set' : 'Missing'}`,
+      description: `REST endpoints configured and ready for data. Version: ${pluginVersion}`,
       icon: '🔌'
     }
   ];
@@ -162,7 +191,7 @@ export function ShadowApp() {
                 ))}
               </div>
 
-              {/* Footer */}
+              {/* Footer with Radix Dialog Demo */}
               <div style={{
                 padding: 'var(--space-4)',
                 borderTop: '1px solid var(--raycast-border)',
@@ -172,7 +201,7 @@ export function ShadowApp() {
                 <div style={{ 
                   fontSize: '12px', 
                   color: 'var(--raycast-text-secondary)',
-                  marginBottom: 'var(--space-2)'
+                  marginBottom: 'var(--space-3)'
                 }}>
                   Press <code style={{ 
                     background: 'var(--raycast-bg)', 
@@ -181,11 +210,203 @@ export function ShadowApp() {
                     fontFamily: 'var(--font-mono)'
                   }}>Cmd/Ctrl + `</code> to toggle
                 </div>
+                
+                {/* Radix UI Dialog Demo */}
+                <Dialog.Root open={settingsOpen} onOpenChange={setSettingsOpen}>
+                  <Dialog.Trigger asChild>
+                    <button className="shadow-button shadow-button-default" style={{ marginBottom: 'var(--space-2)' }}>
+                      ⚙️ Radix Settings Demo
+                    </button>
+                  </Dialog.Trigger>
+                  <Dialog.Portal>
+                    <Dialog.Overlay style={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      position: 'fixed',
+                      inset: 0,
+                      zIndex: 10000000
+                    }} />
+                    <Dialog.Content style={{
+                      backgroundColor: 'var(--raycast-surface)',
+                      borderRadius: '12px',
+                      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)',
+                      position: 'fixed',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '90vw',
+                      maxWidth: '500px',
+                      maxHeight: '85vh',
+                      padding: 'var(--space-6)',
+                      zIndex: 10000001,
+                      border: '1px solid var(--raycast-border)'
+                    }}>
+                      <Dialog.Title style={{
+                        margin: 0,
+                        fontSize: '18px',
+                        fontWeight: '600',
+                        color: 'var(--raycast-text-primary)',
+                        marginBottom: 'var(--space-4)'
+                      }}>
+                        Plugin Settings
+                      </Dialog.Title>
+                      
+                      <Tabs.Root defaultValue="general" style={{ width: '100%' }}>
+                        <Tabs.List style={{
+                          display: 'flex',
+                          borderBottom: '1px solid var(--raycast-border)',
+                          marginBottom: 'var(--space-4)'
+                        }}>
+                          <Tabs.Trigger 
+                            value="general" 
+                            style={{
+                              padding: 'var(--space-2) var(--space-3)',
+                              backgroundColor: 'transparent',
+                              border: 'none',
+                              color: 'var(--raycast-text-secondary)',
+                              cursor: 'pointer',
+                              borderBottom: '2px solid transparent'
+                            }}
+                            data-state="active"
+                          >
+                            General
+                          </Tabs.Trigger>
+                          <Tabs.Trigger 
+                            value="advanced" 
+                            style={{
+                              padding: 'var(--space-2) var(--space-3)',
+                              backgroundColor: 'transparent',
+                              border: 'none',
+                              color: 'var(--raycast-text-secondary)',
+                              cursor: 'pointer',
+                              borderBottom: '2px solid transparent'
+                            }}
+                          >
+                            Advanced
+                          </Tabs.Trigger>
+                        </Tabs.List>
+                        
+                        <Tabs.Content value="general">
+                          <div style={{ marginBottom: 'var(--space-4)' }}>
+                            <div style={{ 
+                              fontSize: '14px', 
+                              color: 'var(--raycast-text-primary)',
+                              marginBottom: 'var(--space-2)'
+                            }}>
+                              Server Data:
+                            </div>
+                            <div style={{ 
+                              fontSize: '12px', 
+                              color: 'var(--raycast-text-secondary)',
+                              fontFamily: 'var(--font-mono)',
+                              backgroundColor: 'var(--raycast-bg)',
+                              padding: 'var(--space-3)',
+                              borderRadius: '8px',
+                              border: '1px solid var(--raycast-border)'
+                            }}>
+                              User Role: {userRole}<br/>
+                              Site URL: {siteUrl}<br/>
+                              User ID: {userId}<br/>
+                              Is Admin: {isAdmin ? 'Yes' : 'No'}<br/>
+                              Plugin Version: {pluginVersion}
+                            </div>
+                          </div>
+                          
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                            <Switch.Root
+                              checked={enableNotifications}
+                              onCheckedChange={setEnableNotifications}
+                              style={{
+                                width: '42px',
+                                height: '24px',
+                                backgroundColor: enableNotifications ? 'var(--raycast-primary)' : 'var(--raycast-border)',
+                                borderRadius: '12px',
+                                position: 'relative',
+                                border: 'none',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              <Switch.Thumb style={{
+                                display: 'block',
+                                width: '20px',
+                                height: '20px',
+                                backgroundColor: 'white',
+                                borderRadius: '10px',
+                                transition: 'transform 100ms',
+                                transform: enableNotifications ? 'translateX(20px)' : 'translateX(2px)',
+                                position: 'absolute',
+                                top: '2px'
+                              }} />
+                            </Switch.Root>
+                            <Label.Root style={{
+                              fontSize: '14px',
+                              color: 'var(--raycast-text-primary)',
+                              cursor: 'pointer'
+                            }}>
+                              Enable Notifications
+                            </Label.Root>
+                          </div>
+                        </Tabs.Content>
+                        
+                        <Tabs.Content value="advanced">
+                          <div style={{ 
+                            fontSize: '14px', 
+                            color: 'var(--raycast-text-secondary)',
+                            textAlign: 'center',
+                            padding: 'var(--space-4)'
+                          }}>
+                            Advanced settings would go here...
+                          </div>
+                        </Tabs.Content>
+                      </Tabs.Root>
+                      
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'flex-end', 
+                        gap: 'var(--space-2)',
+                        marginTop: 'var(--space-6)'
+                      }}>
+                        <Dialog.Close asChild>
+                          <button className="shadow-button shadow-button-ghost">
+                            Cancel
+                          </button>
+                        </Dialog.Close>
+                        <Dialog.Close asChild>
+                          <button className="shadow-button shadow-button-default">
+                            Save Settings
+                          </button>
+                        </Dialog.Close>
+                      </div>
+                      
+                      <Dialog.Close asChild>
+                        <button
+                          style={{
+                            position: 'absolute',
+                            top: 'var(--space-3)',
+                            right: 'var(--space-3)',
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: 'var(--raycast-text-secondary)',
+                            cursor: 'pointer',
+                            padding: 'var(--space-1)',
+                            borderRadius: '4px'
+                          }}
+                          aria-label="Close"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                          </svg>
+                        </button>
+                      </Dialog.Close>
+                    </Dialog.Content>
+                  </Dialog.Portal>
+                </Dialog.Root>
+                
                 <div style={{ 
                   fontSize: '11px', 
                   color: 'var(--raycast-text-tertiary)'
                 }}>
-                  Boilerplate ready for your awesome plugin! 🎨
+                  Boilerplate with Radix UI + Server Props! 🎨
                 </div>
               </div>
             </div>

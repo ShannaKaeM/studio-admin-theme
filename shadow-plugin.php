@@ -109,6 +109,9 @@ class ShadowPlugin {
             'currentUser' => wp_get_current_user()->ID,
             'version' => SHADOW_PLUGIN_VERSION
         ]);
+        
+        // Add server data to page for web component props
+        $this->addServerDataToPage();
     }
     
     /**
@@ -199,12 +202,67 @@ class ShadowPlugin {
      * Render admin page
      */
     public function renderAdminPage() {
+        // Get current user info
+        $current_user = wp_get_current_user();
+        $user_roles = $current_user->roles;
+        $user_role = !empty($user_roles) ? $user_roles[0] : 'subscriber';
+        
         ?>
         <div class="wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-            <div id="shadow-plugin-admin-root"></div>
+            <div id="shadow-plugin-admin-root">
+                <!-- Example of passing server data to React component via attributes -->
+                <shadow-plugin-panel 
+                    user-role="<?php echo esc_attr($user_role); ?>"
+                    site-url="<?php echo esc_attr(home_url()); ?>"
+                    user-id="<?php echo esc_attr($current_user->ID); ?>"
+                    settings='<?php echo esc_attr(json_encode(get_option('shadow_plugin_settings', []))); ?>'
+                    api-nonce="<?php echo esc_attr(wp_create_nonce('shadow_plugin_nonce')); ?>"
+                    plugin-version="<?php echo esc_attr(SHADOW_PLUGIN_VERSION); ?>"
+                    is-admin="<?php echo esc_attr(current_user_can('manage_options') ? 'true' : 'false'); ?>"
+                    theme="dark"
+                ></shadow-plugin-panel>
+            </div>
         </div>
         <?php
+    }
+    
+    /**
+     * Add server data to page for web component initialization
+     */
+    public function addServerDataToPage() {
+        // Get current user info
+        $current_user = wp_get_current_user();
+        $user_roles = $current_user->roles;
+        $user_role = !empty($user_roles) ? $user_roles[0] : 'subscriber';
+        
+        // Add a web component with server data to footer
+        add_action('wp_footer', function() use ($current_user, $user_role) {
+            ?>
+            <script>
+                // Auto-create shadow plugin panel with server data
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Only add if not already present
+                    if (!document.querySelector('shadow-plugin-panel')) {
+                        const panel = document.createElement('shadow-plugin-panel');
+                        
+                        // Set attributes with server data
+                        panel.setAttribute('user-role', '<?php echo esc_js($user_role); ?>');
+                        panel.setAttribute('site-url', '<?php echo esc_js(home_url()); ?>');
+                        panel.setAttribute('user-id', '<?php echo esc_js($current_user->ID); ?>');
+                        panel.setAttribute('settings', '<?php echo esc_js(json_encode(get_option('shadow_plugin_settings', []))); ?>');
+                        panel.setAttribute('api-nonce', '<?php echo esc_js(wp_create_nonce('shadow_plugin_nonce')); ?>');
+                        panel.setAttribute('plugin-version', '<?php echo esc_js(SHADOW_PLUGIN_VERSION); ?>');
+                        panel.setAttribute('is-admin', '<?php echo esc_js(current_user_can('manage_options') ? 'true' : 'false'); ?>');
+                        panel.setAttribute('theme', 'dark');
+                        
+                        // Add to body (hidden by default until triggered)
+                        document.body.appendChild(panel);
+                    }
+                });
+            </script>
+            <?php
+        });
     }
     
     /**
