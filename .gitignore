@@ -1,0 +1,36 @@
+# WordPress Core Files
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+
+# Local Development
+local-xdebuginfo.php
+local-site.json
+
+# Logs
+logs/
+*.log
+
+# Database
+*.sql
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary Files
+*.tmp
+*.temp
+
+# Node Modules (if we add build tools later)
+node_modules/
+npm-debug.log*
+
+# Plugin Development
+*.zip
+dist/
+build/

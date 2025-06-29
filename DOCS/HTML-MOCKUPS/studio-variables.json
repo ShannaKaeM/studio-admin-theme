@@ -1,0 +1,967 @@
+{
+  "studioVariables": {
+    "meta": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-06-29",
+      "description": "Studio Design System Variables Documentation",
+      "totalVariables": 45,
+      "totalUsageCount": 150,
+      "totalComponents": 28
+    },
+    "components": {
+      "navigation": {
+        "title": "Navigation",
+        "description": "Left sidebar navigation system",
+        "category": "layout",
+        "priority": "high",
+        "editable": true,
+        "elements": {
+          "studio-nav": {
+            "displayName": "Navigation Container",
+            "description": "Main navigation wrapper",
+            "cssSelector": ".studio-nav",
+            "variables": {
+              "padding": "studio-space-5",
+              "backgroundColor": "studio-bg-sidebar"
+            },
+            "editable": true
+          },
+          "studio-nav-item": {
+            "displayName": "Navigation Item",
+            "description": "Individual navigation links",
+            "cssSelector": ".studio-nav-item",
+            "variables": {
+              "padding": "studio-space-2 studio-space-3",
+              "fontSize": "studio-text-interface",
+              "color": "studio-text-supporting",
+              "borderRadius": "studio-radius-sm",
+              "marginBottom": "studio-space-1"
+            },
+            "states": {
+              "hover": {
+                "backgroundColor": "studio-bg-card",
+                "color": "studio-text-content"
+              },
+              "active": {
+                "background": "linear-gradient(135deg, var(--studio-primary-500), var(--studio-secondary-500))",
+                "color": "studio-text-emphasis"
+              }
+            },
+            "editable": true
+          },
+          "studio-nav-title": {
+            "displayName": "Navigation Section Title",
+            "description": "Section headers in navigation",
+            "cssSelector": ".studio-nav-title",
+            "variables": {
+              "fontSize": "studio-text-metadata",
+              "color": "studio-text-subtle",
+              "marginBottom": "studio-space-3"
+            },
+            "editable": true
+          }
+        }
+      },
+      "colorCards": {
+        "title": "Color Cards",
+        "description": "Color editing interface cards",
+        "category": "content",
+        "priority": "high",
+        "editable": true,
+        "elements": {
+          "studio-color-card": {
+            "displayName": "Color Card Container",
+            "description": "Main color editing card",
+            "cssSelector": ".studio-color-card",
+            "variables": {
+              "backgroundColor": "studio-bg-card",
+              "border": "studio-border-thick solid studio-border-primary",
+              "borderRadius": "studio-radius-xl",
+              "padding": "studio-space-4"
+            },
+            "editable": true
+          },
+          "studio-color-name": {
+            "displayName": "Color Name",
+            "description": "Color title/name display",
+            "cssSelector": ".studio-color-name",
+            "variables": {
+              "fontSize": "studio-text-card-title",
+              "color": "studio-text-content",
+              "marginBottom": "studio-space-3"
+            },
+            "editable": true
+          },
+          "studio-color-dot": {
+            "displayName": "Color Dot",
+            "description": "Small color preview dot",
+            "cssSelector": ".studio-color-dot",
+            "variables": {
+              "width": "20px",
+              "height": "20px",
+              "borderRadius": "studio-radius-sm",
+              "border": "studio-border-thick solid studio-border-accent"
+            },
+            "editable": true
+          }
+        }
+      },
+      "forms": {
+        "title": "Form Controls",
+        "description": "Input fields and form elements",
+        "category": "controls",
+        "priority": "medium",
+        "editable": true,
+        "elements": {
+          "studio-input": {
+            "displayName": "Input Field",
+            "description": "Text input fields",
+            "cssSelector": ".studio-input",
+            "variables": {
+              "padding": "studio-space-3",
+              "border": "studio-border-thin solid studio-border-ui",
+              "borderRadius": "studio-radius",
+              "backgroundColor": "studio-bg-input",
+              "color": "studio-text-content",
+              "fontSize": "studio-text-interface"
+            },
+            "states": {
+              "focus": {
+                "borderColor": "studio-primary-500",
+                "boxShadow": "0 0 0 2px rgba(39, 104, 96, 0.2)"
+              }
+            },
+            "editable": true
+          },
+          "studio-select": {
+            "displayName": "Select Dropdown",
+            "description": "Dropdown select fields",
+            "cssSelector": ".studio-select",
+            "variables": {
+              "padding": "studio-space-3",
+              "border": "studio-border-thin solid studio-border-ui",
+              "borderRadius": "studio-radius",
+              "backgroundColor": "studio-bg-input",
+              "color": "studio-text-content",
+              "fontSize": "studio-text-interface"
+            },
+            "editable": true
+          }
+        }
+      },
+      "buttons": {
+        "title": "Buttons",
+        "description": "Interactive button elements",
+        "category": "controls",
+        "priority": "high",
+        "editable": true,
+        "elements": {
+          "studio-button": {
+            "displayName": "Primary Button",
+            "description": "Main action buttons",
+            "cssSelector": ".studio-button",
+            "variables": {
+              "padding": "studio-space-3 studio-space-4",
+              "border": "studio-border-thin solid studio-primary-500",
+              "borderRadius": "studio-radius",
+              "backgroundColor": "studio-primary-500",
+              "color": "white",
+              "fontSize": "studio-text-interface"
+            },
+            "states": {
+              "hover": {
+                "transform": "translateY(-1px)",
+                "boxShadow": "0 4px 12px rgba(39, 104, 96, 0.3)"
+              }
+            },
+            "editable": true
+          },
+          "studio-format-tab": {
+            "displayName": "Format Tab Button",
+            "description": "Color format selection tabs",
+            "cssSelector": ".studio-format-tab",
+            "variables": {
+              "padding": "studio-space-2 studio-space-3",
+              "border": "none",
+              "borderRadius": "studio-radius-sm",
+              "fontSize": "studio-text-interface"
+            },
+            "editable": true
+          }
+        }
+      },
+      "controls": {
+        "title": "Interactive Controls",
+        "description": "Toggles, sliders, and control elements",
+        "category": "controls",
+        "priority": "medium",
+        "editable": true,
+        "elements": {
+          "studio-theme-toggle": {
+            "displayName": "Theme Toggle",
+            "description": "Light/dark mode toggle switch",
+            "cssSelector": ".studio-theme-toggle",
+            "variables": {
+              "width": "48px",
+              "height": "24px",
+              "border": "studio-border-medium solid studio-border-interactive",
+              "borderRadius": "14px",
+              "backgroundColor": "studio-bg-sidebar"
+            },
+            "editable": true
+          },
+          "studio-control-icon": {
+            "displayName": "Control Icon",
+            "description": "Icon-based control buttons",
+            "cssSelector": ".studio-control-icon",
+            "variables": {
+              "width": "32px",
+              "height": "32px",
+              "border": "studio-border-medium solid studio-border-interactive",
+              "borderRadius": "studio-radius-lg",
+              "background": "linear-gradient(135deg, var(--studio-primary-500), var(--studio-secondary-500))"
+            },
+            "editable": true
+          },
+          "studio-slider": {
+            "displayName": "Range Slider",
+            "description": "Color adjustment sliders",
+            "cssSelector": ".studio-slider",
+            "variables": {
+              "height": "8px",
+              "borderRadius": "studio-radius"
+            },
+            "elements": {
+              "thumb": {
+                "displayName": "Slider Handle",
+                "description": "Draggable slider handle",
+                "cssSelector": ".studio-slider::-webkit-slider-thumb",
+                "variables": {
+                  "width": "16px",
+                  "height": "16px",
+                  "borderRadius": "50%",
+                  "backgroundColor": "studio-primary-500",
+                  "border": "studio-border-medium solid studio-border-accent"
+                }
+              }
+            },
+            "editable": true
+          }
+        }
+      },
+      "layout": {
+        "title": "Layout Elements",
+        "description": "Structural layout components",
+        "category": "layout",
+        "priority": "low",
+        "editable": false,
+        "elements": {
+          "studio-header": {
+            "displayName": "Page Header",
+            "description": "Main page header area",
+            "cssSelector": ".studio-header",
+            "variables": {
+              "backgroundColor": "studio-bg-sidebar-header",
+              "padding": "studio-space-4",
+              "gap": "studio-space-3"
+            },
+            "editable": false
+          },
+          "studio-main-title": {
+            "displayName": "Main Title",
+            "description": "Primary page title with gradient",
+            "cssSelector": ".studio-main-title",
+            "variables": {
+              "fontSize": "studio-text-page-title",
+              "background": "linear-gradient(135deg, var(--studio-primary-500), var(--studio-secondary-500))"
+            },
+            "editable": true
+          },
+          "studio-section-header": {
+            "displayName": "Section Header",
+            "description": "Content section headers",
+            "cssSelector": ".studio-section-header",
+            "variables": {
+              "border": "studio-border-thick solid studio-border-primary",
+              "borderRadius": "studio-radius-xl",
+              "padding": "studio-space-4"
+            },
+            "editable": true
+          }
+        }
+      },
+      "ghost": {
+        "title": "Ghost Elements",
+        "description": "Placeholder and add buttons",
+        "category": "interactive",
+        "priority": "low",
+        "editable": true,
+        "elements": {
+          "studio-add-color-card": {
+            "displayName": "Add Color Card",
+            "description": "Add new color placeholder",
+            "cssSelector": ".studio-add-color-card",
+            "variables": {
+              "border": "studio-border-medium dashed studio-border-ghost",
+              "backgroundColor": "transparent",
+              "borderRadius": "studio-radius-xl"
+            },
+            "states": {
+              "hover": {
+                "borderColor": "studio-border-ghost-hover",
+                "opacity": "1"
+              }
+            },
+            "editable": true
+          }
+        }
+      },
+      "utility": {
+        "title": "Utility Elements",
+        "description": "Close buttons and utility controls",
+        "category": "utility",
+        "priority": "low",
+        "editable": true,
+        "elements": {
+          "studio-global-close": {
+            "displayName": "Global Close Button",
+            "description": "Global overlay close button",
+            "cssSelector": ".studio-global-close",
+            "variables": {
+              "width": "32px",
+              "height": "32px",
+              "border": "studio-border-thin solid studio-border-ui",
+              "borderRadius": "studio-radius-md",
+              "backgroundColor": "studio-bg-card",
+              "color": "studio-text-subtle"
+            },
+            "states": {
+              "hover": {
+                "backgroundColor": "studio-bg-card",
+                "color": "studio-text-content",
+                "borderColor": "studio-border-interactive"
+              }
+            },
+            "editable": true
+          }
+        }
+      }
+    },
+    "componentCategories": {
+      "layout": {
+        "title": "Layout",
+        "description": "Structural and layout components",
+        "color": "#3B82F6",
+        "icon": "layout",
+        "priority": 1
+      },
+      "content": {
+        "title": "Content", 
+        "description": "Content display components",
+        "color": "#10B981",
+        "icon": "content",
+        "priority": 2
+      },
+      "controls": {
+        "title": "Controls",
+        "description": "Interactive form and button controls", 
+        "color": "#F59E0B",
+        "icon": "controls",
+        "priority": 3
+      },
+      "interactive": {
+        "title": "Interactive",
+        "description": "Interactive and state-based elements",
+        "color": "#EF4444",
+        "icon": "interactive", 
+        "priority": 4
+      },
+      "utility": {
+        "title": "Utility",
+        "description": "Helper and utility components",
+        "color": "#8B5CF6",
+        "icon": "utility",
+        "priority": 5
+      }
+    },
+    "categories": {
+      "typography": {
+        "title": "Typography",
+        "description": "Semantic text sizing system with meaningful component names",
+        "totalUsage": 50,
+        "variables": {
+          "studio-font-family": {
+            "value": "'Montserrat', system-ui, sans-serif",
+            "description": "Primary font family for all Studio components",
+            "usage": "Global font family",
+            "usageCount": 1,
+            "components": ["body", "all text elements"]
+          },
+          "studio-text-metadata": {
+            "value": "0.75rem",
+            "description": "Small text for codes, timestamps, nav section titles",
+            "usage": "Navigation section titles, metadata, timestamps",
+            "usageCount": 3,
+            "components": [".studio-nav-title", "timestamp displays", "code snippets"]
+          },
+          "studio-text-interface": {
+            "value": "0.875rem", 
+            "description": "Standard interface text for navigation, buttons, forms",
+            "usage": "Navigation items, buttons, form labels, format tabs",
+            "usageCount": 14,
+            "components": [".studio-nav-item", ".studio-button", ".studio-format-tab", "form labels"]
+          },
+          "studio-text-body": {
+            "value": "1rem",
+            "description": "Main body text, default size for content",
+            "usage": "Regular paragraph text, default content",
+            "usageCount": 1,
+            "components": ["body text", "descriptions"]
+          },
+          "studio-text-description": {
+            "value": "1.0625rem",
+            "description": "Section descriptions and help text",
+            "usage": "Section descriptions, explanatory text",
+            "usageCount": 1,
+            "components": ["help text", "section descriptions"]
+          },
+          "studio-text-card-title": {
+            "value": "1.125rem",
+            "description": "Card headers and component titles",
+            "usage": "Color card names, component headers",
+            "usageCount": 3,
+            "components": [".studio-color-name", "card titles", "component headers"]
+          },
+          "studio-text-section-title": {
+            "value": "1.25rem",
+            "description": "Section titles in main content areas",
+            "usage": "Section headings, content titles",
+            "usageCount": 1,
+            "components": ["section headers", "content titles"]
+          },
+          "studio-text-icon": {
+            "value": "1.5rem",
+            "description": "Icon font sizes in navigation and UI",
+            "usage": "Navigation icons, UI icon text",
+            "usageCount": 1,
+            "components": ["nav icons", "UI icons"]
+          },
+          "studio-text-page-title": {
+            "value": "1.875rem",
+            "description": "Main page title with gradient styling",
+            "usage": "Primary page headers",
+            "usageCount": 1,
+            "components": [".studio-main-title"]
+          },
+          "studio-text-accent-icon": {
+            "value": "2rem",
+            "description": "Large accent icons for emphasis",
+            "usage": "Large decorative icons",
+            "usageCount": 1,
+            "components": ["large accent icons"]
+          }
+        }
+      },
+      "spacing": {
+        "title": "Spacing Scale",
+        "description": "Generic spacing scale with clear usage patterns for different component types",
+        "totalUsage": 62,
+        "variables": {
+          "studio-space-1": {
+            "value": "0.25rem",
+            "description": "Micro spacing for fine adjustments",
+            "usage": "Navigation item margins, tight spacing adjustments",
+            "usageCount": 6,
+            "components": [".studio-nav-item margin", "fine adjustments"]
+          },
+          "studio-space-2": {
+            "value": "0.5rem",
+            "description": "Tight spacing for controls and small gaps",
+            "usage": "Button padding, control gaps, small element spacing",
+            "usageCount": 13,
+            "components": [".studio-nav-item padding", "button gaps", "control spacing"]
+          },
+          "studio-space-3": {
+            "value": "0.75rem",
+            "description": "Standard element spacing between related items",
+            "usage": "Form padding, element gaps, related item spacing",
+            "usageCount": 18,
+            "components": ["form padding", "element gaps", "related content spacing"]
+          },
+          "studio-space-4": {
+            "value": "1rem",
+            "description": "Container spacing for cards and form elements",
+            "usage": "Card padding, form elements, container inner spacing",
+            "usageCount": 11,
+            "components": [".studio-header padding", "card interiors", "form containers"]
+          },
+          "studio-space-5": {
+            "value": "2rem",
+            "description": "Section spacing for sidebars and major gaps",
+            "usage": "Sidebar padding, section separation, major layout gaps",
+            "usageCount": 9,
+            "components": [".studio-nav padding", "sidebar content", "section gaps"]
+          },
+          "studio-space-6": {
+            "value": "3rem",
+            "description": "Content spacing between sections and major margins",
+            "usage": "Section margins, major content separation",
+            "usageCount": 9,
+            "components": ["section margins", "major content gaps", "layout separation"]
+          },
+          "studio-space-8": {
+            "value": "4rem",
+            "description": "Large spacing for content areas and major separations",
+            "usage": "Large content areas, major layout separations",
+            "usageCount": 2,
+            "components": ["large content areas", "major separations"]
+          },
+          "studio-space-10": {
+            "value": "5rem",
+            "description": "Extra large spacing for special layouts",
+            "usage": "Special large layouts, extra separation",
+            "usageCount": 1,
+            "components": ["special layouts"]
+          },
+          "studio-space-12": {
+            "value": "6rem",
+            "description": "Maximum spacing for largest separations",
+            "usage": "Maximum layout separation",
+            "usageCount": 1,
+            "components": ["maximum separations"]
+          }
+        }
+      },
+      "borderRadius": {
+        "title": "Border Radius",
+        "description": "Radius scale that corresponds to component importance and visual hierarchy",
+        "totalUsage": 16,
+        "variables": {
+          "studio-radius-sm": {
+            "value": "0.375rem",
+            "description": "Small elements like navigation items and color dots",
+            "usage": "Small UI elements, minimal rounding",
+            "usageCount": 4,
+            "components": [".studio-nav-item", ".studio-color-dot", ".studio-format-tab"]
+          },
+          "studio-radius": {
+            "value": "0.5rem",
+            "description": "Standard controls like forms and buttons",
+            "usage": "Standard UI controls, default rounding",
+            "usageCount": 6,
+            "components": [".studio-input", ".studio-select", ".studio-button", "sliders"]
+          },
+          "studio-radius-md": {
+            "value": "0.625rem",
+            "description": "Medium elements like close buttons",
+            "usage": "Medium importance UI elements",
+            "usageCount": 1,
+            "components": [".studio-global-close"]
+          },
+          "studio-radius-lg": {
+            "value": "0.75rem",
+            "description": "Important controls like control icons and color swatches",
+            "usage": "Important interactive elements",
+            "usageCount": 3,
+            "components": [".studio-control-icon", "color swatches"]
+          },
+          "studio-radius-xl": {
+            "value": "1rem",
+            "description": "Major containers like color cards and section headers",
+            "usage": "Primary containers, major UI elements",
+            "usageCount": 2,
+            "components": [".studio-color-card", ".studio-section-header"]
+          }
+        }
+      },
+      "borderThickness": {
+        "title": "Border Thickness",
+        "description": "Semantic border thickness system based on component importance",
+        "totalUsage": 14,
+        "variables": {
+          "studio-border-thin": {
+            "value": "1px",
+            "description": "Forms, buttons, and small UI elements",
+            "usage": "Subtle borders for standard UI",
+            "usageCount": 7,
+            "components": ["forms", "buttons", "small UI elements"]
+          },
+          "studio-border-medium": {
+            "value": "2px", 
+            "description": "Controls, toggles, and interactive elements",
+            "usage": "Interactive element borders for better definition",
+            "usageCount": 5,
+            "components": ["toggles", "controls", "interactive elements"]
+          },
+          "studio-border-thick": {
+            "value": "3px",
+            "description": "Cards and primary content elements", 
+            "usage": "Prominent borders for main content",
+            "usageCount": 3,
+            "components": ["cards", "primary content", "accent elements"]
+          }
+        }
+      },
+      "borderColors": {
+        "title": "Border Colors",
+        "description": "Semantic border colors with theme awareness",
+        "totalUsage": 14,
+        "themeAware": true,
+        "variables": {
+          "studio-border-ui": {
+            "lightValue": "var(--studio-base-300)",
+            "darkValue": "var(--studio-base-500)",
+            "description": "General UI borders for forms and standard interface elements",
+            "usage": "Forms, inputs, close buttons, structural borders",
+            "usageCount": 5,
+            "components": [".studio-input", ".studio-select", ".studio-global-close", "structural elements"]
+          },
+          "studio-border-interactive": {
+            "lightValue": "var(--studio-base-400)",
+            "darkValue": "var(--studio-base-600)",
+            "description": "Interactive elements like toggles and control icons",
+            "usage": "Toggles, control icons, interactive UI elements",
+            "usageCount": 3,
+            "components": [".studio-theme-toggle", ".studio-control-icon", "interactive controls"]
+          },
+          "studio-border-primary": {
+            "lightValue": "var(--studio-base-300)",
+            "darkValue": "var(--studio-base-700)",
+            "description": "Primary content borders for cards and sections",
+            "usage": "Color cards, section headers, primary containers",
+            "usageCount": 3,
+            "components": [".studio-color-card", ".studio-section-header", "primary containers"]
+          },
+          "studio-border-accent": {
+            "lightValue": "var(--studio-base-700)",
+            "darkValue": "var(--studio-base-50)",
+            "description": "Accent borders for color dots and highlights",
+            "usage": "Color dots, slider handles, accent elements",
+            "usageCount": 2,
+            "components": [".studio-color-dot", "slider handles", "accent elements"]
+          },
+          "studio-border-ghost": {
+            "lightValue": "var(--studio-base-400)",
+            "darkValue": "var(--studio-base-600)",
+            "description": "Ghost widget borders for add buttons and placeholders",
+            "usage": "Add buttons, placeholder widgets, ghost states",
+            "usageCount": 2,
+            "components": [".studio-add-color-card", "ghost widgets", "placeholder elements"]
+          },
+          "studio-border-ghost-hover": {
+            "lightValue": "var(--studio-base-500)",
+            "darkValue": "var(--studio-base-500)",
+            "description": "Ghost widget hover states",
+            "usage": "Hover states for ghost elements",
+            "usageCount": 0,
+            "components": ["ghost hover states"]
+          }
+        }
+      },
+      "backgroundColors": {
+        "title": "Background Colors",
+        "description": "Theme-aware background colors for different UI contexts",
+        "totalUsage": 15,
+        "themeAware": true,
+        "variables": {
+          "studio-bg-main": {
+            "lightValue": "var(--studio-base-50)",
+            "darkValue": "var(--studio-base-950)",
+            "description": "Main page background",
+            "usage": "Primary page background",
+            "usageCount": 1,
+            "components": ["body background"]
+          },
+          "studio-bg-header": {
+            "lightValue": "var(--studio-base-200)",
+            "darkValue": "var(--studio-base-800)",
+            "description": "Top header background",
+            "usage": "Main header area background",
+            "usageCount": 1,
+            "components": ["main header"]
+          },
+          "studio-bg-section-header": {
+            "lightValue": "var(--studio-base-200)",
+            "darkValue": "var(--studio-base-800)",
+            "description": "Section header backgrounds",
+            "usage": "Section header areas",
+            "usageCount": 1,
+            "components": ["section headers"]
+          },
+          "studio-bg-sidebar": {
+            "lightValue": "var(--studio-base-100)",
+            "darkValue": "var(--studio-base-900)",
+            "description": "Left sidebar background",
+            "usage": "Sidebar background, theme toggle",
+            "usageCount": 3,
+            "components": [".studio-sidebar", "navigation area", "theme toggle"]
+          },
+          "studio-bg-sidebar-header": {
+            "lightValue": "var(--studio-base-300)",
+            "darkValue": "var(--studio-base-700)",
+            "description": "Sidebar header area",
+            "usage": "Sidebar header background",
+            "usageCount": 2,
+            "components": ["sidebar header area"]
+          },
+          "studio-bg-card": {
+            "lightValue": "var(--studio-base-200)",
+            "darkValue": "var(--studio-base-800)",
+            "description": "Color cards and overlay backgrounds",
+            "usage": "Color cards, overlays, hover states, close button",
+            "usageCount": 7,
+            "components": [".studio-color-card", "overlays", "hover states", ".studio-global-close"]
+          },
+          "studio-bg-controls": {
+            "lightValue": "var(--studio-base-100)",
+            "darkValue": "var(--studio-base-900)",
+            "description": "Control area backgrounds",
+            "usage": "Control backgrounds",
+            "usageCount": 1,
+            "components": ["control areas"]
+          },
+          "studio-bg-input": {
+            "lightValue": "var(--studio-base-200)",
+            "darkValue": "var(--studio-base-800)",
+            "description": "Form input backgrounds",
+            "usage": "Form inputs, selects",
+            "usageCount": 3,
+            "components": [".studio-input", ".studio-select", "form elements"]
+          },
+          "studio-bg-button": {
+            "lightValue": "var(--studio-base-300)",
+            "darkValue": "var(--studio-base-700)",
+            "description": "Button backgrounds",
+            "usage": "Button backgrounds",
+            "usageCount": 1,
+            "components": [".studio-button"]
+          }
+        }
+      },
+      "textColors": {
+        "title": "Text Colors",
+        "description": "Semantic text colors with theme awareness for different content types",
+        "totalUsage": 32,
+        "themeAware": true,
+        "variables": {
+          "studio-text-content": {
+            "lightValue": "var(--studio-base-950)",
+            "darkValue": "var(--studio-base-50)",
+            "description": "Main content text and card titles",
+            "usage": "Primary text content, card titles, body text",
+            "usageCount": 8,
+            "components": ["main content", "card titles", "primary text"]
+          },
+          "studio-text-supporting": {
+            "lightValue": "var(--studio-base-700)",
+            "darkValue": "var(--studio-base-300)",
+            "description": "Supporting text like descriptions and labels",
+            "usage": "Form labels, descriptions, supporting information",
+            "usageCount": 6,
+            "components": ["form labels", "descriptions", "supporting text"]
+          },
+          "studio-text-subtle": {
+            "lightValue": "var(--studio-base-600)",
+            "darkValue": "var(--studio-base-400)",
+            "description": "Subtle text for metadata and secondary information",
+            "usage": "Metadata, timestamps, secondary info, close button",
+            "usageCount": 11,
+            "components": ["metadata", "timestamps", "secondary info", ".studio-global-close"]
+          },
+          "studio-text-navigation": {
+            "lightValue": "var(--studio-base-900)",
+            "darkValue": "var(--studio-base-100)",
+            "description": "Navigation text and sidebar items",
+            "usage": "Navigation items, sidebar text",
+            "usageCount": 3,
+            "components": [".studio-nav-item", "navigation text", "sidebar content"]
+          },
+          "studio-text-heading": {
+            "lightValue": "var(--studio-base-900)",
+            "darkValue": "var(--studio-base-100)",
+            "description": "Section titles and main headings",
+            "usage": "Section headings, main titles",
+            "usageCount": 1,
+            "components": ["section headings", "main titles"]
+          },
+          "studio-text-emphasis": {
+            "lightValue": "var(--studio-base-950)",
+            "darkValue": "var(--studio-base-50)",
+            "description": "Emphasized text and active states",
+            "usage": "Active navigation, emphasized content",
+            "usageCount": 3,
+            "components": ["active nav items", "emphasized text", "important content"]
+          }
+        }
+      },
+      "brandColors": {
+        "title": "Brand Colors",
+        "description": "Studio brand accent colors for identity and interactive elements",
+        "totalUsage": 10,
+        "themeAware": false,
+        "variables": {
+          "studio-primary-500": {
+            "value": "rgb(39, 104, 96)",
+            "description": "Studio teal - primary brand color",
+            "usage": "Primary buttons, gradients, slider thumbs, active states",
+            "usageCount": 6,
+            "components": [".studio-button", "gradients", "slider thumbs", "brand accents"]
+          },
+          "studio-secondary-500": {
+            "value": "rgb(112, 153, 51)",
+            "description": "Studio green - secondary brand color",
+            "usage": "Gradients, secondary accents",
+            "usageCount": 4,
+            "components": ["gradients", "secondary accents", "brand elements"]
+          }
+        }
+      }
+    },
+    "usagePatterns": {
+      "mostUsed": {
+        "variable": "studio-text-interface",
+        "count": 14,
+        "category": "typography"
+      },
+      "leastUsed": {
+        "variable": "studio-border-ghost-hover",
+        "count": 0,
+        "category": "borderColors"
+      },
+      "categoryUsage": {
+        "spacing": 62,
+        "textColors": 32,
+        "typography": 50,
+        "borderColors": 14,
+        "backgroundColors": 15,
+        "borderRadius": 16,
+        "borderThickness": 14,
+        "brandColors": 10
+      }
+    },
+    "adminPageConfig": {
+      "editableCategories": ["spacing", "borderRadius", "typography"],
+      "readOnlyCategories": ["brandColors"],
+      "previewComponents": [
+        "colorCard",
+        "navigationItem", 
+        "button",
+        "formInput",
+        "sectionHeader"
+      ],
+      "themeToggle": true,
+      "livePreview": true,
+      "exportFormats": ["css", "json", "scss"],
+      "componentView": {
+        "enabled": true,
+        "defaultView": "components",
+        "sortOptions": {
+          "alphabetical": "A-Z",
+          "category": "By Category",
+          "priority": "By Priority",
+          "usage": "By Usage Count",
+          "lastModified": "Recently Modified"
+        },
+        "filterOptions": {
+          "category": ["layout", "content", "controls", "interactive", "utility"],
+          "priority": ["high", "medium", "low"],
+          "editable": [true, false],
+          "hasStates": [true, false]
+        },
+        "groupBy": ["category", "priority", "none"],
+        "searchFields": ["displayName", "description", "cssSelector", "variables"],
+        "bulkEdit": {
+          "enabled": true,
+          "operations": [
+            "changeCategory",
+            "setPriority", 
+            "toggleEditable",
+            "updateDescription",
+            "addVariable",
+            "removeVariable"
+          ]
+        }
+      },
+      "componentEditor": {
+        "editableFields": {
+          "displayName": {
+            "type": "text",
+            "required": true,
+            "maxLength": 50
+          },
+          "description": {
+            "type": "textarea",
+            "required": true,
+            "maxLength": 200
+          },
+          "category": {
+            "type": "select",
+            "options": ["layout", "content", "controls", "interactive", "utility"]
+          },
+          "priority": {
+            "type": "select", 
+            "options": ["high", "medium", "low"]
+          },
+          "editable": {
+            "type": "boolean"
+          },
+          "cssSelector": {
+            "type": "text",
+            "pattern": "^\\.[a-zA-Z][a-zA-Z0-9-_]*$"
+          }
+        },
+        "variableEditor": {
+          "addNew": true,
+          "removeExisting": true,
+          "editNames": true,
+          "editValues": true,
+          "validateReferences": true
+        },
+        "stateEditor": {
+          "addStates": true,
+          "removeStates": true,
+          "commonStates": ["hover", "active", "focus", "disabled", "loading"]
+        }
+      },
+      "variableView": {
+        "enabled": true,
+        "showComponentUsage": true,
+        "sortOptions": {
+          "alphabetical": "A-Z",
+          "category": "By Category", 
+          "usage": "By Usage Count",
+          "value": "By Value"
+        },
+        "filterOptions": {
+          "category": ["typography", "spacing", "borderRadius", "borderColors", "backgroundColors", "textColors", "brandColors"],
+          "themeAware": [true, false],
+          "unused": [true, false]
+        }
+      },
+      "exportOptions": {
+        "formats": {
+          "css": {
+            "includeComments": true,
+            "organized": true,
+            "minified": false
+          },
+          "json": {
+            "includeUsage": true,
+            "includeComponents": true,
+            "prettyPrint": true
+          },
+          "scss": {
+            "useNesting": true,
+            "includeComponents": true
+          },
+          "componentMap": {
+            "format": "markdown",
+            "includeVariables": true,
+            "includeStates": true
+          }
+        },
+        "scopes": ["all", "componentsOnly", "variablesOnly", "categories"]
+      }
+    }
+  }
+}
