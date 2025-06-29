@@ -1,0 +1,65 @@
+/*
+Theme Name: Studio Admin Theme
+Description: Clean Blocksy child theme for Studio Design System testing. NO color overrides - lets Blocksy use natural colors for proper coexistence testing.
+Author: Studio Design Team
+Template: blocksy
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 8.0
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: studio-admin-theme
+Tags: blocksy, child-theme, testing, design-system
+
+Studio Admin Theme - Clean Testing Environment
+This child theme provides a clean Blocksy testing environment with no Studio color overrides.
+Perfect for testing Studio plugin coexistence with existing themes.
+*/
+
+/* Import Parent Theme Styles */
+@import url("../blocksy/style.css");
+
+/* ================================== */
+/* CLEAN TESTING ENVIRONMENT         */
+/* ================================== */
+
+/* NO Studio color overrides - let Blocksy use its natural colors */
+/* NO typography overrides - let Blocksy handle fonts naturally */
+/* NO button styling overrides - let Blocksy handle all UI naturally */
+
+/* This child theme serves as a clean baseline for testing Studio plugin coexistence */
+/* Studio plugin will inject styles via scoped CSS or Shadow DOM only */
+
+/* ================================== */
+/* MINIMAL CHILD THEME CUSTOMIZATIONS */
+/* ================================== */
+
+/* Only essential child theme styling - no Studio branding on user site */
+.studio-test-marker {
+    /* Hidden marker to confirm child theme is active */
+    content: "studio-admin-theme-active";
+    display: none;
+}
+
+/* Development notice for admin testing */
+.studio-child-theme-notice {
+    background: #f0f8ff;
+    border-left: 4px solid #0073aa;
+    padding: 12px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #23282d;
+}
+
+/* ================================== */
+/* RESPONSIVE DESIGN                 */
+/* ================================== */
+
+@media (max-width: 768px) {
+    .studio-child-theme-notice {
+        margin: 10px 0;
+        padding: 8px;
+        font-size: 13px;
+    }
+}
