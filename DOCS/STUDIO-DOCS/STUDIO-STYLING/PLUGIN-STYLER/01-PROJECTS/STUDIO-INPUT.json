@@ -1,0 +1,435 @@
+{
+  "studioVariables": {
+    "meta": {
+      "version": "3.0.0",
+      "lastUpdated": "2024-12-30",
+      "description": "Studio Projects Page - Universal Scoped Component System",
+      "totalVariables": 32,
+      "totalUsageCount": 95,
+      "totalComponents": 12,
+      "pageType": "projects-dashboard",
+      "architecture": "universal-scoped-components"
+    },
+    "components": {
+      "universalCard": {
+        "title": "Universal Card Component",
+        "description": "Base card component used across ALL pages",
+        "category": "universal",
+        "priority": "critical",
+        "editable": true,
+        "elements": {
+          "card": {
+            "displayName": "Base Card",
+            "description": "Universal card styling for all pages",
+            "cssSelector": ".card",
+            "variables": {
+              "background": "studio-bg-card",
+              "border": "studio-border-thick solid studio-border-primary",
+              "borderRadius": "studio-radius-xl",
+              "minHeight": "300px",
+              "padding": "studio-space-4",
+              "transition": "all 0.2s ease"
+            },
+            "states": {
+              "hover": {
+                "transform": "translateY(-2px)",
+                "boxShadow": "0 8px 32px rgba(0, 0, 0, 0.1)"
+              }
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "universalGrid": {
+        "title": "Universal Grid System",
+        "description": "Base grid component used across ALL pages",
+        "category": "universal",
+        "priority": "critical",
+        "editable": true,
+        "elements": {
+          "grid": {
+            "displayName": "Base Grid",
+            "description": "Universal grid layout for all pages",
+            "cssSelector": ".grid",
+            "variables": {
+              "display": "grid",
+              "gridTemplateColumns": "repeat(auto-fit, minmax(320px, 1fr))",
+              "gap": "studio-space-5",
+              "padding": "studio-space-6"
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "universalNav": {
+        "title": "Universal Navigation",
+        "description": "Base navigation components used across ALL pages",
+        "category": "universal",
+        "priority": "high",
+        "editable": true,
+        "elements": {
+          "nav": {
+            "displayName": "Base Navigation",
+            "description": "Universal navigation container",
+            "cssSelector": ".nav",
+            "variables": {
+              "display": "flex",
+              "gap": "studio-space-6"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "nav-item": {
+            "displayName": "Navigation Item",
+            "description": "Universal navigation item styling",
+            "cssSelector": ".nav-item",
+            "variables": {
+              "padding": "studio-space-2 studio-space-4",
+              "color": "studio-text-navigation",
+              "fontSize": "studio-text-interface",
+              "borderRadius": "studio-radius",
+              "transition": "all 0.2s ease",
+              "opacity": "0.7"
+            },
+            "states": {
+              "hover": {
+                "opacity": "1",
+                "background": "rgba(255, 255, 255, 0.1)"
+              },
+              "active": {
+                "opacity": "1",
+                "background": "rgba(255, 255, 255, 0.15)",
+                "borderColor": "rgba(255, 255, 255, 0.2)"
+              }
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "universalStatus": {
+        "title": "Universal Status Component",
+        "description": "Base status badge used across ALL pages",
+        "category": "universal",
+        "priority": "medium",
+        "editable": true,
+        "elements": {
+          "status": {
+            "displayName": "Status Badge",
+            "description": "Universal status indicator",
+            "cssSelector": ".status",
+            "variables": {
+              "background": "studio-bg-controls",
+              "color": "studio-text-subtle",
+              "padding": "studio-space-1 studio-space-2",
+              "borderRadius": "studio-radius-sm",
+              "fontSize": "studio-text-metadata",
+              "fontWeight": "600",
+              "textTransform": "uppercase",
+              "letterSpacing": "1px"
+            },
+            "states": {
+              "active": {
+                "background": "linear-gradient(135deg, var(--studio-primary-500), var(--studio-secondary-500))",
+                "color": "white"
+              }
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "universalStats": {
+        "title": "Universal Stats Component",
+        "description": "Base statistics display used across pages",
+        "category": "universal",
+        "priority": "medium",
+        "editable": true,
+        "elements": {
+          "stats": {
+            "displayName": "Stats Container",
+            "description": "Universal stats container",
+            "cssSelector": ".stats",
+            "variables": {
+              "display": "flex",
+              "gap": "studio-space-4",
+              "margin": "studio-space-3 0"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "stat": {
+            "displayName": "Individual Stat",
+            "description": "Universal stat item",
+            "cssSelector": ".stat",
+            "variables": {
+              "display": "flex",
+              "flexDirection": "column",
+              "alignItems": "center",
+              "textAlign": "center"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "stat-value": {
+            "displayName": "Stat Value",
+            "description": "Universal stat number",
+            "cssSelector": ".stat-value",
+            "variables": {
+              "fontSize": "studio-text-card-title",
+              "fontWeight": "700",
+              "color": "studio-text-content",
+              "lineHeight": "1"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "stat-label": {
+            "displayName": "Stat Label",
+            "description": "Universal stat description",
+            "cssSelector": ".stat-label",
+            "variables": {
+              "fontSize": "studio-text-metadata",
+              "color": "studio-text-subtle",
+              "textTransform": "uppercase",
+              "letterSpacing": "1px",
+              "marginTop": "studio-space-1"
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "universalSidebar": {
+        "title": "Universal Sidebar Component",
+        "description": "Base sidebar navigation used across ALL pages",
+        "category": "universal",
+        "priority": "critical",
+        "editable": true,
+        "elements": {
+          "sidebar": {
+            "displayName": "Base Sidebar",
+            "description": "Universal sidebar container",
+            "cssSelector": ".sidebar",
+            "variables": {
+              "background": "studio-bg-sidebar",
+              "width": "300px",
+              "height": "100vh",
+              "borderRight": "1px solid studio-border-ui",
+              "display": "flex",
+              "flexDirection": "column"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "sidebar-header": {
+            "displayName": "Sidebar Header",
+            "description": "Universal sidebar header area",
+            "cssSelector": ".sidebar-header",
+            "variables": {
+              "padding": "studio-space-5",
+              "borderBottom": "1px solid studio-border-ui",
+              "background": "studio-bg-sidebar-header"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "sidebar-nav": {
+            "displayName": "Sidebar Navigation",
+            "description": "Universal sidebar navigation container",
+            "cssSelector": ".sidebar-nav",
+            "variables": {
+              "flex": "1",
+              "padding": "studio-space-5",
+              "overflowY": "auto"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "sidebar-nav-section": {
+            "displayName": "Navigation Section",
+            "description": "Universal navigation section grouping",
+            "cssSelector": ".sidebar-nav-section",
+            "variables": {
+              "marginBottom": "studio-space-6"
+            },
+            "editable": true,
+            "scope": "universal"
+          },
+          "sidebar-nav-title": {
+            "displayName": "Navigation Section Title",
+            "description": "Universal navigation section headers",
+            "cssSelector": ".sidebar-nav-title",
+            "variables": {
+              "fontSize": "studio-text-metadata",
+              "fontWeight": "600",
+              "color": "studio-text-subtle",
+              "marginBottom": "studio-space-3",
+              "textTransform": "uppercase",
+              "letterSpacing": "1px"
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "universalSectionTitle": {
+        "title": "Universal Section Title Component",
+        "description": "Base section title used across ALL pages",
+        "category": "universal",
+        "priority": "high",
+        "editable": true,
+        "elements": {
+          "section-title": {
+            "displayName": "Section Title",
+            "description": "Universal section header styling",
+            "cssSelector": ".section-title",
+            "variables": {
+              "fontSize": "studio-text-interface",
+              "fontWeight": "600",
+              "color": "studio-text-subtle",
+              "marginBottom": "studio-space-3",
+              "textTransform": "uppercase",
+              "letterSpacing": "1px"
+            },
+            "editable": true,
+            "scope": "universal"
+          }
+        }
+      },
+      "projectsScope": {
+        "title": "Projects Page Scope",
+        "description": "Projects page specific styling",
+        "category": "page-scope",
+        "priority": "high",
+        "editable": true,
+        "elements": {
+          "card-projects": {
+            "displayName": "Projects Card",
+            "description": "Projects page card modifications",
+            "cssSelector": ".card.projects",
+            "variables": {
+              "minHeight": "320px"
+            },
+            "editable": true,
+            "scope": "projects"
+          },
+          "card-projects-dashboard": {
+            "displayName": "Projects Dashboard Card",
+            "description": "Dashboard tab specific card styling",
+            "cssSelector": ".card.projects.dashboard",
+            "variables": {},
+            "editable": true,
+            "scope": "projects.dashboard"
+          },
+          "card-projects-add-new": {
+            "displayName": "Add New Project Card",
+            "description": "Add new project card variant",
+            "cssSelector": ".card.projects.add-new",
+            "variables": {
+              "justifyContent": "center",
+              "alignItems": "center",
+              "textAlign": "center",
+              "opacity": "0.7",
+              "borderStyle": "dashed"
+            },
+            "states": {
+              "hover": {
+                "opacity": "1",
+                "borderStyle": "solid"
+              }
+            },
+            "editable": true,
+            "scope": "projects.add-new"
+          },
+          "grid-projects-dashboard": {
+            "displayName": "Projects Dashboard Grid",
+            "description": "Dashboard tab grid modifications",
+            "cssSelector": ".grid.projects.dashboard",
+            "variables": {},
+            "editable": true,
+            "scope": "projects.dashboard"
+          },
+          "sidebar-projects": {
+            "displayName": "Projects Sidebar",
+            "description": "Projects page sidebar modifications",
+            "cssSelector": ".sidebar.projects",
+            "variables": {},
+            "editable": true,
+            "scope": "projects"
+          },
+          "section-title-projects": {
+            "displayName": "Projects Section Title",
+            "description": "Projects page section title modifications",
+            "cssSelector": ".section-title.projects",
+            "variables": {},
+            "editable": true,
+            "scope": "projects"
+          }
+        }
+      },
+      "projectComponents": {
+        "title": "Project Specific Components",
+        "description": "Components unique to project cards",
+        "category": "component-specific",
+        "priority": "medium",
+        "editable": true,
+        "elements": {
+          "project-header": {
+            "displayName": "Project Header",
+            "description": "Project card header with logo and status",
+            "cssSelector": ".project-header",
+            "variables": {
+              "display": "flex",
+              "justifyContent": "space-between",
+              "alignItems": "flex-start",
+              "marginBottom": "studio-space-4"
+            },
+            "editable": true,
+            "scope": "projects"
+          },
+          "project-info": {
+            "displayName": "Project Info",
+            "description": "Project card content area",
+            "cssSelector": ".project-info",
+            "variables": {
+              "flex": "1",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "studio-space-3"
+            },
+            "editable": true,
+            "scope": "projects"
+          },
+          "project-name": {
+            "displayName": "Project Name",
+            "description": "Project title styling",
+            "cssSelector": ".project-name",
+            "variables": {
+              "fontSize": "studio-text-card-title",
+              "fontWeight": "600",
+              "color": "studio-text-content",
+              "marginBottom": "studio-space-1"
+            },
+            "editable": true,
+            "scope": "projects"
+          },
+          "project-description": {
+            "displayName": "Project Description",
+            "description": "Project subtitle styling",
+            "cssSelector": ".project-description",
+            "variables": {
+              "fontSize": "studio-text-interface",
+              "color": "studio-text-supporting",
+              "lineHeight": "1.4"
+            },
+            "editable": true,
+            "scope": "projects"
+          }
+        }
+      }
+    }
+  }
+}
