@@ -1,10 +1,13 @@
-# STUDIO ADMIN PAGE - COMPREHENSIVE PLAN
+# STUDIO STYLING DOCUMENTATION
+**Comprehensive Admin Interface Specifications & AI Assistant Rules**
 
 **Date Created**: June 29, 2025  
-**Project**: WP Studio Vibes  
-**Purpose**: Document complete admin page vision and implementation plan
+**Project**: Studio Admin Theme - WordPress Admin Page Development  
+**Purpose**: Complete documentation for admin interface implementation and coding standards
 
 ---
+
+# PART 1: ADMIN PAGE SPECIFICATIONS
 
 ## 🎯 **ADMIN PAGE VISION**
 
@@ -290,10 +293,187 @@ AdminPage/
 
 ---
 
-**🎯 This comprehensive admin page will provide complete control over the Studio Design System, enabling efficient management of all design tokens and components with professional-grade editing capabilities.**
+# PART 2: AI ASSISTANT RULES & CODING STANDARDS
+
+## 🎯 **CRITICAL RULES FOR AI ASSISTANTS**
+
+When asking an AI assistant to add features or modify The Studio plugin, **always give them these rules**:
+
+### **Rule #1: ONLY Edit Designated CSS File for Styling**
+```
+❌ NEVER create new CSS files
+❌ NEVER use inline styles in components  
+❌ NEVER add styles to separate files
+✅ HTML Phase: Edit the <style> block in HTML mockup
+✅ React Phase: Edit src/ShadowStyles.jsx (or designated CSS file)
+```
+
+### **Rule #2: Use Existing CSS Classes First**
+```
+✅ FIRST: Check if a class already exists
+✅ SECOND: Use existing Studio design system classes
+❌ LAST RESORT: Create new styles
+```
+
+### **Rule #3: Follow the Variable System**
+```
+✅ ALWAYS use CSS variables: var(--studio-bg-card)
+❌ NEVER use hardcoded colors: #24242a
+✅ ALWAYS use spacing variables: var(--studio-space-4)  
+❌ NEVER use hardcoded spacing: 16px
+```
+
+### **Rule #4: Semantic CSS Architecture**
+```css
+/* ✅ CORRECT - Component-Specific Variables */
+--studio-content-padding: 1.5rem;     /* Main content areas */
+--studio-card-padding: 1.25rem;       /* Color card interior spacing */
+--studio-nav-padding: 0.5rem 0.75rem; /* Navigation item padding */
+
+/* ❌ AVOID - Generic Scales */
+--studio-space-lg: 1.5rem;
+--studio-space-md: 1rem;
+```
+
+### **Rule #5: Component Organization**
+```css
+/* ================================== */
+/* LEFT SIDEBAR                       */
+/* ================================== */
+/* Left Sidebar - Header */
+/* Left Sidebar - Navigation */
+
+/* ================================== */
+/* COLOR WIDGET                       */
+/* ================================== */
+
+/* ================================== */
+/* RIGHT SIDEBAR                      */
+/* ================================== */
+```
+
+---
+
+## 📁 **FILE STRUCTURE (For AI Context)**
+
+### **Current Project Structure**
+```
+studio-admin-theme/DOCS/
+├── CLAUDE-MEMORY.md                    # ← Primary memory file
+├── STUDIO-STYLING/
+│   ├── STUDIO-STYLING-DOC.md          # ← THIS FILE (complete specifications)
+│   ├── studio-mockup.html             # ← Master template
+│   └── studio-variables.json          # ← Data structure
+├── STUDIO-DOCS/
+│   ├── STUDIO-ARCHITECTURE-V2.md      # ← System architecture
+│   └── STUDIO-SETUP-GUIDE.md          # ← React implementation guide
+└── STUDIO-ASSETS/
+    └── S.svg                           # ← Studio logo
+```
+
+### **HTML Phase (Current)**
+```
+DOCS/STUDIO-STYLING/
+└── studio-mockup.html       ← ALL STYLES in <style> block
+```
+
+### **Future React Phase**
+```
+src/
+├── ShadowStyles.jsx          ← ALL STYLES GO HERE
+├── components/               ← React components
+└── data/                     ← JSON data files
+```
+
+---
+
+## 🎨 **SEMANTIC TYPOGRAPHY SYSTEM**
+
+### **Always Use Component-Specific Typography Variables**
+```css
+✅ CORRECT (Semantic Naming):
+--studio-text-metadata: 0.75rem;        /* 12px - codes, timestamps */
+--studio-text-interface: 0.875rem;      /* 14px - nav, buttons, forms */
+--studio-text-body: 1rem;               /* 16px - main body text */
+--studio-text-card-title: 1.125rem;     /* 18px - card titles */
+--studio-text-section-title: 1.25rem;   /* 20px - section titles */
+
+❌ AVOID (Generic naming):
+--studio-text-xs, --studio-text-sm, --studio-text-base
+```
+
+### **Always Use Studio Class Naming Convention**
+```css
+✅ CORRECT:
+.studio-component-name
+.studio-nav-item
+.studio-color-card
+.studio-section-header
+
+❌ AVOID:
+.component, .nav-item, .card, .header
+```
+
+---
+
+## 🔧 **TECHNICAL STANDARDS**
+
+### **CSS Variable Structure**
+```css
+/* Brand Colors */
+--studio-primary-500: rgb(39, 104, 96);    /* Studio teal */
+--studio-secondary-500: rgb(112, 153, 51); /* Studio green */
+
+/* Theme-Aware Variables */
+--studio-bg-main: var(--studio-base-50);     /* Light mode */
+--studio-bg-card: var(--studio-base-200);    /* Light mode */
+--studio-text-content: var(--studio-base-950); /* Light mode */
+
+/* Component-Specific Spacing */
+--studio-space-1: 0.25rem;   /* Micro adjustments */
+--studio-space-2: 0.5rem;    /* Button padding */
+--studio-space-3: 0.75rem;   /* Standard spacing */
+--studio-space-4: 1rem;      /* Container spacing */
+--studio-space-5: 2rem;      /* Section spacing */
+```
+
+### **HTML-to-React Migration Rules**
+1. **Extract CSS**: Move HTML `<style>` block to dedicated CSS file
+2. **Preserve Variables**: Keep all `--studio-*` variables exactly as-is
+3. **Convert Classes**: HTML classes become React `className` props
+4. **Maintain Organization**: Keep CSS sections organized by component
+5. **Single CSS File**: All styles in one file for React
+
+---
+
+## ⚙️ **OPERATIONAL DIRECTIVES**
+
+### **Always Update Memory After Task Groups**
+After completing any logical group of tasks, ALWAYS:
+1. **Update CLAUDE-MEMORY.md** with progress and decisions
+2. **Document new files created** with purpose and location
+3. **Record architectural decisions** and rationale
+4. **Update roadmap status** with completed items
+
+### **Always Request Approval for File Operations**
+Before creating, renaming, or moving files, ALWAYS:
+1. **Suggest specific name + location**
+2. **Wait for explicit approval**
+3. **Provide alternatives** when appropriate
+4. **Explain reasoning** for naming/location choices
+
+### **Code Quality Standards**
+- **Remove > Comment**: Delete unused code rather than commenting out
+- **Proactively Clean**: Identify and remove duplicate/outdated files
+- **Semantic CSS**: Use component-specific variables, not generic scales
+- **Professional Polish**: Every interface should feel production-ready
+
+---
+
+**🎯 This comprehensive documentation provides complete specifications for the Studio admin interface along with coding standards for consistent implementation.**
 
 ---
 
 *Last Updated: June 29, 2025*  
-*Status: Documented and ready for implementation*  
-*Next Step: Create HTML mockup prototype*
+*Status: Complete specifications ready for implementation*  
+*Next Step: Create HTML mockup prototype following these specifications*

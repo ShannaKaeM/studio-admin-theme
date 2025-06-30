@@ -50,92 +50,102 @@
             
             /* Typography - Semantic Text System */
             --studio-font-family: 'Montserrat', system-ui, sans-serif;
-            --studio-text-metadata: 0.75rem;        /* 12px - codes, timestamps, small labels */
-            --studio-text-interface: 0.875rem;      /* 14px - nav, buttons, forms, controls */
-            --studio-text-body: 1rem;               /* 16px - main body text */
-            --studio-text-description: 1.0625rem;   /* 17px - section descriptions */
-            --studio-text-card-title: 1.125rem;     /* 18px - card titles, component headers */
-            --studio-text-section-title: 1.25rem;   /* 20px - section titles */
-            --studio-text-icon: 1.5rem;             /* 24px - icon font sizes */
-            --studio-text-page-title: 1.875rem;     /* 30px - page titles */
+            
+            /* Typography Sizes (Usage: 14 components) */
+            --studio-text-metadata: 0.75rem;        /* 12px - nav section titles, timestamps */
+            --studio-text-interface: 0.875rem;      /* 14px - nav items, buttons, format tabs, form labels (14 uses) */
+            --studio-text-body: 1rem;               /* 16px - main body text, default size */
+            --studio-text-description: 1.0625rem;   /* 17px - section descriptions, help text */
+            --studio-text-card-title: 1.125rem;     /* 18px - color card names, component headers (3 uses) */
+            --studio-text-section-title: 1.25rem;   /* 20px - section titles in main content */
+            --studio-text-icon: 1.5rem;             /* 24px - icon font sizes in navigation */
+            --studio-text-page-title: 1.875rem;     /* 30px - main page title with gradient */
             --studio-text-accent-icon: 2rem;        /* 32px - large accent icons */
 
-            /* Border Radius */
-            --studio-radius-sm: 0.375rem;
-            --studio-radius: 0.5rem;
-            --studio-radius-lg: 0.75rem;
-            --studio-radius-xl: 1rem;
+            /* Border Radius (Usage: 16 components) */
+            --studio-radius-sm: 0.375rem;    /* Small elements: nav items, color dots, format tabs (4 uses) */
+            --studio-radius: 0.5rem;         /* Standard controls: forms, buttons, sliders (6 uses) */
+            --studio-radius-md: 0.625rem;    /* Medium elements: global close button (1 use) */
+            --studio-radius-lg: 0.75rem;     /* Important controls: control icons, color swatches (3 uses) */
+            --studio-radius-xl: 1rem;        /* Major containers: color cards, section headers (2 uses) */
 
-            /* Spacing Scale */
-            --studio-space-1: 0.25rem;
-            --studio-space-2: 0.5rem;
-            --studio-space-3: 0.75rem;
-            --studio-space-4: 1rem;
-            --studio-space-5: 2rem;
-            --studio-space-6: 3rem;
-            --studio-space-8: 4rem;
-            --studio-space-10: 5rem;
-            --studio-space-12: 6rem;
+            /* Border Thickness - Semantic System */
+            --studio-border-thin: 1px;      /* Forms, buttons, small UI elements */
+            --studio-border-medium: 2px;    /* Controls, toggles, interactive elements */
+            --studio-border-thick: 3px;     /* Cards, primary content elements */
+
+            /* Spacing Scale (Usage: 62 total applications) */
+            --studio-space-1: 0.25rem;     /* Micro spacing: nav item margins, fine adjustments (6 uses) */
+            --studio-space-2: 0.5rem;      /* Tight spacing: button padding, control gaps (13 uses) */
+            --studio-space-3: 0.75rem;     /* Element spacing: between related items, form padding (18 uses) */
+            --studio-space-4: 1rem;        /* Container spacing: card padding, form elements (11 uses) */
+            --studio-space-5: 2rem;        /* Section spacing: sidebar padding, major gaps (9 uses) */
+            --studio-space-6: 3rem;        /* Content spacing: between sections, major margins (9 uses) */
+            --studio-space-8: 4rem;        /* Large spacing: content areas, major separations (2 uses) */
+            --studio-space-10: 5rem;       /* Extra large spacing: special layouts (1 use) */
+            --studio-space-12: 6rem;       /* Maximum spacing: largest separations (1 use) */
         }
 
-        /* Light Mode */
+        /* Light Mode Theme Colors */
         :root, [data-theme="light"] {
-            --studio-bg-main: var(--studio-base-50);           /* Dark: 950 → Light: 50 */
-            --studio-bg-header: var(--studio-base-200);        /* Dark: 700 → Light: 200 (swapped) */
-            --studio-bg-section-header: var(--studio-base-200); /* Dark: 800 → Light: 200 */
-            --studio-bg-sidebar: var(--studio-base-100);       /* Dark: 900 → Light: 100 */
-            --studio-bg-sidebar-header: var(--studio-base-300); /* Dark: 800 → Light: 300 (swapped) */
-            --studio-bg-card: var(--studio-base-200);          /* Dark: 800 → Light: 200 */
-            --studio-bg-card-swatch: var(--studio-base-300);   /* Dark: 700 → Light: 300 */
-            --studio-bg-controls: var(--studio-base-100);      /* Dark: 900 → Light: 100 */
-            --studio-bg-input: var(--studio-base-200);         /* Dark: 800 → Light: 200 */
-            --studio-bg-button: var(--studio-base-300);        /* Dark: 700 → Light: 300 */
+            /* Background Colors (Usage: 15 components) */
+            --studio-bg-main: var(--studio-base-50);           /* Page background (1 use) */
+            --studio-bg-header: var(--studio-base-200);        /* Top header background (1 use) */
+            --studio-bg-section-header: var(--studio-base-200); /* Section headers (1 use) */
+            --studio-bg-sidebar: var(--studio-base-100);       /* Left sidebar background (3 uses) */
+            --studio-bg-sidebar-header: var(--studio-base-300); /* Sidebar header (2 uses) */
+            --studio-bg-card: var(--studio-base-200);          /* Color cards, overlays (7 uses) */
+            --studio-bg-controls: var(--studio-base-100);      /* Control backgrounds (1 use) */
+            --studio-bg-input: var(--studio-base-200);         /* Form inputs, selects (3 uses) */
+            --studio-bg-button: var(--studio-base-300);        /* Button backgrounds (1 use) */
             
-            /* Text Colors - Semantic System */
-            --studio-text-content: var(--studio-base-950);     /* Main content, card titles, body text */
-            --studio-text-supporting: var(--studio-base-700);  /* Descriptions, labels, form controls */
-            --studio-text-subtle: var(--studio-base-600);      /* Metadata, codes, timestamps */
-            --studio-text-navigation: var(--studio-base-900);  /* Navigation items, sidebar titles */
-            --studio-text-heading: var(--studio-base-900);     /* Section titles, main headings */
-            --studio-text-emphasis: var(--studio-base-950);    /* Active states, emphasized text */
+            /* Text Colors - Semantic System (Usage: 50+ components) */
+            --studio-text-content: var(--studio-base-950);     /* Main content, card titles (8 uses) */
+            --studio-text-supporting: var(--studio-base-700);  /* Descriptions, labels (6 uses) */
+            --studio-text-subtle: var(--studio-base-600);      /* Metadata, secondary info (11 uses) */
+            --studio-text-navigation: var(--studio-base-900);  /* Navigation items (3 uses) */
+            --studio-text-heading: var(--studio-base-900);     /* Section titles, headings (1 use) */
+            --studio-text-emphasis: var(--studio-base-950);    /* Active states, emphasis (3 uses) */
             
-            --studio-border-subtle: var(--studio-base-300);     /* Dark: 500 → Light: 500 (stays same) */
-            --studio-border-medium: var(--studio-base-300);     /* Dark: 700 → Light: 300 */
-            --studio-border-card: var(--studio-base-300);       /* Dark: 700 → Light: 300 */
-            --studio-border-ghost: var(--studio-base-400);      /* Ghost widget borders */
-            --studio-border-ghost-hover: var(--studio-base-500); /* Ghost widget hover borders */
-            --studio-border-color-dot: var(--studio-base-700);   /* Color dot borders - Light: base-700 */
+            /* Border Colors - Semantic System (Usage: 14 components) */
+            --studio-border-ui: var(--studio-base-300);         /* General UI: forms, inputs, close buttons (5 uses) */
+            --studio-border-interactive: var(--studio-base-400); /* Interactive: toggles, control icons (3 uses) */
+            --studio-border-primary: var(--studio-base-300);    /* Primary content: cards, sections (3 uses) */
+            --studio-border-accent: var(--studio-base-700);     /* Accent elements: color dots, slider handles (2 uses) */
+            --studio-border-ghost: var(--studio-base-400);      /* Ghost widgets: add buttons, placeholders (2 uses) */
+            --studio-border-ghost-hover: var(--studio-base-500); /* Ghost hover states (0 direct uses) */
         }
 
         /* Light Mode Specific Overrides */
 
-        /* Dark Mode */
+        /* Dark Mode Theme Colors */
         [data-theme="dark"] {
-            --studio-bg-main: var(--studio-base-950);
-            --studio-bg-header: var(--studio-base-800);
-            --studio-bg-section-header: var(--studio-base-800);
-            --studio-bg-sidebar: var(--studio-base-900);
-            --studio-bg-sidebar-header: var(--studio-base-700);
-            --studio-bg-card: var(--studio-base-800);
-            --studio-bg-card-swatch: var(--studio-base-700);
-            --studio-bg-controls: var(--studio-base-900);
-            --studio-bg-input: var(--studio-base-800);
-            --studio-bg-button: var(--studio-base-700);
+            /* Background Colors (Dark Mode - Higher Contrast) */
+            --studio-bg-main: var(--studio-base-950);           /* Dark page background */
+            --studio-bg-header: var(--studio-base-800);         /* Dark header background */
+            --studio-bg-section-header: var(--studio-base-800); /* Dark section headers */
+            --studio-bg-sidebar: var(--studio-base-900);        /* Dark sidebar background */
+            --studio-bg-sidebar-header: var(--studio-base-700); /* Dark sidebar header */
+            --studio-bg-card: var(--studio-base-800);           /* Dark card backgrounds */
+            --studio-bg-controls: var(--studio-base-900);       /* Dark control backgrounds */
+            --studio-bg-input: var(--studio-base-800);          /* Dark form inputs */
+            --studio-bg-button: var(--studio-base-700);         /* Dark button backgrounds */
             
-            /* Text Colors - Semantic System (Dark Mode) */
-            --studio-text-content: var(--studio-base-50);
-            --studio-text-supporting: var(--studio-base-300);
-            --studio-text-subtle: var(--studio-base-400);
-            --studio-text-navigation: var(--studio-base-100);
-            --studio-text-emphasis: var(--studio-base-50);
-            --studio-text-heading: var(--studio-base-100);
+            /* Text Colors - Semantic System (Dark Mode - Light Text) */
+            --studio-text-content: var(--studio-base-50);       /* Light main content text */
+            --studio-text-supporting: var(--studio-base-300);   /* Light supporting text */
+            --studio-text-subtle: var(--studio-base-400);       /* Medium subtle text */
+            --studio-text-navigation: var(--studio-base-100);   /* Light navigation text */
+            --studio-text-emphasis: var(--studio-base-50);      /* Bright emphasis text */
+            --studio-text-heading: var(--studio-base-100);      /* Light heading text */
             
-            --studio-border-subtle: var(--studio-base-500);
-            --studio-border-medium: var(--studio-base-700);
-            --studio-border-card: var(--studio-base-700);
-            --studio-border-ghost: var(--studio-base-600);      /* Ghost widget borders */
-            --studio-border-ghost-hover: var(--studio-base-500); /* Ghost widget hover borders */
-            --studio-border-color-dot: var(--studio-base-50);   /* Color dot borders - Dark: base-50 */
+            /* Border Colors - Semantic System (Dark Mode - Higher Contrast) */
+            --studio-border-ui: var(--studio-base-500);         /* Medium UI borders */
+            --studio-border-interactive: var(--studio-base-600); /* Darker interactive borders */
+            --studio-border-primary: var(--studio-base-700);    /* Dark primary borders */
+            --studio-border-accent: var(--studio-base-50);      /* Bright accent borders */
+            --studio-border-ghost: var(--studio-base-600);      /* Dark ghost borders */
+            --studio-border-ghost-hover: var(--studio-base-500); /* Lighter ghost hover */
         }
 
         /* ================================== */
@@ -168,7 +178,7 @@
         .studio-control-icon {
             width: 32px;
             height: 32px;
-            border: 2px solid var(--studio-border-subtle);
+            border: var(--studio-border-medium) solid var(--studio-border-interactive);
             background: linear-gradient(135deg, var(--studio-primary-500), var(--studio-secondary-500));
             color: white;
             cursor: pointer;
@@ -194,7 +204,7 @@
             right: 16px;
             width: 32px;
             height: 32px;
-            border: 1px solid var(--studio-border-subtle);
+            border: var(--studio-border-thin) solid var(--studio-border-ui);
             font-size: 18px;
             font-weight: 400;
             background: var(--studio-bg-card);
@@ -210,9 +220,9 @@
         }
 
         .studio-global-close:hover {
-            background: var(--studio-bg-hover);
-            color: var(--studio-text);
-            border-color: var(--studio-border-hover);
+            background: var(--studio-bg-card);
+            color: var(--studio-text-content);
+            border-color: var(--studio-border-interactive);
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
@@ -221,7 +231,7 @@
             position: relative;
             width: 48px;
             height: 24px;
-            border: 2px solid var(--studio-border-subtle);
+            border: var(--studio-border-medium) solid var(--studio-border-interactive);
             border-radius: 14px;
             background: var(--studio-bg-sidebar);
             cursor: pointer;
@@ -262,7 +272,7 @@
 
         .studio-sidebar {
             background: var(--studio-bg-sidebar);
-            border-right: 1px solid var(--studio-border-subtle);
+            border-right: 1px solid var(--studio-border-ui);
             display: flex;
             flex-direction: column;
         }
@@ -418,7 +428,7 @@
         /* Main Header - Top Bar */
         .studio-top-header {
             padding: var(--studio-space-4) var(--studio-space-8);
-            border-bottom: 1px solid var(--studio-border-subtle);
+            border-bottom: 1px solid var(--studio-border-ui);
             background: var(--studio-bg-header);
             display: flex;
             align-items: center;
@@ -472,7 +482,7 @@
             grid-template-columns: auto 1fr;  /* Title stack, description */
             gap: 0;  /* Remove gap, handle spacing with padding */
             align-items: center;
-            border: 3px solid var(--studio-bg-card-swatch);
+            border: var(--studio-border-thick) solid var(--studio-border-primary);
             overflow: hidden;  /* Ensure border radius is respected */
             font-family: 'Montserrat', sans-serif;
         }
@@ -578,7 +588,7 @@
 
         .studio-color-card {
             background: var(--studio-bg-card);
-            border: 3px solid var(--studio-bg-card-swatch);
+            border: var(--studio-border-thick) solid var(--studio-border-primary);
             border-radius: var(--studio-radius-xl);
             overflow: hidden;
             min-height: 400px;
@@ -626,7 +636,7 @@
             width: 20px;
             height: 20px;
             border-radius: var(--studio-radius-sm);
-            border: 3px solid var(--studio-border-color-dot);
+            border: var(--studio-border-thick) solid var(--studio-border-accent);
             flex-shrink: 0;
         }
 
@@ -717,7 +727,7 @@
             border-radius: 50%;
             background: var(--studio-primary-500);
             cursor: pointer;
-            border: 2px solid white;
+            border: var(--studio-border-medium) solid var(--studio-border-accent);
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
@@ -727,7 +737,7 @@
 
         .studio-right-sidebar {
             background: var(--studio-bg-sidebar);
-            border-left: 1px solid var(--studio-border-subtle);
+            border-left: 1px solid var(--studio-border-ui);
             display: flex;
             flex-direction: column;
         }
@@ -805,7 +815,7 @@
         .studio-input, .studio-select {
             width: 100%;
             padding: var(--studio-space-3);
-            border: 1px solid var(--studio-border-subtle);
+            border: var(--studio-border-thin) solid var(--studio-border-ui);
             border-radius: var(--studio-radius);
             background: var(--studio-bg-input);
             color: var(--studio-text-content);
@@ -821,7 +831,7 @@
 
         .studio-button {
             padding: var(--studio-space-3) var(--studio-space-4);
-            border: 1px solid var(--studio-primary-500);
+            border: var(--studio-border-thin) solid var(--studio-primary-500);
             border-radius: var(--studio-radius);
             background: var(--studio-primary-500);
             color: white;
@@ -879,7 +889,7 @@
             width: 20px;
             height: 20px;
             border-radius: var(--studio-radius-sm);
-            border: 1px solid var(--studio-border-subtle);
+            border: var(--studio-border-thin) solid var(--studio-border-ui);
             flex-shrink: 0;
         }
 
@@ -919,7 +929,7 @@
 
         /* Generic Add New Widget - Ghosted Styling */
         .studio-add-color-card {
-            border: 2px dashed var(--studio-border-ghost);
+            border: var(--studio-border-medium) dashed var(--studio-border-ghost);
             background: transparent;
             opacity: 0.8;
             cursor: pointer;
@@ -942,7 +952,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px dashed var(--studio-border-ghost);
+            border: var(--studio-border-medium) dashed var(--studio-border-ghost);
             border-radius: 50%;
             margin-bottom: var(--studio-space-6);
             opacity: 0.8;
@@ -1035,11 +1045,79 @@
         body:not([data-theme="dark"]) .studio-add-color-card:hover .studio-add-color-subtitle {
             opacity: 0.7;
         }
+
+        /* ================================== */
+        /* DEVELOPMENT TOOLS                  */
+        /* ================================== */
+        
+        .studio-dev-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--studio-bg-card);
+            border: 2px solid var(--studio-border-primary);
+            border-radius: var(--studio-radius-lg);
+            padding: var(--studio-space-3);
+            font-size: var(--studio-text-metadata);
+            z-index: 1000;
+            min-width: 200px;
+        }
+        
+        .studio-dev-status {
+            display: flex;
+            align-items: center;
+            gap: var(--studio-space-2);
+            margin-bottom: var(--studio-space-2);
+        }
+        
+        .studio-dev-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--studio-base-400);
+        }
+        
+        .studio-dev-indicator.connected {
+            background: var(--studio-secondary-500);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .studio-dev-button {
+            background: var(--studio-bg-button);
+            border: 1px solid var(--studio-border-ui);
+            border-radius: var(--studio-radius-sm);
+            padding: var(--studio-space-1) var(--studio-space-2);
+            font-size: var(--studio-text-metadata);
+            color: var(--studio-text-content);
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: var(--studio-space-1);
+        }
+        
+        .studio-dev-button:hover {
+            background: var(--studio-bg-card);
+        }
     </style>
 </head>
 <body data-theme="dark">
     <!-- Global Close Button -->
     <button class="studio-global-close" title="Close">×</button>
+
+    <!-- Development Panel -->
+    <div class="studio-dev-panel" id="studio-dev-panel">
+        <div class="studio-dev-status">
+            <div class="studio-dev-indicator" id="studio-dev-indicator"></div>
+            <span id="studio-dev-status">Loading...</span>
+        </div>
+        <button class="studio-dev-button" onclick="reloadStudioVariables()">🔄 Reload JSON</button>
+        <button class="studio-dev-button" onclick="toggleDevPanel()">📋 Toggle Panel</button>
+        <button class="studio-dev-button" onclick="showGeneratedCSS()">📝 View CSS</button>
+    </div>
     <div class="studio-app">
 
         <div class="studio-layout">
@@ -1100,7 +1178,7 @@
                 </div>
             </nav>
 
-            <div style="padding: var(--studio-space-4); margin-top: auto; border-top: 1px solid var(--studio-border-subtle);">
+            <div style="padding: var(--studio-space-4); margin-top: auto; border-top: 1px solid var(--studio-border-ui);">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div style="font-size: var(--studio-text-metadata); color: var(--studio-text-subtle);">
                         Toggle Theme
@@ -1279,6 +1357,158 @@
                 body.setAttribute('data-theme', 'dark');
             }
         }
+
+        // ================================== 
+        // DYNAMIC STYLING FROM JSON
+        // ==================================
+        
+        let studioVariables = null;
+        
+        // Load studio-variables.json and apply dynamic styles
+        async function loadStudioVariables() {
+            updateDevStatus('Loading JSON...', false);
+            
+            try {
+                const response = await fetch('./studio-variables.json');
+                studioVariables = await response.json();
+                console.log('✅ Studio Variables Loaded:', studioVariables);
+                
+                // Apply dynamic CSS from JSON
+                applyDynamicStyles();
+                
+                // Add update listener for development
+                addVariableUpdateListener();
+                
+                updateDevStatus('JSON Connected', true);
+                
+            } catch (error) {
+                console.warn('⚠️ Could not load studio-variables.json:', error);
+                console.log('💡 Using static CSS variables from <style> block');
+                updateDevStatus('JSON not found - Using static CSS', false);
+            }
+        }
+        
+        // Generate and apply CSS from JSON component definitions
+        function applyDynamicStyles() {
+            if (!studioVariables) return;
+            
+            const components = studioVariables.studioVariables.components;
+            let dynamicCSS = '\n/* ================================== */\n';
+            dynamicCSS += '/* DYNAMIC STYLES FROM JSON          */\n';
+            dynamicCSS += '/* ================================== */\n\n';
+            
+            // Generate CSS for each component
+            Object.entries(components).forEach(([componentKey, component]) => {
+                if (component.elements) {
+                    dynamicCSS += `/* ${component.title} - ${component.description} */\n`;
+                    
+                    Object.entries(component.elements).forEach(([elementKey, element]) => {
+                        const cssSelector = element.cssSelector;
+                        
+                        if (element.variables) {
+                            dynamicCSS += `${cssSelector} {\n`;
+                            
+                            // Apply base variables
+                            Object.entries(element.variables).forEach(([property, value]) => {
+                                const cssProperty = camelToKebab(property);
+                                const cssValue = value.startsWith('studio-') ? `var(--${value})` : value;
+                                dynamicCSS += `    ${cssProperty}: ${cssValue};\n`;
+                            });
+                            
+                            dynamicCSS += `}\n\n`;
+                            
+                            // Apply state styles (hover, active, etc.)
+                            if (element.states) {
+                                Object.entries(element.states).forEach(([state, stateVars]) => {
+                                    dynamicCSS += `${cssSelector}:${state} {\n`;
+                                    Object.entries(stateVars).forEach(([property, value]) => {
+                                        const cssProperty = camelToKebab(property);
+                                        const cssValue = value.startsWith('studio-') ? `var(--${value})` : value;
+                                        dynamicCSS += `    ${cssProperty}: ${cssValue};\n`;
+                                    });
+                                    dynamicCSS += `}\n\n`;
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // Inject dynamic CSS into page
+            const styleElement = document.createElement('style');
+            styleElement.id = 'studio-dynamic-styles';
+            styleElement.textContent = dynamicCSS;
+            document.head.appendChild(styleElement);
+            
+            console.log('✅ Dynamic styles applied from JSON');
+            console.log('📝 Generated CSS:', dynamicCSS);
+        }
+        
+        // Convert camelCase to kebab-case for CSS properties
+        function camelToKebab(str) {
+            return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+        }
+        
+        // Add listener for JSON updates during development
+        function addVariableUpdateListener() {
+            // Add global function for console updates
+            window.updateStudioVariables = function(newVariables) {
+                studioVariables = newVariables;
+                
+                // Remove old dynamic styles
+                const oldStyles = document.getElementById('studio-dynamic-styles');
+                if (oldStyles) oldStyles.remove();
+                
+                // Reapply with new variables
+                applyDynamicStyles();
+                
+                updateDevStatus('Variables updated dynamically');
+                console.log('🔄 Studio variables updated dynamically');
+            };
+            
+            // Add global function to reload from JSON
+            window.reloadStudioVariables = function() {
+                loadStudioVariables();
+                console.log('🔄 Reloading studio variables from JSON...');
+            };
+            
+            // Add development panel functions
+            window.toggleDevPanel = function() {
+                const panel = document.getElementById('studio-dev-panel');
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            };
+            
+            window.showGeneratedCSS = function() {
+                const dynamicStyles = document.getElementById('studio-dynamic-styles');
+                if (dynamicStyles) {
+                    console.log('📝 Generated CSS:', dynamicStyles.textContent);
+                    alert('Generated CSS logged to console');
+                } else {
+                    alert('No dynamic CSS generated yet');
+                }
+            };
+            
+            console.log('🛠️ Development helpers available:');
+            console.log('   updateStudioVariables(newData) - Update variables dynamically');
+            console.log('   reloadStudioVariables() - Reload from JSON file');
+            console.log('   toggleDevPanel() - Show/hide development panel');
+            console.log('   showGeneratedCSS() - View generated CSS in console');
+        }
+        
+        // Update development panel status
+        function updateDevStatus(message, isConnected = true) {
+            const statusEl = document.getElementById('studio-dev-status');
+            const indicatorEl = document.getElementById('studio-dev-indicator');
+            
+            if (statusEl) statusEl.textContent = message;
+            if (indicatorEl) {
+                indicatorEl.classList.toggle('connected', isConnected);
+            }
+        }
+        
+        // Load variables when page loads
+        document.addEventListener('DOMContentLoaded', loadStudioVariables);
+        
     </script>
         </div>
     </div>

@@ -1,0 +1,182 @@
+/* ================================== */
+/* STUDIO GLOBAL STYLES               */
+/* ================================== */
+/* 
+ * Implementation follows styling rules defined in:
+ * ../../../../../../DOCS/STUDIO-DOCS/STUDIO-STYLING/STYLING-RULES.md
+ * All CSS variables and component architecture based on Studio Design System
+ */
+
+/* ================================== */
+/* CSS VARIABLES & THEME SYSTEM      */
+/* ================================== */
+
+:root {
+    /* Base Colors (Neutrals) - Base: rgb(115, 115, 115) */
+    --studio-base-50: #ffffff;
+    --studio-base-100: #f8f8f8;
+    --studio-base-200: #e8e8e8;
+    --studio-base-300: #d1d1d1;
+    --studio-base-400: #a0a0a0;
+    --studio-base-500: #737373;
+    --studio-base-600: #525252;
+    --studio-base-700: #404040;
+    --studio-base-800: #262626;
+    --studio-base-900: #171717;
+    --studio-base-950: #000000;
+
+    /* Primary Colors (Studio Teal) - Base: rgb(39, 104, 96) */
+    --studio-primary-50: #f0fdfa;
+    --studio-primary-100: #ccfbf1;
+    --studio-primary-200: #99f6e4;
+    --studio-primary-300: #5eead4;
+    --studio-primary-400: #2dd4bf;
+    --studio-primary-500: rgb(39, 104, 96);
+    --studio-primary-600: #0d9488;
+    --studio-primary-700: #0f766e;
+    --studio-primary-800: #115e59;
+    --studio-primary-900: #134e4a;
+
+    /* Secondary Colors (Studio Green) - Base: rgb(112, 153, 51) */
+    --studio-secondary-50: #f7fee7;
+    --studio-secondary-100: #ecfccb;
+    --studio-secondary-200: #d9f99d;
+    --studio-secondary-300: #bef264;
+    --studio-secondary-400: #a3e635;
+    --studio-secondary-500: rgb(112, 153, 51);
+    --studio-secondary-600: #65a30d;
+    --studio-secondary-700: #4d7c0f;
+    --studio-secondary-800: #3f6212;
+    --studio-secondary-900: #365314;
+    
+    /* Typography - Semantic Text System */
+    --studio-font-family: 'Montserrat', system-ui, sans-serif;
+    
+    /* Typography Sizes */
+    --studio-text-metadata: 0.75rem;        /* 12px - nav section titles, timestamps */
+    --studio-text-interface: 0.875rem;      /* 14px - nav items, buttons, format tabs, form labels */
+    --studio-text-body: 1rem;               /* 16px - main body text, default size */
+    --studio-text-description: 1.0625rem;   /* 17px - section descriptions, help text */
+    --studio-text-card-title: 1.125rem;     /* 18px - card titles, component headers */
+    --studio-text-section-title: 1.25rem;   /* 20px - section titles in main content */
+    --studio-text-icon: 1.5rem;             /* 24px - icon font sizes in navigation */
+    --studio-text-page-title: 1.875rem;     /* 30px - main page title with gradient */
+    --studio-text-accent-icon: 2rem;        /* 32px - large accent icons */
+
+    /* Border Radius */
+    --studio-radius-sm: 0.375rem;    /* Small elements: nav items, dots, tabs */
+    --studio-radius: 0.5rem;         /* Standard controls: forms, buttons, sliders */
+    --studio-radius-md: 0.625rem;    /* Medium elements: close buttons */
+    --studio-radius-lg: 0.75rem;     /* Important controls: icons, swatches */
+    --studio-radius-xl: 1rem;        /* Major containers: cards, headers */
+
+    /* Border Thickness */
+    --studio-border-thin: 1px;      /* Forms, buttons, small UI elements */
+    --studio-border-medium: 2px;    /* Controls, toggles, interactive elements */
+    --studio-border-thick: 3px;     /* Cards, primary content elements */
+
+    /* Spacing Scale */
+    --studio-space-1: 0.25rem;     /* Micro spacing */
+    --studio-space-2: 0.5rem;      /* Tight spacing */
+    --studio-space-3: 0.75rem;     /* Element spacing */
+    --studio-space-4: 1rem;        /* Container spacing */
+    --studio-space-5: 2rem;        /* Section spacing */
+    --studio-space-6: 3rem;        /* Content spacing */
+    --studio-space-8: 4rem;        /* Large spacing */
+    --studio-space-10: 5rem;       /* Extra large spacing */
+    --studio-space-12: 6rem;       /* Maximum spacing */
+}
+
+/* Light Mode Theme Colors */
+:root, [data-theme="light"] {
+    /* Background Colors */
+    --studio-bg-main: var(--studio-base-50);
+    --studio-bg-header: var(--studio-base-200);
+    --studio-bg-section-header: var(--studio-base-200);
+    --studio-bg-sidebar: var(--studio-base-100);
+    --studio-bg-sidebar-header: var(--studio-base-300);
+    --studio-bg-card: var(--studio-base-200);
+    --studio-bg-controls: var(--studio-base-100);
+    --studio-bg-input: var(--studio-base-200);
+    --studio-bg-button: var(--studio-base-300);
+    
+    /* Text Colors */
+    --studio-text-content: var(--studio-base-950);
+    --studio-text-supporting: var(--studio-base-700);
+    --studio-text-subtle: var(--studio-base-600);
+    --studio-text-navigation: var(--studio-base-900);
+    --studio-text-heading: var(--studio-base-900);
+    --studio-text-emphasis: var(--studio-base-950);
+    
+    /* Border Colors */
+    --studio-border-ui: var(--studio-base-300);
+    --studio-border-interactive: var(--studio-base-400);
+    --studio-border-primary: var(--studio-base-300);
+    --studio-border-accent: var(--studio-base-700);
+    --studio-border-ghost: var(--studio-base-400);
+    --studio-border-ghost-hover: var(--studio-base-500);
+}
+
+/* Dark Mode Theme Colors */
+[data-theme="dark"] {
+    /* Background Colors */
+    --studio-bg-main: var(--studio-base-950);
+    --studio-bg-header: var(--studio-base-800);
+    --studio-bg-section-header: var(--studio-base-800);
+    --studio-bg-sidebar: var(--studio-base-900);
+    --studio-bg-sidebar-header: var(--studio-base-700);
+    --studio-bg-card: var(--studio-base-800);
+    --studio-bg-controls: var(--studio-base-900);
+    --studio-bg-input: var(--studio-base-800);
+    --studio-bg-button: var(--studio-base-700);
+    
+    /* Text Colors */
+    --studio-text-content: var(--studio-base-50);
+    --studio-text-supporting: var(--studio-base-300);
+    --studio-text-subtle: var(--studio-base-400);
+    --studio-text-navigation: var(--studio-base-100);
+    --studio-text-emphasis: var(--studio-base-50);
+    --studio-text-heading: var(--studio-base-100);
+    
+    /* Border Colors */
+    --studio-border-ui: var(--studio-base-500);
+    --studio-border-interactive: var(--studio-base-600);
+    --studio-border-primary: var(--studio-base-700);
+    --studio-border-accent: var(--studio-base-50);
+    --studio-border-ghost: var(--studio-base-600);
+    --studio-border-ghost-hover: var(--studio-base-500);
+}
+
+/* ================================== */
+/* BASE STYLES & RESET               */
+/* ================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--studio-font-family);
+    background: var(--studio-bg-main);
+    color: var(--studio-text-content);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* WordPress Admin Specific */
+body.studio-admin-page #wpcontent {
+    padding-left: 0;
+}
+
+body.studio-admin-page #wpfooter {
+    display: none;
+}
+
+/* Studio Admin Wrapper */
+.studio-admin-wrapper {
+    margin-left: -20px;
+    margin-top: -32px;
+    height: calc(100vh - 32px);
+}
