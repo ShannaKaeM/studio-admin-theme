@@ -107,7 +107,9 @@ class ShadowPlugin {
             'pluginUrl' => SHADOW_PLUGIN_URL,
             'isAdmin' => is_admin(),
             'currentUser' => wp_get_current_user()->ID,
-            'version' => SHADOW_PLUGIN_VERSION
+            'version' => SHADOW_PLUGIN_VERSION,
+            'tailwindApiUrl' => rest_url('shadow-plugin/v1/tailwind-styles'),
+            'hasTailwindCSS' => $this->hasTailwindCSS()
         ]);
         
         // Add server data to page for web component props
@@ -138,6 +140,12 @@ class ShadowPlugin {
             'callback' => [$this, 'apiSaveData'],
             'permission_callback' => [$this, 'apiPermissionCheck']
         ]);
+        
+        // Register Tailwind CSS API routes
+        if (class_exists('ShadowPlugin_Tailwind_Controller')) {
+            $tailwind_controller = new ShadowPlugin_Tailwind_Controller();
+            $tailwind_controller->register_routes();
+        }
     }
     
     /**
@@ -330,11 +338,22 @@ class ShadowPlugin {
     }
     
     /**
+     * Check if Tailwind CSS file exists
+     */
+    private function hasTailwindCSS() {
+        if (class_exists('ShadowPlugin_Tailwind_Controller')) {
+            $controller = new ShadowPlugin_Tailwind_Controller();
+            return $controller->css_file_exists();
+        }
+        return false;
+    }
+    
+    /**
      * Load required dependencies
      */
     private function loadDependencies() {
         // Load additional PHP classes here
-        // require_once SHADOW_PLUGIN_DIR . 'includes/class-api.php';
+        require_once SHADOW_PLUGIN_DIR . 'includes/api/class-tailwind-controller.php';
         // require_once SHADOW_PLUGIN_DIR . 'includes/class-admin.php';
     }
 }
