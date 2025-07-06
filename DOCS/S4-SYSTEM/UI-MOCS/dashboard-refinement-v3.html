@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- @format -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio4 Dashboard v3 - Tailwind 4 @theme Approach</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @theme {
+            /* FONT FAMILIES */
+            --font-montserrat: 'Montserrat', sans-serif;
+            
+            /* BRAND COLORS - HSL with proper TW4 naming */
+            --color-primary-50: hsl(337, 35%, 98%);
+            --color-primary-100: hsl(337, 35%, 95%);
+            --color-primary-200: hsl(337, 35%, 85%);
+            --color-primary-300: hsl(337, 35%, 75%);
+            --color-primary-400: hsl(337, 35%, 65%);
+            --color-primary-500: hsl(337, 35%, 52%);
+            --color-primary-600: hsl(337, 35%, 42%);
+            --color-primary-700: hsl(337, 35%, 32%);
+            --color-primary-800: hsl(337, 35%, 22%);
+            --color-primary-900: hsl(337, 35%, 12%);
+            --color-primary-950: hsl(337, 35%, 6%);
+            
+            --color-secondary-50: hsl(29, 44%, 98%);
+            --color-secondary-100: hsl(29, 44%, 95%);
+            --color-secondary-200: hsl(29, 44%, 85%);
+            --color-secondary-300: hsl(29, 44%, 75%);
+            --color-secondary-400: hsl(29, 44%, 65%);
+            --color-secondary-500: hsl(29, 44%, 53%);
+            --color-secondary-600: hsl(29, 44%, 43%);
+            --color-secondary-700: hsl(29, 44%, 33%);
+            --color-secondary-800: hsl(29, 44%, 23%);
+            --color-secondary-900: hsl(29, 44%, 13%);
+            --color-secondary-950: hsl(29, 44%, 6%);
+            
+            --color-neutral-50: hsl(0, 0%, 98%);
+            --color-neutral-100: hsl(0, 0%, 95%);
+            --color-neutral-200: hsl(0, 0%, 90%);
+            --color-neutral-300: hsl(0, 0%, 80%);
+            --color-neutral-400: hsl(0, 0%, 60%);
+            --color-neutral-500: hsl(0, 0%, 50%);
+            --color-neutral-600: hsl(0, 0%, 40%);
+            --color-neutral-700: hsl(0, 0%, 25%);
+            --color-neutral-800: hsl(0, 0%, 15%);
+            --color-neutral-900: hsl(0, 0%, 10%);
+            --color-neutral-950: hsl(0, 0%, 6%);
+            
+            --color-base-50: hsl(0, 0%, 100%);
+            --color-base-100: hsl(0, 0%, 98%);
+            --color-base-200: hsl(0, 0%, 95%);
+            --color-base-300: hsl(0, 0%, 90%);
+            --color-base-400: hsl(0, 0%, 85%);
+            --color-base-500: hsl(0, 0%, 80%);
+            --color-base-600: hsl(0, 0%, 70%);
+            --color-base-700: hsl(0, 0%, 60%);
+            --color-base-800: hsl(0, 0%, 50%);
+            --color-base-900: hsl(0, 0%, 40%);
+            --color-base-950: hsl(0, 0%, 30%);
+            
+            /* BORDER WIDTHS */
+            --width-sm: 1px;
+            --width-md: 3px;
+            --width-lg: 5px;
+        }
+        
+        /* Text Utility Classes */
+        @utility text-brand-title {
+            font-size: var(--text-brand-title);
+            font-weight: 500;
+            line-height: 1.33;
+            text-transform: lowercase;
+        }
+        
+        @utility text-brand-subtitle {
+            font-size: var(--text-brand-subtitle);
+            font-weight: 400;
+            line-height: 1.43;
+        }
+        
+        @utility text-nav {
+            font-size: var(--text-nav);
+            font-weight: 300;
+            line-height: 1.43;
+        }
+        
+        @utility text-label {
+            font-size: var(--text-label);
+            font-weight: 500;
+            line-height: 1.33;
+        }
+        
+        @utility text-caption {
+            font-size: var(--text-caption);
+            font-weight: 400;
+            line-height: 1.33;
+        }
+        
+        /* Custom gradient for S4 logo */
+        .s4-gradient {
+            background: linear-gradient(135deg, hsl(337, 35%, 52%), hsl(29, 44%, 53%));
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: var(--color-neutral-900);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--color-neutral-600);
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-500);
+        }
+        
+        /* Custom range slider styles */
+        .slider-primary::-webkit-slider-thumb {
+            appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--color-primary-500);
+            cursor: pointer;
+            border: 2px solid var(--color-primary-50);
+            box-shadow: 0 0 0 1px var(--color-neutral-700);
+        }
+        
+        .slider-primary::-moz-range-thumb {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--color-primary-500);
+            cursor: pointer;
+            border: 2px solid var(--color-primary-50);
+            box-shadow: 0 0 0 1px var(--color-neutral-700);
+        }
+    </style>
+</head>
+<body class="bg-neutral-950 text-neutral-50 font-montserrat overflow-hidden h-screen">
+    
+    <!-- Main Container -->
+    <div class="flex h-screen">
+        
+        <!-- Sidebar - 400px with semantic color pairing -->
+        <aside class="w-[400px] bg-neutral-900 text-neutral-100 border-r-lg border-neutral-700 flex flex-col">
+            
+            <!-- Header -->
+            <div class="px-8 py-6 bg-neutral-950">
+                <div class="flex items-center gap-4">
+                    <!-- S4 Logo SVG with Studio4 gradient -->
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg width="48" height="48" viewBox="0 0 103 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3.5" y="3.49963" width="95.6918" height="96.1796" rx="15.22" stroke="url(#paint0_linear_studio)" stroke-width="7"/>
+                            <path d="M13.9529 17.8661V22.3476C13.9529 23.343 15.1542 23.8438 15.8612 23.1432L22.5479 16.5173C23.2585 15.8132 22.7599 14.6017 21.7596 14.6017H17.2788C16.9873 14.6017 16.7072 14.7154 16.4982 14.9186L14.2922 17.0631C14.0753 17.2739 13.9529 17.5636 13.9529 17.8661Z" fill="oklch(0.568 0.143 7.2)" fill-opacity="0.7"/>
+                            <path d="M88.4811 17.8661V22.3476C88.4811 23.343 87.2798 23.8438 86.5727 23.1432L79.886 16.5173C79.1755 15.8132 79.6741 14.6017 80.6744 14.6017H85.1551C85.4467 14.6017 85.7268 14.7154 85.9358 14.9186L88.1418 17.0631C88.3587 17.2739 88.4811 17.5636 88.4811 17.8661Z" fill="oklch(0.568 0.143 7.2)" fill-opacity="0.7"/>
+                            <path d="M17.2173 88.1299H21.6988C22.6942 88.1299 23.195 86.9286 22.4944 86.2215L15.8684 79.5348C15.1644 78.8243 13.9529 79.3229 13.9529 80.3232V84.8039C13.9529 85.0955 14.0666 85.3756 14.2698 85.5846L16.4143 87.7906C16.6251 88.0075 16.9148 88.1299 17.2173 88.1299Z" fill="oklch(0.568 0.143 7.2)" fill-opacity="0.7"/>
+                            <path d="M85.2166 88.1299H80.7351C79.7398 88.1299 79.239 86.9286 79.9396 86.2215L86.5655 79.5348C87.2696 78.8243 88.4811 79.3229 88.4811 80.3232V84.8039C88.4811 85.0955 88.3674 85.3756 88.1642 85.5846L86.0197 87.7906C85.8088 88.0075 85.5192 88.1299 85.2166 88.1299Z" fill="oklch(0.568 0.143 7.2)" fill-opacity="0.7"/>
+                            <path d="M66.2096 37.8214C65.8459 35.156 64.3459 33.0913 61.7096 31.6272C59.0732 30.1444 55.755 29.4029 51.755 29.4029C48.8914 29.4029 46.4141 29.7784 44.3232 30.5292C42.2323 31.2612 40.6073 32.2748 39.4482 33.57C38.3118 34.8463 37.7437 36.301 37.7437 37.9341C37.7437 39.3043 38.13 40.4868 38.9027 41.4816C39.6982 42.4765 40.7323 43.3117 42.005 43.9875C43.3005 44.6444 44.6868 45.1982 46.1641 45.6486C47.6414 46.0804 49.0618 46.437 50.4255 46.7186L57.2437 48.1826C59.4709 48.6331 61.755 49.2432 64.0959 50.0127C66.4368 50.7823 68.6073 51.7959 70.6073 53.0535C72.6073 54.3111 74.2209 55.8691 75.4482 57.7273C76.6982 59.5856 77.3232 61.8099 77.3232 64.4002C77.3232 67.6662 76.3005 70.5662 74.255 73.1002C72.2323 75.6342 69.2891 77.6332 65.4255 79.0973C61.5846 80.5614 56.9368 81.2935 51.4823 81.2935C46.255 81.2935 41.7323 80.6083 37.9141 79.2381C34.0959 77.8679 31.1073 75.9251 28.9482 73.4099C26.7891 70.8759 25.5959 67.8727 25.3687 64.4002H35.9368C36.1414 66.4837 36.9596 68.2199 38.3914 69.6089C39.8459 70.9792 41.6982 72.0022 43.9482 72.6779C46.2209 73.3348 48.7096 73.6633 51.4141 73.6633C54.3914 73.6633 57.0391 73.2785 59.3573 72.5089C61.6982 71.7206 63.5391 70.6319 64.88 69.2429C66.2209 67.8351 66.8914 66.1927 66.8914 64.3157C66.8914 62.6076 66.3005 61.2092 65.1187 60.1205C63.9596 59.0319 62.38 58.1309 60.38 57.4176C58.4027 56.7044 56.1641 56.0756 53.6641 55.5312L45.4141 53.673C39.8232 52.4153 35.3914 50.5665 32.1187 48.1263C28.8687 45.6862 27.2437 42.4577 27.2437 38.4408C27.2437 35.1185 28.3346 32.2185 30.5164 29.7408C32.6982 27.2631 35.6527 25.3392 39.38 23.9689C43.1073 22.5799 47.3118 21.8854 51.9937 21.8854C56.7209 21.8854 60.8914 22.5706 64.505 23.9408C68.1414 25.311 71.005 27.1974 73.0959 29.6C75.1868 31.9839 76.2777 34.7243 76.3687 37.8214H66.2096Z" fill="url(#paint1_linear_studio)"/>
+                            <defs>
+                                <linearGradient id="paint0_linear_studio" x1="1.23267e-06" y1="8.7248" x2="99.6891" y2="102.708" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="oklch(0.568 0.143 7.2)"/>
+                                    <stop offset="1" stop-color="oklch(0.645 0.116 60.5)"/>
+                                </linearGradient>
+                                <linearGradient id="paint1_linear_studio" x1="25.3687" y1="26.9091" x2="81.8625" y2="73.7083" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="oklch(0.568 0.143 7.2)"/>
+                                    <stop offset="1" stop-color="oklch(0.645 0.116 60.5)"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h1 class="text-brand-title text-neutral-50">studio4</h1>
+                        <p class="text-brand-subtitle text-neutral-300">Visual Theme Builder</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="flex bg-neutral-800">
+                <button class="flex-1 px-4 py-3 text-nav text-neutral-50 hover:border-b-md hover:border-primary-500 hover:bg-neutral-700 
+                active:border-b-md active:border-primary-500 active:bg-neutral-700 focus:border-b-md focus:border-primary-500 focus:bg-neutral-700 
+                transition-colors">
+                    Theme
+                </button>
+                <button class="flex-1 px-4 py-3 text-nav text-neutral-300 hover:border-b-md hover:border-primary-500 hover:bg-neutral-700 
+                active:border-b-md active:border-primary-500 active:bg-neutral-700 focus:border-b-md focus:border-primary-500 focus:bg-neutral-700 
+                transition-colors">
+                    Presets
+                </button>
+                <button class="flex-1 px-4 py-3 text-nav text-neutral-300 hover:border-b-md hover:border-primary-500 hover:bg-neutral-700 
+                active:border-b-md active:border-primary-500 active:bg-neutral-700 focus:border-b-md focus:border-primary-500 focus:bg-neutral-700 
+                transition-colors">
+                    Components
+                </button>
+                <button class="flex-1 px-4 py-3 text-nav text-neutral-300 hover:border-b-md hover:border-primary-500 hover:bg-neutral-700 
+                active:border-b-md active:border-primary-500 active:bg-neutral-700 focus:border-b-md focus:border-primary-500 focus:bg-neutral-700 
+                transition-colors">
+                    Sections
+                </button>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                
+                <!-- Colors Section - Expanded -->
+                <div class="bg-neutral-700">
+                    <button class="w-full px-8 py-4 flex items-center justify-between hover:bg-neutral-600 hover:border-b-md hover:border-primary-500 active:border-b-md active:border-primary-500 active:bg-neutral-600 
+                    transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full s4-gradient shadow-sm"></div>
+                            <span class="text-label text-neutral-100">Brand Colors</span>
+                        </div>
+                        <svg class="w-4 h-4 text-neutral-400 rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Expanded Colors Content -->
+                    <div class="px-8 py-4 bg-neutral-800 space-y-6">
+                        
+                        <!-- Color Selection Dropdown -->
+                        <div class="space-y-2">
+                            <label class="text-label text-neutral-200">Current Color</label>
+                            <select class="w-full px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-neutral-100 text-nav focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors">
+                                <option>Color 1 - Primary Brand</option>
+                                <option>Color 2 - Secondary Brand</option>
+                                <option>Color 3 - Neutral (Text/Surfaces)</option>
+                                <option>Color 4 - Base (Backgrounds)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Current Color Display -->
+                        <div class="space-y-3">
+                            <label class="text-label text-neutral-200">Color Preview</label>
+                            <div class="flex gap-3">
+                                <div class="flex-1 h-16 bg-primary-500 rounded-lg border-2 border-neutral-600 shadow-inner"></div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="font-mono bg-neutral-700 text-neutral-200 px-2 py-1 rounded text-caption">
+                                        hsl(337, 35%, 52%)
+                                    </span>
+                                    <span class="font-mono bg-neutral-700 text-neutral-200 px-2 py-1 rounded text-caption">
+                                        Studio4 Pink
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- HSL Controls -->
+                        <div class="space-y-4 bg-neutral-900 text-neutral-200 p-4 rounded-lg border border-neutral-700">
+                            <h4 class="text-label text-neutral-200 font-medium">Color Adjustments</h4>
+                            
+                            <!-- Hue Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-caption text-neutral-200 font-medium">Hue</span>
+                                    <span class="font-mono bg-neutral-800 text-neutral-200 px-2 py-0.5 rounded text-caption">337°</span>
+                                </div>
+                                <input type="range" min="0" max="360" value="337" 
+                                       class="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer slider-primary">
+                            </div>
+                            
+                            <!-- Saturation Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-caption text-neutral-200 font-medium">Saturation</span>
+                                    <span class="font-mono bg-neutral-800 text-neutral-200 px-2 py-0.5 rounded text-caption">35%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value="35" 
+                                       class="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer slider-primary">
+                            </div>
+                            
+                            <!-- Lightness Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-caption text-neutral-200 font-medium">Lightness</span>
+                                    <span class="font-mono bg-neutral-800 text-neutral-200 px-2 py-0.5 rounded text-caption">52%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value="52" 
+                                       class="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer slider-primary">
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3 pt-2">
+                            <button class="flex-1 px-4 py-2.5 s4-gradient text-white rounded-lg text-nav font-medium hover:opacity-90 shadow-lg transition-all">
+                                Apply to Theme
+                            </button>
+                            <button class="px-4 py-2.5 bg-neutral-700 text-neutral-200 rounded-lg text-nav font-medium hover:bg-neutral-600 border border-neutral-600 transition-colors">
+                                Reset
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <!-- Typography Section - Collapsed -->
+                <div class="border-b border-neutral-700">
+                    <button class="w-full px-8 py-4 flex items-center justify-between hover:bg-neutral-600 hover:border-b-md hover:border-primary-500 active:border-b-md active:border-primary-500 active:bg-neutral-600 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded bg-neutral-700 flex items-center justify-center font-bold text-neutral-200 text-caption">
+                                Aa
+                            </div>
+                            <span class="text-label text-neutral-200 font-medium">Typography</span>
+                        </div>
+                        <svg class="w-4 h-4 text-neutral-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Global Elements Section - Collapsed -->
+                <div class="border-b border-neutral-700">
+                    <button class="w-full px-8 py-4 flex items-center justify-between hover:bg-neutral-600 hover:border-b-md hover:border-primary-500 active:border-b-md active:border-primary-500 active:bg-neutral-600 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded bg-neutral-700 flex items-center justify-center text-neutral-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                </svg>
+                            </div>
+                            <span class="text-label text-neutral-200 font-medium">Global Elements</span>
+                        </div>
+                        <svg class="w-4 h-4 text-neutral-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Presets Section - Collapsed -->
+                <div class="border-b border-neutral-700">
+                    <button class="w-full px-8 py-4 flex items-center justify-between hover:bg-neutral-600 hover:border-b-md hover:border-primary-500 active:border-b-md active:border-primary-500 active:bg-neutral-600 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded bg-neutral-700 flex items-center justify-center text-neutral-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                                </svg>
+                            </div>
+                            <span class="text-label text-neutral-200 font-medium">Color Presets</span>
+                        </div>
+                        <svg class="w-4 h-4 text-neutral-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+            </div>
+            
+            <!-- Footer Actions -->
+            <div class="px-8 py-6 border-t border-neutral-700 space-y-3 bg-neutral-950">
+                <button class="w-full px-4 py-2 bg-neutral-800 text-neutral-200 rounded-lg font-medium hover:bg-neutral-700 flex items-center justify-center gap-2 border border-neutral-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                    </svg>
+                    Fullscreen
+                    <span class="text-caption text-neutral-400">(Shift+F)</span>
+                </button>
+                <button class="w-full px-4 py-2 s4-gradient text-white rounded-lg font-medium hover:opacity-90 shadow-lg transition-all">
+                    Export Theme
+                </button>
+            </div>
+            
+        </aside>
+        
+        <!-- Main Preview Area -->
+        <div class="flex-1 bg-neutral-950 text-neutral-200 flex flex-col">
+            
+            <!-- Preview Header -->
+            <div class="border-b border-neutral-700 px-6 py-4 flex items-center justify-between">
+                <!-- Mode Toggle -->
+                <div class="flex gap-1 bg-neutral-800 rounded-lg p-1">
+                    <button class="px-4 py-2 rounded-md text-nav font-medium bg-neutral-700 text-neutral-50 shadow-sm transition-colors">
+                        Preview
+                    </button>
+                    <button class="px-4 py-2 rounded-md text-nav font-medium text-neutral-400 hover:text-neutral-50 transition-colors">
+                        HTML
+                    </button>
+                    <button class="px-4 py-2 rounded-md text-nav font-medium text-neutral-400 hover:text-neutral-50 transition-colors">
+                        CSS
+                    </button>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2">
+                    <button class="p-2 hover:bg-neutral-800 rounded-md transition-colors text-neutral-400 hover:text-neutral-50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                    </button>
+                    <button class="p-2 hover:bg-neutral-800 rounded-md transition-colors text-neutral-400 hover:text-neutral-50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Preview Content -->
+            <div class="flex-1 p-8 overflow-y-auto custom-scrollbar">
+                
+                <!-- Tailwind 4 Demo Section -->
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-8 text-center text-neutral-50">Tailwind 4 @theme Demo</h2>
+                    
+                    <!-- Semantic Color Demonstration -->
+                    <div class="grid grid-cols-2 gap-6 mb-12">
+                        
+                        <!-- Sidebar Colors Demo -->
+                        <div class="bg-sidebar-header-bg text-sidebar-header-text rounded-xl p-6 border border-neutral-700">
+                            <h3 class="text-brand-title font-medium mb-4">Sidebar Header</h3>
+                            <p class="text-brand-subtitle mb-4">Uses bg-sidebar-header-bg + text-sidebar-header-text</p>
+                            <div class="bg-sidebar-nav-bg text-sidebar-nav-text p-4 rounded-lg">
+                                <p class="text-nav">Navigation: bg-sidebar-nav-bg + text-sidebar-nav-text</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Accordion Demo -->
+                        <div class="bg-accordion-button-bg text-accordion-button-text rounded-xl p-6 border border-neutral-700">
+                            <h3 class="text-brand-title font-medium mb-4">Accordion Button</h3>
+                            <p class="text-brand-subtitle mb-4">Uses bg-accordion-button-bg + text-accordion-button-text</p>
+                            <div class="bg-accordion-content-bg text-accordion-content-text p-4 rounded-lg">
+                                <p class="text-nav">Content: bg-accordion-content-bg + text-accordion-content-text</p>
+                            </div>
+                        </div>
+                        
+                        <!-- OKLCH Color Demo -->
+                        <div class="bg-primary-500 text-primary-50 rounded-xl p-6 shadow-lg">
+                            <h3 class="text-brand-title font-medium mb-4">Primary OKLCH</h3>
+                            <p class="text-brand-subtitle mb-4">oklch(0.568 0.143 7.2) - Studio4 Pink</p>
+                            <p class="text-nav">Better color manipulation than HSL</p>
+                        </div>
+                        
+                        <!-- Secondary Color Demo -->
+                        <div class="bg-secondary-500 text-secondary-50 rounded-xl p-6 shadow-lg">
+                            <h3 class="text-brand-title font-medium mb-4">Secondary OKLCH</h3>
+                            <p class="text-brand-subtitle mb-4">oklch(0.645 0.116 60.5) - Studio4 Tangerine</p>
+                            <p class="text-nav">Consistent color space for gradients</p>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Typography Scale Demo -->
+                    <div class="bg-neutral-900 text-neutral-50 rounded-xl border border-neutral-700 p-8">
+                        <h3 class="text-brand-title font-medium mb-6">Typography Scale Demo</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="text-brand-title font-medium">Brand Title (text-brand-title)</div>
+                            <div class="text-brand-subtitle">Brand Subtitle (text-brand-subtitle)</div>
+                            <div class="text-nav">Navigation Text (text-nav)</div>
+                            <div class="text-label font-medium">Label Text (text-label)</div>
+                            <div class="text-caption">Caption Text (text-caption)</div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-neutral-800 rounded-lg">
+                            <p class="text-nav text-neutral-200">All typography uses semantic names defined in @theme directive</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</body>
+</html>
