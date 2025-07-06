@@ -5,6 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   
+  define: {
+    'process.env.NODE_ENV': '"development"'
+  },
+  
   build: {
     outDir: 'dist/js',
     emptyOutDir: false,
@@ -20,8 +24,8 @@ export default defineConfig({
         globals: {}
       }
     },
-    sourcemap: false,
-    minify: 'terser'
+    sourcemap: true,
+    minify: false
   },
   
   server: {

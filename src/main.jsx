@@ -1,32 +1,78 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import r2wc from '@r2wc/react-to-web-component';
 import { ShadowApp } from './ShadowApp';
+import './styles/main.css';
 
-// Create the web component with props support
-const ShadowPluginElement = r2wc(ShadowApp, React, ReactDOM, {
-  shadow: 'open',
-  props: {
-    // Define the props that can be passed via attributes
-    userRole: 'string',
-    siteUrl: 'string', 
-    userId: 'number',
-    settings: 'json',
-    apiNonce: 'string',
-    pluginVersion: 'string',
-    isAdmin: 'boolean',
-    theme: 'string'
+// Custom web component with proper shadow DOM
+class PluginBoilerplateElement extends HTMLElement {
+  constructor() {
+    super();
+    
+    // Create shadow DOM
+    this.attachShadow({ mode: 'open' });
+    
+    this.root = null;
   }
-});
+  
+  connectedCallback() {
+    this.render();
+  }
+  
+  disconnectedCallback() {
+    if (this.root) {
+      this.root.unmount();
+    }
+  }
+  
+  attributeChangedCallback() {
+    this.render();
+  }
+  
+  static get observedAttributes() {
+    return ['user-role', 'site-url', 'user-id', 'settings', 'api-nonce', 'plugin-version', 'is-admin', 'theme', 'tailwind-css'];
+  }
+  
+  render() {
+    // Safe JSON parsing
+    let settings = {};
+    try {
+      const settingsAttr = this.getAttribute('settings');
+      if (settingsAttr && settingsAttr.trim() !== '') {
+        settings = JSON.parse(settingsAttr);
+      }
+    } catch (e) {
+      // Silently handle invalid JSON
+      settings = {};
+    }
+
+    const props = {
+      userRole: this.getAttribute('user-role') || 'guest',
+      siteUrl: this.getAttribute('site-url') || window.location.origin,
+      userId: parseInt(this.getAttribute('user-id')) || 0,
+      settings: settings,
+      apiNonce: this.getAttribute('api-nonce') || '',
+      pluginVersion: this.getAttribute('plugin-version') || '1.0.0',
+      isAdmin: this.getAttribute('is-admin') === 'true',
+      theme: this.getAttribute('theme') || 'dark',
+      tailwindCSS: this.getAttribute('tailwind-css') || ''
+    };
+    
+    if (!this.root) {
+      this.root = ReactDOM.createRoot(this.shadowRoot);
+    }
+    
+    this.root.render(React.createElement(ShadowApp, props));
+  }
+}
 
 // Register the web component
-customElements.define('shadow-plugin-panel', ShadowPluginElement);
+customElements.define('plugin-boilerplate', PluginBoilerplateElement);
 
 // Export for global access
 window.ShadowPlugin = {
   ShadowApp,
   init: () => {
-    console.log('Shadow Plugin Boilerplate initialized');
+    // Plugin initialized
   }
 };
 

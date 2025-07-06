@@ -65,10 +65,8 @@ export function Panel() {
         setSettingsOpen(true);
         break;
       case 'reload-styles':
-        // Reload Tailwind styles
-        import('../TailwindLoader.jsx').then(({ reloadTailwindStyles }) => {
-          reloadTailwindStyles();
-        });
+        // Reload Tailwind styles - styles are now server-side injected
+        console.log('Tailwind styles are now injected server-side. Refresh the page to reload styles.');
         break;
       default:
         // Default action - you can extend this
@@ -134,7 +132,7 @@ export function Panel() {
           <>
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999998]"
+              className="fixed inset-0 bg-black/80 z-[9999998]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -144,9 +142,10 @@ export function Panel() {
             {/* Panel */}
             <motion.div
               className={cn(
-                "bg-gray-900 border border-gray-700 shadow-2xl",
+                "bg-background border border-border shadow-lg",
                 "flex flex-col overflow-hidden",
-                panelPosition === 'center' ? "rounded-xl" : ""
+                panelPosition === 'center' ? "rounded-lg" : "",
+                "max-h-screen"
               )}
               style={getPanelStyles()}
               {...getAnimationConfig()}
@@ -195,12 +194,12 @@ function FloatingActionButton() {
     <motion.button
       onClick={openPanel}
       className={cn(
-        "fixed top-5 right-5 z-[9999998]",
-        "w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600",
-        "text-white rounded-xl shadow-2xl",
+        "fixed bottom-5 right-5 z-[9999998]",
+        "w-12 h-12 bg-muted border border-border",
+        "text-muted-foreground rounded-xl shadow-lg",
         "flex items-center justify-center",
-        "hover:from-blue-700 hover:to-purple-700",
-        "focus:outline-none focus:ring-4 focus:ring-blue-500/50",
+        "hover:bg-accent hover:text-accent-foreground",
+        "focus:outline-none focus:ring-2 focus:ring-ring",
         "transition-all duration-200"
       )}
       initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -226,10 +225,10 @@ function FloatingActionButton() {
 
       {/* Pulse Ring */}
       <motion.div
-        className="absolute inset-0 rounded-xl border-2 border-blue-400"
+        className="absolute inset-0 rounded-xl border-2 border-border"
         animate={{
           scale: [1, 1.2, 1],
-          opacity: [0.7, 0, 0.7]
+          opacity: [0.5, 0, 0.5]
         }}
         transition={{
           duration: 2,

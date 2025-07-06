@@ -7,23 +7,25 @@ export function PanelHeader({ onClose, onSettingsClick }) {
   const { settings } = useStore();
 
   return (
-    <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-900/95 backdrop-blur-sm">
+    <div className="flex items-center justify-between p-6 border-b border-border bg-background">
       {/* Logo and Title */}
       <div className="flex items-center space-x-3">
         <motion.div
-          className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          whileTap={{ scale: 0.9 }}
+          className="flex-shrink-0 w-8 h-8 bg-primary rounded-md flex items-center justify-center"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <span className="text-white text-lg font-bold">🚀</span>
+          <svg className="w-4 h-4 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
         </motion.div>
         
         <div>
-          <h2 className="text-lg font-semibold text-white leading-tight">
-            Shadow Plugin
+          <h2 className="text-lg font-semibold text-foreground leading-tight">
+            WordPress Plugin
           </h2>
-          <p className="text-xs text-gray-400">
-            React + Tailwind + Zustand Boilerplate
+          <p className="text-sm text-muted-foreground">
+            Modern UI Components
           </p>
         </div>
       </div>
@@ -37,8 +39,8 @@ export function PanelHeader({ onClose, onSettingsClick }) {
         <motion.button
           onClick={onSettingsClick}
           className={cn(
-            "p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800",
-            "transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            "p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary",
+            "transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring"
           )}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -64,8 +66,8 @@ export function PanelHeader({ onClose, onSettingsClick }) {
         <motion.button
           onClick={onClose}
           className={cn(
-            "p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800",
-            "transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            "p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary",
+            "transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring"
           )}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -133,13 +135,13 @@ function StatusIndicator() {
   const config = statusConfig[status];
 
   return (
-    <div className="flex items-center space-x-2 px-3 py-1 bg-gray-800 rounded-full">
+    <div className="flex items-center space-x-2 px-3 py-1 bg-secondary rounded-full">
       <motion.div
         className={cn("w-2 h-2 rounded-full", config.color, config.pulse)}
         animate={status === 'online' ? { scale: [1, 1.2, 1] } : {}}
         transition={{ duration: 2, repeat: Infinity }}
       />
-      <span className="text-xs text-gray-400 font-medium">
+      <span className="text-xs text-muted-foreground font-medium">
         {config.text}
       </span>
     </div>

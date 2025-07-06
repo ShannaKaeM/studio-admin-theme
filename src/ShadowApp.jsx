@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { useStore, useWordPressStore } from './storage/store.js';
-import { ShadowStyles } from './ShadowStyles.jsx';
-import { TailwindLoader } from './TailwindLoader.jsx';
 import { Panel } from './components/Panel.jsx';
 
 export function ShadowApp(props = {}) {
@@ -14,13 +12,14 @@ export function ShadowApp(props = {}) {
     apiNonce = '',
     pluginVersion = '1.0.0',
     isAdmin = false,
-    theme = 'dark'
+    theme = 'dark',
+    tailwindCSS = ''
   } = props;
 
   const { openPanel, updateSettings } = useStore();
   const { setServerData } = useWordPressStore();
 
-  // Initialize server data from props
+  // Initialize server data from props (only run once)
   useEffect(() => {
     setServerData({
       userRole,
@@ -30,14 +29,15 @@ export function ShadowApp(props = {}) {
       apiNonce,
       pluginVersion,
       isAdmin,
-      theme
+      theme,
+      tailwindCSS
     });
 
     // Update store settings with any server settings
     if (settings && Object.keys(settings).length > 0) {
       updateSettings(settings);
     }
-  }, [userRole, siteUrl, userId, settings, apiNonce, pluginVersion, isAdmin, theme, setServerData, updateSettings]);
+  }, []); // Empty dependency array to run only once
 
   // Auto-open panel on mount for demo (based on settings)
   useEffect(() => {
@@ -48,13 +48,16 @@ export function ShadowApp(props = {}) {
     }
   }, [openPanel]);
 
+  // Decode the base64 CSS content
+  const decodedCSS = tailwindCSS ? atob(tailwindCSS) : '';
+
+
   return (
     <>
-      {/* Load Tailwind styles dynamically */}
-      <TailwindLoader />
-      
-      {/* Load Raycast design system */}
-      <ShadowStyles />
+      {/* Inject Tailwind CSS directly as a style tag */}
+      {decodedCSS && (
+        <style dangerouslySetInnerHTML={{ __html: decodedCSS }} />
+      )}
       
       {/* Main panel component */}
       <Panel />

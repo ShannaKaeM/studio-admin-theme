@@ -4,19 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a WordPress plugin boilerplate that demonstrates modern React Shadow DOM architecture with a complete Raycast-inspired design system. The plugin creates web components using React that render in Shadow DOM to prevent WordPress style conflicts.
+This is a WordPress plugin boilerplate that demonstrates modern React Shadow DOM architecture with a complete ShadCN design system. The plugin creates web components using React that render in Shadow DOM to prevent WordPress style conflicts.
 
 ## Key Architecture
 
 ### React to Web Component System
-- **Entry Point**: `src/main.jsx` - Sets up the web component using `@r2wc/react-to-web-component`
-- **Main Component**: `src/ShadowApp.jsx` - The root React component that receives server-side props
-- **Design System**: `src/ShadowStyles.jsx` - Complete CSS-in-JS implementation of Raycast design system
-- **Web Component**: Registered as `<shadow-plugin-panel>` custom element
+- **Entry Point**: `src/main.jsx` - Custom HTMLElement class `PluginBoilerplateElement` that creates shadow DOM and renders React
+- **Main Component**: `src/ShadowApp.jsx` - Root React component that receives server-side props and injects CSS
+- **Design System**: `src/styles/main.css` - Tailwind CSS 4 with ShadCN design tokens using `@theme` directive
+- **Web Component**: Registered as `<plugin-boilerplate>` custom element
 
 ### Server-Side Integration
-- **WordPress Plugin**: `shadow-plugin.php` - Complete WordPress plugin with REST API, admin pages, and server data injection
-- **Props System**: Server data (user role, site URL, settings, etc.) passed to React via web component attributes
+- **WordPress Plugin**: `shadow-plugin.php` - Singleton plugin class with hooks, REST API, and CSS injection
+- **Props System**: Server data passed via base64-encoded attributes (non-escaped to prevent CSS corruption)
+- **CSS Injection**: Tailwind CSS served server-side and injected into shadow DOM via `<style>` tags
 - **REST API**: WordPress REST endpoints at `/wp-json/shadow-plugin/v1/`
 
 ## Development Commands
@@ -46,10 +47,11 @@ npm run test:integration  # Integration tests only
 
 ## Build Configuration
 
-- **Vite**: Configured to build as IIFE (Immediately Invoked Function Expression) for WordPress compatibility
-- **Output**: Single file `dist/js/shadow-plugin.js` that WordPress enqueues
-- **React**: Uses React 18 with modern features (hooks, concurrent rendering)
-- **Bundling**: All dependencies bundled together (no external dependencies)
+- **Vite**: Dual configuration - main build for JS (IIFE format) and CSS-only build via `vite.config.css.js`
+- **CSS Build**: Tailwind CSS 4 with `@tailwindcss/vite` plugin, uses `@source` directives to scan JSX files
+- **Output**: `dist/js/shadow-plugin.js` (1.4MB) and `dist/css/main.css` (30KB+ with ShadCN design system)
+- **React**: Uses React 18, renders directly into `shadowRoot` for proper isolation
+- **Bundling**: All dependencies bundled, no external dependencies required
 
 ## Key Libraries and Dependencies
 
@@ -57,38 +59,76 @@ npm run test:integration  # Integration tests only
 - **React 18**: Core framework with hooks and concurrent features
 - **Radix UI**: Headless UI components (Dialog, Tabs, Switch, Label, Dropdown Menu)
 - **Framer Motion**: Animation library for smooth transitions
-- **Tailwind CSS**: Utility-first CSS framework loaded dynamically via API
+- **Tailwind CSS 4**: Utility-first CSS with `@theme` directive for ShadCN design tokens
 - **Zustand**: Lightweight state management with localStorage persistence
 
 ### WordPress Integration
-- **@r2wc/react-to-web-component**: Converts React components to web components
-- **Shadow DOM**: Provides complete style isolation from WordPress themes
+- **Custom Web Component**: Hand-coded HTMLElement class (no @r2wc dependency)
+- **Shadow DOM**: Complete style isolation with server-side CSS injection
+- **Base64 CSS Transport**: CSS encoded and passed via attributes to prevent escaping issues
 
 ## Code Patterns
 
 ### WordPress Data to React Props
 ```php
-// In PHP - pass data via attributes
-<shadow-plugin-panel 
+// In PHP - pass data via attributes (CSS uses json_encode, not esc_attr)
+<plugin-boilerplate 
     user-role="<?php echo esc_attr($user_role); ?>"
     site-url="<?php echo esc_attr(home_url()); ?>"
     settings='<?php echo esc_attr(json_encode($settings)); ?>'
-></shadow-plugin-panel>
+    tailwind-css="<?php echo base64_encode($tailwind_css); ?>"
+></plugin-boilerplate>
 ```
 
 ```jsx
-// In React - receive as props
+// In React - props parsed from attributes in render() method
 export function ShadowApp(props = {}) {
-  const { userRole, siteUrl, settings } = props;
-  // Use server data in React
+  const { userRole, siteUrl, settings, tailwindCSS } = props;
+  const decodedCSS = tailwindCSS ? atob(tailwindCSS) : '';
+  
+  return (
+    <>
+      {decodedCSS && <style dangerouslySetInnerHTML={{ __html: decodedCSS }} />}
+      <Panel />
+    </>
+  );
 }
 ```
 
-### REST API Integration
-- **Endpoints**: `/wp-json/shadow-plugin/v1/data` (GET/POST)
-- **Tailwind API**: `/wp-json/shadow-plugin/v1/tailwind-styles` (GET) - Serves compiled CSS
-- **Authentication**: WordPress nonce verification
-- **Permissions**: `current_user_can('edit_posts')`
+### Tailwind CSS 4 with ShadCN Design System
+```css
+// src/styles/main.css - Tailwind 4 configuration
+@import "tailwindcss";
+@source "../**/*.jsx";
+@source "../**/*.js";
+
+@theme inline {
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(15% 0.007 285.82);
+  --color-primary: oklch(47.31% 0.099 264.05);
+  --color-muted: oklch(96% 0.006 285.82);
+  --color-border: oklch(90% 0.006 285.82);
+  --radius: 0.5rem;
+}
+```
+
+```jsx
+// Components use ShadCN design tokens
+<button className="bg-muted text-muted-foreground border border-border hover:bg-accent">
+  Click me
+</button>
+```
+
+### Critical CSS Escaping Rules
+```php
+// CORRECT: Use json_encode for base64 CSS in JavaScript
+panel.setAttribute('tailwind-css', <?php echo json_encode(base64_encode($tailwind_css)); ?>);
+
+// CORRECT: Use raw base64 for HTML attributes  
+tailwind-css="<?php echo base64_encode($tailwind_css); ?>"
+
+// WRONG: esc_js() or esc_attr() will corrupt the base64 CSS
+```
 
 ### State Management with Zustand
 ```jsx
@@ -101,10 +141,10 @@ function MyComponent() {
   const { serverData, makeApiCall } = useWordPressStore();
   
   return (
-    <div className="p-4 bg-blue-100 rounded-lg">
+    <div className="p-4 bg-muted rounded-lg border border-border">
       <button 
         onClick={togglePanel}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+        className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
       >
         Toggle Panel
       </button>
@@ -126,10 +166,10 @@ import { TailwindDemo } from './components/TailwindDemo.jsx';
 
 ```
 src/
-├── main.jsx              # Web component setup and registration
-├── ShadowApp.jsx         # Main app component (refactored to be minimal)
-├── ShadowStyles.jsx      # Complete Raycast design system (400+ lines)
-├── TailwindLoader.jsx    # Tailwind CSS API integration
+├── main.jsx              # Custom HTMLElement web component with shadow DOM
+├── ShadowApp.jsx         # Main app component with CSS injection
+├── ShadowStyles.jsx      # Legacy Raycast design (replaced by Tailwind)
+├── TailwindLoader.jsx    # Legacy API loader (replaced by server-side injection)
 ├── components/           # Modular React components
 │   ├── Panel.jsx         # Main panel with keyboard shortcuts
 │   ├── CommandPalette.jsx # Search and command interface
@@ -143,13 +183,13 @@ src/
 │   ├── helpers.js        # Utility functions
 │   └── keyboardShortcuts.js # Keyboard shortcut management
 └── styles/
-    └── main.css          # Tailwind CSS source file
+    └── main.css          # Tailwind 4 with @theme directive and ShadCN tokens
 
 includes/
 └── api/
     └── class-tailwind-controller.php  # WordPress API controller for CSS
 
-tests/                    # Comprehensive test suite
+tests/                    # Comprehensive test suite  
 ├── build-validation.js  # Build artifacts validation
 ├── component-tests.js   # React component architecture tests
 ├── integration-tests.js # WordPress integration tests
@@ -158,13 +198,14 @@ tests/                    # Comprehensive test suite
 
 dist/
 ├── js/
-│   └── shadow-plugin.js  # Compiled React bundle
+│   └── shadow-plugin.js  # Compiled React bundle (1.4MB)
 └── css/
-    └── main.css          # Compiled Tailwind CSS (12KB+)
+    └── main.css          # Compiled Tailwind CSS with ShadCN (30KB+)
 
-shadow-plugin.php         # WordPress plugin file
-vite.config.js           # Build configuration
-build-css.js             # Tailwind CSS build script
+shadow-plugin.php         # WordPress plugin file (singleton class)
+vite.config.js           # Main Vite configuration (IIFE format)
+vite.config.css.js       # CSS-only Vite configuration  
+build-css.js             # Tailwind CSS build script using Vite + @tailwindcss/vite
 package.json             # Dependencies and scripts
 ```
 
@@ -178,15 +219,16 @@ package.json             # Dependencies and scripts
 
 ### Component Architecture  
 - **Modular Design**: Each feature is a separate component
-- **Tailwind CSS**: Utility-first styling with dynamic loading
-- **Raycast Design**: Custom design system for professional UI
-- **Keyboard Navigation**: Full keyboard support with shortcuts
+- **ShadCN Design System**: Complete design system with semantic color tokens
+- **Tailwind CSS 4**: Uses `@theme` directive for custom design tokens
+- **Keyboard Navigation**: Full keyboard support with shortcuts via Framer Motion
+- **Floating Action Button**: Positioned bottom-right with monochromatic styling
 
 ### Shadow DOM Isolation
-- All styles are scoped to Shadow DOM
-- No WordPress theme conflicts
-- CSS variables defined in `:host` selector
-- Complete design system with typography, colors, spacing
+- **Complete Isolation**: All styles scoped to Shadow DOM using `:host` selector  
+- **Server-Side CSS**: CSS built server-side and injected via `<style>` tags
+- **No WordPress Conflicts**: Zero interference with WordPress themes
+- **Base64 Transport**: CSS safely encoded to prevent PHP escaping corruption
 
 ### Plugin Architecture
 - Singleton pattern for main plugin class
@@ -243,12 +285,18 @@ package.json             # Dependencies and scripts
 2. Implement callback functions with proper nonce verification
 3. Use `wp_localize_script` to pass API URLs to React
 
-### Tailwind CSS Development
-1. Modify Tailwind classes in React components
-2. Update `build-css.js` if you need additional utilities
-3. Run `npm run build:css` to recompile CSS
-4. CSS is automatically served via WordPress API at `/wp-json/shadow-plugin/v1/tailwind-styles`
-5. The `TailwindLoader` component fetches and injects styles into Shadow DOM automatically
+### Tailwind CSS 4 Development  
+1. Modify Tailwind classes in React components (uses ShadCN design tokens)
+2. Update `src/styles/main.css` to add new `@theme` variables if needed
+3. Run `npm run build:css` to recompile CSS using Vite + @tailwindcss/vite plugin
+4. CSS is automatically read server-side and injected into shadow DOM
+5. Use ShadCN semantic tokens: `bg-background`, `text-foreground`, `border-border`, etc.
+
+### Critical Development Rules
+1. **Never use esc_attr() or esc_js() on base64 CSS** - it will corrupt the CSS
+2. **Use json_encode() for JavaScript attributes** and raw base64 for HTML attributes  
+3. **CSS uses `@source` directives** to scan JSX files for Tailwind classes
+4. **All components must use ShadCN tokens** for consistent design system
 
 ## WordPress Integration Examples
 

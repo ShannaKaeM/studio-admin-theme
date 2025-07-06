@@ -1,24 +1,33 @@
 import { useEffect } from 'react';
 
 const SHADOW_STYLES = `
-/* Raycast-inspired design system for Shadow DOM */
+/* ShadCN + Gutenberg inspired design system for Shadow DOM */
 :host {
-  /* Raycast Color Palette */
-  --raycast-bg: rgba(9, 9, 11, 0.8);
-  --raycast-bg-solid: #09090b;
-  --raycast-surface: rgba(24, 24, 27, 0.9);
-  --raycast-surface-hover: rgba(39, 39, 42, 0.9);
-  --raycast-surface-active: rgba(63, 63, 70, 0.9);
-  --raycast-border: rgba(39, 39, 42, 0.6);
-  --raycast-text-primary: rgba(255, 255, 255, 0.98);
-  --raycast-text-secondary: rgba(255, 255, 255, 0.7);
-  --raycast-text-tertiary: rgba(255, 255, 255, 0.5);
-  --raycast-accent: #ff6363;
-  --raycast-accent-hover: #ff4747;
-  --raycast-blue: #007aff;
-  --raycast-green: #30d158;
-  --raycast-orange: #ff9500;
-  --raycast-shadow: rgba(0, 0, 0, 0.5);
+  /* ShadCN Color Palette with Gutenberg influences */
+  --background: 255 255 255;
+  --foreground: 2 8 23;
+  --card: 255 255 255;
+  --card-foreground: 2 8 23;
+  --popover: 255 255 255;
+  --popover-foreground: 2 8 23;
+  --primary: 15 23 42;
+  --primary-foreground: 248 250 252;
+  --secondary: 241 245 249;
+  --secondary-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 241 245 249;
+  --accent-foreground: 15 23 42;
+  --destructive: 239 68 68;
+  --destructive-foreground: 248 250 252;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 15 23 42;
+  
+  /* Gutenberg colors */
+  --wp-admin-theme-color: 0 115 170;
+  --wp-admin-theme-color-darker-10: 0 103 153;
+  --wp-admin-theme-color-darker-20: 0 86 132;
   
   /* Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -62,7 +71,7 @@ const SHADOW_STYLES = `
 }
 
 /* Panel Styles */
-.shadow-plugin-panel {
+.plugin-boilerplate {
   position: fixed !important;
   top: 0 !important;
   bottom: 0 !important;
@@ -90,19 +99,19 @@ const SHADOW_STYLES = `
   isolation: isolate !important;
 }
 
-.shadow-plugin-panel.right {
+.plugin-boilerplate.right {
   right: 0;
   border-radius: var(--radius-xl) 0 0 var(--radius-xl);
   border-right: none;
 }
 
-.shadow-plugin-panel.left {
+.plugin-boilerplate.left {
   left: 0;
   border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
   border-left: none;
 }
 
-.shadow-plugin-panel.fullscreen {
+.plugin-boilerplate.fullscreen {
   left: 0;
   right: 0;
   width: 100vw;

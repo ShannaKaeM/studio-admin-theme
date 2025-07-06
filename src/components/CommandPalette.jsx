@@ -50,11 +50,11 @@ export function CommandPalette({ onCommandSelect }) {
   return (
     <div className="flex flex-col h-full">
       {/* Search Input */}
-      <div className="relative p-4 border-b border-gray-700">
+      <div className="relative p-4 border-b border-border">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg 
-              className="h-5 w-5 text-gray-400" 
+              className="h-4 w-4 text-muted-foreground" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -70,8 +70,8 @@ export function CommandPalette({ onCommandSelect }) {
           <input
             type="text"
             className={cn(
-              "w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-600 rounded-lg",
-              "text-white placeholder-gray-400 focus:outline-none focus:border-blue-500",
+              "w-full pl-10 pr-4 py-3 bg-background border border-input rounded-md",
+              "text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring",
               "transition-colors duration-200"
             )}
             placeholder="Search commands..."
@@ -88,7 +88,7 @@ export function CommandPalette({ onCommandSelect }) {
       {/* Commands List */}
       <div className="flex-1 overflow-y-auto p-2">
         {filteredCommands.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
             <svg 
               className="h-12 w-12 mb-4" 
               fill="none" 
@@ -121,20 +121,20 @@ export function CommandPalette({ onCommandSelect }) {
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-700 bg-gray-800/50">
-        <div className="flex items-center justify-between text-xs text-gray-400">
+      <div className="p-4 border-t border-border bg-muted/50">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center space-x-4">
             <span className="flex items-center">
-              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">↑↓</kbd>
+              <kbd className="px-2 py-1 bg-background border border-border rounded text-xs shadow-sm">↑↓</kbd>
               <span className="ml-2">Navigate</span>
             </span>
             <span className="flex items-center">
-              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">Enter</kbd>
+              <kbd className="px-2 py-1 bg-background border border-border rounded text-xs shadow-sm">Enter</kbd>
               <span className="ml-2">Select</span>
             </span>
           </div>
           <div className="flex items-center">
-            <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">Esc</kbd>
+            <kbd className="px-2 py-1 bg-background border border-border rounded text-xs shadow-sm">Esc</kbd>
             <span className="ml-2">Close</span>
           </div>
         </div>
@@ -147,23 +147,23 @@ function CommandItem({ command, isSelected, onClick, index }) {
   return (
     <motion.button
       className={cn(
-        "w-full p-3 rounded-lg text-left transition-all duration-150",
+        "w-full p-3 rounded-md text-left transition-all duration-150",
         "flex items-start space-x-3 group",
         isSelected 
-          ? "bg-blue-600 text-white shadow-lg ring-2 ring-blue-500 ring-opacity-50" 
-          : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/70"
+          ? "bg-accent text-accent-foreground" 
+          : "text-foreground hover:bg-accent/50"
       )}
       onClick={onClick}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, delay: index * 0.05 }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
     >
       {/* Icon */}
       <div className={cn(
-        "flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-lg",
-        isSelected ? "bg-white/20" : "bg-gray-700"
+        "flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center text-lg",
+        isSelected ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
       )}>
         {command.icon}
       </div>
@@ -172,13 +172,13 @@ function CommandItem({ command, isSelected, onClick, index }) {
       <div className="flex-1 min-w-0">
         <div className={cn(
           "font-medium text-sm mb-1 truncate",
-          isSelected ? "text-white" : "text-gray-200"
+          isSelected ? "text-accent-foreground" : "text-foreground"
         )}>
           {command.title}
         </div>
         <div className={cn(
           "text-xs leading-relaxed",
-          isSelected ? "text-blue-100" : "text-gray-400"
+          isSelected ? "text-muted-foreground" : "text-muted-foreground"
         )}>
           {command.description}
         </div>
@@ -189,8 +189,8 @@ function CommandItem({ command, isSelected, onClick, index }) {
             <span className={cn(
               "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
               isSelected 
-                ? "bg-white/20 text-white" 
-                : "bg-gray-700 text-gray-400"
+                ? "bg-primary/20 text-primary" 
+                : "bg-muted text-muted-foreground"
             )}>
               {command.category}
             </span>
