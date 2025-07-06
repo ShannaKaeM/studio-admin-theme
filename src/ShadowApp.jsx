@@ -39,14 +39,8 @@ export function ShadowApp(props = {}) {
     }
   }, []); // Empty dependency array to run only once
 
-  // Auto-open panel on mount for demo (based on settings)
-  useEffect(() => {
-    const { autoOpenPanel } = useStore.getState().settings;
-    if (autoOpenPanel && window.innerWidth > 768) { // Don't auto-open on mobile
-      const timer = setTimeout(() => openPanel(), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [openPanel]);
+  // Note: Panel auto-open behavior is now handled by Zustand store persistence
+  // The panel will maintain its last open/closed state across page reloads
 
   // Decode the base64 CSS content
   const decodedCSS = tailwindCSS ? atob(tailwindCSS) : '';

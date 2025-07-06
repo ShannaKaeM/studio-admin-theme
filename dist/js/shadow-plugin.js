@@ -24616,7 +24616,8 @@
           enableNotifications: false,
           theme: "dark",
           enableKeyboardShortcuts: true,
-          autoOpenPanel: true,
+          autoOpenPanel: false,
+          // Changed to false for better persistence behavior
           panelWidth: 500,
           enableAnimations: true
         },
@@ -24654,7 +24655,8 @@
             enableNotifications: false,
             theme: "dark",
             enableKeyboardShortcuts: true,
-            autoOpenPanel: true,
+            autoOpenPanel: false,
+            // Changed to false for consistency
             panelWidth: 500,
             enableAnimations: true
           }
@@ -24706,11 +24708,11 @@
         }),
         // Handle storage events for cross-tab sync
         onRehydrateStorage: () => (state) => {
-          var _a;
           console.log("💾 Zustand store rehydrated from localStorage");
-          if (((_a = state == null ? void 0 : state.settings) == null ? void 0 : _a.autoOpenPanel) && window.innerWidth > 768) {
+          console.log("🔄 Panel state from storage:", state == null ? void 0 : state.isPanelOpen);
+          if (!state && window.innerWidth > 768) {
             setTimeout(() => {
-              state.openPanel();
+              useStore.getState().openPanel();
             }, 500);
           }
         }
@@ -35966,13 +35968,6 @@ For more information, see https://radix-ui.com/primitives/docs/components/${titl
         updateSettings(settings);
       }
     }, []);
-    reactExports.useEffect(() => {
-      const { autoOpenPanel } = useStore.getState().settings;
-      if (autoOpenPanel && window.innerWidth > 768) {
-        const timer = setTimeout(() => openPanel(), 500);
-        return () => clearTimeout(timer);
-      }
-    }, [openPanel]);
     const decodedCSS = tailwindCSS ? atob(tailwindCSS) : "";
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       decodedCSS && /* @__PURE__ */ jsxRuntimeExports.jsx("style", { dangerouslySetInnerHTML: { __html: decodedCSS } }),
