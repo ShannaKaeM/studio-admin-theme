@@ -21,7 +21,7 @@ export const useStore = create(
         enableNotifications: false,
         theme: 'dark',
         enableKeyboardShortcuts: true,
-        autoOpenPanel: true,
+        autoOpenPanel: false, // Changed to false for better persistence behavior
         panelWidth: 500,
         enableAnimations: true,
       },
@@ -68,7 +68,7 @@ export const useStore = create(
           enableNotifications: false,
           theme: 'dark',
           enableKeyboardShortcuts: true,
-          autoOpenPanel: true,
+          autoOpenPanel: false, // Changed to false for consistency
           panelWidth: 500,
           enableAnimations: true,
         }
@@ -130,10 +130,14 @@ export const useStore = create(
       onRehydrateStorage: () => (state) => {
         console.log('💾 Zustand store rehydrated from localStorage');
         
-        // Auto-open panel if setting is enabled and not mobile
-        if (state?.settings?.autoOpenPanel && window.innerWidth > 768) {
+        // Respect the persistent panel state - don't auto-open if state exists
+        // The isPanelOpen value from localStorage should be maintained
+        console.log('🔄 Panel state from storage:', state?.isPanelOpen);
+        
+        // Only auto-open on very first visit when no storage exists
+        if (!state && window.innerWidth > 768) {
           setTimeout(() => {
-            state.openPanel();
+            useStore.getState().openPanel();
           }, 500);
         }
       },
