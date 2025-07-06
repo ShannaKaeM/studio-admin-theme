@@ -1,0 +1,158 @@
+{
+  "layoutPresets": {
+    "center": {
+      "name": "Center Layout",
+      "description": "Traditional centered hero with focus on content",
+      "modifications": {
+        "section": {
+          "flex-direction": "row",
+          "justify-content": "center",
+          "align-items": "center",
+          "padding": "2rem"
+        },
+        "container": {
+          "align-items": "center",
+          "justify-content": "center",
+          "max-width": "800px",
+          "flex": "none",
+          "padding": "0"
+        },
+        "wrapper": {
+          "text-align": "center",
+          "align-items": "center"
+        },
+        "media-container": {
+          "display": "none"
+        }
+      }
+    },
+    
+    "split": {
+      "name": "Split Screen",
+      "description": "50/50 split with content and media",
+      "modifications": {
+        "section": {
+          "flex-direction": "row",
+          "padding": "0",
+          "gap": "0"
+        },
+        "container": {
+          "flex": "1",
+          "padding": "4rem",
+          "max-width": "none",
+          "align-items": "flex-start",
+          "justify-content": "center"
+        },
+        "wrapper": {
+          "text-align": "left",
+          "align-items": "flex-start",
+          "max-width": "500px"
+        },
+        "media-container": {
+          "display": "block",
+          "flex": "1",
+          "height": "100vh"
+        }
+      }
+    },
+    
+    "fullwidth": {
+      "name": "Full Width",
+      "description": "Edge-to-edge layout with background media",
+      "modifications": {
+        "section": {
+          "flex-direction": "column",
+          "padding": "0"
+        },
+        "container": {
+          "max-width": "100%",
+          "padding": "4rem 2rem"
+        },
+        "wrapper": {
+          "max-width": "1200px",
+          "text-align": "center"
+        },
+        "media-container": {
+          "display": "block",
+          "width": "100%",
+          "height": "50vh",
+          "position": "absolute",
+          "opacity": "0.3",
+          "z-index": "-1"
+        }
+      }
+    },
+    
+    "sidebar": {
+      "name": "Sidebar Layout",
+      "description": "Fixed sidebar with scrollable media",
+      "modifications": {
+        "section": {
+          "flex-direction": "row",
+          "align-items": "stretch",
+          "justify-content": "flex-start",
+          "padding": "0"
+        },
+        "container": {
+          "flex": "0 0 400px",
+          "padding": "3rem",
+          "bg": "color1",
+          "height": "100vh",
+          "overflow-y": "auto"
+        },
+        "wrapper": {
+          "text-align": "left",
+          "max-width": "100%"
+        },
+        "media-container": {
+          "display": "block",
+          "flex": "1"
+        }
+      },
+      "colorOverrides": {
+        "title": { "color": "color4" },
+        "description": { "color": "color4" }
+      }
+    }
+  },
+  
+  "layoutTransformations": {
+    "responsive": {
+      "breakpoints": {
+        "mobile": {
+          "max": 768,
+          "overrides": {
+            "split": {
+              "section": { "flex-direction": "column" },
+              "media-container": { "height": "40vh" },
+              "container": { "padding": "2rem" }
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  "layoutCombinations": {
+    "examples": [
+      {
+        "name": "Hero Split Dark",
+        "layout": "split",
+        "colorPreset": "dark",
+        "scope": "hero"
+      },
+      {
+        "name": "Card Grid Light",
+        "layout": "center",
+        "colorPreset": "light",
+        "scope": "card"
+      },
+      {
+        "name": "Sidebar Dashboard",
+        "layout": "sidebar",
+        "colorPreset": "dark",
+        "scope": "hero"
+      }
+    ]
+  }
+}

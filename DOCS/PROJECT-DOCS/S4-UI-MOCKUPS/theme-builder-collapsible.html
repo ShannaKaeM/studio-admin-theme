@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S4 Visual Theme Builder - Collapsible Sidebar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Sidebar transitions */
+        .sidebar {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .sidebar.collapsed {
+            width: 4rem;
+        }
+        
+        .sidebar.collapsed .sidebar-label {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .sidebar-label {
+            transition: all 0.2s;
+        }
+        
+        /* Main content transitions */
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Collapsible Sidebar -->
+        <aside id="sidebar" class="sidebar w-64 bg-white border-r border-gray-200 flex flex-col relative">
+            <!-- Collapse Toggle -->
+            <button onclick="toggleSidebar()" class="absolute -right-3 top-8 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow z-10">
+                <svg id="collapse-icon" class="w-3 h-3 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-rose-600 to-amber-600 rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
+                        S4
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="font-semibold text-gray-900">Studio Design</h1>
+                        <p class="text-xs text-gray-500">Visual Theme Builder</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-1">
+                <a href="#" class="flex items-center gap-3 px-3 py-2 bg-rose-50 text-rose-700 rounded-lg font-medium group">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                    <span class="sidebar-label">Colors</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg font-medium group">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                    </svg>
+                    <span class="sidebar-label">Layouts</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg font-medium group">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                    </svg>
+                    <span class="sidebar-label">Typography</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg font-medium group">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span class="sidebar-label">Components</span>
+                </a>
+            </nav>
+            
+            <!-- Bottom Actions -->
+            <div class="p-4 border-t border-gray-100 space-y-2">
+                <button class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 font-medium">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                    </svg>
+                    <span class="sidebar-label">Export</span>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="flex-1 flex">
+            <!-- Controls Panel -->
+            <div class="w-96 bg-white border-r border-gray-200 overflow-y-auto">
+                <!-- Color Controls Content -->
+                <div class="sticky top-0 bg-white z-10 border-b border-gray-100">
+                    <div class="flex gap-1 p-2">
+                        <button class="flex-1 px-3 py-2 bg-gray-100 text-gray-900 rounded-md text-sm font-medium">Brand Colors</button>
+                        <button class="flex-1 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md text-sm font-medium">Theme Mapping</button>
+                        <button class="flex-1 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md text-sm font-medium">Presets</button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <!-- Your existing color controls here -->
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <h3 class="font-medium mb-3">Primary Color</h3>
+                            <div class="h-24 rounded-lg shadow-inner mb-3" style="background-color: #b25977"></div>
+                            <input type="text" value="#b25977" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Live Preview -->
+            <div class="flex-1 bg-gray-100 p-8">
+                <div class="bg-white rounded-xl shadow-lg p-16 text-center">
+                    <h1 class="text-4xl font-bold mb-4" style="color: hsl(0, 0%, 20%)">Live Preview Area</h1>
+                    <p class="text-lg" style="color: hsl(0, 0%, 40%)">Your design updates in real-time</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('collapse-icon');
+            
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+</body>
+</html>

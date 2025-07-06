@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S4 Framework - JSON Preset System</title>
+    
+    <!-- Embedded S4 Preset Processor -->
+    <script>
+    /**
+     * S4 Preset Processor
+     * Converts JSON preset definitions into CSS
+     */
+    class S4PresetProcessor {
+      constructor(presetData) {
+        this.data = presetData;
+        this.css = [];
+      }
+
+      /**
+       * Generate all CSS from the preset data
+       */
+      generateCSS() {
+        this.css = [];
+        
+        // 1. Generate brand tokens
+        this.generateBrandTokens();
+        
+        // 2. Generate color presets
+        this.generateColorPresets();
+        
+        // 3. Generate helper presets
+        this.generateHelperPresets();
+        
+        // 4. Generate scope modifiers
+        this.generateScopes();
+        
+        return this.css.join('\n\n');
+      }
+
+      /**
+       * Generate CSS custom properties for brand tokens
+       */
+      generateBrandTokens() {
+        const tokens = [':root {'];
+        
+        // Color tokens
+        Object.entries(this.data.brandTokens.colors).forEach(([key, color]) => {
+          tokens.push(`  --${key}: hsl(${color.h}, ${color.s}%, ${color.l}%);`);
+          // Also generate component values for manual calculations
+          tokens.push(`  --${key}-h: ${color.h};`);
+          tokens.push(`  --${key}-s: ${color.s}%;`);
+          tokens.push(`  --${key}-l: ${color.l}%;`);
+        });
+        
+        tokens.push(`  --color-base: hsla(0, 0%, 0%, 0); /* Transparent placeholder */`);
+        tokens.push('}');
+        
+        this.css.push(tokens.join('\n'));
+      }
+
+      /**
+       * Generate CSS for color presets
+       */
+      generateColorPresets() {
+        Object.entries(this.data.colorPresets).forEach(([presetKey, preset]) => {
+          const rules = [`/* ${preset.name} - ${preset.description} */`];
+          
+          Object.entries(preset.assignments).forEach(([element, props]) => {
+            const selector = `[data-preset="${presetKey}"] .${element}`;
+            const properties = [];
+            
+            Object.entries(props).forEach(([prop, value]) => {
+              if (value === 'transparent') {
+                properties.push(`--${element}-${prop}: transparent;`);
+              } else {
+                properties.push(`--${element}-${prop}: var(--${value});`);
+              }
+            });
+            
+            if (properties.length > 0) {
+              rules.push(`${selector} {\n  ${properties.join('\n  ')}\n}`);
+            }
+          });
+          
+          this.css.push(rules.join('\n'));
+        });
+      }
+
+      /**
+       * Generate CSS for helper presets
+       */
+      generateHelperPresets() {
+        Object.entries(this.data.helperPresets).forEach(([category, presets]) => {
+          this.css.push(`/* Helper Presets: ${category} */`);
+          
+          Object.entries(presets).forEach(([presetKey, preset]) => {
+            const rules = [`/* ${preset.name} - ${preset.description} */`];
+            
+            Object.entries(preset.modifications).forEach(([element, mods]) => {
+              const selector = element === 'all' 
+                ? `[data-${category}="${presetKey}"] *` 
+                : `[data-${category}="${presetKey}"] .${element}`;
+              
+              const properties = this.generateModifications(element, mods);
+              
+              if (properties.length > 0) {
+                rules.push(`${selector} {\n  ${properties.join('\n  ')}\n}`);
+              }
+            });
+            
+            this.css.push(rules.join('\n'));
+          });
+        });
+      }
+
+      /**
+       * Generate modification properties
+       */
+      generateModifications(element, mods) {
+        const properties = [];
+        
+        // Handle opacity directly
+        if (mods.opacity !== undefined) {
+          properties.push(`opacity: ${mods.opacity};`);
+        }
+        
+        // Handle HSL modifications
+        if (mods.lightness || mods.saturation || mods.hue) {
+          // For browsers that support relative colors
+          const relativeColor = this.generateRelativeColor(element, mods);
+          if (relativeColor) {
+            properties.push(`--${element}-color: ${relativeColor};`);
+          }
+          
+          // For manual HSL approach
+          const manualHSL = this.generateManualHSL(element, mods);
+          if (manualHSL) {
+            properties.push(`/* Fallback: ${manualHSL} */`);
+          }
+        }
+        
+        return properties;
+      }
+
+      /**
+       * Generate relative color syntax
+       */
+      generateRelativeColor(element, mods) {
+        const parts = [];
+        
+        if (mods.hue) {
+          parts.push(this.applyOperation('h', mods.hue));
+        } else {
+          parts.push('h');
+        }
+        
+        if (mods.saturation) {
+          parts.push(this.applyOperation('s', mods.saturation) + '%');
+        } else {
+          parts.push('s');
+        }
+        
+        if (mods.lightness) {
+          parts.push(this.applyOperation('l', mods.lightness) + '%');
+        } else {
+          parts.push('l');
+        }
+        
+        return `hsl(from var(--${element}-color) ${parts.join(' ')})`;
+      }
+
+      /**
+       * Apply mathematical operation
+       */
+      applyOperation(channel, mod) {
+        switch (mod.operation) {
+          case 'set':
+            return mod.value;
+          case 'adjust':
+            return `calc(${channel} + ${mod.value})`;
+          case 'multiply':
+            return `calc(${channel} * ${mod.value})`;
+          case 'divide':
+            return `calc(${channel} / ${mod.value})`;
+          default:
+            return channel;
+        }
+      }
+
+      /**
+       * Generate manual HSL syntax for fallback
+       */
+      generateManualHSL(element, mods) {
+        const h = mods.hue?.operation === 'set' ? mods.hue.value : `var(--${element}-color-h)`;
+        const s = mods.saturation?.operation === 'set' ? `${mods.saturation.value}%` : `var(--${element}-color-s)`;
+        const l = mods.lightness?.operation === 'set' ? `${mods.lightness.value}%` : `var(--${element}-color-l)`;
+        
+        return `hsl(${h}, ${s}, ${l})`;
+      }
+
+      /**
+       * Generate scope modifiers
+       */
+      generateScopes() {
+        Object.entries(this.data.scopes).forEach(([scopeType, scopes]) => {
+          this.css.push(`/* Layout Scopes: ${scopeType} */`);
+          
+          Object.entries(scopes).forEach(([scopeKey, scope]) => {
+            const rules = [`/* ${scope.name} */`];
+            
+            Object.entries(scope.modifiers).forEach(([element, mods]) => {
+              const selector = `[data-scope="${scopeKey}"] .${element}`;
+              const properties = [];
+              
+              if (mods.scale) {
+                properties.push(`--${element}-scale: ${mods.scale};`);
+              }
+              
+              if (properties.length > 0) {
+                rules.push(`${selector} {\n  ${properties.join('\n  ')}\n}`);
+              }
+            });
+            
+            this.css.push(rules.join('\n'));
+          });
+        });
+      }
+    }
+    </script>
+    
+    <style id="s4-base-styles">
+        /* ============================================ */
+        /* TIER 2: GLOBAL ELEMENTS (GECs)              */
+        /* ============================================ */
+        
+        /* Section Component */
+        .section {
+            --section-width: 100%;
+            --section-min-height: 100vh;
+            --section-display: flex;
+            --section-align-items: center;
+            --section-justify-content: center;
+            --section-padding: 2rem;
+            --section-bg: var(--color-base);
+            
+            width: var(--section-width);
+            min-height: var(--section-min-height);
+            display: var(--section-display);
+            align-items: var(--section-align-items);
+            justify-content: var(--section-justify-content);
+            padding: var(--section-padding);
+            background: var(--section-bg);
+        }
+
+        /* Container Component */
+        .container {
+            --container-max-width: 1200px;
+            --container-margin: 0 auto;
+            --container-width: 100%;
+            --container-display: flex;
+            --container-align-items: center;
+            --container-justify-content: center;
+            --container-bg: var(--color-base);
+            
+            max-width: var(--container-max-width);
+            margin: var(--container-margin);
+            width: var(--container-width);
+            display: var(--container-display);
+            align-items: var(--container-align-items);
+            justify-content: var(--container-justify-content);
+            background: var(--container-bg);
+        }
+
+        /* Wrapper Component */
+        .wrapper {
+            --wrapper-max-width: 600px;
+            --wrapper-bg: var(--color-base);
+            --wrapper-padding: 4rem;
+            --wrapper-radius: 0.5rem;
+            --wrapper-display: flex;
+            --wrapper-flex-direction: column;
+            --wrapper-text-align: center;
+            
+            max-width: var(--wrapper-max-width);
+            background: var(--wrapper-bg);
+            padding: var(--wrapper-padding);
+            border-radius: var(--wrapper-radius);
+            display: var(--wrapper-display);
+            flex-direction: var(--wrapper-flex-direction);
+            text-align: var(--wrapper-text-align);
+        }
+
+        /* Pretitle Component */
+        .pretitle {
+            --pretitle-color: var(--color-base);
+            --pretitle-size: 1.25rem;
+            --pretitle-weight: 500;
+            --pretitle-transform: uppercase;
+            --pretitle-spacing: .5em;
+            --pretitle-margin: 0 0 .5rem 0;
+            
+            color: var(--pretitle-color);
+            font-size: var(--pretitle-size);
+            font-weight: var(--pretitle-weight);
+            text-transform: var(--pretitle-transform);
+            letter-spacing: var(--pretitle-spacing);
+            margin: var(--pretitle-margin);
+        }
+
+        /* Title Component */
+        .title {
+            --title-color: var(--color-base);
+            --title-size: 2rem;
+            --title-weight: 600;
+            --title-margin: 0 0 1rem 0;
+            --title-line-height: 1.2;
+            --title-scale: 1;
+            
+            color: var(--title-color);
+            font-size: calc(var(--title-size) * var(--title-scale));
+            font-weight: var(--title-weight);
+            margin: var(--title-margin);
+            line-height: var(--title-line-height);
+        }
+
+        /* Subtitle Component */
+        .subtitle {
+            --subtitle-color: var(--color-base);
+            --subtitle-size: 1.5rem;
+            --subtitle-weight: 500;
+            --subtitle-margin: 0 0 1rem 0;
+            --subtitle-line-height: 1.3;
+            --subtitle-scale: 1;
+            
+            color: var(--subtitle-color);
+            font-size: calc(var(--subtitle-size) * var(--subtitle-scale));
+            font-weight: var(--subtitle-weight);
+            margin: var(--subtitle-margin);
+            line-height: var(--subtitle-line-height);
+        }
+
+        /* Description Component */
+        .description {
+            --description-color: var(--color-base);
+            --description-size: 1rem;
+            --description-weight: 500;
+            --description-margin: 0;
+            --description-line-height: 1.5;
+            
+            color: var(--description-color);
+            font-size: var(--description-size);
+            font-weight: var(--description-weight);
+            margin: var(--description-margin);
+            line-height: var(--description-line-height);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .control-panel h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .preset-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+    
+    <!-- This is where generated CSS will be injected -->
+    <style id="s4-generated-styles"></style>
+</head>
+<body data-preset="default-colors">
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <h3>S4 Preset Controls</h3>
+        
+        <div class="control-group">
+            <label>Color Preset:</label>
+            <select id="colorPreset" onchange="updatePresets()">
+                <option value="default-colors">Default Colors</option>
+                <option value="emphasis-colors">Emphasis Colors</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label>Typography Helper:</label>
+            <select id="typographyHelper" onchange="updatePresets()">
+                <option value="">None</option>
+                <option value="hierarchy">Hierarchy</option>
+                <option value="high-contrast">High Contrast</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label>Saturation Helper:</label>
+            <select id="saturationHelper" onchange="updatePresets()">
+                <option value="">None</option>
+                <option value="vibrant">Vibrant</option>
+                <option value="muted">Muted</option>
+                <option value="grayscale">Grayscale</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label>Layout Scope:</label>
+            <select id="layoutScope" onchange="updatePresets()">
+                <option value="">None</option>
+                <option value="hero">Hero</option>
+                <option value="card">Card</option>
+                <option value="sidebar">Sidebar</option>
+            </select>
+        </div>
+        
+        <div class="preset-info" id="presetInfo">
+            Loading presets...
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <section class="section">
+            <div class="container">
+                <div class="wrapper">
+                    <p class="pretitle">S4 JSON System</p>
+                    <h1 class="title">Dynamic Preset Loading</h1>
+                    <h2 class="subtitle">Real-time CSS Generation</h2>
+                    <p class="description">This example loads preset definitions from JSON and generates CSS dynamically. Use the controls to see different preset combinations in action.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Embedded preset data (for testing without server)
+        const presetData = {
+            "brandTokens": {
+                "colors": {
+                    "color1": { "h": 172, "s": 50, "l": 40, "name": "Primary" },
+                    "color2": { "h": 92, "s": 50, "l": 40, "name": "Secondary" },
+                    "color3": { "h": 0, "s": 0, "l": 50, "name": "Neutral" },
+                    "color4": { "h": 0, "s": 0, "l": 100, "name": "Base" }
+                }
+            },
+            
+            "colorPresets": {
+                "default-colors": {
+                    "name": "Default Colors",
+                    "description": "Standard color theme",
+                    "assignments": {
+                        "section": { "bg": "color4" },
+                        "container": { "bg": "transparent" },
+                        "wrapper": { "bg": "color4" },
+                        "pretitle": { "color": "color1" },
+                        "title": { "color": "color3" },
+                        "subtitle": { "color": "color3" },
+                        "description": { "color": "color3" }
+                    }
+                },
+                "emphasis-colors": {
+                    "name": "Emphasis Colors",
+                    "description": "High contrast theme",
+                    "assignments": {
+                        "section": { "bg": "color1" },
+                        "container": { "bg": "transparent" },
+                        "wrapper": { "bg": "color4" },
+                        "pretitle": { "color": "color1" },
+                        "title": { "color": "color3" },
+                        "subtitle": { "color": "color3" },
+                        "description": { "color": "color3" }
+                    }
+                }
+            },
+            
+            "helperPresets": {
+                "typography": {
+                    "hierarchy": {
+                        "name": "Typography Hierarchy",
+                        "description": "Creates visual hierarchy through lightness modifications",
+                        "modifications": {
+                            "title": { 
+                                "lightness": { "operation": "set", "value": 90 },
+                                "opacity": 1.0
+                            },
+                            "pretitle": { 
+                                "lightness": { "operation": "set", "value": 70 },
+                                "opacity": 0.9
+                            },
+                            "subtitle": { 
+                                "lightness": { "operation": "set", "value": 70 },
+                                "opacity": 0.8
+                            },
+                            "description": { 
+                                "lightness": { "operation": "set", "value": 60 },
+                                "opacity": 0.7
+                            }
+                        }
+                    },
+                    "high-contrast": {
+                        "name": "High Contrast",
+                        "description": "Maximum contrast for accessibility",
+                        "modifications": {
+                            "title": { 
+                                "lightness": { "operation": "set", "value": 10 }
+                            },
+                            "pretitle": { 
+                                "lightness": { "operation": "set", "value": 30 }
+                            },
+                            "subtitle": { 
+                                "lightness": { "operation": "set", "value": 20 }
+                            },
+                            "description": { 
+                                "lightness": { "operation": "set", "value": 40 }
+                            }
+                        }
+                    }
+                },
+                
+                "saturation": {
+                    "vibrant": {
+                        "name": "Vibrant",
+                        "description": "Increased color saturation",
+                        "modifications": {
+                            "all": {
+                                "saturation": { "operation": "multiply", "value": 1.5 }
+                            }
+                        }
+                    },
+                    "muted": {
+                        "name": "Muted",
+                        "description": "Reduced color saturation",
+                        "modifications": {
+                            "all": {
+                                "saturation": { "operation": "multiply", "value": 0.5 }
+                            }
+                        }
+                    },
+                    "grayscale": {
+                        "name": "Grayscale",
+                        "description": "Remove all color",
+                        "modifications": {
+                            "all": {
+                                "saturation": { "operation": "set", "value": 0 }
+                            }
+                        }
+                    }
+                }
+            },
+            
+            "scopes": {
+                "layout": {
+                    "hero": {
+                        "name": "Hero Scope",
+                        "modifiers": {
+                            "title": { "scale": 1.5 },
+                            "subtitle": { "scale": 1.2 },
+                            "spacing": { "scale": 1.5 }
+                        }
+                    },
+                    "card": {
+                        "name": "Card Scope",
+                        "modifiers": {
+                            "title": { "scale": 0.8 },
+                            "subtitle": { "scale": 0.9 },
+                            "spacing": { "scale": 0.8 }
+                        }
+                    },
+                    "sidebar": {
+                        "name": "Sidebar Scope",
+                        "modifiers": {
+                            "title": { "scale": 0.7 },
+                            "subtitle": { "scale": 0.8 },
+                            "spacing": { "scale": 0.6 }
+                        }
+                    }
+                }
+            }
+        };
+
+        let processor = null;
+
+        // Initialize on page load
+        function init() {
+            try {
+                // Create processor instance
+                processor = new S4PresetProcessor(presetData);
+                
+                // Generate initial CSS
+                generateAndApplyCSS();
+                
+                // Update info
+                updatePresetInfo();
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                document.getElementById('presetInfo').textContent = 'Error initializing';
+            }
+        }
+
+        // Generate and apply CSS
+        function generateAndApplyCSS() {
+            if (!processor) return;
+            
+            const css = processor.generateCSS();
+            document.getElementById('s4-generated-styles').textContent = css;
+        }
+
+        // Update presets based on control selections
+        function updatePresets() {
+            const colorPreset = document.getElementById('colorPreset').value;
+            const typographyHelper = document.getElementById('typographyHelper').value;
+            const saturationHelper = document.getElementById('saturationHelper').value;
+            const layoutScope = document.getElementById('layoutScope').value;
+            
+            // Update body attributes
+            const body = document.body;
+            body.setAttribute('data-preset', colorPreset);
+            
+            // Update main content wrapper attributes
+            const mainContent = document.getElementById('mainContent');
+            
+            // Clear all data attributes
+            mainContent.removeAttribute('data-typography');
+            mainContent.removeAttribute('data-saturation');
+            mainContent.removeAttribute('data-scope');
+            
+            // Apply selected helpers
+            if (typographyHelper) {
+                mainContent.setAttribute('data-typography', typographyHelper);
+            }
+            if (saturationHelper) {
+                mainContent.setAttribute('data-saturation', saturationHelper);
+            }
+            if (layoutScope) {
+                mainContent.setAttribute('data-scope', layoutScope);
+            }
+            
+            updatePresetInfo();
+        }
+
+        // Update preset information display
+        function updatePresetInfo() {
+            if (!presetData) return;
+            
+            const colorPreset = document.getElementById('colorPreset').value;
+            const info = [];
+            
+            // Show active preset info
+            const preset = presetData.colorPresets[colorPreset];
+            if (preset) {
+                info.push(`<strong>${preset.name}</strong>: ${preset.description}`);
+            }
+            
+            // Show active helpers
+            const typography = document.getElementById('typographyHelper').value;
+            if (typography && presetData.helperPresets.typography[typography]) {
+                info.push(`Typography: ${presetData.helperPresets.typography[typography].name}`);
+            }
+            
+            const saturation = document.getElementById('saturationHelper').value;
+            if (saturation && presetData.helperPresets.saturation[saturation]) {
+                info.push(`Saturation: ${presetData.helperPresets.saturation[saturation].name}`);
+            }
+            
+            const scope = document.getElementById('layoutScope').value;
+            if (scope && presetData.scopes.layout[scope]) {
+                info.push(`Scope: ${presetData.scopes.layout[scope].name}`);
+            }
+            
+            document.getElementById('presetInfo').innerHTML = info.join('<br>');
+        }
+
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

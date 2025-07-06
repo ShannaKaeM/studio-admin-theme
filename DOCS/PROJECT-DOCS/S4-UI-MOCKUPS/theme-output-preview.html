@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S4 Theme Output - What Users Can Edit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* This represents the theme output that users generate */
+        :root {
+            /* Brand Colors - User Editable */
+            --color1: #b25977;  /* Primary - Rose */
+            --color2: #b8874d;  /* Secondary - Gold */
+            --color3: hsl(0, 0%, 20%);     /* Neutral Dark */
+            --color4: hsl(0, 0%, 98%);     /* Base Light */
+            
+            /* Generated Color Scales */
+            --color1-50: hsl(338, 34%, 95%);
+            --color1-100: hsl(338, 34%, 90%);
+            --color1-200: hsl(338, 34%, 80%);
+            --color1-300: hsl(338, 34%, 70%);
+            --color1-400: hsl(338, 34%, 60%);
+            --color1-500: hsl(338, 34%, 50%);
+            --color1-600: hsl(338, 34%, 40%);
+            --color1-700: hsl(338, 34%, 30%);
+            --color1-800: hsl(338, 34%, 20%);
+            --color1-900: hsl(338, 34%, 10%);
+            
+            /* Typography Scale - User Editable */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 1.875rem;
+            --text-4xl: 2.25rem;
+            --text-5xl: 3rem;
+            
+            /* Spacing Scale - User Editable */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            
+            /* Border Radius - User Editable */
+            --radius-sm: 0.125rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --radius-2xl: 1rem;
+            --radius-full: 9999px;
+            
+            /* Shadows - User Editable */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Color Preset Example */
+        [data-preset="default"] {
+            --section-bg: var(--color4);
+            --wrapper-bg: var(--color4);
+            --title-color: var(--color3);
+            --text-color: var(--color3);
+            --button-bg: var(--color1);
+            --button-text: var(--color4);
+        }
+        
+        [data-preset="dark"] {
+            --section-bg: var(--color3);
+            --wrapper-bg: var(--color3);
+            --title-color: var(--color4);
+            --text-color: var(--color4);
+            --button-bg: var(--color1);
+            --button-text: var(--color4);
+        }
+        
+        /* Layout Presets */
+        [data-layout="center"] {
+            --container-max-width: 1200px;
+            --container-padding: var(--space-8);
+            --text-align: center;
+        }
+        
+        [data-layout="split"] {
+            --container-max-width: 100%;
+            --container-grid: 1fr 1fr;
+            --text-align: left;
+        }
+        
+        /* Component Styles using CSS Variables */
+        .hero {
+            background: var(--section-bg);
+            padding: var(--space-16) var(--space-4);
+        }
+        
+        .title {
+            color: var(--title-color);
+            font-size: var(--text-5xl);
+            line-height: 1.1;
+            margin-bottom: var(--space-6);
+        }
+        
+        .subtitle {
+            color: var(--text-color);
+            font-size: var(--text-xl);
+            opacity: 0.8;
+            margin-bottom: var(--space-8);
+        }
+        
+        .button {
+            background: var(--button-bg);
+            color: var(--button-text);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card {
+            background: var(--wrapper-bg);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-6xl mx-auto p-8">
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">S4 Theme Output - What You Can Edit</h1>
+            <p class="text-gray-600">This shows the CSS variables and theme structure that users can customize. Everything is token-based for easy editing.</p>
+        </div>
+        
+        <!-- Editable Tokens -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Colors Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-900">🎨 Brand Colors</h2>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="font-mono text-sm">--color1</span>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded" style="background: var(--color1)"></div>
+                            <code class="text-xs bg-gray-200 px-2 py-1 rounded">#b25977</code>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="font-mono text-sm">--color2</span>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded" style="background: var(--color2)"></div>
+                            <code class="text-xs bg-gray-200 px-2 py-1 rounded">#b8874d</code>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="font-mono text-sm">--color3</span>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded" style="background: var(--color3)"></div>
+                            <code class="text-xs bg-gray-200 px-2 py-1 rounded">hsl(0, 0%, 20%)</code>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="font-mono text-sm">--color4</span>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded border" style="background: var(--color4)"></div>
+                            <code class="text-xs bg-gray-200 px-2 py-1 rounded">hsl(0, 0%, 98%)</code>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-4">Edit these 4 colors and the system generates 40+ color variations automatically</p>
+            </div>
+            
+            <!-- Typography Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-900">📝 Typography Scale</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-baseline">
+                        <span class="font-mono text-xs">--text-xs</span>
+                        <span style="font-size: var(--text-xs)">Sample Text</span>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="font-mono text-xs">--text-sm</span>
+                        <span style="font-size: var(--text-sm)">Sample Text</span>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="font-mono text-xs">--text-base</span>
+                        <span style="font-size: var(--text-base)">Sample Text</span>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="font-mono text-xs">--text-lg</span>
+                        <span style="font-size: var(--text-lg)">Sample Text</span>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="font-mono text-xs">--text-xl</span>
+                        <span style="font-size: var(--text-xl)">Sample Text</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-4">Consistent type scale based on modular ratios</p>
+            </div>
+        </div>
+        
+        <!-- Live Example -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Live Component Examples</h2>
+                <div class="flex gap-4 mt-4">
+                    <button onclick="document.getElementById('example').setAttribute('data-preset', 'default')" 
+                            class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium">Light Theme</button>
+                    <button onclick="document.getElementById('example').setAttribute('data-preset', 'dark')" 
+                            class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium">Dark Theme</button>
+                </div>
+            </div>
+            
+            <!-- Example Component -->
+            <div id="example" data-preset="default" data-layout="center">
+                <section class="hero">
+                    <div class="max-w-4xl mx-auto text-center">
+                        <h1 class="title">Your Brand Title Here</h1>
+                        <p class="subtitle">This component adapts to your color choices automatically. Try switching themes above!</p>
+                        <button class="button">Get Started</button>
+                    </div>
+                </section>
+                
+                <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card">
+                        <h3 class="font-semibold mb-2" style="color: var(--title-color)">Card Title</h3>
+                        <p class="text-sm" style="color: var(--text-color); opacity: 0.8">All components use the same color tokens for consistency.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-semibold mb-2" style="color: var(--title-color)">Another Card</h3>
+                        <p class="text-sm" style="color: var(--text-color); opacity: 0.8">Change one color variable, update everywhere.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-semibold mb-2" style="color: var(--title-color)">Third Card</h3>
+                        <p class="text-sm" style="color: var(--text-color); opacity: 0.8">Professional results with minimal effort.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- What Users Can Edit -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">✏️ What Users Can Edit</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Direct Edits (Visual Builder)</h3>
+                    <ul class="space-y-1 text-sm text-gray-600">
+                        <li>• 4 Brand Colors (generates 40+ variations)</li>
+                        <li>• Typography Scale (9 sizes)</li>
+                        <li>• Spacing System (10 values)</li>
+                        <li>• Border Radius (6 options)</li>
+                        <li>• Shadow Depths (5 levels)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Preset System</h3>
+                    <ul class="space-y-1 text-sm text-gray-600">
+                        <li>• Color Presets (light, dark, custom)</li>
+                        <li>• Layout Presets (center, split, full)</li>
+                        <li>• Typography Hierarchy</li>
+                        <li>• Component Variations</li>
+                        <li>• Helper Modifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -84,28 +84,114 @@ Modifications and variants: `[data-helper="black-friday"]`
 
 # S4 COLOR PRESET SYSTEM
 
-## **Core Innovation: Hydration + Cascading**
-You've created a **separation of concerns** between:
-1. **Color Assignment** (which of color1-4 gets used)
-2. **Color Modification** (mathematical adjustments to those colors)
+**Hydration system for dynamic color assignment**
 
-## **The Hydration System**
-- Elements start with `--base-color` placeholders (transparent)
-- **Base Theme Presets** hydrate elements by assigning color1-4 (no modifications)
-- **Helper Presets** apply mathematical modifications while preserving hue
+---
 
-## **Cascading Flexibility**
-Both base themes AND helper presets can be applied at any level:
-- Site-wide defaults
-- Section overrides  
-- Component overrides
-- Element overrides
+## **HOW IT WORKS**
 
-## **Current Goals**
-1. **Build Example-2** with working preset system
+1. **GECs use placeholders**: All color properties set to `--color-base` (transparent)
+2. **Presets assign colors**: Map color1-4 to specific properties
+3. **Apply via data attribute**: `data-preset="name"` activates hydration
 
-## **Key Benefits**
-- **Contextual theming**: Apply different presets to sections/components for visual variety
-- **Mathematical consistency**: Helper presets automatically adapt to any base theme
-- **Designer control**: Mix and match themes and modifications at any granularity
-- **No framework lock-in**: Users control everything through their own color definitions
+## **SYNTAX**
+
+```css
+/* GEC with placeholder */
+.wrapper {
+    --wrapper-bg: var(--color-base);
+}
+
+/* Preset assigns color */
+[data-preset="default-colors"] .wrapper {
+    --wrapper-bg: var(--color3);
+}
+```
+
+## **KEY RULES**
+
+- Target specific classes: `[data-preset="name"] .class`
+- NOT universal selector: `[data-preset="name"] *`
+- Presets only assign base colors (no modifications yet)
+
+## **CASCADE HIERARCHY**
+
+1. **Body preset**: Base hydration for all elements
+2. **Element preset**: Override parent preset on specific elements  
+3. **Component scope**: Component-specific styling
+4. **Helper scope**: Final overrides
+
+## **GRANULAR APPLICATION**
+
+```html
+<body data-preset="emphasis-colors">
+    <div data-scope="hero">
+        <section data-preset="default-colors">  <!-- Override just this element -->
+```
+
+## **EXAMPLES**
+
+- **S4-SYSTEM-Example-2.html**: Preset hydration + granular application
+- **S4-SYSTEM-Example-3.html**: Helper presets with hierarchy modifications
+- **S4-SYSTEM-Example-4.html**: JSON-based preset system with live controls
+
+---
+
+# S4 JSON-BASED ARCHITECTURE
+
+**All UI interactions and theme editing use JSON as the primary data format**
+
+---
+
+## **JSON STRUCTURE**
+
+```json
+{
+  "brandTokens": {
+    "colors": { "color1": { "h": 172, "s": 50, "l": 40 } }
+  },
+  "colorPresets": {
+    "default-colors": {
+      "assignments": { "title": { "color": "color3" } }
+    }
+  },
+  "helperPresets": {
+    "typography": {
+      "hierarchy": {
+        "modifications": {
+          "title": { "lightness": { "operation": "set", "value": 90 } }
+        }
+      }
+    }
+  },
+  "layoutPresets": { ... },
+  "scopes": { ... }
+}
+```
+
+## **BENEFITS**
+
+- **React State Management**: Direct mapping to Redux/Zustand
+- **Dynamic CSS Generation**: Real-time conversion from JSON to CSS
+- **Visual Builder**: UI controls modify JSON, CSS updates automatically
+- **Import/Export**: Portable preset configurations
+- **Database Storage**: Save as JSON in WordPress
+
+## **IMPLEMENTATION**
+
+- **s4-presets.json**: Complete preset definitions
+- **S4PresetProcessor**: JavaScript class for JSON→CSS conversion
+- **Live Updates**: Changes apply instantly without page reload
+
+## **OPERATIONS**
+
+Mathematical operations for color/layout modifications:
+- `set`: Direct value replacement
+- `adjust`: Add/subtract from current
+- `multiply`: Scale current value
+- `divide`: Reduce current value
+
+---
+
+**Ready for Plugin**: Complete JSON system for React implementation
+
