@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useStore, useWordPressStore } from './storage/store.js';
-import { Panel } from './components/Panel.jsx';
+import { S4ThemeBuilder } from './s4/components/S4ThemeBuilder.jsx';
 
 export function ShadowApp(props = {}) {
   // Extract props passed from PHP/server-side
@@ -59,8 +59,10 @@ export function ShadowApp(props = {}) {
         <style dangerouslySetInnerHTML={{ __html: decodedCSS }} />
       )}
       
-      {/* Main panel component */}
-      <Panel />
+      {/* S4 Theme Builder */}
+      <div className="h-screen">
+        <S4ThemeBuilder />
+      </div>
     </>
   );
 }

@@ -4,7 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a WordPress plugin boilerplate that demonstrates modern React Shadow DOM architecture with a complete ShadCN design system. The plugin creates web components using React that render in Shadow DOM to prevent WordPress style conflicts.
+Studio4 is a WordPress plugin implementing the S4 (4-Layer Scope System) for visual theme building. It uses React Shadow DOM architecture with ShadCN design system for the UI, while allowing users to create themes using the S4 system.
+
+## S4 System Architecture
+
+### The 4 Layers (IN ORDER - this is critical):
+1. **Brand Tokens**: 4 colors + typography that cascade through everything
+2. **Global Elements**: Define all properties for every element (section, title, button, etc.)
+3. **Component Scopes**: Modify global elements within components (hero, card, sidebar)
+4. **Helper Scopes**: Utilities and states (hover, hierarchy, saturation)
+
+### Current Status
+- ✅ Basic color picker for brand tokens
+- ✅ Color persistence working
+- ❌ Built wrong "layouts" system (spacing/sizing instead of component layouts)
+- 📋 Need to build: Typography, Global Elements, Color Presets, Component Scopes
+
+### IMPORTANT: Correct User Flow
+1. Brand Setup (Colors + Typography)
+2. Global Elements Definition
+3. Color Preset Mapping
+4. Helper Presets
+5. Component Scopes
+6. Layout Transformations (component layouts, NOT spacing)
+
+### What "Layouts" Means in S4
+- Component layout transformations (hero: center → half-page → full-width)
+- Card arrangements (grid → list → masonry)
+- NOT spacing scales or sizing systems
 
 ## Key Architecture
 
@@ -15,10 +42,47 @@ This is a WordPress plugin boilerplate that demonstrates modern React Shadow DOM
 - **Web Component**: Registered as `<plugin-boilerplate>` custom element
 
 ### Server-Side Integration
-- **WordPress Plugin**: `shadow-plugin.php` - Singleton plugin class with hooks, REST API, and CSS injection
+- **WordPress Plugin**: `studio4.php` - Singleton plugin class with hooks, REST API, and CSS injection
 - **Props System**: Server data passed via base64-encoded attributes (non-escaped to prevent CSS corruption)
 - **CSS Injection**: Tailwind CSS served server-side and injected into shadow DOM via `<style>` tags
-- **REST API**: WordPress REST endpoints at `/wp-json/shadow-plugin/v1/`
+- **REST API**: WordPress REST endpoints at `/wp-json/studio4/v1/`
+
+## S4 Implementation Guidelines
+
+### Global Elements to Define
+```javascript
+const globalElements = {
+  'section': { bg, padding, margin, border },
+  'container': { maxWidth, padding, margin },
+  'wrapper': { bg, padding, border, borderRadius },
+  'title': { color, fontSize, fontWeight, lineHeight, margin },
+  'subtitle': { color, fontSize, fontWeight, lineHeight, margin },
+  'pretitle': { color, fontSize, fontWeight, textTransform, letterSpacing },
+  'text': { color, fontSize, lineHeight, opacity },
+  'button-primary': { bg, color, padding, border, borderRadius, fontSize },
+  'button-secondary': { bg, color, padding, border, borderRadius, fontSize },
+  'link': { color, textDecoration, hover },
+  'divider': { borderColor, borderWidth, margin }
+};
+```
+
+### Property Matrix
+Every element needs ALL properties defined, even if null:
+- color, background-color
+- border (width, color, style, radius)
+- padding, margin
+- font (size, weight, line-height, family)
+- opacity, transition
+- text (transform, decoration, align)
+
+### CSS Variable Generation Pattern
+```css
+/* For each element and property */
+--[element]-[property]: value;
+--title-color: var(--color3);
+--title-font-size: 2.5rem;
+--button-primary-bg: var(--color1);
+```
 
 ## Development Commands
 

@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Plugin Boilerplate
- * Description: A WordPress plugin boilerplate with React Shadow DOM architecture and Raycast design system
+ * Plugin Name: Studio4 - Visual Design System Builder
+ * Description: Revolutionary S4 design system with visual theme builder, transformable layouts, and Tailwind 4 integration
  * Version: 1.0.0
- * Author: Daniel Snell @ Umbral.ai
+ * Author: MI Agency
  * License: GPL v2 or later
- * Text Domain: plugin-boilerplate
+ * Text Domain: studio4
  * Domain Path: /languages
  *
- * @package PluginBoilerplate
+ * @package Studio4
  */
 
 // Prevent direct access
@@ -17,16 +17,16 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('PLUGIN_BOILERPLATE_VERSION', '1.0.0');
-define('PLUGIN_BOILERPLATE_FILE', __FILE__);
-define('PLUGIN_BOILERPLATE_DIR', plugin_dir_path(__FILE__));
-define('PLUGIN_BOILERPLATE_URL', plugin_dir_url(__FILE__));
-define('PLUGIN_BOILERPLATE_BASENAME', plugin_basename(__FILE__));
+define('STUDIO4_VERSION', '1.0.0');
+define('STUDIO4_FILE', __FILE__);
+define('STUDIO4_DIR', plugin_dir_path(__FILE__));
+define('STUDIO4_URL', plugin_dir_url(__FILE__));
+define('STUDIO4_BASENAME', plugin_basename(__FILE__));
 
 /**
  * Main Plugin Class
  */
-class ShadowPlugin {
+class Studio4 {
     
     /**
      * Single instance of the class
@@ -77,7 +77,7 @@ class ShadowPlugin {
      */
     public function onInit() {
         // Load text domain
-        load_plugin_textdomain('shadow-plugin', false, dirname(PLUGIN_BOILERPLATE_BASENAME) . '/languages');
+        load_plugin_textdomain('studio4', false, dirname(STUDIO4_BASENAME) . '/languages');
         
         // Initialize database tables if needed
         $this->initDatabase();
@@ -88,11 +88,11 @@ class ShadowPlugin {
      */
     public function enqueueAssets() {
         // Enqueue the React build
-        $js_file = PLUGIN_BOILERPLATE_DIR . 'dist/js/shadow-plugin.js';
+        $js_file = STUDIO4_DIR . 'dist/js/studio4.js';
         if (file_exists($js_file)) {
             wp_enqueue_script(
-                'shadow-plugin-js',
-                PLUGIN_BOILERPLATE_URL . 'dist/js/shadow-plugin.js',
+                'studio4-js',
+                STUDIO4_URL . 'dist/js/studio4.js',
                 [],
                 filemtime($js_file),
                 true
@@ -100,15 +100,15 @@ class ShadowPlugin {
         }
         
         // Localize script with WordPress data
-        wp_localize_script('shadow-plugin-js', 'shadowPluginData', [
-            'nonce' => wp_create_nonce('shadow_plugin_nonce'),
-            'apiUrl' => rest_url('shadow-plugin/v1/'),
+        wp_localize_script('studio4-js', 'studio4Data', [
+            'nonce' => wp_create_nonce('studio4_nonce'),
+            'apiUrl' => rest_url('studio4/v1/'),
             'adminUrl' => admin_url(),
-            'pluginUrl' => PLUGIN_BOILERPLATE_URL,
+            'pluginUrl' => STUDIO4_URL,
             'isAdmin' => is_admin(),
             'currentUser' => wp_get_current_user()->ID,
-            'version' => PLUGIN_BOILERPLATE_VERSION,
-            'tailwindApiUrl' => rest_url('shadow-plugin/v1/tailwind-styles'),
+            'version' => STUDIO4_VERSION,
+            'tailwindApiUrl' => rest_url('studio4/v1/tailwind-styles'),
             'hasTailwindCSS' => $this->hasTailwindCSS()
         ]);
         
@@ -129,21 +129,21 @@ class ShadowPlugin {
      */
     public function initRestApi() {
         // Register API routes
-        register_rest_route('shadow-plugin/v1', '/data', [
+        register_rest_route('studio4/v1', '/data', [
             'methods' => 'GET',
             'callback' => [$this, 'apiGetData'],
             'permission_callback' => [$this, 'apiPermissionCheck']
         ]);
         
-        register_rest_route('shadow-plugin/v1', '/data', [
+        register_rest_route('studio4/v1', '/data', [
             'methods' => 'POST',
             'callback' => [$this, 'apiSaveData'],
             'permission_callback' => [$this, 'apiPermissionCheck']
         ]);
         
         // Register Tailwind CSS API routes
-        if (class_exists('ShadowPlugin_Tailwind_Controller')) {
-            $tailwind_controller = new ShadowPlugin_Tailwind_Controller();
+        if (class_exists('Studio4_Tailwind_Controller')) {
+            $tailwind_controller = new Studio4_Tailwind_Controller();
             $tailwind_controller->register_routes();
         }
     }
@@ -198,10 +198,10 @@ class ShadowPlugin {
      */
     public function addAdminMenu() {
         add_options_page(
-            __('Shadow Plugin Settings', 'shadow-plugin'),
-            __('Shadow Plugin', 'shadow-plugin'),
+            __('Studio4 Settings', 'studio4'),
+            __('Studio4', 'studio4'),
             'manage_options',
-            'shadow-plugin-settings',
+            'studio4-settings',
             [$this, 'renderAdminPage']
         );
     }
@@ -221,21 +221,21 @@ class ShadowPlugin {
         ?>
         <div class="wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-            <div id="shadow-plugin-admin-root">
+            <div id="studio4-admin-root">
                 <!-- Example of passing server data to React component via attributes -->
-                <plugin-boilerplate 
+                <studio4-builder 
                     user-role="<?php echo esc_attr($user_role); ?>"
                     site-url="<?php echo esc_attr(home_url()); ?>"
                     user-id="<?php echo esc_attr($current_user->ID); ?>"
-                    settings='<?php echo esc_attr(json_encode(get_option('shadow_plugin_settings', []))); ?>'
-                    api-nonce="<?php echo esc_attr(wp_create_nonce('shadow_plugin_nonce')); ?>"
-                    plugin-version="<?php echo esc_attr(PLUGIN_BOILERPLATE_VERSION); ?>"
+                    settings='<?php echo esc_attr(json_encode(get_option('studio4_settings', []))); ?>'
+                    api-nonce="<?php echo esc_attr(wp_create_nonce('studio4_nonce')); ?>"
+                    plugin-version="<?php echo esc_attr(STUDIO4_VERSION); ?>"
                     is-admin="<?php echo esc_attr(current_user_can('manage_options') ? 'true' : 'false'); ?>"
                     theme="dark"
                     <?php if (!empty($tailwind_css)) : ?>
                     tailwind-css="<?php echo base64_encode($tailwind_css); ?>"
                     <?php endif; ?>
-                ></plugin-boilerplate>
+                ></studio4-builder>
             </div>
         </div>
         <?php
@@ -245,7 +245,7 @@ class ShadowPlugin {
      * Get Tailwind CSS content server-side
      */
     private function getTailwindCSS() {
-        $css_file = PLUGIN_BOILERPLATE_DIR . 'dist/css/main.css';
+        $css_file = STUDIO4_DIR . 'dist/css/main.css';
         
         if (!file_exists($css_file)) {
             return '';
@@ -297,7 +297,7 @@ class ShadowPlugin {
         // Add a web component with server data to footer only if script is enqueued
         add_action('wp_footer', function() use ($current_user, $user_role, $tailwind_css) {
             // Only inject if the script was actually enqueued
-            if (!wp_script_is('shadow-plugin-js', 'enqueued')) {
+            if (!wp_script_is('studio4-js', 'enqueued')) {
                 return;
             }
             ?>
@@ -305,16 +305,16 @@ class ShadowPlugin {
                 // Auto-create shadow plugin panel with server data
                 document.addEventListener('DOMContentLoaded', function() {
                     // Only add if not already present
-                    if (!document.querySelector('plugin-boilerplate')) {
-                        const panel = document.createElement('plugin-boilerplate');
+                    if (!document.querySelector('studio4-builder')) {
+                        const panel = document.createElement('studio4-builder');
                         
                         // Set attributes with server data
                         panel.setAttribute('user-role', '<?php echo esc_js($user_role); ?>');
                         panel.setAttribute('site-url', '<?php echo esc_js(home_url()); ?>');
                         panel.setAttribute('user-id', '<?php echo esc_js($current_user->ID); ?>');
-                        panel.setAttribute('settings', '<?php echo esc_js(json_encode(get_option('shadow_plugin_settings', []))); ?>');
-                        panel.setAttribute('api-nonce', '<?php echo esc_js(wp_create_nonce('shadow_plugin_nonce')); ?>');
-                        panel.setAttribute('plugin-version', '<?php echo esc_js(PLUGIN_BOILERPLATE_VERSION); ?>');
+                        panel.setAttribute('settings', '<?php echo esc_js(json_encode(get_option('studio4_settings', []))); ?>');
+                        panel.setAttribute('api-nonce', '<?php echo esc_js(wp_create_nonce('studio4_nonce')); ?>');
+                        panel.setAttribute('plugin-version', '<?php echo esc_js(STUDIO4_VERSION); ?>');
                         panel.setAttribute('is-admin', '<?php echo esc_js(current_user_can('manage_options') ? 'true' : 'false'); ?>');
                         panel.setAttribute('theme', 'dark');
                         <?php if (!empty($tailwind_css)) : ?>
@@ -332,7 +332,7 @@ class ShadowPlugin {
         // For admin pages, also add to admin_footer
         add_action('admin_footer', function() use ($current_user, $user_role, $tailwind_css) {
             // Only inject if the script was actually enqueued
-            if (!wp_script_is('shadow-plugin-js', 'enqueued')) {
+            if (!wp_script_is('studio4-js', 'enqueued')) {
                 return;
             }
             ?>
@@ -340,16 +340,16 @@ class ShadowPlugin {
                 // Auto-create shadow plugin panel with server data
                 document.addEventListener('DOMContentLoaded', function() {
                     // Only add if not already present
-                    if (!document.querySelector('plugin-boilerplate')) {
-                        const panel = document.createElement('plugin-boilerplate');
+                    if (!document.querySelector('studio4-builder')) {
+                        const panel = document.createElement('studio4-builder');
                         
                         // Set attributes with server data
                         panel.setAttribute('user-role', '<?php echo esc_js($user_role); ?>');
                         panel.setAttribute('site-url', '<?php echo esc_js(home_url()); ?>');
                         panel.setAttribute('user-id', '<?php echo esc_js($current_user->ID); ?>');
-                        panel.setAttribute('settings', '<?php echo esc_js(json_encode(get_option('shadow_plugin_settings', []))); ?>');
-                        panel.setAttribute('api-nonce', '<?php echo esc_js(wp_create_nonce('shadow_plugin_nonce')); ?>');
-                        panel.setAttribute('plugin-version', '<?php echo esc_js(PLUGIN_BOILERPLATE_VERSION); ?>');
+                        panel.setAttribute('settings', '<?php echo esc_js(json_encode(get_option('studio4_settings', []))); ?>');
+                        panel.setAttribute('api-nonce', '<?php echo esc_js(wp_create_nonce('studio4_nonce')); ?>');
+                        panel.setAttribute('plugin-version', '<?php echo esc_js(STUDIO4_VERSION); ?>');
                         panel.setAttribute('is-admin', '<?php echo esc_js(current_user_can('manage_options') ? 'true' : 'false'); ?>');
                         panel.setAttribute('theme', 'dark');
                         <?php if (!empty($tailwind_css)) : ?>
@@ -373,8 +373,8 @@ class ShadowPlugin {
         $this->createTables();
         
         // Set default options
-        add_option('shadow_plugin_version', PLUGIN_BOILERPLATE_VERSION);
-        add_option('shadow_plugin_settings', [
+        add_option('studio4_version', STUDIO4_VERSION);
+        add_option('studio4_settings', [
             'enabled' => true,
             'api_key' => ''
         ]);
@@ -395,11 +395,11 @@ class ShadowPlugin {
      * Initialize database
      */
     private function initDatabase() {
-        $installed_version = get_option('shadow_plugin_version');
+        $installed_version = get_option('studio4_version');
         
-        if ($installed_version !== PLUGIN_BOILERPLATE_VERSION) {
+        if ($installed_version !== STUDIO4_VERSION) {
             $this->createTables();
-            update_option('shadow_plugin_version', PLUGIN_BOILERPLATE_VERSION);
+            update_option('studio4_version', STUDIO4_VERSION);
         }
     }
     
@@ -409,7 +409,7 @@ class ShadowPlugin {
     private function createTables() {
         global $wpdb;
         
-        $table_name = $wpdb->prefix . 'shadow_plugin_data';
+        $table_name = $wpdb->prefix . 'studio4_data';
         
         $charset_collate = $wpdb->get_charset_collate();
         
@@ -433,8 +433,8 @@ class ShadowPlugin {
      * Check if Tailwind CSS file exists
      */
     private function hasTailwindCSS() {
-        if (class_exists('ShadowPlugin_Tailwind_Controller')) {
-            $controller = new ShadowPlugin_Tailwind_Controller();
+        if (class_exists('Studio4_Tailwind_Controller')) {
+            $controller = new Studio4_Tailwind_Controller();
             return $controller->css_file_exists();
         }
         return false;
@@ -445,15 +445,15 @@ class ShadowPlugin {
      */
     private function loadDependencies() {
         // Load additional PHP classes here
-        require_once PLUGIN_BOILERPLATE_DIR . 'includes/api/class-tailwind-controller.php';
+        require_once STUDIO4_DIR . 'includes/api/class-tailwind-controller.php';
         // require_once SHADOW_PLUGIN_DIR . 'includes/class-admin.php';
     }
 }
 
 // Initialize the plugin
-function shadowPlugin() {
-    return ShadowPlugin::getInstance();
+function studio4() {
+    return Studio4::getInstance();
 }
 
 // Start the plugin
-shadowPlugin();
+studio4();

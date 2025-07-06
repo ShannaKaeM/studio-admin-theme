@@ -14,8 +14,8 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: 'src/main.jsx',
-      name: 'ShadowPlugin',
-      fileName: () => 'shadow-plugin.js',
+      name: 'Studio4',
+      fileName: () => 'studio4.js',
       formats: ['iife']
     },
     rollupOptions: {

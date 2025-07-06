@@ -4,7 +4,7 @@ import { ShadowApp } from './ShadowApp';
 import './styles/main.css';
 
 // Custom web component with proper shadow DOM
-class PluginBoilerplateElement extends HTMLElement {
+class Studio4Element extends HTMLElement {
   constructor() {
     super();
     
@@ -66,10 +66,10 @@ class PluginBoilerplateElement extends HTMLElement {
 }
 
 // Register the web component
-customElements.define('plugin-boilerplate', PluginBoilerplateElement);
+customElements.define('studio4-builder', Studio4Element);
 
 // Export for global access
-window.ShadowPlugin = {
+window.Studio4 = {
   ShadowApp,
   init: () => {
     // Plugin initialized
@@ -78,5 +78,5 @@ window.ShadowPlugin = {
 
 // Auto-initialize
 document.addEventListener('DOMContentLoaded', () => {
-  window.ShadowPlugin.init();
+  window.Studio4.init();
 });

@@ -4,7 +4,7 @@
  * 
  * Handles fetching and serving compiled Tailwind CSS for the Shadow DOM web component
  * 
- * @package ShadowPlugin
+ * @package Studio4
  */
 
 // Prevent direct access
@@ -12,13 +12,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class ShadowPlugin_Tailwind_Controller {
+class Studio4_Tailwind_Controller {
     
     /**
      * Register REST API routes
      */
     public function register_routes() {
-        register_rest_route('shadow-plugin/v1', '/tailwind-styles', [
+        register_rest_route('studio4/v1', '/tailwind-styles', [
             'methods' => 'GET',
             'callback' => [$this, 'get_tailwind_styles'],
             'permission_callback' => '__return_true', // Public endpoint for styles
@@ -42,12 +42,12 @@ class ShadowPlugin_Tailwind_Controller {
         try {
             // Look for compiled CSS in common Tailwind output locations
             $possible_paths = [
-                PLUGIN_BOILERPLATE_DIR . 'dist/css/main.css',
-                PLUGIN_BOILERPLATE_DIR . 'dist/main.css',
-                PLUGIN_BOILERPLATE_DIR . 'dist/styles.css',
-                PLUGIN_BOILERPLATE_DIR . 'dist/tailwind.css',
-                PLUGIN_BOILERPLATE_DIR . 'src/styles/main.css',
-                PLUGIN_BOILERPLATE_DIR . 'build/css/main.css'
+                STUDIO4_DIR . 'dist/css/main.css',
+                STUDIO4_DIR . 'dist/main.css',
+                STUDIO4_DIR . 'dist/styles.css',
+                STUDIO4_DIR . 'dist/tailwind.css',
+                STUDIO4_DIR . 'src/styles/main.css',
+                STUDIO4_DIR . 'build/css/main.css'
             ];
             
             $css_content = '';
@@ -135,11 +135,11 @@ class ShadowPlugin_Tailwind_Controller {
      */
     public function get_css_modification_time() {
         $possible_paths = [
-            PLUGIN_BOILERPLATE_DIR . 'dist/css/main.css',
-            PLUGIN_BOILERPLATE_DIR . 'dist/main.css',
-            PLUGIN_BOILERPLATE_DIR . 'dist/styles.css',
-            PLUGIN_BOILERPLATE_DIR . 'dist/tailwind.css',
-            PLUGIN_BOILERPLATE_DIR . 'src/styles/main.css'
+            STUDIO4_DIR . 'dist/css/main.css',
+            STUDIO4_DIR . 'dist/main.css',
+            STUDIO4_DIR . 'dist/styles.css',
+            STUDIO4_DIR . 'dist/tailwind.css',
+            STUDIO4_DIR . 'src/styles/main.css'
         ];
         
         foreach ($possible_paths as $path) {
@@ -158,11 +158,11 @@ class ShadowPlugin_Tailwind_Controller {
      */
     public function css_file_exists() {
         $possible_paths = [
-            PLUGIN_BOILERPLATE_DIR . 'dist/css/main.css',
-            PLUGIN_BOILERPLATE_DIR . 'dist/main.css',
-            PLUGIN_BOILERPLATE_DIR . 'dist/styles.css',
-            PLUGIN_BOILERPLATE_DIR . 'dist/tailwind.css',
-            PLUGIN_BOILERPLATE_DIR . 'src/styles/main.css'
+            STUDIO4_DIR . 'dist/css/main.css',
+            STUDIO4_DIR . 'dist/main.css',
+            STUDIO4_DIR . 'dist/styles.css',
+            STUDIO4_DIR . 'dist/tailwind.css',
+            STUDIO4_DIR . 'src/styles/main.css'
         ];
         
         foreach ($possible_paths as $path) {
@@ -180,6 +180,6 @@ class ShadowPlugin_Tailwind_Controller {
      * @return string
      */
     public static function get_api_url() {
-        return rest_url('shadow-plugin/v1/tailwind-styles');
+        return rest_url('studio4/v1/tailwind-styles');
     }
 }

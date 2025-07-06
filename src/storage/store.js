@@ -29,6 +29,23 @@ export const useStore = create(
       // Demo mode
       isDemoMode: true,
       
+      // S4 Theme Builder State
+      s4BrandColors: {
+        color1: '#b25977', // Rose
+        color2: '#b8874d', // Gold
+        color3: 'hsl(0, 0%, 20%)', // Neutral Dark
+        color4: 'hsl(0, 0%, 98%)', // Base Light
+      },
+      s4ActiveColorPreset: 'default-colors',
+      s4ActiveLayoutPreset: 'balanced',
+      s4ActiveHelpers: [],
+      s4LayoutSettings: {
+        spacing: { base: 1, scale: 1.5 },
+        sizing: { base: 16, scale: 1.333 },
+        container: { maxWidth: 1280, padding: 24 },
+        grid: { gap: 24, columns: 12 }
+      },
+      
       // Actions
       togglePanel: () => set((state) => ({ 
         isPanelOpen: !state.isPanelOpen 
@@ -75,6 +92,28 @@ export const useStore = create(
       })),
       
       setDemoMode: (enabled) => set({ isDemoMode: enabled }),
+      
+      // S4 Actions
+      setS4BrandColors: (colors) => set({ s4BrandColors: colors }),
+      updateS4BrandColor: (colorKey, value) => set((state) => ({
+        s4BrandColors: {
+          ...state.s4BrandColors,
+          [colorKey]: value
+        }
+      })),
+      setS4ActiveColorPreset: (preset) => set({ s4ActiveColorPreset: preset }),
+      setS4ActiveLayoutPreset: (preset) => set({ s4ActiveLayoutPreset: preset }),
+      setS4ActiveHelpers: (helpers) => set({ s4ActiveHelpers: helpers }),
+      setS4LayoutSettings: (settings) => set({ s4LayoutSettings: settings }),
+      updateS4LayoutSetting: (category, key, value) => set((state) => ({
+        s4LayoutSettings: {
+          ...state.s4LayoutSettings,
+          [category]: {
+            ...state.s4LayoutSettings[category],
+            [key]: value
+          }
+        }
+      })),
       
       // Computed getters
       getFilteredCommands: (commands) => {
@@ -124,6 +163,11 @@ export const useStore = create(
         panelPosition: state.panelPosition,
         settings: state.settings,
         isDemoMode: state.isDemoMode,
+        s4BrandColors: state.s4BrandColors,
+        s4ActiveColorPreset: state.s4ActiveColorPreset,
+        s4ActiveLayoutPreset: state.s4ActiveLayoutPreset,
+        s4LayoutSettings: state.s4LayoutSettings,
+        s4ActiveHelpers: state.s4ActiveHelpers,
       }),
       
       // Handle storage events for cross-tab sync

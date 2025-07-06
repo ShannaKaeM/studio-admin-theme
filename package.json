@@ -1,7 +1,7 @@
 {
-  "name": "shadow-plugin-boilerplate",
+  "name": "studio4",
   "version": "1.0.0",
-  "description": "WordPress plugin boilerplate with React Shadow DOM and Raycast design system",
+  "description": "Revolutionary S4 design system with visual theme builder, transformable layouts, and Tailwind 4 integration",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,10 +19,11 @@
     "plugin",
     "react",
     "shadow-dom",
-    "boilerplate",
-    "raycast"
+    "s4",
+    "design-system",
+    "theme-builder"
   ],
-  "author": "Your Name",
+  "author": "MI Agency",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
