@@ -1,0 +1,80 @@
+{
+  "colors": {
+    "color1-base": "hsl(174, 45%, 50%)",
+    "color2-base": "hsl(30, 40%, 50%)",
+    "color3-base": "hsl(0, 0%, 50%)",
+    "color4-base": "hsl(337, 35%, 52%)",
+    "palettes": {
+      "color1": {
+        "lightest": 90,
+        "light": 70,
+        "base": 50,
+        "dark": 30,
+        "darkest": 10
+      },
+      "color2": {
+        "lightest": 90,
+        "light": 70,
+        "base": 50,
+        "dark": 30,
+        "darkest": 10
+      },
+      "color3": {
+        "lightest": 90,
+        "light": 70,
+        "base": 50,
+        "dark": 30,
+        "darkest": 10
+      },
+      "color4": {
+        "lightest": 90,
+        "light": 70,
+        "base": 50,
+        "dark": 30,
+        "darkest": 10
+      }
+    }
+  },
+  "typography": {
+    "pretitle": {
+      "size": "0.875rem",
+      "weight": "600",
+      "lineHeight": "1.2",
+      "letterSpacing": "0.05em",
+      "transform": "uppercase",
+      "marginBottom": "0.5em",
+      "color": "hsl(from var(--color3-base) h s 30%)",
+      "sampleText": "PRETITLE TEXT"
+    },
+    "title": {
+      "size": "2rem",
+      "weight": "600",
+      "lineHeight": "1.2",
+      "letterSpacing": "normal",
+      "transform": "none",
+      "marginBottom": "0.5em",
+      "color": "hsl(from var(--color3-base) h s 10%)",
+      "sampleText": "This is a Title"
+    },
+    "subtitle": {
+      "size": "1.25rem",
+      "weight": "500",
+      "lineHeight": "1.4",
+      "letterSpacing": "normal",
+      "transform": "uppercase",
+      "marginBottom": "0.75em",
+      "color": "hsl(from var(--color3-base) h s 30%)",
+      "sampleText": "This is a Subtitle"
+    },
+    "description": {
+      "size": "1rem",
+      "weight": "400",
+      "lineHeight": "1.6",
+      "letterSpacing": "normal",
+      "transform": "none",
+      "marginBottom": "1em",
+      "color": "hsl(from var(--color3-base) h s 30%)",
+      "sampleText": "This is a description paragraph with more text to show line height."
+    }
+  }
+}

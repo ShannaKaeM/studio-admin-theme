@@ -1,0 +1,3560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio4 - Visual Design System Builder</title>
+    <style>
+        /* ============================================ */
+        /* LAYER 1: PRIMITIVES (Studio4 theme)          */
+        /* ============================================ */
+        :root {
+            /* Base Color Definitions */
+            --studio4-primary: hsl(337, 35%, 52%);     /* Pink */
+            --studio4-accent: hsl(29, 44%, 53%);       /* Tangerine */
+            --studio4-neutral: hsl(0, 0%, 50%);
+            
+            /* Neutral Scale */
+            --neutral-950: hsl(from var(--studio4-neutral) h s 5%);
+            --neutral-900: hsl(from var(--studio4-neutral) h s 10%);
+            --neutral-800: hsl(from var(--studio4-neutral) h s 15%);
+            --neutral-700: hsl(from var(--studio4-neutral) h s 25%);
+            --neutral-600: hsl(from var(--studio4-neutral) h s 30%);
+            --neutral-500: hsl(from var(--studio4-neutral) h s 50%);
+            --neutral-400: hsl(from var(--studio4-neutral) h s 60%);
+            --neutral-300: hsl(from var(--studio4-neutral) h s 70%);
+            --neutral-200: hsl(from var(--studio4-neutral) h s 80%);
+            --neutral-100: hsl(from var(--studio4-neutral) h s 90%);
+            --neutral-50: hsl(from var(--studio4-neutral) h s 95%);
+            
+            /* Semantic Aliases */
+            --primary: var(--studio4-primary);
+            --secondary: var(--studio4-accent);
+            --bg-base: var(--neutral-950);
+            --bg-surface: var(--neutral-900);
+            --bg-elevated: var(--neutral-800);
+            --content-primary: var(--neutral-50);
+            --content-secondary: var(--neutral-300);
+            --border-default: var(--neutral-700);
+            --border-subtle: var(--neutral-800);
+            
+            /* Typography Scale */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 2rem;
+            
+            /* Spacing Scale */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            
+            /* Radii */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ============================================ */
+        /* LAYER 2: BASE COMPONENTS                     */
+        /* ============================================ */
+        
+        /* Button Component */
+        .button {
+            --button-padding: var(--space-2) var(--space-4);
+            --button-radius: var(--radius-md);
+            --button-size: var(--text-sm);
+            --button-weight: 500;
+            --button-bg: var(--primary);
+            --button-color: white;
+            --button-border: 1px solid var(--primary);
+            --button-hover-bg: hsl(from var(--primary) h s 60%);
+            --button-hover-border: 1px solid hsl(from var(--primary) h s 60%);
+            
+            padding: var(--button-padding);
+            border-radius: var(--button-radius);
+            font-size: var(--button-size);
+            font-weight: var(--button-weight);
+            background: var(--button-bg);
+            color: var(--button-color);
+            border: var(--button-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .button:hover {
+            background: var(--button-hover-bg);
+            border: var(--button-hover-border);
+        }
+        
+        /* Button Variants */
+        .button--outline {
+            --button-bg: transparent;
+            --button-color: var(--primary);
+            --button-hover-bg: hsl(from var(--primary) h s 60% / 0.1);
+        }
+        
+        .button--secondary {
+            --button-bg: var(--bg-elevated);
+            --button-color: var(--content-secondary);
+            --button-border: 1px solid var(--border-default);
+            --button-hover-bg: var(--neutral-700);
+            --button-hover-border: 1px solid var(--neutral-500);
+        }
+        
+        /* Input Component */
+        .input {
+            --input-padding: var(--space-2);
+            --input-radius: var(--radius-md);
+            --input-size: var(--text-sm);
+            --input-bg: var(--bg-elevated);
+            --input-color: var(--content-primary);
+            --input-border: 1px solid var(--border-default);
+            --input-focus-border: 1px solid var(--primary);
+            
+            padding: var(--input-padding);
+            border-radius: var(--input-radius);
+            font-size: var(--input-size);
+            background: var(--input-bg);
+            color: var(--input-color);
+            border: var(--input-border);
+            transition: border-color 0.2s ease;
+        }
+        
+        .input:focus {
+            outline: none;
+            border: var(--input-focus-border);
+        }
+        
+        /* Select Component */
+        .select {
+            --select-padding: var(--space-2);
+            --select-radius: var(--radius-md);
+            --select-size: var(--text-sm);
+            --select-bg: var(--bg-elevated);
+            --select-color: var(--content-primary);
+            --select-border: 1px solid var(--border-default);
+            
+            padding: var(--select-padding);
+            border-radius: var(--select-radius);
+            font-size: var(--select-size);
+            background: var(--select-bg);
+            color: var(--select-color);
+            border: var(--select-border);
+        }
+        
+        /* Tab Component */
+        .tab {
+            --tab-padding: var(--space-3) var(--space-6);
+            --tab-bg: transparent;
+            --tab-color: var(--content-secondary);
+            --tab-hover-color: var(--content-primary);
+            --tab-active-color: var(--content-primary);
+            --tab-active-border: 2px solid var(--primary);
+            
+            padding: var(--tab-padding);
+            background: var(--tab-bg);
+            color: var(--tab-color);
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tab:hover {
+            color: var(--tab-hover-color);
+        }
+        
+        .tab.active {
+            color: var(--tab-active-color);
+            border-bottom: var(--tab-active-border);
+        }
+        
+        /* Badge Component */
+        .badge {
+            --badge-size: 24px;
+            --badge-bg: var(--primary);
+            --badge-color: white;
+            --badge-font-size: var(--text-sm);
+            --badge-font-weight: 600;
+            
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background: var(--badge-bg);
+            color: var(--badge-color);
+            border-radius: 50%;
+            font-size: var(--badge-font-size);
+            font-weight: var(--badge-font-weight);
+        }
+        
+        .badge--secondary {
+            --badge-bg: var(--secondary);
+        }
+        
+        /* Wrapper Component */
+        .wrapper {
+            --wrapper-padding: var(--space-4);
+            --wrapper-bg: transparent;
+            --wrapper-border: none;
+            --wrapper-radius: 0;
+            --wrapper-display: block;
+            --wrapper-flex-direction: row;
+            --wrapper-height: auto;
+            --wrapper-overflow: visible;
+            
+            padding: var(--wrapper-padding);
+            background: var(--wrapper-bg);
+            border: var(--wrapper-border);
+            border-radius: var(--wrapper-radius);
+            display: var(--wrapper-display);
+            flex-direction: var(--wrapper-flex-direction);
+            height: var(--wrapper-height);
+            overflow: var(--wrapper-overflow);
+        }
+        
+        /* Section Component */
+        .section {
+            --section-padding: 0;
+            --section-bg: transparent;
+            --section-border: none;
+            --section-border-right: none;
+            --section-width: 100%;
+            --section-min-width: auto;
+            --section-height: 100vh;
+            --section-margin: 0;
+            --section-margin-left: 0;
+            --section-display: block;
+            --section-flex-direction: column;
+            --section-transition: none;
+            --section-position: static;
+            --section-overflow: visible;
+            
+            padding: var(--section-padding);
+            background: var(--section-bg);
+            border: var(--section-border);
+            border-right: var(--section-border-right);
+            width: var(--section-width);
+            min-width: var(--section-min-width);
+            height: var(--section-height);
+            margin: var(--section-margin);
+            margin-left: var(--section-margin-left);
+            display: var(--section-display);
+            flex-direction: var(--section-flex-direction);
+            transition: var(--section-transition);
+            position: var(--section-position);
+            overflow: var(--section-overflow);
+            contain: layout style paint;
+        }
+        
+        /* Container Component */
+        .container {
+            --container-width: 100%;
+            --container-max-width: 100%;
+            --container-padding: 0;
+            --container-margin: 0 auto;
+            --container-display: flex;
+            --container-flex-direction: column;
+            --container-height: 100%;
+            
+            width: var(--container-width);
+            max-width: var(--container-max-width);
+            padding: var(--container-padding);
+            margin: var(--container-margin);
+            display: var(--container-display);
+            flex-direction: var(--container-flex-direction);
+            height: var(--container-height);
+        }
+        
+        /* Layout Component */
+        .layout {
+            --layout-display: flex;
+            --layout-direction: column;
+            --layout-gap: 0;
+            --layout-padding: 0;
+            --layout-bg: transparent;
+            --layout-flex: none;
+            --layout-min-height: auto;
+            --layout-overflow: visible;
+            --layout-radius: 0;
+            --layout-position: static;
+            
+            display: var(--layout-display);
+            flex-direction: var(--layout-direction);
+            gap: var(--layout-gap);
+            padding: var(--layout-padding);
+            background: var(--layout-bg);
+            flex: var(--layout-flex);
+            min-height: var(--layout-min-height);
+            overflow: var(--layout-overflow);
+            border-radius: var(--layout-radius);
+            position: var(--layout-position);
+        }
+        
+        /* Header Component */
+        .header {
+            --header-padding: var(--space-4);
+            --header-bg: transparent;
+            --header-border: none;
+            --header-border-bottom: none;
+            --header-color: inherit;
+            --header-display: block;
+            --header-flex-direction: row;
+            --header-gap: 0;
+            --header-flex-shrink: 0;
+            --header-height: auto;
+            --header-min-height: 0;
+            --header-align-items: stretch;
+            
+            padding: var(--header-padding);
+            background: var(--header-bg);
+            border: var(--header-border);
+            border-bottom: var(--header-border-bottom);
+            color: var(--header-color);
+            display: var(--header-display);
+            flex-direction: var(--header-flex-direction);
+            gap: var(--header-gap);
+            flex-shrink: var(--header-flex-shrink);
+            height: var(--header-height);
+            min-height: var(--header-min-height);
+            align-items: var(--header-align-items);
+        }
+        
+        /* Footer Component */
+        .footer {
+            --footer-padding: var(--space-4);
+            --footer-bg: transparent;
+            --footer-border: none;
+            --footer-border-top: none;
+            --footer-color: inherit;
+            --footer-flex-shrink: 1;
+            
+            padding: var(--footer-padding);
+            background: var(--footer-bg);
+            border: var(--footer-border);
+            border-top: var(--footer-border-top);
+            color: var(--footer-color);
+            flex-shrink: var(--footer-flex-shrink);
+        }
+        
+        /* Grid Component */
+        .grid {
+            --grid-display: grid;
+            --grid-columns: 1fr;
+            --grid-rows: 1fr;
+            --grid-gap: 0;
+            --grid-column-gap: 0;
+            --grid-row-gap: 0;
+            --grid-template-areas: none;
+            --grid-auto-flow: row;
+            --grid-auto-columns: auto;
+            --grid-auto-rows: auto;
+            --grid-justify-items: stretch;
+            --grid-align-items: stretch;
+            --grid-justify-content: start;
+            --grid-align-content: start;
+            --grid-padding: 0;
+            --grid-bg: transparent;
+            --grid-width: 100%;
+            --grid-height: 100%;
+            --grid-min-height: 0;
+            --grid-max-height: none;
+            
+            display: var(--grid-display);
+            grid-template-columns: var(--grid-columns);
+            grid-template-rows: var(--grid-rows);
+            gap: var(--grid-gap);
+            column-gap: var(--grid-column-gap);
+            row-gap: var(--grid-row-gap);
+            grid-template-areas: var(--grid-template-areas);
+            grid-auto-flow: var(--grid-auto-flow);
+            grid-auto-columns: var(--grid-auto-columns);
+            grid-auto-rows: var(--grid-auto-rows);
+            justify-items: var(--grid-justify-items);
+            align-items: var(--grid-align-items);
+            justify-content: var(--grid-justify-content);
+            align-content: var(--grid-align-content);
+            padding: var(--grid-padding);
+            background: var(--grid-bg);
+            width: var(--grid-width);
+            height: var(--grid-height);
+            min-height: var(--grid-min-height);
+            max-height: var(--grid-max-height);
+        }
+        
+        /* Label Component */
+        .label {
+            --label-display: block;
+            --label-color: var(--content-secondary);
+            --label-size: var(--text-sm);
+            --label-weight: 400;
+            --label-margin: 0 0 var(--space-2) 0;
+            
+            display: var(--label-display);
+            color: var(--label-color);
+            font-size: var(--label-size);
+            font-weight: var(--label-weight);
+            margin: var(--label-margin);
+        }
+        
+        /* Range Component */
+        .range {
+            --range-height: 6px;
+            --range-bg: var(--border-default);
+            --range-fill: var(--primary);
+            --range-thumb-size: 16px;
+            --range-thumb-bg: var(--primary);
+            --range-thumb-border: none;
+            --range-focus-shadow: 0 0 0 2px rgba(from var(--primary) r g b / 0.2);
+            
+            -webkit-appearance: none;
+            appearance: none;
+            height: var(--range-height);
+            background: var(--range-bg);
+            border-radius: calc(var(--range-height) / 2);
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: var(--range-thumb-size);
+            height: var(--range-thumb-size);
+            background: var(--range-thumb-bg);
+            border: var(--range-thumb-border);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .range::-moz-range-thumb {
+            width: var(--range-thumb-size);
+            height: var(--range-thumb-size);
+            background: var(--range-thumb-bg);
+            border: var(--range-thumb-border);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .range:focus::-webkit-slider-thumb {
+            box-shadow: var(--range-focus-shadow);
+        }
+        
+        .range:focus::-moz-range-thumb {
+            box-shadow: var(--range-focus-shadow);
+        }
+        
+        /* Color Picker Component */
+        .color-picker {
+            --picker-width: 3rem;
+            --picker-height: 2.5rem;
+            --picker-bg: var(--bg-elevated);
+            --picker-border: 1px solid var(--border-default);
+            --picker-radius: var(--radius-sm);
+            
+            width: var(--picker-width);
+            height: var(--picker-height);
+            background: var(--picker-bg);
+            border: var(--picker-border);
+            border-radius: var(--picker-radius);
+            cursor: pointer;
+        }
+        
+        /* Form Group Component */
+        .form-group {
+            --group-margin: 0 0 var(--space-4) 0;
+            
+            margin: var(--group-margin);
+        }
+        
+        /* Field Group Component (for range + input combos) */
+        .field-group {
+            --field-display: flex;
+            --field-gap: var(--space-2);
+            --field-align: center;
+            
+            display: var(--field-display);
+            gap: var(--field-gap);
+            align-items: var(--field-align);
+        }
+        
+        /* Accordion Component */
+        .accordion {
+            --accordion-margin: 0 0 var(--space-6) 0;
+            --accordion-bg: var(--bg-elevated);
+            --accordion-radius: var(--radius-lg);
+            --accordion-padding: var(--space-4);
+            --accordion-border: 1px solid var(--border-subtle);
+            
+            margin: var(--accordion-margin);
+            background: var(--accordion-bg);
+            border-radius: var(--accordion-radius);
+            padding: var(--accordion-padding);
+            border: var(--accordion-border);
+        }
+        
+        .accordion-header {
+            --accordion-header-cursor: pointer;
+            --accordion-header-user-select: none;
+            --accordion-header-position: relative;
+            --accordion-header-padding-right: var(--space-8);
+            --accordion-header-color: var(--content-primary);
+            --accordion-header-size: var(--text-base);
+            --accordion-header-weight: 600;
+            --accordion-header-margin: 0;
+            --accordion-header-display: flex;
+            --accordion-header-align: center;
+            --accordion-header-gap: var(--space-2);
+            
+            cursor: var(--accordion-header-cursor);
+            user-select: var(--accordion-header-user-select);
+            position: var(--accordion-header-position);
+            padding-right: var(--accordion-header-padding-right);
+            color: var(--accordion-header-color);
+            font-size: var(--accordion-header-size);
+            font-weight: var(--accordion-header-weight);
+            margin: var(--accordion-header-margin);
+            display: var(--accordion-header-display);
+            align-items: var(--accordion-header-align);
+            gap: var(--accordion-header-gap);
+        }
+        
+        .accordion-header::after {
+            content: '▼';
+            position: absolute;
+            right: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s ease;
+        }
+        
+        .accordion-header.collapsed::after {
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        
+        .accordion-content {
+            --accordion-content-margin-top: var(--space-4);
+            --accordion-content-overflow: hidden;
+            --accordion-content-transition: all 0.3s ease;
+            
+            margin-top: var(--accordion-content-margin-top);
+            overflow: var(--accordion-content-overflow);
+            transition: var(--accordion-content-transition);
+        }
+        
+        .accordion-content.collapsed {
+            display: none;
+        }
+        
+        /* Code Display Component */
+        .code {
+            --code-bg: var(--neutral-950);
+            --code-color: var(--content-secondary);
+            --code-font: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+            --code-size: var(--text-xs);
+            --code-line-height: 1.5;
+            --code-padding: var(--space-4);
+            --code-radius: var(--radius-sm);
+            --code-border: 1px solid var(--border-subtle);
+            --code-min-height: 100px;
+            --code-whitespace: pre-wrap;
+            
+            background: var(--code-bg);
+            color: var(--code-color);
+            font-family: var(--code-font);
+            font-size: var(--code-size);
+            line-height: var(--code-line-height);
+            padding: var(--code-padding);
+            border-radius: var(--code-radius);
+            border: var(--code-border);
+            min-height: var(--code-min-height);
+            white-space: var(--code-whitespace);
+        }
+        
+        /* Divider Component */
+        .divider {
+            --divider-margin: var(--space-6) 0;
+            --divider-height: 1px;
+            --divider-bg: var(--border-subtle);
+            
+            margin: var(--divider-margin);
+            height: var(--divider-height);
+            background: var(--divider-bg);
+            border: none;
+        }
+        
+        /* ============================================ */
+        /* LAYER 3: SCOPES                              */
+        /* ============================================ */
+        
+        /* Dashboard Scope - Main application container (PARENT - comes first!) */
+        [data-scope="dashboard"] {
+            /* Section overrides */
+            --section-height: 100vh;
+            --section-bg: var(--bg-base);
+            --section-overflow: hidden;
+            
+            /* Container overrides */
+            --container-height: 100vh; /* Changed from 100% to 100vh */
+            --container-padding: 0;
+            --container-display: flex;
+            --container-flex-direction: column;
+            
+            /* Header overrides for top bar */
+            --header-height: 60px;
+            --header-bg: var(--neutral-900);
+            --header-border-bottom: 1px solid var(--neutral-700);
+            --header-padding: 0 var(--space-4);
+            --header-display: flex;
+            --header-align-items: center;
+            --header-flex-shrink: 0;
+            
+            /* Grid overrides for 2-column layout */
+            --grid-display: grid !important;
+            --grid-columns: 400px 1fr;
+            --grid-rows: 1fr;
+            --grid-height: calc(100vh - 60px); /* Full height minus header */
+            
+            /* Theme panel specific overrides */
+            --accordion-bg: var(--neutral-800);
+            --accordion-border: 1px solid var(--neutral-700);
+            
+            /* Tab badge for layer numbers */
+            --badge-bg: var(--secondary);
+            
+            /* Form control overrides */
+            --label-size: var(--text-xs);
+            --label-color: var(--neutral-300);
+            
+            --select-padding: var(--space-2) var(--space-3);
+            --select-size: var(--text-sm);
+            
+            --input-width: 100%;
+            --input-padding: var(--space-2) var(--space-3);
+            --input-size: var(--text-sm);
+            
+            --range-thumb-bg: var(--primary);
+            
+            /* Button overrides for theme panel */
+            --button-width: 100%;
+        }
+        
+        /* Direct grid fix for dashboard */
+        [data-scope="dashboard"] .grid {
+            display: grid !important;
+            grid-template-columns: 400px 1fr !important;
+            height: calc(100vh - 60px) !important; /* Full height minus header */
+            overflow: hidden; /* Prevent scrolling on grid itself */
+        }
+        
+        /* Ensure grid children fill height */
+        [data-scope="dashboard"] .grid > * {
+            height: 100%; /* Fill grid cell height */
+            overflow: hidden; /* Each column handles its own scrolling */
+        }
+        
+        /* Direct override for sidebar content wrapper scrolling */
+        [data-scope="sidebar"] #themePanel {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        /* Ensure sidebar wrapper is full height */
+        [data-scope="sidebar"] > .wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent wrapper overflow */
+        }
+        
+        /* Force section and container to be full height */
+        .section[data-scope="dashboard"] {
+            height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        .section[data-scope="dashboard"] > .container {
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        /* Force grid to fill remaining space */
+        .section[data-scope="dashboard"] .grid {
+            flex: 1 !important;
+            overflow: hidden !important;
+        }
+        
+        /* Direct override for preview layout to ensure full height */
+        [data-scope="preview"] .layout {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        
+        /* Collapsed state for dashboard grid */
+        [data-scope="dashboard"].sidebar-collapsed .grid {
+            grid-template-columns: 0 1fr !important;
+        }
+        
+        /* Expanded state for dashboard grid */
+        [data-scope="dashboard"].sidebar-expanded .grid {
+            grid-template-columns: 600px 1fr !important;
+        }
+        
+        /* Sidebar Scope - Inner sidebar column */
+        [data-scope="sidebar"] {
+            /* Wrapper component overrides */
+            --wrapper-padding: 0;
+            --wrapper-bg: var(--bg-surface);
+            --wrapper-border: none;
+            --wrapper-border-right: 1px solid var(--border-default);
+            --wrapper-height: 100%;
+            --wrapper-display: flex;
+            --wrapper-flex-direction: column;
+            --wrapper-overflow: hidden;
+            
+            /* Header component overrides */
+            --header-padding: var(--space-4);
+            --header-bg: var(--neutral-700);
+            --header-color: white;
+            --header-border-bottom: none;
+            --header-display: flex;
+            --header-flex-direction: column;
+            --header-gap: var(--space-3);
+            --header-flex-shrink: 0;
+            
+            /* Remove layout overrides - not using layout component */
+            
+            /* Footer component overrides */
+            --footer-padding: var(--space-4);
+            --footer-bg: var(--bg-elevated);
+            --footer-border-top: 1px solid var(--border-default);
+            --footer-flex-shrink: 0;
+            
+            /* Button component overrides (for controls) */
+            --button-size: 1rem;
+            --button-padding: 0.375rem 0.5rem;
+            
+            /* Tab component overrides */
+            --tab-size: var(--text-sm);
+        }
+        
+        /* Theme Scope - Layer 4 helper scope */
+        [data-scope="theme"] {
+            /* Wrapper overrides for theme content */
+            --wrapper-bg: var(--bg-elevated);
+            --wrapper-padding: var(--space-4);
+            --wrapper-border: none;
+            --wrapper-flex: 1;
+            --wrapper-overflow: visible; /* Let parent handle scrolling */
+            --wrapper-display: block; /* Ensure normal flow */
+            
+            /* Badge overrides */
+            --badge-bg: var(--secondary);
+        }
+        
+        
+        /* Preview Scope - Right side preview area */
+        [data-scope="preview"] {
+            /* Wrapper overrides */
+            --wrapper-padding: var(--space-4);
+            --wrapper-bg: var(--neutral-900);
+            --wrapper-display: flex;
+            --wrapper-flex-direction: column;
+            --wrapper-height: 100%;
+            --wrapper-overflow: hidden;
+            
+            /* Header overrides */
+            --header-bg: var(--neutral-800);
+            --header-border-bottom: 1px solid var(--neutral-700);
+            --header-padding: var(--space-4);
+            --header-display: flex;
+            --header-flex-direction: row;
+            --header-gap: var(--space-4);
+            
+            /* Layout overrides */
+            --layout-flex: 1;
+            --layout-overflow: hidden;
+            --layout-bg: white;
+            --layout-padding: 0;
+            --layout-position: relative;
+            --layout-radius: var(--radius-lg);
+            --layout-display: flex;
+            --layout-direction: column;
+            
+            /* Tab component overrides for preview tabs */
+            --tab-size: 0.875rem;
+            --tab-padding: 0.375rem 0.75rem;
+        }
+        
+        /* ============================================ */
+        /* LAYER 4: HELPERS                             */
+        /* ============================================ */
+        
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;a
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+        
+        .w-full { width: 100%; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+
+        /* ============================================ */
+        /* APP STRUCTURE                                */
+        /* ============================================ */
+
+        body {
+            font-family: 'SF Pro Text', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-base);
+            color: var(--content-primary);
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            font-size: var(--text-sm);
+        }
+        
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Ensure body fills viewport */
+        body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent body scroll */
+        }
+
+        /* Remove editor-container - using proper section instead */
+
+        /* Editor-specific components */
+        .editor-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 1rem;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            border: none;
+            outline: none;
+            resize: none;
+            background: var(--neutral-950);
+            color: var(--neutral-200);
+        }
+
+
+        /* Editor overlay component */
+        .editor-overlay {
+            --overlay-position: absolute;
+            --overlay-inset: 0;
+            --overlay-bg: var(--neutral-950);
+            --overlay-color: var(--neutral-50);
+            --overlay-font: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+            --overlay-size: 14px;
+            --overlay-line-height: 1.5;
+            --overlay-padding: 1rem;
+            --overlay-z-index: 10;
+            
+            position: var(--overlay-position);
+            top: var(--overlay-inset);
+            left: var(--overlay-inset);
+            right: var(--overlay-inset);
+            bottom: var(--overlay-inset);
+            background: var(--overlay-bg);
+            color: var(--overlay-color);
+            font-family: var(--overlay-font);
+            font-size: var(--overlay-size);
+            line-height: var(--overlay-line-height);
+            padding: var(--overlay-padding);
+            border: none;
+            resize: none;
+            z-index: var(--overlay-z-index);
+        }
+
+        .editor-overlay.hidden {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        /* Preview iframe component */
+        .preview-frame {
+            --frame-width: 100%;
+            --frame-height: 100%;
+            --frame-border: none;
+            --frame-bg: white;
+            --frame-display: block;
+            --frame-radius: var(--radius-lg);
+            
+            width: var(--frame-width);
+            height: var(--frame-height);
+            border: var(--frame-border);
+            background: var(--frame-bg);
+            display: var(--frame-display);
+            border-radius: var(--frame-radius);
+            flex: 1; /* Take remaining height */
+        }
+        
+        .preview-frame.hidden {
+            display: none !important;
+        }
+
+
+
+        /* Sidebar toggle component */
+        .sidebar-toggle {
+            --toggle-position: fixed;
+            --toggle-left: 10px;
+            --toggle-top: 10px;
+            --toggle-z-index: 30;
+            --toggle-bg: var(--primary);
+            --toggle-color: white;
+            --toggle-padding: 0.75rem 1rem;
+            --toggle-radius: 0.5rem;
+            --toggle-size: 0.875rem;
+            --toggle-weight: 500;
+            --toggle-transition: all 0.3s ease;
+            --toggle-opacity: 0;
+            --toggle-pointer-events: none;
+            --toggle-transform: translateX(-20px);
+            --toggle-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --toggle-display: flex;
+            --toggle-align: center;
+            --toggle-gap: 0.5rem;
+            
+            position: var(--toggle-position);
+            left: var(--toggle-left);
+            top: var(--toggle-top);
+            z-index: var(--toggle-z-index);
+            background: var(--toggle-bg);
+            color: var(--toggle-color);
+            border: none;
+            padding: var(--toggle-padding);
+            border-radius: var(--toggle-radius);
+            cursor: pointer;
+            font-size: var(--toggle-size);
+            font-weight: var(--toggle-weight);
+            transition: var(--toggle-transition);
+            opacity: var(--toggle-opacity);
+            pointer-events: var(--toggle-pointer-events);
+            transform: var(--toggle-transform);
+            box-shadow: var(--toggle-shadow);
+            display: var(--toggle-display);
+            align-items: var(--toggle-align);
+            gap: var(--toggle-gap);
+        }
+
+        .sidebar-toggle::before {
+            content: '→';
+            font-size: 1rem;
+        }
+
+        [data-scope="dashboard"].sidebar-collapsed ~ .sidebar-toggle {
+            --toggle-opacity: 1;
+            --toggle-pointer-events: auto;
+            --toggle-transform: translateX(0);
+        }
+
+        .sidebar-toggle:hover {
+            --toggle-bg: hsl(from var(--primary) h s 60%);
+            --toggle-transform: translateX(3px);
+            --toggle-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            background: var(--toggle-bg);
+            transform: var(--toggle-transform);
+            box-shadow: var(--toggle-shadow);
+        }
+
+        /* Editor toggle buttons */
+
+
+    </style>
+</head>
+<body>
+    <section class="section" data-scope="dashboard">
+        <div class="container">
+            <!-- Top header bar -->
+            <header class="header" style="height: 60px; flex-shrink: 0;">
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: var(--space-2); height: 100%;">
+                    <button class="button" id="saveBtn" title="Save Theme (Cmd+S)">Save Theme</button>
+                    <button class="button button--outline" id="loadThemeBtn" title="Load saved theme file">Load Theme</button>
+                </div>
+            </header>
+            <div class="grid">
+            <!-- LEFT COLUMN: Sidebar -->
+            <div data-scope="sidebar">
+                <div class="wrapper">
+                    <header class="header">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <h1 style="font-size: var(--text-xl); font-weight: 600;">Studio4</h1>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <button class="button button--secondary" id="shrinkBtn" title="Shrink (Alt+[)">−</button>
+                                <button class="button button--secondary" id="expandBtn" title="Expand (Alt+])">+</button>
+                                <button class="button button--secondary" id="collapseBtn" title="Collapse (Alt+\\)">×</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-1);">
+                            <button class="tab active" id="themeTab">Theme</button>
+                        </div>
+                    </header>
+                    <div class="wrapper" id="themePanel" style="flex: 1; overflow-y: auto; overflow-x: hidden; min-height: 0;">
+                        <!-- Theme content will be added by JavaScript -->
+                    </div>
+                    <footer class="footer">
+                        <div class="flex gap-1">
+                        </div>
+                    </footer>
+                </div>
+            </div>
+            <!-- RIGHT COLUMN: Preview -->
+            <div data-scope="preview" style="height: 100%; overflow: hidden;">
+                <div class="wrapper" style="height: 100%; display: flex; flex-direction: column;">
+                    <header class="header" style="flex-shrink: 0;">
+                        <div style="display: flex; gap: 0.25rem; background: var(--neutral-900); padding: 0.25rem; border-radius: 0.375rem;">
+                            <button class="button button--secondary" id="previewToggle" style="--button-size: 0.875rem; --button-padding: 0.375rem 0.75rem; --button-radius: 0.25rem; --button-bg: var(--neutral-700); --button-color: var(--neutral-50); --button-border: none;">Preview</button>
+                            <button class="button button--secondary" id="htmlToggleBtn" style="--button-size: 0.875rem; --button-padding: 0.375rem 0.75rem; --button-radius: 0.25rem; --button-bg: transparent; --button-color: var(--neutral-400); --button-border: none;">HTML</button>
+                            <button class="button button--secondary" id="cssToggleBtn" style="--button-size: 0.875rem; --button-padding: 0.375rem 0.75rem; --button-radius: 0.25rem; --button-bg: transparent; --button-color: var(--neutral-400); --button-border: none;">CSS</button>
+                        </div>
+                    </header>
+                    <div class="layout" style="flex: 1; overflow: hidden; position: relative;">
+                        <iframe class="preview-frame" id="previewFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+                        <textarea class="editor-overlay hidden" id="htmlEditorOverlay" spellcheck="false"></textarea>
+                        <textarea class="editor-overlay hidden" id="cssEditorOverlay" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+    
+    <!-- Toggle button (visible when sidebar is collapsed) -->
+    <button class="sidebar-toggle" id="toggleSidebarBtn">Show Editor</button>
+    
+    <!-- Hidden textareas for storing code (outside visible UI) -->
+    <textarea class="hidden" id="htmlEditor" style="display: none !important; position: fixed; left: -9999px; top: -9999px; width: 0; height: 0; visibility: hidden;"></textarea>
+    <textarea class="hidden" id="cssEditor" style="display: none !important; position: fixed; left: -9999px; top: -9999px; width: 0; height: 0; visibility: hidden;"></textarea>
+
+    <script>
+        // Get DOM elements
+        const dashboard = document.querySelector('[data-scope="dashboard"]');
+        const sidebar = document.querySelector('[data-scope="sidebar"]');
+        const htmlEditor = document.getElementById('htmlEditor');
+        const htmlEditorOverlay = document.getElementById('htmlEditorOverlay');
+        const cssEditor = document.getElementById('cssEditor');
+        const cssEditorOverlay = document.getElementById('cssEditorOverlay');
+        const previewFrame = document.getElementById('previewFrame');
+        const shrinkBtn = document.getElementById('shrinkBtn');
+        const expandBtn = document.getElementById('expandBtn');
+        const collapseBtn = document.getElementById('collapseBtn');
+        const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+        // Removed export button - using button2 instead
+        const themeTab = document.getElementById('themeTab');
+        const themePanel = document.getElementById('themePanel');
+        const previewToggle = document.getElementById('previewToggle');
+        const htmlToggleBtn = document.getElementById('htmlToggleBtn');
+        const cssToggleBtn = document.getElementById('cssToggleBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const loadThemeBtn = document.getElementById('loadThemeBtn');
+        
+        // File path configuration  
+        let fileHandle = null; // File handle for File System Access API
+        let autoSave = true; // Auto-save for development
+        const DEV_FILE_NAME = 'studio4-users.html'; // The development theme file
+        
+
+        // Default HTML content (empty to start fresh)
+        const defaultHTML = ``;
+
+        // Default CSS content
+        const defaultCSS = `/* ============================================ */
+/* LAYER 1: PRIMITIVES (ROOT THEME VARIABLES)  */
+/* ============================================ */
+:root {
+    /* Base Color Definitions (source colors) */
+    --color1-base: hsl(174, 45%, 50%);  /* Aqua */
+    --color2-base: hsl(30, 40%, 50%);   /* Terracotta */
+    --color3-base: hsl(0, 0%, 50%);     /* Neutral */
+    --color4-base: hsl(337, 35%, 52%);  /* Pink */
+    
+    /* Color 1 Palette */
+    --color1-lightest: hsl(from var(--color1-base) h s 90%);
+    --color1-light: hsl(from var(--color1-base) h s 70%);
+    --color1: hsl(from var(--color1-base) h s 50%);
+    --color1-dark: hsl(from var(--color1-base) h s 30%);
+    --color1-darkest: hsl(from var(--color1-base) h s 10%);
+    
+    /* Color 2 Palette */
+    --color2-lightest: hsl(from var(--color2-base) h s 90%);
+    --color2-light: hsl(from var(--color2-base) h s 70%);
+    --color2: hsl(from var(--color2-base) h s 50%);
+    --color2-dark: hsl(from var(--color2-base) h s 30%);
+    --color2-darkest: hsl(from var(--color2-base) h s 10%);
+    
+    /* Color 3 Palette */
+    --color3-lightest: hsl(from var(--color3-base) h s 90%);
+    --color3-light: hsl(from var(--color3-base) h s 70%);
+    --color3: hsl(from var(--color3-base) h s 50%);
+    --color3-dark: hsl(from var(--color3-base) h s 30%);
+    --color3-darkest: hsl(from var(--color3-base) h s 10%);
+    
+    /* Color 4 Palette */
+    --color4-lightest: hsl(from var(--color4-base) h s 90%);
+    --color4-light: hsl(from var(--color4-base) h s 70%);
+    --color4: hsl(from var(--color4-base) h s 50%);
+    --color4-dark: hsl(from var(--color4-base) h s 30%);
+    --color4-darkest: hsl(from var(--color4-base) h s 10%);
+}
+
+/* ============================================ */
+/* LAYER 2: BASE COMPONENTS                     */
+/* ============================================ */
+
+/* Section Component - Full-width structural container */
+.section {
+    margin: var(--section-margin, 0 0 0 0);
+    padding: var(--section-padding, 0);
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap, 2rem);
+}
+
+
+/* Wrapper Component - Generic box/card component */
+.wrapper {
+    padding: var(--wrapper-padding, 1rem);
+    margin: var(--wrapper-margin, 0 0 1rem 0);
+    border-radius: var(--wrapper-radius, 0.5rem);
+    background: var(--wrapper-bg, var(--bg-surface));
+    border: var(--wrapper-border, 1px solid var(--border-default));
+    box-shadow: var(--wrapper-shadow, none);
+}
+
+/* Title Component */
+.title {
+    --title-size: 2rem;
+    --title-weight: 600;
+    --title-color: var(--content-primary);
+    --title-margin: 0 0 0.5rem 0;
+    --title-transform: none;
+    --title-spacing: normal;
+    --title-line-height: 1.2;
+    
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
+    color: var(--title-color);
+    margin: var(--title-margin);
+    text-transform: var(--title-transform);
+    letter-spacing: var(--title-spacing);
+    line-height: var(--title-line-height);
+}
+
+/* Subtitle Component */
+.subtitle {
+    --subtitle-size: 1.25rem;
+    --subtitle-weight: 500;
+    --subtitle-color: var(--content-secondary);
+    --subtitle-margin: 0 0 0.25rem 0;
+    --text-transform: uppercase;
+    
+    font-size: var(--subtitle-size);
+    font-weight: var(--subtitle-weight);
+    color: var(--subtitle-color);
+    margin: var(--subtitle-margin);
+    text-transform: var(--text-transform);
+}
+
+/* Description Component */
+.description {
+    --description-size: 1rem;
+    --description-color: var(--content-secondary);
+    --description-line-height: 1.6;
+    --description-margin: 0;
+    
+    font-size: var(--description-size);
+    color: var(--description-color);
+    line-height: var(--description-line-height);
+    margin: var(--description-margin);
+}
+
+/* Button Component */
+.button {
+    --button-size: 0.875rem;
+    --button-weight: 500;
+    --button-padding: 0.75rem 2rem;
+    --button-radius: 0.5rem;
+    --button-margin: 0 0.5rem 0 0;
+    --button-bg: var(--primary-600);
+    --button-color: white;
+    --button-border: 1px solid var(--primary-600);
+    
+    font-size: var(--button-size);
+    font-weight: var(--button-weight);
+    padding: var(--button-padding);
+    border-radius: var(--button-radius);
+    margin: var(--button-margin);
+    background: var(--button-bg);
+    color: var(--button-color);
+    border: var(--button-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button:hover {
+    --button-bg: var(--primary-700);
+    --button-color: white;
+    --button-border: 1px solid var(--primary-700);
+    
+    background: var(--button-bg);
+    color: var(--button-color);
+    border: var(--button-border);
+}
+
+.button:active {
+    --button-bg: var(--primary-800);
+    --button-color: white;
+    --button-border: 1px solid var(--primary-800);
+    
+    background: var(--button-bg);
+    color: var(--button-color);
+    border: var(--button-border);
+}
+
+
+/* Navigation Component */
+.navigation {
+    display: block;
+    padding: var(--navigation-padding, 0.5rem 1.5rem);
+    color: var(--navigation-color, var(--content-secondary));
+    text-decoration: none;
+    border-radius: var(--navigation-radius, 0.375rem);
+    transition: all 0.2s ease;
+}
+
+.navigation:hover {
+    background: var(--navigation-hover-bg, var(--bg-active));
+    color: var(--navigation-hover-color, var(--content-primary));
+}
+
+.navigation.active {
+    background: var(--navigation-active-bg, var(--bg-active));
+    color: var(--navigation-active-color, var(--interactive-default));
+    font-weight: var(--navigation-active-weight, 500);
+}
+
+/* Layout Component */
+.layout {
+    display: var(--layout-display, block);
+    gap: var(--layout-gap, 0);
+    padding: var(--layout-padding, 0);
+    margin: var(--layout-margin, 0);
+}
+
+/* Swatch Component */
+.swatch {
+    height: var(--swatch-height, 8rem);
+    border-radius: var(--swatch-radius, 0.5rem);
+    margin-bottom: var(--swatch-margin, 1rem);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Info Component */
+.info {
+    padding: var(--info-padding, 1rem);
+}
+
+/* Values Component */
+.values {
+    display: flex;
+    gap: var(--values-gap, 2rem);
+    margin-top: var(--values-margin, 0.5rem);
+    font-size: var(--values-size, 0.75rem);
+    color: var(--values-color, var(--content-muted));
+}
+
+/* Form Component */
+.form {
+    margin-bottom: var(--form-margin, 1.5rem);
+}
+
+/* Label Component */
+.label {
+    display: block;
+    font-size: var(--label-size, 0.875rem);
+    color: var(--label-color, var(--content-secondary));
+    margin-bottom: var(--label-margin, 0.5rem);
+    font-weight: var(--label-weight, 500);
+}
+
+/* Select Component */
+.select {
+    width: 100%;
+    padding: var(--select-padding, 0.5rem 0.75rem);
+    border: 1px solid var(--select-border, var(--border-default));
+    border-radius: var(--select-radius, 0.375rem);
+    background: var(--select-bg, var(--bg-surface));
+    color: var(--select-color, var(--content-primary));
+    font-size: var(--select-size, 0.875rem);
+}
+
+/* ============================================ */
+/* LAYER 3: SCOPES                              */
+/* ============================================ */
+
+/* App Layout Scope */
+[data-scope="app-layout"] {
+    --layout-display: grid;
+    --layout-gap: 0;
+    grid-template-columns: 240px 1fr 320px;
+    height: 100vh;
+}
+
+/* Sidebar Scope */
+[data-scope="sidebar"] {
+    --wrapper-padding: 1rem;
+    --wrapper-bg: var(--bg-surface);
+    --wrapper-border: none;
+    --wrapper-radius: 0;
+    --wrapper-margin: 0;
+    
+    --title-size: 0.75rem;
+    --title-weight: 700;
+    --title-color: var(--content-muted);
+    --title-transform: uppercase;
+    --title-spacing: 0.1em;
+    --title-margin: 1.5rem 1.5rem 1rem 1.5rem;
+    
+    overflow-y: auto;
+}
+
+/* Main Content Scope */
+[data-scope="main-content"] {
+    --wrapper-padding: 0;
+    --wrapper-bg: var(--bg-base);
+    --wrapper-border: none;
+    --wrapper-radius: 0;
+    --wrapper-margin: 0;
+    
+    overflow-y: auto;
+}
+
+/* Hero Scope - Single scope with all component overrides */
+/* Pattern: One scope contains ALL variable overrides for every component within it */
+/* This keeps base components completely DRY and uses them as theme defaults */
+[data-scope="hero"] {
+    /* Section overrides */
+    --section-padding: 4rem 0;
+    --section-margin: 0;
+    
+    /* Container overrides */
+    --container-max-width: 1200px;
+    
+    /* Wrapper overrides */
+    --wrapper-padding: 3rem;
+    --wrapper-bg: transparent;
+    --wrapper-border: none;
+    --wrapper-radius: 0;
+    --wrapper-margin: 0 auto;
+    
+    /* Title overrides */
+    --title-size: 3.5rem;
+    --title-weight: 700;
+    --title-margin: 0 0 1.5rem 0;
+    --title-color: white;
+    
+    /* Description overrides */
+    --description-size: 1.25rem;
+    --description-color: rgba(255, 255, 255, 0.9);
+    --description-line-height: 1.6;
+    
+    /* Pretitle overrides */
+    --pretitle-color: rgba(255, 255, 255, 0.9);
+    
+    /* Hero-specific styles */
+    min-height: 60vh;
+    background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    margin: 2rem;
+}
+
+/* Hero overlay for better text readability */
+[data-scope="hero"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 1;
+}
+
+/* Make wrapper centered with max-width */
+[data-scope="hero"] .wrapper {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+}
+
+/* Pretitle component - base styles only */
+.pretitle {
+    display: inline-block;
+    font-size: var(--pretitle-size, 0.875rem);
+    font-weight: var(--pretitle-weight, 600);
+    text-transform: var(--pretitle-transform, uppercase);
+    letter-spacing: var(--pretitle-spacing, 0.1em);
+    color: var(--pretitle-color, var(--primary-300));
+    margin-bottom: var(--pretitle-margin, 1rem);
+}
+
+/* Card Scope */
+[data-scope="card"] {
+    --wrapper-padding: 0;
+    --wrapper-bg: white;
+    --wrapper-border: 1px solid var(--border-default);
+    --wrapper-radius: 0.75rem;
+    --wrapper-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    --title-size: 1.25rem;
+    --title-weight: 600;
+    --title-margin: 0 0 0.25rem 0;
+    
+    --subtitle-size: 0.875rem;
+    --subtitle-color: var(--content-muted);
+    --subtitle-margin: 0;
+}
+
+/* Panel Scope */
+[data-scope="panel"] {
+    --wrapper-padding: 2rem;
+    --wrapper-bg: var(--bg-surface);
+    --wrapper-border: none;
+    --wrapper-border-left: 1px solid var(--border-default);
+    --wrapper-radius: 0;
+    
+    --title-size: 1.125rem;
+    --title-weight: 600;
+    --title-margin: 0 0 0.5rem 0;
+}
+
+/* Tab Navigation Scope */
+[data-scope="tab-nav"] {
+    --layout-display: flex;
+    --layout-gap: 2rem;
+    --layout-padding: 0 3rem;
+    --layout-margin: 0;
+    
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Tab Item Scope */
+[data-scope="tab-item"] {
+    --navigation-padding: 1rem 0;
+    --navigation-radius: 0;
+    position: relative;
+}
+
+[data-scope="tab-item"].navigation.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--interactive-default);
+}
+
+/* Content Area Scope */
+[data-scope="content-area"] {
+    --layout-padding: 3rem;
+}
+
+/* ============================================ */
+/* LAYER 4: HELPERS                             */
+/* ============================================ */
+
+/* Brand Colors Helper */
+[data-helper="brand-colors"] {
+    /* Tab-specific brand colors */
+    --primary-600: #5a7f88;  /* Aqua */
+    --secondary-600: #a56f51;  /* Terracotta */
+    --neutral-600: #ac9e8b;  /* Sand */
+}
+
+/* ============================================ */
+/* GLOBAL RESET                                 */
+/* ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-base);
+    color: var(--content-primary);
+    line-height: 1.5;
+}`;
+
+
+        // Initialize with defaults
+        htmlEditor.value = defaultHTML;
+        cssEditor.value = defaultCSS;
+        
+        // Ensure overlays start hidden
+        htmlEditorOverlay.classList.add('hidden');
+        cssEditorOverlay.classList.add('hidden');
+        
+        
+        updatePreview();
+
+        // Update preview function
+        function updatePreview() {
+            const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview</title>
+    <style>${cssEditor.value}</style>
+</head>
+<body>
+    ${htmlEditor.value}
+</body>
+</html>`;
+            
+            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            doc.open();
+            doc.write(fullHTML);
+            doc.close();
+            
+        }
+        
+        // Helper function to convert HSL to RGB
+        function hslToRgb(hsl) {
+            const match = hsl.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+            if (!match) return { r: 0, g: 0, b: 0 };
+            
+            let h = parseInt(match[1]) / 360;
+            let s = parseInt(match[2]) / 100;
+            let l = parseInt(match[3]) / 100;
+            
+            let r, g, b;
+            
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            
+            return {
+                r: Math.round(r * 255),
+                g: Math.round(g * 255),
+                b: Math.round(b * 255)
+            };
+        }
+        
+        // Get contrast color (black or white) based on background
+        function getContrastColor(r, g, b) {
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return luminance > 0.5 ? '#000000' : '#ffffff';
+        }
+        
+        // Show color preview
+        function showColorPreview() {
+            // Use the current color presets (not default)
+            // This was the bug - it was always showing defaults!
+            
+            // Generate color swatches HTML
+            const colorSwatches = CORE_COLORS.map(colorName => {
+                const baseColorKey = `${colorName}-base`;
+                const baseValue = colorPresets[baseColorKey];
+                if (!baseValue) return '';
+                
+                const rgb = hslToRgb(baseValue);
+                const textColor = getContrastColor(rgb.r, rgb.g, rgb.b);
+                
+                // Get palette lightness values or use defaults
+                const palette = colorPresets.palettes?.[colorName] || { lightest: 90, light: 70, base: 50, dark: 30, darkest: 10 };
+                
+                return `
+                <div class="color-swatch">
+                    <div class="swatch-header" style="background: ${baseValue}; color: ${textColor};">
+                        <div class="swatch-name">${colorName.replace('color', 'Color ')}</div>
+                    </div>
+                    <div class="swatch-details">
+                        <div class="lightness-grid">
+                            ${['lightest', 'light', 'base', 'dark', 'darkest'].map(key => {
+                                // For 'base', use the actual base color, not the lightness-adjusted version
+                                if (key === 'base') {
+                                    return `<div class="lightness-swatch" style="background: ${baseValue};"></div>`;
+                                } else {
+                                    return `<div class="lightness-swatch" style="background: hsl(from ${baseValue} h s ${palette[key]}%);"></div>`;
+                                }
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            const colorHTML = `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        :root {
+            ${Object.entries(colorPresets).map(([name, value]) => `--${name}: ${value};`).join('\n            ')}
+        }
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .color-swatch {
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .color-swatch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .swatch-header {
+            padding: 4rem 1.5rem;
+            text-align: center;
+        }
+        .swatch-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .swatch-details {
+            background: white;
+            padding: 1rem;
+        }
+        .lightness-grid {
+            display: flex;
+            gap: 0.25rem;
+            justify-content: center;
+        }
+        .lightness-swatch {
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .lightness-swatch:hover {
+            transform: scale(1.1);
+            z-index: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #212529;
+            margin-bottom: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Color System Preview</h1>
+    <div class="color-grid">
+        ${colorSwatches}
+    </div>
+</body>
+</html>`;
+            
+            // Update preview
+            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            previewDoc.open();
+            previewDoc.write(colorHTML);
+            previewDoc.close();
+        }
+        
+        // Show typography preview
+        function showTypographyPreview() {
+            // Get current typography presets
+            const currentPresets = typographyPresets || {
+                pretitle: { sampleText: 'PRETITLE TEXT' },
+                title: { sampleText: 'This is a Title' },
+                subtitle: { sampleText: 'This is a Subtitle' },
+                description: { sampleText: 'This is a description paragraph with more text to show line height.' }
+            };
+            
+            const typographyHTML = `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        ${cssEditor.value}
+        body {
+            padding: 2rem;
+            background: #ffffff;
+            color: #212529;
+        }
+        .preview-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .preview-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom: 2rem;">Typography System Preview</h1>
+    
+    ${Object.entries(currentPresets).map(([component, settings]) => `
+        <div class="preview-section">
+            <div class="preview-label">${component}</div>
+            <div class="${component}" id="typography-preview-${component}">
+                ${settings.sampleText || component.charAt(0).toUpperCase() + component.slice(1) + ' Example'}
+            </div>
+        </div>
+    `).join('')}
+</body>
+</html>`;
+            
+            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            previewDoc.open();
+            previewDoc.write(typographyHTML);
+            previewDoc.close();
+        }
+        
+        // Show UI preview
+        function showUIPreview() {
+            const uiHTML = `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        ${cssEditor.value}
+        body {
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        .preview-section {
+            margin-bottom: 2rem;
+        }
+        .preview-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom: 2rem;">UI Components Preview</h1>
+    
+    <div class="preview-section">
+        <div class="preview-label">Buttons</div>
+        <button class="button">Primary Button</button>
+        <button class="button button--secondary">Secondary Button</button>
+        <button class="button button--outline">Outline Button</button>
+    </div>
+    
+    <div class="preview-section">
+        <div class="preview-label">Cards</div>
+        <div class="card">
+            <h3 class="subtitle">Card Title</h3>
+            <p class="description">This is a card component with some example content.</p>
+        </div>
+    </div>
+</body>
+</html>`;
+            
+            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            previewDoc.open();
+            previewDoc.write(uiHTML);
+            previewDoc.close();
+        }
+        
+        // Show sections preview
+        function showSectionsPreview() {
+            // Just show the default content for sections
+            updatePreview();
+        }
+        
+
+        
+        
+
+        // Tab switching
+        // Sidebar tab switching
+        themeTab.addEventListener('click', () => {
+            themeTab.classList.add('active');
+            componentsTab.classList.remove('active');
+            themePanel.classList.remove('hidden');
+            componentsPanel.classList.add('hidden');
+            updateThemePanel();
+            
+            // Auto-open Colors section and show preview
+            const colorsToggle = document.getElementById('colors-toggle');
+            const colorsContent = document.getElementById('colors-content');
+            if (colorsToggle && colorsContent) {
+                // Open the Colors accordion
+                colorsToggle.classList.remove('collapsed');
+                colorsContent.classList.remove('collapsed');
+                
+                // Show color preview
+                setTimeout(() => {
+                    showColorPreview();
+                }, 100);
+            }
+        });
+
+        // Components and Inspector tabs removed - focusing on Theme only
+
+        // Preview area toggle buttons
+        previewToggle.addEventListener('click', () => {
+            previewToggle.classList.add('active');
+            htmlToggleBtn.classList.remove('active');
+            cssToggleBtn.classList.remove('active');
+            previewFrame.classList.remove('hidden');
+            htmlEditorOverlay.classList.add('hidden');
+            cssEditorOverlay.classList.add('hidden');
+        });
+
+        htmlToggleBtn.addEventListener('click', () => {
+            htmlToggleBtn.classList.add('active');
+            previewToggle.classList.remove('active');
+            cssToggleBtn.classList.remove('active');
+            htmlEditorOverlay.classList.remove('hidden');
+            previewFrame.classList.add('hidden');
+            cssEditorOverlay.classList.add('hidden');
+            // Sync content
+            htmlEditorOverlay.value = htmlEditor.value;
+        });
+
+        cssToggleBtn.addEventListener('click', () => {
+            cssToggleBtn.classList.add('active');
+            previewToggle.classList.remove('active');
+            htmlToggleBtn.classList.remove('active');
+            cssEditorOverlay.classList.remove('hidden');
+            previewFrame.classList.add('hidden');
+            htmlEditorOverlay.classList.add('hidden');
+            // Sync content
+            cssEditorOverlay.value = cssEditor.value;
+        });
+
+        // Sync overlay editors with hidden editors
+        htmlEditorOverlay.addEventListener('input', () => {
+            htmlEditor.value = htmlEditorOverlay.value;
+            updatePreview();
+        });
+
+        cssEditorOverlay.addEventListener('input', () => {
+            cssEditor.value = cssEditorOverlay.value;
+            updatePreview();
+        });
+
+        // Theme Panel functionality
+        function updateThemePanel() {
+            // Extract typography variables from CSS
+            const css = cssEditor.value;
+            
+            // Theme panel HTML
+            let themePanelHTML = `
+                <h2 style="color: var(--neutral-200); margin-bottom: 1.5rem;">Theme Variables</h2>
+                
+                <!-- Colors Section -->
+                <div class="accordion">
+                    <h3 class="accordion-header" id="colors-toggle">
+                        <span class="badge badge--secondary">1</span>
+                        Colors
+                    </h3>
+                    <div class="accordion-content" id="colors-content">
+                        <div style="padding: 1rem;">
+                            <!-- Color editor -->
+                            <div style="margin-bottom: 1.5rem;">
+                                <label class="label">Select Base Color</label>
+                                <select class="select" id="colorSelect" style="width: 100%;">
+                                    <option value="">-- Select Color --</option>
+                                    <option value="color1">Color 1</option>
+                                    <option value="color2">Color 2</option>
+                                    <option value="color3">Color 3</option>
+                                    <option value="color4">Color 4</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Color controls -->
+                            <div id="colorControls" style="display: none;">
+                                <!-- Color Picker -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label class="label">Base Color</label>
+                                    <div class="field-group">
+                                        <input type="color" class="color-picker" id="baseColorPicker">
+                                        <input type="text" class="input" id="baseColorInput" placeholder="hsl(0, 0%, 50%)" style="flex: 1;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Color Preview -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Current Color</label>
+                                    <div id="baseColorPreview" style="height: 3rem; border-radius: 0.375rem; border: 1px solid var(--neutral-600); display: flex; align-items: center; justify-content: center;">
+                                        <span id="colorPreviewText" style="font-weight: 500; font-size: 0.875rem; text-shadow: 0 0 4px rgba(0,0,0,0.5);">Color Preview</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- HSL Controls -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Hue</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="hueRange" min="0" max="360" step="1" style="flex: 1;">
+                                        <input type="text" id="hueInput" style="width: 4rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Saturation</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="saturationRange" min="0" max="100" step="1" style="flex: 1;">
+                                        <input type="text" id="saturationInput" style="width: 4rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Lightness</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="baseLightnessRange" min="0" max="100" step="1" style="flex: 1;">
+                                        <input type="text" id="baseLightnessInput" style="width: 4rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Palette Controls -->
+                                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--neutral-700);">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.75rem;">Color Palette (Lightness)</label>
+                                    <div id="paletteControls" style="display: grid; gap: 0.75rem;">
+                                        <!-- Lightest -->
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 2rem; height: 2rem; border-radius: 0.25rem; border: 1px solid var(--neutral-600);" data-palette="lightest"></div>
+                                            <span style="flex: 1; font-size: 0.75rem; color: var(--neutral-400);">Lightest</span>
+                                            <input type="range" data-lightness="lightest" min="80" max="98" value="90" style="width: 100px;">
+                                            <span style="width: 3rem; text-align: right; font-size: 0.75rem; color: var(--neutral-500);" data-value="lightest">90%</span>
+                                        </div>
+                                        <!-- Light -->
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 2rem; height: 2rem; border-radius: 0.25rem; border: 1px solid var(--neutral-600);" data-palette="light"></div>
+                                            <span style="flex: 1; font-size: 0.75rem; color: var(--neutral-400);">Light</span>
+                                            <input type="range" data-lightness="light" min="60" max="80" value="70" style="width: 100px;">
+                                            <span style="width: 3rem; text-align: right; font-size: 0.75rem; color: var(--neutral-500);" data-value="light">70%</span>
+                                        </div>
+                                        <!-- Base -->
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 2rem; height: 2rem; border-radius: 0.25rem; border: 1px solid var(--neutral-600);" data-palette="base"></div>
+                                            <span style="flex: 1; font-size: 0.75rem; color: var(--neutral-400);">Base</span>
+                                            <input type="range" data-lightness="base" min="40" max="60" value="50" style="width: 100px;">
+                                            <span style="width: 3rem; text-align: right; font-size: 0.75rem; color: var(--neutral-500);" data-value="base">50%</span>
+                                        </div>
+                                        <!-- Dark -->
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 2rem; height: 2rem; border-radius: 0.25rem; border: 1px solid var(--neutral-600);" data-palette="dark"></div>
+                                            <span style="flex: 1; font-size: 0.75rem; color: var(--neutral-400);">Dark</span>
+                                            <input type="range" data-lightness="dark" min="20" max="40" value="30" style="width: 100px;">
+                                            <span style="width: 3rem; text-align: right; font-size: 0.75rem; color: var(--neutral-500);" data-value="dark">30%</span>
+                                        </div>
+                                        <!-- Darkest -->
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 2rem; height: 2rem; border-radius: 0.25rem; border: 1px solid var(--neutral-600);" data-palette="darkest"></div>
+                                            <span style="flex: 1; font-size: 0.75rem; color: var(--neutral-400);">Darkest</span>
+                                            <input type="range" data-lightness="darkest" min="5" max="20" value="10" style="width: 100px;">
+                                            <span style="width: 3rem; text-align: right; font-size: 0.75rem; color: var(--neutral-500);" data-value="darkest">10%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Apply Button -->
+                                <button class="button" id="applyColorBtn" style="width: 100%; margin-top: 1rem;">Apply Color</button>
+                                
+                                <!-- Export/Import Buttons -->
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                    <button class="button button--secondary" id="exportColorsBtn" style="flex: 1; --button-size: 0.75rem; --button-padding: 0.375rem;">Export Colors</button>
+                                    <button class="button button--secondary" id="importColorsBtn" style="flex: 1; --button-size: 0.75rem; --button-padding: 0.375rem;">Import Colors</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Add Color Button -->
+                            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--neutral-700);">
+                                <button id="addColorBtn" style="width: 100%; padding: 0.75rem; background: transparent; color: var(--neutral-300); border: 2px dashed var(--neutral-600); border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease;">
+                                    + Add Custom Color
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Typography Section -->
+                <div class="accordion">
+                    <h3 class="accordion-header collapsed" id="typography-toggle">
+                        <span class="badge badge--secondary">2</span>
+                        Typography
+                    </h3>
+                    <div class="accordion-content collapsed" id="typography-content">
+                        <div style="padding: 1rem;">
+                            <!-- Component selector -->
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; color: var(--neutral-300); font-size: 0.875rem; margin-bottom: 0.5rem;">Select Text Component</label>
+                                <select id="typographyComponentSelect" style="width: 100%; padding: 0.5rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.375rem; font-size: 0.875rem;">
+                                    <option value="">-- Select Component --</option>
+                                    <option value="pretitle">Pretitle</option>
+                                    <option value="title">Title</option>
+                                    <option value="subtitle">Subtitle</option>
+                                    <option value="description">Description</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Typography controls -->
+                            <div id="typographyControls" style="display: none;">
+                                <!-- Font Size -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Font Size</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="fontSizeRange" min="0.5" max="4" step="0.25" style="flex: 1;">
+                                        <input type="text" id="fontSizeInput" style="width: 5rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Font Weight -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Font Weight</label>
+                                    <select id="fontWeightSelect" style="width: 100%; padding: 0.375rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.375rem; font-size: 0.875rem;">
+                                        <option value="300">Light (300)</option>
+                                        <option value="400">Normal (400)</option>
+                                        <option value="500">Medium (500)</option>
+                                        <option value="600">Semi-Bold (600)</option>
+                                        <option value="700">Bold (700)</option>
+                                        <option value="800">Extra Bold (800)</option>
+                                        <option value="900">Black (900)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Line Height -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Line Height</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="lineHeightRange" min="1" max="3" step="0.1" style="flex: 1;">
+                                        <input type="text" id="lineHeightInput" style="width: 4rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Letter Spacing -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Letter Spacing</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="letterSpacingRange" min="-0.1" max="0.5" step="0.025" style="flex: 1;">
+                                        <input type="text" id="letterSpacingInput" style="width: 5rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Text Transform -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Text Transform</label>
+                                    <select id="textTransformSelect" style="width: 100%; padding: 0.375rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.375rem; font-size: 0.875rem;">
+                                        <option value="none">None</option>
+                                        <option value="uppercase">UPPERCASE</option>
+                                        <option value="lowercase">lowercase</option>
+                                        <option value="capitalize">Capitalize</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Margin Bottom -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Margin Bottom (em)</label>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="range" id="marginBottomRange" min="0" max="2" step="0.125" style="flex: 1;">
+                                        <input type="text" id="marginBottomInput" style="width: 5rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Color -->
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Color</label>
+                                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <select id="colorBaseSelect" style="flex: 1; padding: 0.375rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.375rem; font-size: 0.875rem;">
+                                            <option value="custom">Custom Color</option>
+                                            <option value="color1">Color 1</option>
+                                            <option value="color2">Color 2</option>
+                                            <option value="color3">Color 3 (Neutral)</option>
+                                            <option value="color4">Color 4</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Lightness slider (hidden by default) -->
+                                    <div id="lightnessControl" style="display: none; margin-bottom: 0.5rem;">
+                                        <label style="display: block; color: var(--neutral-300); font-size: 0.75rem; margin-bottom: 0.25rem;">Lightness</label>
+                                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                            <input type="range" id="lightnessRange" min="0" max="100" step="1" value="50" style="flex: 1;">
+                                            <input type="text" id="lightnessInput" value="50%" style="width: 4rem; padding: 0.25rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.25rem; font-size: 0.75rem; text-align: center;">
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-top: 0.25rem;">
+                                            <span style="color: var(--neutral-500); font-size: 0.7rem;">Dark</span>
+                                            <span style="color: var(--neutral-500); font-size: 0.7rem;">Light</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Custom color controls (shown when custom is selected) -->
+                                    <div id="customColorControl">
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <input type="color" id="colorPicker" style="width: 3rem; height: 2rem; background: var(--neutral-800); border: 1px solid var(--neutral-600); border-radius: 0.25rem; cursor: pointer;">
+                                            <input type="text" id="colorInput" placeholder="e.g. #000000 or var(--primary)" style="flex: 1; padding: 0.375rem; background: var(--neutral-800); color: var(--neutral-50); border: 1px solid var(--neutral-600); border-radius: 0.375rem; font-size: 0.875rem;">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Color preview -->
+                                    <div style="margin-top: 0.5rem; height: 2rem; border-radius: 0.25rem; border: 1px solid var(--neutral-600);" id="colorPreview"></div>
+                                </div>
+                                
+                                <!-- Apply Button -->
+                                <button id="applyTypographyBtn" style="width: 100%; margin-top: 1rem; padding: 0.5rem; background: var(--primary); color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Apply Changes</button>
+                                
+                                <!-- Export/Import Buttons -->
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                    <button id="exportTypographyBtn" style="flex: 1; padding: 0.375rem; background: var(--neutral-800); color: var(--neutral-200); border: 1px solid var(--neutral-600); border-radius: 0.375rem; cursor: pointer; font-size: 0.75rem;">Export Presets</button>
+                                    <button id="importTypographyBtn" style="flex: 1; padding: 0.375rem; background: var(--neutral-800); color: var(--neutral-200); border: 1px solid var(--neutral-600); border-radius: 0.375rem; cursor: pointer; font-size: 0.75rem;">Import Presets</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- UI Section -->
+                <div class="accordion">
+                    <h3 class="accordion-header collapsed" id="ui-toggle">
+                        <span class="badge badge--secondary">3</span>
+                        UI
+                    </h3>
+                    <div class="accordion-content collapsed" id="ui-content">
+                        <div class="code">
+/* UI Component Variables */
+--button-padding: 0.75rem 1.5rem;
+--button-radius: 0.375rem;
+--card-padding: 1.5rem;
+--card-radius: 0.5rem;
+--input-padding: 0.75rem;
+--input-border: 1px solid var(--neutral-300);</div>
+                    </div>
+                </div>
+                
+                <!-- Layouts Section -->
+                <div class="accordion">
+                    <h3 class="accordion-header collapsed" id="sections-toggle">
+                        <span class="badge badge--secondary">4</span>
+                        Layouts
+                    </h3>
+                    <div class="accordion-content collapsed" id="sections-content">
+                        <div class="code">
+/* Layout Variables */
+--section-padding: 4rem 0;
+--container-max-width: 1200px;
+--grid-gap: 2rem;
+--stack-gap: 1.5rem;</div>
+                    </div>
+                </div>
+            `;
+            
+            themePanel.innerHTML = themePanelHTML;
+            
+            // Add accordion functionality
+            setupAccordions();
+            
+            // Setup typography editor
+            setupTypographyEditor();
+            
+            // Setup color editor
+            setupColorEditor();
+        }
+        
+        // Setup accordion functionality
+        function setupAccordions() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    header.classList.toggle('collapsed');
+                    const content = header.nextElementSibling;
+                    content.classList.toggle('collapsed');
+                    
+                    // Handle section-specific previews
+                    if (!header.classList.contains('collapsed')) {
+                        setTimeout(() => {
+                            switch(header.id) {
+                                case 'colors-toggle':
+                                    showColorPreview();
+                                    break;
+                                case 'typography-toggle':
+                                    showTypographyPreview();
+                                    break;
+                                case 'ui-toggle':
+                                    showUIPreview();
+                                    break;
+                                case 'sections-toggle':
+                                    showSectionsPreview();
+                                    break;
+                            }
+                        }, 100);
+                    }
+                });
+            });
+        }
+        
+        // Typography presets storage
+        let typographyPresets = null;
+        
+        // Typography Editor functionality
+        function setupTypographyEditor() {
+            const componentSelect = document.getElementById('typographyComponentSelect');
+            const controls = document.getElementById('typographyControls');
+            const fontSizeRange = document.getElementById('fontSizeRange');
+            const fontSizeInput = document.getElementById('fontSizeInput');
+            const fontWeightSelect = document.getElementById('fontWeightSelect');
+            const lineHeightRange = document.getElementById('lineHeightRange');
+            const lineHeightInput = document.getElementById('lineHeightInput');
+            const letterSpacingRange = document.getElementById('letterSpacingRange');
+            const letterSpacingInput = document.getElementById('letterSpacingInput');
+            const textTransformSelect = document.getElementById('textTransformSelect');
+            const marginBottomRange = document.getElementById('marginBottomRange');
+            const marginBottomInput = document.getElementById('marginBottomInput');
+            const colorBaseSelect = document.getElementById('colorBaseSelect');
+            const lightnessControl = document.getElementById('lightnessControl');
+            const lightnessRange = document.getElementById('lightnessRange');
+            const lightnessInput = document.getElementById('lightnessInput');
+            const customColorControl = document.getElementById('customColorControl');
+            const colorPicker = document.getElementById('colorPicker');
+            const colorInput = document.getElementById('colorInput');
+            const colorPreview = document.getElementById('colorPreview');
+            const applyBtn = document.getElementById('applyTypographyBtn');
+            const exportBtn = document.getElementById('exportTypographyBtn');
+            const importBtn = document.getElementById('importTypographyBtn');
+            
+            if (!componentSelect) return;
+            
+            // Load presets on startup
+            typographyPresets = null;
+            
+            // Component default values
+            const componentDefaults = {
+                pretitle: {
+                    size: '0.875rem',
+                    weight: '600',
+                    lineHeight: '1.2',
+                    letterSpacing: '0.05em',
+                    transform: 'uppercase',
+                    marginBottom: '0.5em',
+                    color: 'hsl(from var(--neutral) h s 30%)',
+                    sampleText: 'PRETITLE TEXT'
+                },
+                title: {
+                    size: '2rem',
+                    weight: '600',
+                    lineHeight: '1.2',
+                    letterSpacing: 'normal',
+                    transform: 'none',
+                    marginBottom: '0.5em',
+                    color: 'hsl(from var(--neutral) h s 10%)',
+                    sampleText: 'This is a Title'
+                },
+                subtitle: {
+                    size: '1.25rem',
+                    weight: '500',
+                    lineHeight: '1.4',
+                    letterSpacing: 'normal',
+                    transform: 'uppercase',
+                    marginBottom: '0.75em',
+                    color: 'hsl(from var(--neutral) h s 30%)',
+                    sampleText: 'This is a Subtitle'
+                },
+                description: {
+                    size: '1rem',
+                    weight: '400',
+                    lineHeight: '1.6',
+                    letterSpacing: 'normal',
+                    transform: 'none',
+                    marginBottom: '1em',
+                    color: 'hsl(from var(--neutral) h s 30%)',
+                    sampleText: 'This is a description paragraph with more text to show line height.'
+                }
+            };
+            
+            // Update controls when component is selected
+            componentSelect.addEventListener('change', () => {
+                const component = componentSelect.value;
+                if (!component) {
+                    controls.style.display = 'none';
+                    return;
+                }
+                
+                controls.style.display = 'block';
+                
+                // Use saved presets if available, otherwise use defaults
+                const currentPresets = typographyPresets || componentDefaults;
+                const defaults = currentPresets[component];
+                
+                // Check if we have saved presets for this component
+                if (typographyPresets && typographyPresets[component]) {
+                    // Load from saved presets
+                    const preset = typographyPresets[component];
+                    fontSizeInput.value = preset.size;
+                    fontSizeRange.value = parseFloat(preset.size);
+                    fontWeightSelect.value = preset.weight;
+                    lineHeightInput.value = preset.lineHeight;
+                    lineHeightRange.value = preset.lineHeight;
+                    letterSpacingInput.value = preset.letterSpacing;
+                    letterSpacingRange.value = preset.letterSpacing === 'normal' ? 0 : parseFloat(preset.letterSpacing);
+                    textTransformSelect.value = preset.transform;
+                    marginBottomInput.value = preset.marginBottom;
+                    marginBottomRange.value = parseFloat(preset.marginBottom);
+                    
+                    // Handle color - check for all color options
+                    const color = preset.color;
+                    let colorFound = false;
+                    
+                    // Check each color1-4
+                    for (let i = 1; i <= 4; i++) {
+                        if (color.includes(`var(--color${i})`)) {
+                            colorBaseSelect.value = `color${i}`;
+                            const relativeMatch = color.match(/hsl\(from var\(--color\d+(?:-base)?\) h s (\d+)%\)/);
+                            if (relativeMatch) {
+                                lightnessRange.value = relativeMatch[1];
+                                lightnessInput.value = relativeMatch[1] + '%';
+                            } else {
+                                lightnessRange.value = 50;
+                                lightnessInput.value = '50%';
+                            }
+                            lightnessControl.style.display = 'block';
+                            customColorControl.style.display = 'none';
+                            colorFound = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!colorFound) {
+                        colorBaseSelect.value = 'custom';
+                        colorInput.value = color;
+                        if (color.startsWith('#')) {
+                            colorPicker.value = color;
+                        }
+                        lightnessControl.style.display = 'none';
+                        customColorControl.style.display = 'block';
+                    }
+                    
+                    updateColorValue();
+                } else {
+                    // Fall back to parsing CSS if no presets saved
+                    const css = cssEditor.value;
+                    const componentRegex = new RegExp(`\\.${component}\\s*{([^}]+)}`, 's');
+                    const match = css.match(componentRegex);
+                    
+                    if (match) {
+                        const cssBlock = match[1];
+                    
+                    // Parse font size
+                    const sizeMatch = cssBlock.match(/--${component}-size:\s*([^;]+);/);
+                    const fontSize = sizeMatch ? sizeMatch[1].trim() : defaults.size;
+                    const sizeInRem = parseFloat(fontSize);
+                    fontSizeRange.value = sizeInRem;
+                    fontSizeInput.value = fontSize;
+                    
+                    // Parse font weight
+                    const weightMatch = cssBlock.match(/--${component}-weight:\s*([^;]+);/);
+                    const fontWeight = weightMatch ? weightMatch[1].trim() : defaults.weight;
+                    fontWeightSelect.value = fontWeight;
+                    
+                    // Parse line height
+                    const lineHeightMatch = cssBlock.match(/--${component}-line-height:\s*([^;]+);/);
+                    const lineHeight = lineHeightMatch ? lineHeightMatch[1].trim() : defaults.lineHeight;
+                    lineHeightRange.value = lineHeight;
+                    lineHeightInput.value = lineHeight;
+                    
+                    // Parse letter spacing
+                    const letterSpacingMatch = cssBlock.match(/--${component}-spacing:\s*([^;]+);/);
+                    const letterSpacing = letterSpacingMatch ? letterSpacingMatch[1].trim() : defaults.letterSpacing;
+                    const spacingValue = letterSpacing === 'normal' ? '0' : letterSpacing.replace('em', '');
+                    letterSpacingRange.value = spacingValue;
+                    letterSpacingInput.value = letterSpacing;
+                    
+                    // Parse text transform
+                    const transformMatch = cssBlock.match(/--${component}-transform:\s*([^;]+);/) || 
+                                         cssBlock.match(/--text-transform:\s*([^;]+);/);
+                    const textTransform = transformMatch ? transformMatch[1].trim() : defaults.transform;
+                    textTransformSelect.value = textTransform;
+                    
+                    // Parse margin bottom
+                    const marginMatch = cssBlock.match(/--${component}-margin:\s*([^;]+);/);
+                    let marginBottom = defaults.marginBottom;
+                    if (marginMatch) {
+                        const margins = marginMatch[1].trim().split(' ');
+                        marginBottom = margins[2] || margins[0]; // bottom or all
+                    }
+                    // Convert to em if needed
+                    if (!marginBottom.includes('em')) {
+                        const value = parseFloat(marginBottom);
+                        marginBottom = value + 'em';
+                    }
+                    const marginValue = parseFloat(marginBottom);
+                    marginBottomRange.value = marginValue;
+                    marginBottomInput.value = marginBottom;
+                    
+                    // Parse color
+                    const colorMatch = cssBlock.match(/--${component}-color:\s*([^;]+);/);
+                    const color = colorMatch ? colorMatch[1].trim() : defaults.color;
+                    
+                    // Detect color type and set controls
+                    if (color.includes('var(--primary)')) {
+                        colorBaseSelect.value = 'primary';
+                        // Check if it's using relative color syntax
+                        const relativeMatch = color.match(/hsl\(from var\(--primary\) h s (\d+)%\)/);
+                        if (relativeMatch) {
+                            lightnessRange.value = relativeMatch[1];
+                            lightnessInput.value = relativeMatch[1] + '%';
+                        } else {
+                            lightnessRange.value = 50;
+                            lightnessInput.value = '50%';
+                        }
+                        lightnessControl.style.display = 'block';
+                        customColorControl.style.display = 'none';
+                    } else if (color.includes('var(--secondary)')) {
+                        colorBaseSelect.value = 'secondary';
+                        const relativeMatch = color.match(/hsl\(from var\(--secondary\) h s (\d+)%\)/);
+                        if (relativeMatch) {
+                            lightnessRange.value = relativeMatch[1];
+                            lightnessInput.value = relativeMatch[1] + '%';
+                        } else {
+                            lightnessRange.value = 50;
+                            lightnessInput.value = '50%';
+                        }
+                        lightnessControl.style.display = 'block';
+                        customColorControl.style.display = 'none';
+                    } else if (color.includes('var(--neutral)')) {
+                        colorBaseSelect.value = 'neutral';
+                        const relativeMatch = color.match(/hsl\(from var\(--neutral\) h s (\d+)%\)/);
+                        if (relativeMatch) {
+                            lightnessRange.value = relativeMatch[1];
+                            lightnessInput.value = relativeMatch[1] + '%';
+                        } else {
+                            lightnessRange.value = 50;
+                            lightnessInput.value = '50%';
+                        }
+                        lightnessControl.style.display = 'block';
+                        customColorControl.style.display = 'none';
+                    } else {
+                        colorBaseSelect.value = 'custom';
+                        colorInput.value = color;
+                        if (color.startsWith('#')) {
+                            colorPicker.value = color;
+                        }
+                        lightnessControl.style.display = 'none';
+                        customColorControl.style.display = 'block';
+                    }
+                    
+                    updateColorValue();
+                } else {
+                    // Use defaults if component not found
+                    fontSizeInput.value = defaults.size;
+                    fontWeightSelect.value = defaults.weight;
+                    lineHeightInput.value = defaults.lineHeight;
+                    letterSpacingInput.value = defaults.letterSpacing;
+                    textTransformSelect.value = defaults.transform;
+                    marginBottomInput.value = defaults.marginBottom;
+                    const marginValue = parseFloat(defaults.marginBottom);
+                    marginBottomRange.value = marginValue;
+                    
+                    // Set default color
+                    colorBaseSelect.value = 'custom';
+                    colorInput.value = defaults.color;
+                    lightnessControl.style.display = 'none';
+                    customColorControl.style.display = 'block';
+                    }
+                }
+                
+                updateTypographyPreview();
+            });
+            
+            // Sync range and input controls
+            fontSizeRange.addEventListener('input', () => {
+                fontSizeInput.value = fontSizeRange.value + 'rem';
+                updateTypographyPreview();
+            });
+            
+            fontSizeInput.addEventListener('input', () => {
+                const value = parseFloat(fontSizeInput.value);
+                if (!isNaN(value)) {
+                    fontSizeRange.value = value;
+                }
+                updateTypographyPreview();
+            });
+            
+            lineHeightRange.addEventListener('input', () => {
+                lineHeightInput.value = lineHeightRange.value;
+                updateTypographyPreview();
+            });
+            
+            lineHeightInput.addEventListener('input', () => {
+                lineHeightRange.value = lineHeightInput.value;
+                updateTypographyPreview();
+            });
+            
+            letterSpacingRange.addEventListener('input', () => {
+                letterSpacingInput.value = letterSpacingRange.value + 'em';
+                updateTypographyPreview();
+            });
+            
+            letterSpacingInput.addEventListener('input', () => {
+                const value = parseFloat(letterSpacingInput.value);
+                if (!isNaN(value)) {
+                    letterSpacingRange.value = value;
+                }
+                updateTypographyPreview();
+            });
+            
+            marginBottomRange.addEventListener('input', () => {
+                marginBottomInput.value = marginBottomRange.value + 'em';
+                updateTypographyPreview();
+            });
+            
+            marginBottomInput.addEventListener('input', () => {
+                const value = parseFloat(marginBottomInput.value);
+                if (!isNaN(value)) {
+                    marginBottomRange.value = value;
+                }
+                updateTypographyPreview();
+            });
+            
+            // Color base selector
+            colorBaseSelect.addEventListener('change', () => {
+                const baseColor = colorBaseSelect.value;
+                
+                if (baseColor === 'custom') {
+                    lightnessControl.style.display = 'none';
+                    customColorControl.style.display = 'block';
+                } else {
+                    lightnessControl.style.display = 'block';
+                    customColorControl.style.display = 'none';
+                    
+                    // Set default lightness based on component
+                    if (baseColor === 'color3') { // Color 3 is neutral
+                        lightnessRange.value = 20; // Darker for text (20% = scale 800)
+                        lightnessInput.value = '20%';
+                    } else {
+                        lightnessRange.value = 40; // Default for colors (40% = scale 600)
+                        lightnessInput.value = '40%';
+                    }
+                }
+                
+                updateColorValue();
+                updateTypographyPreview();
+            });
+            
+            // Lightness slider
+            lightnessRange.addEventListener('input', () => {
+                lightnessInput.value = lightnessRange.value + '%';
+                updateColorValue();
+                updateTypographyPreview();
+            });
+            
+            // Lightness input
+            lightnessInput.addEventListener('input', () => {
+                const value = parseFloat(lightnessInput.value);
+                if (!isNaN(value) && value >= 0 && value <= 100) {
+                    lightnessRange.value = value;
+                    updateColorValue();
+                    updateTypographyPreview();
+                }
+            });
+            
+            // Update color value based on selection
+            function updateColorValue() {
+                const baseColor = colorBaseSelect.value;
+                let colorValue = '';
+                
+                if (baseColor === 'custom') {
+                    colorValue = colorInput.value || '#000000';
+                } else {
+                    // Use CSS relative color syntax to adjust lightness
+                    const lightness = lightnessRange.value;
+                    colorValue = `hsl(from var(--${baseColor}) h s ${lightness}%)`;
+                }
+                
+                // Update color preview
+                if (colorPreview) {
+                    if (colorValue.includes('hsl(from')) {
+                        // For relative colors, we need to show approximate preview
+                        // This is a simplified preview - actual rendering will be correct in the iframe
+                        const baseColors = {
+                            'primary': 'hsl(174, 45%, 50%)',
+                            'secondary': 'hsl(30, 40%, 50%)',
+                            'neutral': 'hsl(0, 0%, 50%)'
+                        };
+                        if (baseColors[baseColor]) {
+                            const [h, s] = baseColors[baseColor].match(/\d+/g);
+                            colorPreview.style.background = `hsl(${h}, ${s}%, ${lightnessRange.value}%)`;
+                        }
+                    } else if (colorValue.startsWith('var(')) {
+                        // For CSS variables, try to get computed style
+                        const tempDiv = document.createElement('div');
+                        tempDiv.style.color = colorValue;
+                        document.body.appendChild(tempDiv);
+                        const computed = getComputedStyle(tempDiv).color;
+                        document.body.removeChild(tempDiv);
+                        colorPreview.style.background = computed || colorValue;
+                    } else {
+                        colorPreview.style.background = colorValue;
+                    }
+                }
+                
+                return colorValue;
+            }
+            
+            colorPicker.addEventListener('input', () => {
+                colorInput.value = colorPicker.value;
+                updateColorValue();
+                updateTypographyPreview();
+            });
+            
+            colorInput.addEventListener('input', () => {
+                if (colorInput.value.startsWith('#') && colorInput.value.length === 7) {
+                    colorPicker.value = colorInput.value;
+                }
+                updateTypographyPreview();
+            });
+            
+            fontWeightSelect.addEventListener('change', updateTypographyPreview);
+            textTransformSelect.addEventListener('change', updateTypographyPreview);
+            
+            // Update preview
+            function updateTypographyPreview() {
+                // Add/update typography preview in main preview
+                let html = htmlEditor.value;
+                
+                // Create preview HTML for all text types
+                let allPreviewsHTML = '';
+                for (const [compName, compDefaults] of Object.entries(componentDefaults)) {
+                    allPreviewsHTML += `    <div class="${compName}" id="typography-preview-${compName}">${compDefaults.sampleText}</div>\n`;
+                }
+                
+                // Check if we already have a typography preview section
+                if (!html.includes('<!-- Typography Preview -->')) {
+                    // Add typography preview section with all text types
+                    html += `\n\n<!-- Typography Preview -->\n<section style="padding: 3rem 2rem; background: var(--neutral-50);">\n    <div style="max-width: 800px; margin: 0 auto; padding: 2rem; background: white; border-radius: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">\n${allPreviewsHTML}    </div>\n</section>`;
+                } else {
+                    // Update existing preview section with all components
+                    const typographySection = html.match(/<!-- Typography Preview -->[\s\S]*?<\/section>/);
+                    if (typographySection) {
+                        const newSection = `<!-- Typography Preview -->\n<section style="padding: 3rem 2rem; background: var(--neutral-50);">\n    <div style="max-width: 800px; margin: 0 auto; padding: 2rem; background: white; border-radius: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">\n${allPreviewsHTML}    </div>\n</section>`;
+                        html = html.replace(typographySection[0], newSection);
+                    }
+                }
+                
+                htmlEditor.value = html;
+                updatePreview();
+                
+                // Apply live styles to the currently selected component
+                const component = componentSelect.value;
+                if (component) {
+                    setTimeout(() => {
+                        const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                        const previewElement = previewDoc.getElementById(`typography-preview-${component}`);
+                        if (previewElement) {
+                            // Apply inline styles for live preview
+                            previewElement.style.fontSize = fontSizeInput.value;
+                            previewElement.style.fontWeight = fontWeightSelect.value;
+                            previewElement.style.lineHeight = lineHeightInput.value;
+                            previewElement.style.letterSpacing = letterSpacingInput.value;
+                            previewElement.style.textTransform = textTransformSelect.value;
+                            previewElement.style.marginBottom = marginBottomInput.value;
+                            previewElement.style.color = updateColorValue();
+                        }
+                    }, 100);
+                }
+            }
+            
+            // Apply changes
+            applyBtn.addEventListener('click', () => {
+                const component = componentSelect.value;
+                if (!component) return;
+                
+                // Save current values to presets
+                if (!typographyPresets) {
+                    typographyPresets = {...componentDefaults};
+                }
+                
+                typographyPresets[component] = {
+                    size: fontSizeInput.value,
+                    weight: fontWeightSelect.value,
+                    lineHeight: lineHeightInput.value,
+                    letterSpacing: letterSpacingInput.value,
+                    transform: textTransformSelect.value,
+                    marginBottom: marginBottomInput.value,
+                    color: updateColorValue(),
+                    sampleText: componentDefaults[component].sampleText
+                };
+                
+                
+                let css = cssEditor.value;
+                const componentRegex = new RegExp(`\\.${component}\\s*{([^}]+)}`, 's');
+                const match = css.match(componentRegex);
+                
+                if (match) {
+                    // Update existing component
+                    let cssBlock = match[1];
+                    
+                    // Update or add each property
+                    const updateProperty = (varName, value) => {
+                        const propRegex = new RegExp(`(--${varName}:\\s*)([^;]+)(;)`, 'g');
+                        if (cssBlock.match(propRegex)) {
+                            cssBlock = cssBlock.replace(propRegex, `$1${value}$3`);
+                        } else {
+                            // Add property if it doesn't exist
+                            cssBlock = cssBlock.trimEnd() + `\n    --${varName}: ${value};`;
+                        }
+                    };
+                    
+                    updateProperty(`${component}-size`, fontSizeInput.value);
+                    updateProperty(`${component}-weight`, fontWeightSelect.value);
+                    updateProperty(`${component}-line-height`, lineHeightInput.value);
+                    updateProperty(`${component}-spacing`, letterSpacingInput.value);
+                    
+                    // Special handling for subtitle's text-transform
+                    if (component === 'subtitle' && cssBlock.includes('--text-transform:')) {
+                        updateProperty('text-transform', textTransformSelect.value);
+                    } else {
+                        updateProperty(`${component}-transform`, textTransformSelect.value);
+                    }
+                    
+                    updateProperty(`${component}-color`, updateColorValue());
+                    updateProperty(`${component}-margin`, `0 0 ${marginBottomInput.value} 0`);
+                    
+                    css = css.replace(match[0], `.${component} {${cssBlock}\n}`);
+                } else {
+                    // Add new component if it doesn't exist
+                    const newComponent = `
+/* ${component.charAt(0).toUpperCase() + component.slice(1)} Component */
+.${component} {
+    --${component}-size: ${fontSizeInput.value};
+    --${component}-weight: ${fontWeightSelect.value};
+    --${component}-line-height: ${lineHeightInput.value};
+    --${component}-spacing: ${letterSpacingInput.value};
+    --${component}-transform: ${textTransformSelect.value};
+    --${component}-color: ${updateColorValue()};
+    --${component}-margin: 0 0 ${marginBottomInput.value} 0;
+    
+    font-size: var(--${component}-size);
+    font-weight: var(--${component}-weight);
+    line-height: var(--${component}-line-height);
+    letter-spacing: var(--${component}-spacing);
+    text-transform: var(--${component === 'subtitle' ? 'text-transform' : `${component}-transform`});
+    color: var(--${component}-color);
+    margin: var(--${component}-margin);
+}`;
+                    
+                    // Find where to insert (after other base components)
+                    const baseComponentsEnd = css.lastIndexOf('/* ============================================ */\n/* LAYER 3:');
+                    if (baseComponentsEnd > -1) {
+                        css = css.slice(0, baseComponentsEnd) + newComponent + '\n\n' + css.slice(baseComponentsEnd);
+                    } else {
+                        css += '\n' + newComponent;
+                    }
+                }
+                
+                cssEditor.value = css;
+                updatePreview();
+                
+                // Remove inline styles from preview element after applying
+                setTimeout(() => {
+                    const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                    const previewElement = previewDoc.getElementById(`typography-preview-${component}`);
+                    if (previewElement) {
+                        // Remove all inline styles so it uses only the CSS classes
+                        previewElement.removeAttribute('style');
+                    }
+                }, 100);
+                
+                // Save HTML with typography preview
+                });
+            
+            // Export typography presets
+            exportBtn.addEventListener('click', () => {
+                const presets = typographyPresets || componentDefaults;
+                const jsonData = JSON.stringify(presets, null, 2);
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'typography-presets.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            // Import typography presets
+            importBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            try {
+                                const imported = JSON.parse(event.target.result);
+                                // Validate that it has the expected structure
+                                if (imported.pretitle && imported.title && imported.subtitle && imported.description) {
+                                    typographyPresets = imported;
+                                                        
+                                    // Update current component if one is selected
+                                    if (componentSelect.value) {
+                                        componentSelect.dispatchEvent(new Event('change'));
+                                    }
+                                    
+                                    // Update preview
+                                    updateTypographyPreview();
+                                    
+                                    alert('Typography presets imported successfully!');
+                                } else {
+                                    alert('Invalid preset file format');
+                                }
+                            } catch (err) {
+                                alert('Error importing presets: ' + err.message);
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            });
+        }
+        
+        // Color presets storage
+        let colorPresets = null;
+        
+        // Core colors that cannot be deleted
+        const CORE_COLORS = ['color1', 'color2', 'color3', 'color4'];
+        
+        // Default color presets
+        function getDefaultColorPresets() {
+            return {
+                'color1-base': 'hsl(174, 45%, 50%)',  // Aqua
+                'color2-base': 'hsl(30, 40%, 50%)',   // Terracotta  
+                'color3-base': 'hsl(0, 0%, 50%)',     // Neutral
+                'color4-base': 'hsl(337, 35%, 52%)',  // Pink
+                palettes: {
+                    color1: { lightest: 90, light: 70, base: 50, dark: 30, darkest: 10 },
+                    color2: { lightest: 90, light: 70, base: 50, dark: 30, darkest: 10 },
+                    color3: { lightest: 90, light: 70, base: 50, dark: 30, darkest: 10 },
+                    color4: { lightest: 90, light: 70, base: 50, dark: 30, darkest: 10 }
+                }
+            };
+        }
+        
+        // Parse color presets from current CSS
+        function parseColorPresetsFromCSS() {
+            const css = cssEditor.value;
+            const presets = {
+                palettes: {}
+            };
+            
+            // Parse base colors
+            CORE_COLORS.forEach(colorName => {
+                const baseKey = `${colorName}-base`;
+                const baseRegex = new RegExp(`--${baseKey}:\\s*([^;]+);`);
+                const baseMatch = css.match(baseRegex);
+                if (baseMatch) {
+                    presets[baseKey] = baseMatch[1].trim();
+                }
+                
+                // Initialize palette with defaults
+                presets.palettes[colorName] = {
+                    lightest: 90,
+                    light: 70, 
+                    base: 50,
+                    dark: 30,
+                    darkest: 10
+                };
+                
+                // Try to parse palette lightness values from CSS
+                ['lightest', 'light', 'dark', 'darkest'].forEach(variant => {
+                    const varName = `${colorName}-${variant}`;
+                    // Updated regex to handle the CSS format without parentheses
+                    const regex = new RegExp(`--${varName}:\\s*hsl\\(from[^)]+\\)\\s+h\\s+s\\s+(\\d+)%`);
+                    const match = css.match(regex);
+                    if (match) {
+                        presets.palettes[colorName][variant] = parseInt(match[1]);
+                    }
+                });
+                
+                // For base, extract from base color
+                if (presets[baseKey]) {
+                    const baseMatch = presets[baseKey].match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+                    if (baseMatch) {
+                        presets.palettes[colorName].base = parseInt(baseMatch[3]);
+                    }
+                }
+            });
+            
+            console.log('Parsed color presets from CSS:', presets);
+            
+            // Only return if we found at least some colors
+            return Object.keys(presets).length > 1 ? presets : null;
+        }
+        
+        // Setup color editor functionality
+        function setupColorEditor() {
+            const colorSelect = document.getElementById('colorSelect');
+            const colorControls = document.getElementById('colorControls');
+            const baseColorPicker = document.getElementById('baseColorPicker');
+            const baseColorInput = document.getElementById('baseColorInput');
+            const hueRange = document.getElementById('hueRange');
+            const hueInput = document.getElementById('hueInput');
+            const saturationRange = document.getElementById('saturationRange');
+            const saturationInput = document.getElementById('saturationInput');
+            const baseLightnessRange = document.getElementById('baseLightnessRange');
+            const baseLightnessInput = document.getElementById('baseLightnessInput');
+            const baseColorPreview = document.getElementById('baseColorPreview');
+            const colorPreviewText = document.getElementById('colorPreviewText');
+            // Removed currentColorsDisplay - replaced with Add Color button
+            const applyColorBtn = document.getElementById('applyColorBtn');
+            const exportColorsBtn = document.getElementById('exportColorsBtn');
+            const importColorsBtn = document.getElementById('importColorsBtn');
+            
+            if (!colorSelect) return;
+            
+            // Load presets - first try localStorage, then parse from CSS, then use defaults
+            const savedPresets = localStorage.getItem('studio4-color-presets');
+            if (savedPresets) {
+                colorPresets = JSON.parse(savedPresets);
+                console.log('Loaded color presets from localStorage:', colorPresets);
+            } else {
+                colorPresets = parseColorPresetsFromCSS() || getDefaultColorPresets();
+                console.log('Loaded color presets:', colorPresets);
+            }
+            
+            // Update current colors display
+            // Add Color button functionality
+            const addColorBtn = document.getElementById('addColorBtn');
+            if (addColorBtn) {
+                addColorBtn.addEventListener('click', () => {
+                    const colorName = prompt('Enter a name for the new color:');
+                    if (colorName && colorName.trim()) {
+                        const sanitizedName = colorName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+                        if (!colorPresets[sanitizedName]) {
+                            colorPresets[sanitizedName] = 'hsl(0, 0%, 50%)'; // Default gray
+                            
+                            // Add to dropdown
+                            const option = document.createElement('option');
+                            option.value = sanitizedName;
+                            option.textContent = colorName.trim();
+                            colorSelect.appendChild(option);
+                            
+                            // Select the new color
+                            colorSelect.value = sanitizedName;
+                            colorSelect.dispatchEvent(new Event('change'));
+                        } else {
+                            alert('A color with this name already exists!');
+                        }
+                    }
+                });
+            }
+            
+            // Parse HSL string
+            function parseHSL(hslString) {
+                const match = hslString.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+                if (match) {
+                    return {
+                        h: parseInt(match[1]),
+                        s: parseInt(match[2]),
+                        l: parseInt(match[3])
+                    };
+                }
+                return { h: 0, s: 0, l: 50 };
+            }
+            
+            // Convert HSL to hex for color picker
+            function hslToHex(h, s, l) {
+                l /= 100;
+                const a = s * Math.min(l, 1 - l) / 100;
+                const f = n => {
+                    const k = (n + h / 30) % 12;
+                    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                    return Math.round(255 * color).toString(16).padStart(2, '0');
+                };
+                return `#${f(0)}${f(8)}${f(4)}`;
+            }
+            
+            // Update color preview
+            function updateColorPreview() {
+                const h = parseInt(hueRange.value);
+                const s = parseInt(saturationRange.value);
+                const l = parseInt(baseLightnessRange.value);
+                const hslColor = `hsl(${h}, ${s}%, ${l}%)`;
+                
+                baseColorPreview.style.background = hslColor;
+                baseColorInput.value = hslColor;
+                baseColorPicker.value = hslToHex(h, s, l);
+                
+                // Update text color for contrast
+                colorPreviewText.style.color = l > 50 ? '#000' : '#fff';
+            }
+            
+            // Update palette swatches preview
+            function updatePaletteSwatches() {
+                const h = parseInt(hueRange.value);
+                const s = parseInt(saturationRange.value);
+                const baseL = parseInt(baseLightnessRange.value);
+                
+                document.querySelectorAll('[data-palette]').forEach(swatch => {
+                    const key = swatch.dataset.palette;
+                    if (key === 'base') {
+                        // Use the actual base color for the base swatch
+                        const color = `hsl(${h}, ${s}%, ${baseL}%)`;
+                        swatch.style.background = color;
+                    } else {
+                        const range = document.querySelector(`[data-lightness="${key}"]`);
+                        if (range) {
+                            const l = parseInt(range.value);
+                            const color = `hsl(${h}, ${s}%, ${l}%)`;
+                            swatch.style.background = color;
+                        }
+                    }
+                });
+            }
+            
+            // Handle color selection
+            colorSelect.addEventListener('change', () => {
+                const selectedColor = colorSelect.value;
+                if (!selectedColor) {
+                    colorControls.style.display = 'none';
+                    return;
+                }
+                
+                colorControls.style.display = 'block';
+                
+                // Load the current base color value
+                const baseColorKey = `${selectedColor}-base`;
+                const currentValue = colorPresets[baseColorKey] || 'hsl(0, 0%, 50%)';
+                const hsl = parseHSL(currentValue);
+                
+                hueRange.value = hsl.h;
+                hueInput.value = hsl.h + '°';
+                saturationRange.value = hsl.s;
+                saturationInput.value = hsl.s + '%';
+                baseLightnessRange.value = hsl.l;
+                baseLightnessInput.value = hsl.l + '%';
+                
+                // Load palette lightness values
+                if (colorPresets.palettes && colorPresets.palettes[selectedColor]) {
+                    const palette = colorPresets.palettes[selectedColor];
+                    document.querySelectorAll('[data-lightness]').forEach(range => {
+                        const key = range.dataset.lightness;
+                        if (palette[key] !== undefined) {
+                            range.value = palette[key];
+                            const valueSpan = document.querySelector(`[data-value="${key}"]`);
+                            if (valueSpan) valueSpan.textContent = palette[key] + '%';
+                        }
+                    });
+                }
+                
+                updateColorPreview();
+                updatePaletteSwatches();
+            });
+            
+            // Sync controls
+            // Add palette slider handlers
+            document.querySelectorAll('[data-lightness]').forEach(range => {
+                range.addEventListener('input', () => {
+                    const valueSpan = document.querySelector(`[data-value="${range.dataset.lightness}"]`);
+                    if (valueSpan) valueSpan.textContent = range.value + '%';
+                    updatePaletteSwatches();
+                });
+            });
+            
+            hueRange.addEventListener('input', () => {
+                hueInput.value = hueRange.value + '°';
+                updateColorPreview();
+                updatePaletteSwatches();
+            });
+            
+            hueInput.addEventListener('input', () => {
+                const value = parseInt(hueInput.value);
+                if (!isNaN(value) && value >= 0 && value <= 360) {
+                    hueRange.value = value;
+                    updateColorPreview();
+                    updatePaletteSwatches();
+                }
+            });
+            
+            saturationRange.addEventListener('input', () => {
+                saturationInput.value = saturationRange.value + '%';
+                updateColorPreview();
+                updatePaletteSwatches();
+            });
+            
+            saturationInput.addEventListener('input', () => {
+                const value = parseInt(saturationInput.value);
+                if (!isNaN(value) && value >= 0 && value <= 100) {
+                    saturationRange.value = value;
+                    updateColorPreview();
+                    updatePaletteSwatches();
+                }
+            });
+            
+            baseLightnessRange.addEventListener('input', () => {
+                baseLightnessInput.value = baseLightnessRange.value + '%';
+                updateColorPreview();
+                updatePaletteSwatches();
+            });
+            
+            baseLightnessInput.addEventListener('input', () => {
+                const value = parseInt(baseLightnessInput.value);
+                if (!isNaN(value) && value >= 0 && value <= 100) {
+                    baseLightnessRange.value = value;
+                    updateColorPreview();
+                    updatePaletteSwatches();
+                }
+            });
+            
+            // Color picker change
+            baseColorPicker.addEventListener('input', () => {
+                // Convert hex to HSL
+                const hex = baseColorPicker.value;
+                const r = parseInt(hex.slice(1, 3), 16) / 255;
+                const g = parseInt(hex.slice(3, 5), 16) / 255;
+                const b = parseInt(hex.slice(5, 7), 16) / 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const l = (max + min) / 2;
+                
+                let h = 0;
+                let s = 0;
+                
+                if (max !== min) {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    
+                    switch (max) {
+                        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                        case g: h = ((b - r) / d + 2) / 6; break;
+                        case b: h = ((r - g) / d + 4) / 6; break;
+                    }
+                }
+                
+                hueRange.value = Math.round(h * 360);
+                hueInput.value = Math.round(h * 360) + '°';
+                saturationRange.value = Math.round(s * 100);
+                saturationInput.value = Math.round(s * 100) + '%';
+                baseLightnessRange.value = Math.round(l * 100);
+                baseLightnessInput.value = Math.round(l * 100) + '%';
+                
+                updateColorPreview();
+            });
+            
+            // Apply color changes
+            applyColorBtn.addEventListener('click', () => {
+                console.log('Apply button clicked!');
+                const selectedColor = colorSelect.value;
+                if (!selectedColor) {
+                    console.log('No color selected');
+                    return;
+                }
+                
+                const h = parseInt(hueRange.value);
+                const s = parseInt(saturationRange.value);
+                const l = parseInt(baseLightnessRange.value);
+                const baseColor = `hsl(${h}, ${s}%, ${l}%)`;
+                console.log(`Applying ${selectedColor}: ${baseColor}`);
+                
+                // Update base color preset
+                colorPresets[`${selectedColor}-base`] = baseColor;
+                
+                // Update palette lightness values
+                if (!colorPresets.palettes) colorPresets.palettes = {};
+                if (!colorPresets.palettes[selectedColor]) colorPresets.palettes[selectedColor] = {};
+                
+                document.querySelectorAll('[data-lightness]').forEach(range => {
+                    const key = range.dataset.lightness;
+                    colorPresets.palettes[selectedColor][key] = parseInt(range.value);
+                });
+                
+                
+                // Update CSS root variables
+                const root = document.documentElement;
+                root.style.setProperty(`--${selectedColor}-base`, baseColor);
+                
+                // Update palette variables
+                Object.entries(colorPresets.palettes[selectedColor]).forEach(([key, lightness]) => {
+                    const varName = key === 'base' ? selectedColor : `${selectedColor}-${key}`;
+                    const paletteColor = `hsl(from var(--${selectedColor}-base) h s ${lightness}%)`;
+                    root.style.setProperty(`--${varName}`, paletteColor);
+                });
+                
+                // Also update in the CSS editor
+                let css = cssEditor.value;
+                console.log('CSS before update:', css.substring(0, 500));
+                
+                // Update base color
+                const baseRegex = new RegExp(`(--${selectedColor}-base:\\s*)([^;]+)(;)`, 'g');
+                if (css.match(baseRegex)) {
+                    css = css.replace(baseRegex, `$1${baseColor}$3`);
+                    console.log('Updated base color in CSS');
+                } else {
+                    console.log('Base color not found in CSS!');
+                }
+                
+                // Update palette variables
+                Object.entries(colorPresets.palettes[selectedColor]).forEach(([key, lightness]) => {
+                    const varName = key === 'base' ? selectedColor : `${selectedColor}-${key}`;
+                    const varRegex = new RegExp(`(--${varName}:\\s*)([^;]+)(;)`, 'g');
+                    const newValue = `hsl(from var(--${selectedColor}-base) h s ${lightness}%)`;
+                    if (css.match(varRegex)) {
+                        css = css.replace(varRegex, `$1${newValue}$3`);
+                    }
+                });
+                
+                cssEditor.value = css;
+                updatePreview();
+                
+                // Save to localStorage
+                localStorage.setItem('studio4-color-presets', JSON.stringify(colorPresets));
+                
+                // Auto-save after applying colors
+                if (autoSave && fileHandle) {
+                    saveTheme();
+                }
+                
+                // Update color preview if it's currently shown
+                const colorsToggle = document.getElementById('colors-toggle');
+                if (colorsToggle && !colorsToggle.classList.contains('collapsed')) {
+                    showColorPreview();
+                }
+                
+                // Flash the apply button to show it worked
+                applyColorBtn.style.background = 'var(--secondary)';
+                setTimeout(() => {
+                    applyColorBtn.style.background = '';
+                }, 200);
+                
+                console.log(`Applied color ${selectedColor}: ${baseColor}`);
+            });
+            
+            // Export colors
+            exportColorsBtn.addEventListener('click', () => {
+                const jsonData = JSON.stringify(colorPresets, null, 2);
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'color-presets.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            // Import colors
+            importColorsBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            try {
+                                const imported = JSON.parse(event.target.result);
+                                colorPresets = imported;
+                                    // Color display update removed
+                                
+                                // Update root CSS variables
+                                const root = document.documentElement;
+                                for (const [name, value] of Object.entries(colorPresets)) {
+                                    root.style.setProperty(`--${name}`, value);
+                                }
+                                
+                                alert('Color presets imported successfully!');
+                            } catch (err) {
+                                alert('Error importing color presets: ' + err.message);
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            });
+        }
+
+        function escapeHtml(html) {
+            const div = document.createElement('div');
+            div.textContent = html;
+            return div.innerHTML;
+        }
+
+        // Live preview and save on input
+        htmlEditor.addEventListener('input', () => {
+            updatePreview();
+            if (autoSave) {
+                saveTheme();
+            }
+        });
+        
+        cssEditor.addEventListener('input', () => {
+            updatePreview();
+            if (autoSave) {
+                saveTheme();
+            }
+        });
+
+        // Sidebar controls
+        function setSidebarState(state) {
+            // Remove inline width to let CSS handle transitions
+            if (sidebar) sidebar.style.width = '';
+            
+            if (state === 'normal') {
+                dashboard.classList.remove('sidebar-expanded', 'sidebar-collapsed');
+            } else if (state === 'expanded') {
+                dashboard.classList.add('sidebar-expanded');
+                dashboard.classList.remove('sidebar-collapsed');
+            } else if (state === 'collapsed') {
+                dashboard.classList.add('sidebar-collapsed');
+                dashboard.classList.remove('sidebar-expanded');
+            }
+        }
+
+        shrinkBtn.addEventListener('click', () => {
+            setSidebarState('normal');
+        });
+
+        expandBtn.addEventListener('click', () => {
+            setSidebarState('expanded');
+        });
+
+        collapseBtn.addEventListener('click', () => {
+            setSidebarState('collapsed');
+        });
+
+        toggleSidebarBtn.addEventListener('click', () => {
+            setSidebarState('normal');
+        });
+
+        // Save functionality using File System Access API
+        async function saveTheme() {
+            try {
+                // If we don't have a file handle, prompt user to select file
+                if (!fileHandle) {
+                    // Show file picker - point to development theme file
+                    fileHandle = await window.showSaveFilePicker({
+                        suggestedName: DEV_FILE_NAME,
+                        types: [{
+                            description: 'HTML Files',
+                            accept: {'text/html': ['.html']}
+                        }]
+                    });
+                    
+                    // Update button to show connected status
+                    saveBtn.textContent = 'Save Theme ✓';
+                    saveBtn.title = `Connected to DEV: ${fileHandle.name}`;
+                }
+                
+                // Create writable stream
+                const writable = await fileHandle.createWritable();
+                
+                // Write the complete HTML file content
+                const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio4 - User Design System</title>
+    <style>
+${cssEditor.value}
+    </style>
+</head>
+<body>
+${htmlEditor.value || '    <!-- Add your HTML content here -->'}
+</body>
+</html>`;
+                
+                await writable.write(htmlContent);
+                await writable.close();
+                
+                // Flash button to show save happened
+                saveBtn.style.background = 'var(--secondary)';
+                setTimeout(() => {
+                    saveBtn.style.background = '';
+                }, 200);
+                
+                console.log(`Saved to ${fileHandle.name}`);
+                
+            } catch (err) {
+                // User cancelled or browser doesn't support
+                if (err.name !== 'AbortError') {
+                    console.error('Save failed:', err);
+                    alert('Save failed. Your browser might not support the File System Access API.');
+                }
+            }
+        }
+        
+        // Save button click
+        saveBtn.addEventListener('click', saveTheme);
+        
+        // Load theme button
+        loadThemeBtn.addEventListener('click', async () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.html';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const text = await file.text();
+                    const styleMatch = text.match(/<style>([\s\S]*?)<\/style>/);
+                    if (styleMatch) {
+                        cssEditor.value = styleMatch[1].trim();
+                        updatePreview();
+                        // Re-parse colors after loading
+                        setupColorEditor();
+                        console.log('Loaded theme from file');
+                    }
+                }
+            };
+            input.click();
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Cmd/Ctrl + S to save
+            if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+                e.preventDefault();
+                saveTheme();
+            }
+            
+            if (e.altKey) {
+                if (e.key === '[') {
+                    e.preventDefault();
+                    setSidebarState('normal');
+                } else if (e.key === ']') {
+                    e.preventDefault();
+                    setSidebarState('expanded');
+                } else if (e.key === '\\') {
+                    e.preventDefault();
+                    setSidebarState(dashboard && dashboard.classList.contains('sidebar-collapsed') ? 'normal' : 'collapsed');
+                }
+            }
+        });
+
+
+        // Load existing file on startup (optional)
+        async function loadExistingFile() {
+            try {
+                // Try to load studio4-users.html from the same directory
+                const response = await fetch('./studio4-users.html');
+                if (response.ok) {
+                    const html = await response.text();
+                    // Extract CSS from the loaded file
+                    const styleMatch = html.match(/<style>([\s\S]*?)<\/style>/);
+                    if (styleMatch) {
+                        cssEditor.value = styleMatch[1].trim();
+                        updatePreview();
+                        console.log('Loaded existing studio4-users.html');
+                    }
+                }
+            } catch (err) {
+                console.log('No existing file found, using defaults');
+            }
+        }
+        
+        // Initialize the interface
+        updatePreview();
+        updateThemePanel();
+        
+        // Try to load existing file, but don't rely on it due to CORS
+        loadExistingFile().finally(() => {
+            // Setup color editor whether file loads or not
+            // The CSS editor already has the content, so parse from there
+            setupColorEditor();
+        });
+        
+        // Auto-open Colors section and show color preview
+        setTimeout(() => {
+            const colorsToggle = document.getElementById('colors-toggle');
+            const colorsContent = document.getElementById('colors-content');
+            if (colorsToggle && colorsContent) {
+                // Open the Colors accordion
+                colorsToggle.classList.remove('collapsed');
+                colorsContent.classList.remove('collapsed');
+                
+                // Show color preview
+                showColorPreview();
+            }
+        }, 200);
+    </script>
+</body>
+</html>

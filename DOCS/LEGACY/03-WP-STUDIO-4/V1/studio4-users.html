@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio4 - User Design System</title>
+    <style>
+/* ============================================ */
+/* LAYER 1: PRIMITIVES (ROOT THEME VARIABLES)  */
+/* ============================================ */
+:root {
+    /* Base Color Definitions (source colors) */
+    --color1-base: hsl(174, 25%, 44%);  /* Aqua */
+    --color2-base: hsl(78, 25%, 44%);   /* Terracotta */
+    --color3-base: hsl(0, 0%, 50%);     /* Neutral */
+    --color4-base: hsl(337, 35%, 52%);  /* Pink */
+    
+    /* Color 1 Palette */
+    --color1-lightest: hsl(from var(--color1-base) h s 90%);
+    --color1-light: hsl(from var(--color1-base) h s 70%);
+    --color1: hsl(from var(--color1-base) h s 50%);
+    --color1-dark: hsl(from var(--color1-base) h s 30%);
+    --color1-darkest: hsl(from var(--color1-base) h s 10%);
+    
+    /* Color 2 Palette */
+    --color2-lightest: hsl(from var(--color2-base) h s 90%);
+    --color2-light: hsl(from var(--color2-base) h s 70%);
+    --color2: hsl(from var(--color2-base) h s 50%);
+    --color2-dark: hsl(from var(--color2-base) h s 30%);
+    --color2-darkest: hsl(from var(--color2-base) h s 10%);
+    
+    /* Color 3 Palette */
+    --color3-lightest: hsl(from var(--color3-base) h s 90%);
+    --color3-light: hsl(from var(--color3-base) h s 70%);
+    --color3: hsl(from var(--color3-base) h s 50%);
+    --color3-dark: hsl(from var(--color3-base) h s 30%);
+    --color3-darkest: hsl(from var(--color3-base) h s 10%);
+    
+    /* Color 4 Palette */
+    --color4-lightest: hsl(from var(--color4-base) h s 90%);
+    --color4-light: hsl(from var(--color4-base) h s 70%);
+    --color4: hsl(from var(--color4-base) h s 50%);
+    --color4-dark: hsl(from var(--color4-base) h s 30%);
+    --color4-darkest: hsl(from var(--color4-base) h s 10%);
+}
+
+/* ============================================ */
+/* LAYER 2: BASE COMPONENTS                     */
+/* ============================================ */
+
+/* Section Component - Full-width structural container */
+.section {
+    margin: var(--section-margin, 0 0 0 0);
+    padding: var(--section-padding, 0);
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap, 2rem);
+}
+
+
+/* Wrapper Component - Generic box/card component */
+.wrapper {
+    padding: var(--wrapper-padding, 1rem);
+    margin: var(--wrapper-margin, 0 0 1rem 0);
+    border-radius: var(--wrapper-radius, 0.5rem);
+    background: var(--wrapper-bg, var(--bg-surface));
+    border: var(--wrapper-border, 1px solid var(--border-default));
+    box-shadow: var(--wrapper-shadow, none);
+}
+
+/* Title Component */
+.title {
+    --title-size: 2rem;
+    --title-weight: 600;
+    --title-color: var(--content-primary);
+    --title-margin: 0 0 0.5rem 0;
+    --title-transform: none;
+    --title-spacing: normal;
+    --title-line-height: 1.2;
+    
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
+    color: var(--title-color);
+    margin: var(--title-margin);
+    text-transform: var(--title-transform);
+    letter-spacing: var(--title-spacing);
+    line-height: var(--title-line-height);
+}
+
+/* Subtitle Component */
+.subtitle {
+    --subtitle-size: 1.25rem;
+    --subtitle-weight: 500;
+    --subtitle-color: var(--content-secondary);
+    --subtitle-margin: 0 0 0.25rem 0;
+    --text-transform: uppercase;
+    
+    font-size: var(--subtitle-size);
+    font-weight: var(--subtitle-weight);
+    color: var(--subtitle-color);
+    margin: var(--subtitle-margin);
+    text-transform: var(--text-transform);
+}
+
+/* Description Component */
+.description {
+    --description-size: 1rem;
+    --description-color: var(--content-secondary);
+    --description-line-height: 1.6;
+    --description-margin: 0;
+    
+    font-size: var(--description-size);
+    color: var(--description-color);
+    line-height: var(--description-line-height);
+    margin: var(--description-margin);
+}
+
+/* Button Component */
+.button {
+    --button-size: 0.875rem;
+    --button-weight: 500;
+    --button-padding: 0.75rem 2rem;
+    --button-radius: 0.5rem;
+    --button-margin: 0 0.5rem 0 0;
+    --button-bg: var(--primary-600);
+    --button-color: white;
+    --button-border: 1px solid var(--primary-600);
+    
+    font-size: var(--button-size);
+    font-weight: var(--button-weight);
+    padding: var(--button-padding);
+    border-radius: var(--button-radius);
+    margin: var(--button-margin);
+    background: var(--button-bg);
+    color: var(--button-color);
+    border: var(--button-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button:hover {
+    --button-bg: var(--primary-700);
+    --button-color: white;
+    --button-border: 1px solid var(--primary-700);
+    
+    background: var(--button-bg);
+    color: var(--button-color);
+    border: var(--button-border);
+}
+
+.button:active {
+    --button-bg: var(--primary-800);
+    --button-color: white;
+    --button-border: 1px solid var(--primary-800);
+    
+    background: var(--button-bg);
+    color: var(--button-color);
+    border: var(--button-border);
+}
+
+
+/* Navigation Component */
+.navigation {
+    display: block;
+    padding: var(--navigation-padding, 0.5rem 1.5rem);
+    color: var(--navigation-color, var(--content-secondary));
+    text-decoration: none;
+    border-radius: var(--navigation-radius, 0.375rem);
+    transition: all 0.2s ease;
+}
+
+.navigation:hover {
+    background: var(--navigation-hover-bg, var(--bg-active));
+    color: var(--navigation-hover-color, var(--content-primary));
+}
+
+.navigation.active {
+    background: var(--navigation-active-bg, var(--bg-active));
+    color: var(--navigation-active-color, var(--interactive-default));
+    font-weight: var(--navigation-active-weight, 500);
+}
+
+/* Layout Component */
+.layout {
+    display: var(--layout-display, block);
+    gap: var(--layout-gap, 0);
+    padding: var(--layout-padding, 0);
+    margin: var(--layout-margin, 0);
+}
+
+/* Swatch Component */
+.swatch {
+    height: var(--swatch-height, 8rem);
+    border-radius: var(--swatch-radius, 0.5rem);
+    margin-bottom: var(--swatch-margin, 1rem);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Info Component */
+.info {
+    padding: var(--info-padding, 1rem);
+}
+
+/* Values Component */
+.values {
+    display: flex;
+    gap: var(--values-gap, 2rem);
+    margin-top: var(--values-margin, 0.5rem);
+    font-size: var(--values-size, 0.75rem);
+    color: var(--values-color, var(--content-muted));
+}
+
+/* Form Component */
+.form {
+    margin-bottom: var(--form-margin, 1.5rem);
+}
+
+/* Label Component */
+.label {
+    display: block;
+    font-size: var(--label-size, 0.875rem);
+    color: var(--label-color, var(--content-secondary));
+    margin-bottom: var(--label-margin, 0.5rem);
+    font-weight: var(--label-weight, 500);
+}
+
+/* Select Component */
+.select {
+    width: 100%;
+    padding: var(--select-padding, 0.5rem 0.75rem);
+    border: 1px solid var(--select-border, var(--border-default));
+    border-radius: var(--select-radius, 0.375rem);
+    background: var(--select-bg, var(--bg-surface));
+    color: var(--select-color, var(--content-primary));
+    font-size: var(--select-size, 0.875rem);
+}
+
+/* ============================================ */
+/* LAYER 3: SCOPES                              */
+/* ============================================ */
+
+/* App Layout Scope */
+[data-scope="app-layout"] {
+    --layout-display: grid;
+    --layout-gap: 0;
+    grid-template-columns: 240px 1fr 320px;
+    height: 100vh;
+}
+
+/* Sidebar Scope */
+[data-scope="sidebar"] {
+    --wrapper-padding: 1rem;
+    --wrapper-bg: var(--bg-surface);
+    --wrapper-border: none;
+    --wrapper-radius: 0;
+    --wrapper-margin: 0;
+    
+    --title-size: 0.75rem;
+    --title-weight: 700;
+    --title-color: var(--content-muted);
+    --title-transform: uppercase;
+    --title-spacing: 0.1em;
+    --title-margin: 1.5rem 1.5rem 1rem 1.5rem;
+    
+    overflow-y: auto;
+}
+
+/* Main Content Scope */
+[data-scope="main-content"] {
+    --wrapper-padding: 0;
+    --wrapper-bg: var(--bg-base);
+    --wrapper-border: none;
+    --wrapper-radius: 0;
+    --wrapper-margin: 0;
+    
+    overflow-y: auto;
+}
+
+/* Hero Scope - Single scope with all component overrides */
+/* Pattern: One scope contains ALL variable overrides for every component within it */
+/* This keeps base components completely DRY and uses them as theme defaults */
+[data-scope="hero"] {
+    /* Section overrides */
+    --section-padding: 4rem 0;
+    --section-margin: 0;
+    
+    /* Container overrides */
+    --container-max-width: 1200px;
+    
+    /* Wrapper overrides */
+    --wrapper-padding: 3rem;
+    --wrapper-bg: transparent;
+    --wrapper-border: none;
+    --wrapper-radius: 0;
+    --wrapper-margin: 0 auto;
+    
+    /* Title overrides */
+    --title-size: 3.5rem;
+    --title-weight: 700;
+    --title-margin: 0 0 1.5rem 0;
+    --title-color: white;
+    
+    /* Description overrides */
+    --description-size: 1.25rem;
+    --description-color: rgba(255, 255, 255, 0.9);
+    --description-line-height: 1.6;
+    
+    /* Pretitle overrides */
+    --pretitle-color: rgba(255, 255, 255, 0.9);
+    
+    /* Hero-specific styles */
+    min-height: 60vh;
+    background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    margin: 2rem;
+}
+
+/* Hero overlay for better text readability */
+[data-scope="hero"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 1;
+}
+
+/* Make wrapper centered with max-width */
+[data-scope="hero"] .wrapper {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+}
+
+/* Pretitle component - base styles only */
+.pretitle {
+    display: inline-block;
+    font-size: var(--pretitle-size, 0.875rem);
+    font-weight: var(--pretitle-weight, 600);
+    text-transform: var(--pretitle-transform, uppercase);
+    letter-spacing: var(--pretitle-spacing, 0.1em);
+    color: var(--pretitle-color, var(--primary-300));
+    margin-bottom: var(--pretitle-margin, 1rem);
+}
+
+/* Card Scope */
+[data-scope="card"] {
+    --wrapper-padding: 0;
+    --wrapper-bg: white;
+    --wrapper-border: 1px solid var(--border-default);
+    --wrapper-radius: 0.75rem;
+    --wrapper-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    --title-size: 1.25rem;
+    --title-weight: 600;
+    --title-margin: 0 0 0.25rem 0;
+    
+    --subtitle-size: 0.875rem;
+    --subtitle-color: var(--content-muted);
+    --subtitle-margin: 0;
+}
+
+/* Panel Scope */
+[data-scope="panel"] {
+    --wrapper-padding: 2rem;
+    --wrapper-bg: var(--bg-surface);
+    --wrapper-border: none;
+    --wrapper-border-left: 1px solid var(--border-default);
+    --wrapper-radius: 0;
+    
+    --title-size: 1.125rem;
+    --title-weight: 600;
+    --title-margin: 0 0 0.5rem 0;
+}
+
+/* Tab Navigation Scope */
+[data-scope="tab-nav"] {
+    --layout-display: flex;
+    --layout-gap: 2rem;
+    --layout-padding: 0 3rem;
+    --layout-margin: 0;
+    
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Tab Item Scope */
+[data-scope="tab-item"] {
+    --navigation-padding: 1rem 0;
+    --navigation-radius: 0;
+    position: relative;
+}
+
+[data-scope="tab-item"].navigation.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--interactive-default);
+}
+
+/* Content Area Scope */
+[data-scope="content-area"] {
+    --layout-padding: 3rem;
+}
+
+/* ============================================ */
+/* LAYER 4: HELPERS                             */
+/* ============================================ */
+
+/* Brand Colors Helper */
+[data-helper="brand-colors"] {
+    /* Tab-specific brand colors */
+    --primary-600: #5a7f88;  /* Aqua */
+    --secondary-600: #a56f51;  /* Terracotta */
+    --neutral-600: #ac9e8b;  /* Sand */
+}
+
+/* ============================================ */
+/* GLOBAL RESET                                 */
+/* ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-base);
+    color: var(--content-primary);
+    line-height: 1.5;
+}
+    </style>
+</head>
+<body>
+    <!-- Add your HTML content here -->
+</body>
+</html>

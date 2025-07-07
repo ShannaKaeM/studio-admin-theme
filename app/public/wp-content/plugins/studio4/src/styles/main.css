@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@source "../**/*.jsx";
+@source "../**/*.js";
+
+@theme inline {
+  /* Brand Color Scales - All at 50% values */
+  --color-primary-50: hsl(0, 0%, 100%);           /* White */
+  --color-primary-100: hsl(337, 35%, 95%);
+  --color-primary-200: hsl(337, 35%, 85%);
+  --color-primary-300: hsl(337, 35%, 75%);
+  --color-primary-400: hsl(337, 35%, 65%);
+  --color-primary-500: hsl(337, 35%, 52%);        /* Brand pink at 50% */
+  --color-primary-600: hsl(337, 35%, 42%);
+  --color-primary-700: hsl(337, 35%, 32%);
+  --color-primary-800: hsl(337, 35%, 22%);
+  --color-primary-900: hsl(337, 35%, 12%);
+  --color-primary-950: hsl(0, 0%, 0%);            /* Black */
+
+  --color-secondary-50: hsl(0, 0%, 100%);         /* White */
+  --color-secondary-100: hsl(29, 44%, 95%);
+  --color-secondary-200: hsl(29, 44%, 85%);
+  --color-secondary-300: hsl(29, 44%, 75%);
+  --color-secondary-400: hsl(29, 44%, 65%);
+  --color-secondary-500: hsl(29, 44%, 53%);       /* Brand tangerine at 50% */
+  --color-secondary-600: hsl(29, 44%, 43%);
+  --color-secondary-700: hsl(29, 44%, 33%);
+  --color-secondary-800: hsl(29, 44%, 23%);
+  --color-secondary-900: hsl(29, 44%, 13%);
+  --color-secondary-950: hsl(0, 0%, 0%);          /* Black */
+
+  --color-neutral-50: hsl(0, 0%, 100%);           /* White */
+  --color-neutral-100: hsl(0, 0%, 95%);
+  --color-neutral-200: hsl(0, 0%, 90%);
+  --color-neutral-300: hsl(0, 0%, 80%);
+  --color-neutral-400: hsl(0, 0%, 60%);
+  --color-neutral-500: hsl(0, 0%, 50%);           /* Neutral at 50% */
+  --color-neutral-600: hsl(0, 0%, 40%);
+  --color-neutral-700: hsl(0, 0%, 25%);
+  --color-neutral-800: hsl(0, 0%, 15%);
+  --color-neutral-900: hsl(0, 0%, 10%);
+  --color-neutral-950: hsl(0, 0%, 0%);            /* Black */
+
+  --color-base-50: hsl(0, 0%, 100%);              /* White */
+  --color-base-100: hsl(0, 0%, 98%);
+  --color-base-200: hsl(0, 0%, 95%);
+  --color-base-300: hsl(0, 0%, 90%);
+  --color-base-400: hsl(0, 0%, 85%);
+  --color-base-500: hsl(0, 0%, 80%);              /* Base at 50% */
+  --color-base-600: hsl(0, 0%, 70%);
+  --color-base-700: hsl(0, 0%, 60%);
+  --color-base-800: hsl(0, 0%, 50%);
+  --color-base-900: hsl(0, 0%, 40%);
+  --color-base-950: hsl(0, 0%, 0%);               /* Black */
+
+  /* Dark Theme System Colors */
+  --color-background: var(--color-neutral-950);   /* Very dark background */
+  --color-foreground: var(--color-neutral-50);    /* Light text */
+  --color-card: var(--color-neutral-900);         /* Card background */
+  --color-card-foreground: var(--color-neutral-50); /* Light text on cards */
+  --color-popover: var(--color-neutral-900);      /* Match card background */
+  --color-popover-foreground: var(--color-neutral-50);
+  
+  /* Primary colors */
+  --color-primary: var(--color-primary-500);      /* Brand pink */
+  --color-primary-foreground: var(--color-primary-50); /* White text on pink */
+  
+  /* Secondary colors */
+  --color-secondary: var(--color-secondary-500);  /* Brand tangerine */
+  --color-secondary-foreground: var(--color-secondary-50); /* White text on tangerine */
+  
+  /* Muted states for dark mode */
+  --color-muted: var(--color-neutral-800);        /* Subtle background */
+  --color-muted-foreground: var(--color-neutral-300); /* Dimmed text */
+  
+  /* Accent states */
+  --color-accent: var(--color-neutral-700);       /* Hover/selected state */
+  --color-accent-foreground: var(--color-neutral-50);
+  
+  /* System colors */
+  --color-destructive: oklch(62.8% 0.257 29.23);
+  --color-destructive-foreground: oklch(98% 0.004 285.82);
+  --color-border: var(--color-neutral-700);       /* Subtle borders */
+  --color-input: var(--color-neutral-800);        /* Input backgrounds */
+  --color-ring: var(--color-primary-500);         /* Focus ring matches primary */
+  
+  --radius: 0.375rem;
+}
+
