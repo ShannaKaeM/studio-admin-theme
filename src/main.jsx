@@ -29,7 +29,7 @@ class Studio4Element extends HTMLElement {
   }
   
   static get observedAttributes() {
-    return ['user-role', 'site-url', 'user-id', 'settings', 'api-nonce', 'plugin-version', 'is-admin', 'theme', 'tailwind-css'];
+    return ['user-role', 'site-url', 'user-id', 'settings', 'api-nonce', 'plugin-version', 'is-admin', 'theme', 'tailwind-css', 'full-page'];
   }
   
   render() {
@@ -54,7 +54,8 @@ class Studio4Element extends HTMLElement {
       pluginVersion: this.getAttribute('plugin-version') || '1.0.0',
       isAdmin: this.getAttribute('is-admin') === 'true',
       theme: this.getAttribute('theme') || 'dark',
-      tailwindCSS: this.getAttribute('tailwind-css') || ''
+      tailwindCSS: this.getAttribute('tailwind-css') || '',
+      fullPage: this.getAttribute('full-page') === 'true'
     };
     
     if (!this.root) {

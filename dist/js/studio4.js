@@ -24592,7 +24592,8 @@
           enableNotifications: false,
           theme: "dark",
           enableKeyboardShortcuts: true,
-          autoOpenPanel: true,
+          autoOpenPanel: false,
+          // Changed to false for better persistence behavior
           panelWidth: 500,
           enableAnimations: true
         },
@@ -24600,10 +24601,10 @@
         isDemoMode: true,
         // S4 Theme Builder State
         s4BrandColors: {
-          color1: "#b25977",
-          // Rose
-          color2: "#b8874d",
-          // Gold
+          color1: "hsl(337, 35%, 52%)",
+          // Studio4 Pink Primary
+          color2: "hsl(29, 44%, 53%)",
+          // Studio4 Tangerine Secondary
           color3: "hsl(0, 0%, 20%)",
           // Neutral Dark
           color4: "hsl(0, 0%, 98%)"
@@ -24650,14 +24651,15 @@
             enableNotifications: false,
             theme: "dark",
             enableKeyboardShortcuts: true,
-            autoOpenPanel: true,
+            autoOpenPanel: false,
+            // Changed to false for consistency
             panelWidth: 500,
             enableAnimations: true
           }
         })),
         setDemoMode: (enabled) => set({ isDemoMode: enabled }),
         // S4 Actions
-        setS4BrandColors: (colors) => set({ s4BrandColors: colors }),
+        setS4BrandColors: (colors2) => set({ s4BrandColors: colors2 }),
         updateS4BrandColor: (colorKey, value) => set((state) => ({
           s4BrandColors: {
             ...state.s4BrandColors,
@@ -24728,11 +24730,11 @@
         }),
         // Handle storage events for cross-tab sync
         onRehydrateStorage: () => (state) => {
-          var _a;
           console.log("💾 Zustand store rehydrated from localStorage");
-          if (((_a = state == null ? void 0 : state.settings) == null ? void 0 : _a.autoOpenPanel) && window.innerWidth > 768) {
+          console.log("🔄 Panel state from storage:", state == null ? void 0 : state.isPanelOpen);
+          if (!state && window.innerWidth > 768) {
             setTimeout(() => {
-              state.openPanel();
+              useStore.getState().openPanel();
             }, 500);
           }
         }
@@ -24795,1388 +24797,2474 @@
       }
     }
   }));
-  class S4PresetProcessor {
-    constructor(presetData2) {
-      this.data = presetData2;
-      this.css = [];
-    }
-    /**
-     * Generate all CSS from the preset data
-     */
-    generateCSS() {
-      this.css = [];
-      this.generateBrandTokens();
-      this.generateColorPresets();
-      this.generateHelperPresets();
-      this.generateScopes();
-      return this.css.join("\n\n");
-    }
-    /**
-     * Generate CSS custom properties for brand tokens
-     */
-    generateBrandTokens() {
-      const tokens = [":root {"];
-      Object.entries(this.data.brandTokens.colors).forEach(([key, color]) => {
-        tokens.push(`  --${key}: hsl(${color.h}, ${color.s}%, ${color.l}%);`);
-        tokens.push(`  --${key}-h: ${color.h};`);
-        tokens.push(`  --${key}-s: ${color.s}%;`);
-        tokens.push(`  --${key}-l: ${color.l}%;`);
-      });
-      tokens.push(`  --color-base: hsla(0, 0%, 0%, 0); /* Transparent placeholder */`);
-      tokens.push("}");
-      this.css.push(tokens.join("\n"));
-    }
-    /**
-     * Generate CSS for color presets
-     */
-    generateColorPresets() {
-      Object.entries(this.data.colorPresets).forEach(([presetKey, preset]) => {
-        const rules = [`/* ${preset.name} - ${preset.description} */`];
-        Object.entries(preset.assignments).forEach(([element, props]) => {
-          const selector = `[data-preset="${presetKey}"] .${element}`;
-          const properties = [];
-          Object.entries(props).forEach(([prop, value]) => {
-            if (value === "transparent") {
-              properties.push(`--${element}-${prop}: transparent;`);
-            } else {
-              properties.push(`--${element}-${prop}: var(--${value});`);
-            }
-          });
-          if (properties.length > 0) {
-            rules.push(`${selector} {
-  ${properties.join("\n  ")}
-}`);
-          }
-        });
-        this.css.push(rules.join("\n"));
-      });
-    }
-    /**
-     * Generate CSS for helper presets
-     */
-    generateHelperPresets() {
-      Object.entries(this.data.helperPresets).forEach(([category, presets]) => {
-        this.css.push(`/* Helper Presets: ${category} */`);
-        Object.entries(presets).forEach(([presetKey, preset]) => {
-          const rules = [`/* ${preset.name} - ${preset.description} */`];
-          Object.entries(preset.modifications).forEach(([element, mods]) => {
-            const selector = element === "all" ? `[data-${category}="${presetKey}"] *` : `[data-${category}="${presetKey}"] .${element}`;
-            const properties = this.generateModifications(element, mods);
-            if (properties.length > 0) {
-              rules.push(`${selector} {
-  ${properties.join("\n  ")}
-}`);
-            }
-          });
-          this.css.push(rules.join("\n"));
-        });
-      });
-    }
-    /**
-     * Generate modification properties
-     */
-    generateModifications(element, mods) {
-      const properties = [];
-      if (mods.opacity !== void 0) {
-        properties.push(`opacity: ${mods.opacity};`);
-      }
-      if (mods.lightness || mods.saturation || mods.hue) {
-        const relativeColor = this.generateRelativeColor(element, mods);
-        if (relativeColor) {
-          properties.push(`--${element}-color: ${relativeColor};`);
-        }
-        const manualHSL = this.generateManualHSL(element, mods);
-        if (manualHSL) {
-          properties.push(`/* Fallback: ${manualHSL} */`);
-        }
-      }
-      return properties;
-    }
-    /**
-     * Generate relative color syntax
-     */
-    generateRelativeColor(element, mods) {
-      const parts = [];
-      if (mods.hue) {
-        parts.push(this.applyOperation("h", mods.hue));
-      } else {
-        parts.push("h");
-      }
-      if (mods.saturation) {
-        parts.push(this.applyOperation("s", mods.saturation) + "%");
-      } else {
-        parts.push("s");
-      }
-      if (mods.lightness) {
-        parts.push(this.applyOperation("l", mods.lightness) + "%");
-      } else {
-        parts.push("l");
-      }
-      return `hsl(from var(--${element}-color) ${parts.join(" ")})`;
-    }
-    /**
-     * Apply mathematical operation
-     */
-    applyOperation(channel, mod) {
-      switch (mod.operation) {
-        case "set":
-          return mod.value;
-        case "adjust":
-          return `calc(${channel} + ${mod.value})`;
-        case "multiply":
-          return `calc(${channel} * ${mod.value})`;
-        case "divide":
-          return `calc(${channel} / ${mod.value})`;
-        default:
-          return channel;
-      }
-    }
-    /**
-     * Generate manual HSL syntax for fallback
-     */
-    generateManualHSL(element, mods) {
-      var _a, _b, _c;
-      const h = ((_a = mods.hue) == null ? void 0 : _a.operation) === "set" ? mods.hue.value : `var(--${element}-color-h)`;
-      const s = ((_b = mods.saturation) == null ? void 0 : _b.operation) === "set" ? `${mods.saturation.value}%` : `var(--${element}-color-s)`;
-      const l = ((_c = mods.lightness) == null ? void 0 : _c.operation) === "set" ? `${mods.lightness.value}%` : `var(--${element}-color-l)`;
-      return `hsl(${h}, ${s}, ${l})`;
-    }
-    /**
-     * Generate scope modifiers
-     */
-    generateScopes() {
-      Object.entries(this.data.scopes).forEach(([scopeType, scopes2]) => {
-        this.css.push(`/* Layout Scopes: ${scopeType} */`);
-        Object.entries(scopes2).forEach(([scopeKey, scope]) => {
-          const rules = [`/* ${scope.name} */`];
-          Object.entries(scope.modifiers).forEach(([element, mods]) => {
-            const selector = `[data-scope="${scopeKey}"] .${element}`;
-            const properties = [];
-            if (mods.scale) {
-              properties.push(`--${element}-scale: ${mods.scale};`);
-            }
-            if (properties.length > 0) {
-              rules.push(`${selector} {
-  ${properties.join("\n  ")}
-}`);
-            }
-          });
-          this.css.push(rules.join("\n"));
-        });
-      });
-    }
-  }
-  const hexToHSL = (hex) => {
-    hex = hex.replace("#", "");
-    const r = parseInt(hex.substr(0, 2), 16) / 255;
-    const g = parseInt(hex.substr(2, 2), 16) / 255;
-    const b = parseInt(hex.substr(4, 2), 16) / 255;
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
-    if (max === min) {
-      h = s = 0;
-    } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-          break;
-        case g:
-          h = ((b - r) / d + 2) / 6;
-          break;
-        case b:
-          h = ((r - g) / d + 4) / 6;
-          break;
-      }
-    }
-    return {
-      h: Math.round(h * 360),
-      s: Math.round(s * 100),
-      l: Math.round(l * 100)
-    };
+  const theme = {
+    name: "Studio4 Dark Theme",
+    version: "1.0.0",
+    description: "Dark theme with pink/tangerine branding"
   };
-  const parseHSL = (hslString) => {
-    const match = hslString.match(/hsl\((\d+),?\s*(\d+)%,?\s*(\d+)%\)/);
-    if (match) {
-      return {
-        h: parseInt(match[1]),
-        s: parseInt(match[2]),
-        l: parseInt(match[3])
-      };
-    }
-    return { h: 0, s: 0, l: 50 };
-  };
-  function ColorControls({ brandColors, setBrandColors, updateBrandColor, activePreset, setActivePreset }) {
-    const [expandedColor, setExpandedColor] = reactExports.useState("color1");
-    const updateColor = (colorKey, value) => {
-      updateBrandColor(colorKey, value);
-    };
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 bg-card z-10 pb-4 mb-4 border-b border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "flex-1 px-3 py-2 bg-muted text-foreground rounded-md text-sm font-medium", children: "Brand Colors" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "flex-1 px-3 py-2 text-muted-foreground hover:bg-muted rounded-md text-sm font-medium", children: "Theme Mapping" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "flex-1 px-3 py-2 text-muted-foreground hover:bg-muted rounded-md text-sm font-medium", children: "Presets" })
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          ColorCard,
-          {
-            label: "Primary",
-            colorKey: "color1",
-            color: brandColors.color1,
-            expanded: expandedColor === "color1",
-            onExpand: () => setExpandedColor("color1"),
-            onColorChange: (value) => updateColor("color1", value)
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          ColorCard,
-          {
-            label: "Secondary",
-            colorKey: "color2",
-            color: brandColors.color2,
-            expanded: expandedColor === "color2",
-            onExpand: () => setExpandedColor("color2"),
-            onColorChange: (value) => updateColor("color2", value)
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          ColorCard,
-          {
-            label: "Neutral Dark",
-            colorKey: "color3",
-            color: brandColors.color3,
-            expanded: expandedColor === "color3",
-            onExpand: () => setExpandedColor("color3"),
-            onColorChange: (value) => updateColor("color3", value)
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          ColorCard,
-          {
-            label: "Base Light",
-            colorKey: "color4",
-            color: brandColors.color4,
-            expanded: expandedColor === "color4",
-            onExpand: () => setExpandedColor("color4"),
-            onColorChange: (value) => updateColor("color4", value)
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "w-full border-2 border-dashed border-border rounded-xl p-8 text-muted-foreground hover:border-muted-foreground hover:text-foreground transition-colors", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-8 h-8 mx-auto mb-2", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M12 4v16m8-8H4" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium", children: "Add Brand Color" })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pt-6 mt-6 border-t border-border", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-medium mb-3", children: "Active Color Preset" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "select",
-          {
-            value: activePreset,
-            onChange: (e) => setActivePreset(e.target.value),
-            className: "w-full px-3 py-2 bg-background border border-border rounded-lg text-sm",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "default-colors", children: "Default Colors" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "emphasis-colors", children: "Emphasis Colors" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "dark-theme", children: "Dark Theme" })
-            ]
-          }
-        )
-      ] })
-    ] });
-  }
-  function ColorCard({ label, colorKey, color, expanded, onExpand, onColorChange }) {
-    const getInitialHSL = () => {
-      if (color.startsWith("#")) {
-        return hexToHSL(color);
-      } else if (color.startsWith("hsl")) {
-        return parseHSL(color);
+  const colors = {
+    brand: {
+      primary: {
+        "50": "hsl(0, 0%, 100%)",
+        "100": "hsl(337, 35%, 95%)",
+        "200": "hsl(337, 35%, 85%)",
+        "300": "hsl(337, 35%, 75%)",
+        "400": "hsl(337, 35%, 65%)",
+        "500": "hsl(337, 35%, 52%)",
+        "600": "hsl(337, 35%, 42%)",
+        "700": "hsl(337, 35%, 32%)",
+        "800": "hsl(337, 35%, 22%)",
+        "900": "hsl(337, 35%, 12%)",
+        "950": "hsl(0, 0%, 0%)"
+      },
+      secondary: {
+        "50": "hsl(0, 0%, 100%)",
+        "100": "hsl(29, 44%, 95%)",
+        "200": "hsl(29, 44%, 85%)",
+        "300": "hsl(29, 44%, 75%)",
+        "400": "hsl(29, 44%, 65%)",
+        "500": "hsl(29, 44%, 53%)",
+        "600": "hsl(29, 44%, 43%)",
+        "700": "hsl(29, 44%, 33%)",
+        "800": "hsl(29, 44%, 23%)",
+        "900": "hsl(29, 44%, 13%)",
+        "950": "hsl(0, 0%, 0%)"
+      },
+      neutral: {
+        "50": "hsl(0, 0%, 100%)",
+        "100": "hsl(0, 0%, 95%)",
+        "200": "hsl(0, 0%, 90%)",
+        "300": "hsl(0, 0%, 80%)",
+        "400": "hsl(0, 0%, 60%)",
+        "500": "hsl(0, 0%, 50%)",
+        "600": "hsl(0, 0%, 40%)",
+        "700": "hsl(0, 0%, 25%)",
+        "800": "hsl(0, 0%, 15%)",
+        "900": "hsl(0, 0%, 10%)",
+        "950": "hsl(0, 0%, 0%)"
+      },
+      base: {
+        "50": "hsl(0, 0%, 100%)",
+        "100": "hsl(0, 0%, 98%)",
+        "200": "hsl(0, 0%, 95%)",
+        "300": "hsl(0, 0%, 90%)",
+        "400": "hsl(0, 0%, 85%)",
+        "500": "hsl(0, 0%, 80%)",
+        "600": "hsl(0, 0%, 70%)",
+        "700": "hsl(0, 0%, 60%)",
+        "800": "hsl(0, 0%, 50%)",
+        "900": "hsl(0, 0%, 40%)",
+        "950": "hsl(0, 0%, 0%)"
       }
-      return { h: 0, s: 0, l: 50 };
-    };
-    const initialHSL = getInitialHSL();
-    const [hue, setHue] = reactExports.useState(initialHSL.h);
-    const [saturation, setSaturation] = reactExports.useState(initialHSL.s);
-    const [lightness, setLightness] = reactExports.useState(initialHSL.l);
+    },
+    semantic: {
+      background: "var(--color-neutral-950)",
+      foreground: "var(--color-neutral-50)",
+      card: "var(--color-neutral-900)",
+      cardForeground: "var(--color-neutral-50)",
+      popover: "var(--color-neutral-900)",
+      popoverForeground: "var(--color-neutral-50)",
+      primary: "var(--color-primary-500)",
+      primaryForeground: "var(--color-primary-50)",
+      secondary: "var(--color-secondary-500)",
+      secondaryForeground: "var(--color-secondary-50)",
+      muted: "var(--color-neutral-800)",
+      mutedForeground: "var(--color-neutral-300)",
+      accent: "var(--color-neutral-700)",
+      accentForeground: "var(--color-neutral-50)",
+      border: "var(--color-neutral-700)",
+      input: "var(--color-neutral-800)",
+      ring: "var(--color-primary-500)"
+    }
+  };
+  const typography = {
+    fontFamily: {
+      sans: "Montserrat, sans-serif",
+      mono: "ui-monospace, SFMono-Regular, monospace"
+    },
+    fontSize: {
+      xs: "0.75rem",
+      sm: "0.875rem",
+      base: "1rem",
+      lg: "1.125rem",
+      xl: "1.25rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem"
+    },
+    fontWeight: {
+      light: "300",
+      normal: "400",
+      medium: "500",
+      semibold: "600",
+      bold: "700"
+    },
+    lineHeight: {
+      tight: "1.25",
+      normal: "1.5",
+      relaxed: "1.75"
+    }
+  };
+  const spacing = {
+    xs: "0.25rem",
+    sm: "0.5rem",
+    md: "1rem",
+    lg: "1.5rem",
+    xl: "2rem",
+    "2xl": "3rem",
+    "3xl": "4rem"
+  };
+  const borderRadius = {
+    none: "0",
+    sm: "0.125rem",
+    base: "0.25rem",
+    md: "0.375rem",
+    lg: "0.5rem",
+    xl: "0.75rem",
+    "2xl": "1rem",
+    full: "9999px"
+  };
+  const shadows = {
+    sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    base: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+    md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
+  };
+  const components = {
+    "main-header": {
+      backgroundColor: "var(--color-neutral-950)",
+      borderBottom: "6px solid var(--color-neutral-800)",
+      padding: "1rem 1.5rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between"
+    },
+    "header-brand": {
+      display: "flex",
+      alignItems: "center",
+      gap: "1rem"
+    },
+    "header-logo": {
+      width: "3rem",
+      height: "3rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    "header-title": {
+      fontSize: "1.5rem",
+      fontWeight: "700",
+      color: "var(--color-neutral-50)",
+      margin: "0"
+    },
+    "header-subtitle": {
+      fontSize: "0.875rem",
+      color: "var(--color-neutral-400)",
+      margin: "0"
+    },
+    sidebar: {
+      width: "400px",
+      backgroundColor: "var(--color-neutral-900)",
+      borderRight: "6px solid var(--color-neutral-800)"
+    },
+    "sidebar-header": {
+      backgroundColor: "var(--color-neutral-950)",
+      padding: "1rem",
+      borderBottom: "1px solid var(--color-neutral-700)"
+    },
+    "sidebar-header-content": {
+      display: "flex",
+      alignItems: "center",
+      gap: "0.75rem"
+    },
+    "sidebar-logo": {
+      width: "2.5rem",
+      height: "2.5rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "transparent"
+    },
+    "sidebar-header-text": {
+      flex: "1"
+    },
+    "sidebar-title": {
+      fontSize: "1.125rem",
+      fontWeight: "600",
+      color: "var(--color-neutral-50)",
+      margin: "0"
+    },
+    "sidebar-subtitle": {
+      fontSize: "0.75rem",
+      color: "var(--color-neutral-400)",
+      textTransform: "uppercase",
+      letterSpacing: "0.05em",
+      margin: "0"
+    },
+    "sidebar-nav-grid": {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "0.75rem",
+      padding: "1.5rem"
+    },
+    "sidebar-nav-button": {
+      padding: "0.75rem",
+      borderRadius: "0.5rem",
+      backgroundColor: "var(--color-neutral-800)",
+      border: "none",
+      cursor: "pointer",
+      transition: "all 0.3s",
+      textAlign: "center"
+    },
+    "sidebar-nav-button-active": {
+      background: "linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500))",
+      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+      animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+    },
+    "sidebar-nav-button-hover": {
+      backgroundColor: "var(--color-neutral-700)",
+      transform: "scale(1.05)"
+    },
+    "sidebar-nav-number": {
+      fontSize: "1.5rem",
+      fontWeight: "700",
+      marginBottom: "0.25rem",
+      color: "var(--color-primary-500)"
+    },
+    "sidebar-nav-number-active": {
+      color: "white",
+      fontWeight: "800"
+    },
+    "sidebar-nav-label": {
+      fontSize: "0.75rem",
+      fontWeight: "500",
+      color: "var(--color-neutral-400)"
+    },
+    "sidebar-nav-label-active": {
+      color: "rgba(255, 255, 255, 0.9)"
+    },
+    "sidebar-content": {
+      flex: "1",
+      overflowY: "auto",
+      overflowX: "hidden",
+      padding: "0"
+    },
+    "sidebar-section": {
+      borderBottom: "1px solid var(--color-neutral-700)",
+      backgroundColor: "transparent"
+    },
+    "content-area": {
+      flex: "1",
+      padding: "1.5rem",
+      overflowY: "auto"
+    },
+    section: {
+      marginBottom: "1.5rem",
+      borderBottom: "1px solid var(--color-neutral-700)"
+    },
+    accordion: {
+      width: "100%",
+      backgroundColor: "transparent"
+    },
+    "accordion-item": {
+      borderBottom: "1px solid var(--color-neutral-700)",
+      backgroundColor: "transparent"
+    },
+    "accordion-trigger": {
+      width: "100%",
+      padding: "0.75rem 0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: "var(--color-neutral-800)",
+      border: "none",
+      color: "var(--color-neutral-200)",
+      fontSize: "0.875rem",
+      fontWeight: "500",
+      cursor: "pointer",
+      transition: "background-color 0.2s",
+      textAlign: "left"
+    },
+    "accordion-trigger-open": {
+      backgroundColor: "var(--color-neutral-800)"
+    },
+    "accordion-trigger-hover": {
+      backgroundColor: "var(--color-neutral-700)"
+    },
+    "accordion-content": {
+      padding: "1rem",
+      backgroundColor: "var(--color-neutral-800)",
+      borderTop: "1px solid var(--color-neutral-700)"
+    },
+    "accordion-icon": {
+      width: "1.5rem",
+      height: "1.5rem",
+      borderRadius: "0.375rem",
+      backgroundColor: "var(--color-neutral-700)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: "0.75rem",
+      fontSize: "0.875rem",
+      fontWeight: "600",
+      color: "var(--color-neutral-300)"
+    },
+    "sidebar-footer": {
+      padding: "1rem",
+      borderTop: "1px solid var(--color-neutral-700)",
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.5rem"
+    },
+    "preview-container": {
+      flex: "1",
+      backgroundColor: "var(--color-neutral-950)",
+      display: "flex",
+      flexDirection: "column"
+    },
+    "preview-header": {
+      padding: "1rem 1.5rem",
+      borderBottom: "1px solid var(--color-neutral-700)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between"
+    },
+    "preview-content": {
+      flex: "1",
+      padding: "2rem",
+      overflowY: "auto"
+    },
+    "preview-canvas": {
+      backgroundColor: "var(--color-neutral-50)",
+      borderRadius: "0.5rem",
+      padding: "1rem",
+      minHeight: "100%"
+    },
+    "preview-mode-toggle": {
+      display: "flex",
+      gap: "0.25rem",
+      backgroundColor: "var(--color-neutral-800)",
+      borderRadius: "0.5rem",
+      padding: "0.25rem"
+    },
+    "preview-mode-button": {
+      padding: "0.375rem 1rem",
+      borderRadius: "0.375rem",
+      fontSize: "0.875rem",
+      fontWeight: "500",
+      border: "none",
+      cursor: "pointer",
+      transition: "all 0.2s",
+      backgroundColor: "transparent",
+      color: "var(--color-neutral-400)"
+    },
+    "preview-mode-button-active": {
+      backgroundColor: "var(--color-neutral-900)",
+      color: "var(--color-neutral-50)",
+      boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)"
+    },
+    "preview-mode-button-hover": {
+      color: "var(--color-neutral-200)"
+    },
+    "button-primary": {
+      background: "linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500))",
+      color: "white",
+      padding: "0.625rem 1rem",
+      borderRadius: "0.5rem",
+      fontWeight: "500",
+      border: "none",
+      cursor: "pointer",
+      transition: "opacity 0.2s"
+    },
+    "button-secondary": {
+      backgroundColor: "var(--color-neutral-800)",
+      color: "var(--color-neutral-200)",
+      border: "1px solid var(--color-neutral-600)",
+      padding: "0.625rem 1rem",
+      borderRadius: "0.5rem",
+      fontWeight: "500",
+      cursor: "pointer",
+      transition: "background-color 0.2s"
+    },
+    input: {
+      backgroundColor: "var(--color-neutral-800)",
+      border: "1px solid var(--color-neutral-600)",
+      borderRadius: "0.5rem",
+      padding: "0.5rem 0.75rem",
+      color: "var(--color-neutral-200)"
+    },
+    label: {
+      fontSize: "0.875rem",
+      fontWeight: "500",
+      color: "var(--color-neutral-200)",
+      marginBottom: "0.5rem",
+      display: "block"
+    },
+    card: {
+      backgroundColor: "var(--color-neutral-900)",
+      border: "1px solid var(--color-neutral-700)",
+      borderRadius: "0.75rem",
+      padding: "1.5rem"
+    },
+    "color-grid": {
+      display: "grid",
+      gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
+      gap: "1rem",
+      width: "100%"
+    },
+    "color-grid-xs": {
+      gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
+      gap: "1rem"
+    },
+    "color-grid-sm": {
+      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+      gap: "1rem"
+    },
+    "color-grid-md": {
+      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+      gap: "1.25rem"
+    },
+    "color-grid-lg": {
+      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+      gap: "1.5rem"
+    },
+    "color-grid-xl": {
+      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+      gap: "1.75rem"
+    },
+    "color-card": {
+      backgroundColor: "var(--color-neutral-800)",
+      borderRadius: "0.5rem",
+      border: "1px solid var(--color-neutral-700)",
+      overflow: "hidden",
+      transition: "all 0.3s ease",
+      boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)"
+    },
+    "color-card-hover": {
+      boxShadow: "0 10px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      transform: "translateY(-2px)"
+    },
+    "color-swatch": {
+      height: "8rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative"
+    },
+    "color-swatch-number": {
+      fontSize: "3rem",
+      fontWeight: "300"
+    },
+    "color-swatch-label": {
+      position: "absolute",
+      bottom: "0.5rem",
+      right: "0.5rem",
+      fontSize: "0.75rem",
+      opacity: "0.75"
+    },
+    "color-card-content": {
+      padding: "1rem",
+      backgroundColor: "rgba(var(--color-neutral-800-rgb), 0.3)"
+    },
+    "color-card-title": {
+      fontSize: "1rem",
+      fontWeight: "500",
+      marginBottom: "0.25rem"
+    },
+    "color-card-value": {
+      fontSize: "0.75rem",
+      fontFamily: "monospace",
+      color: "var(--color-neutral-400)"
+    },
+    "color-scale": {
+      display: "flex",
+      gap: "0.25rem",
+      marginTop: "0.75rem"
+    },
+    "color-scale-swatch": {
+      flex: "1",
+      height: "1.5rem",
+      borderRadius: "0.25rem"
+    },
+    "color-preview-title": {
+      fontSize: "1.5rem",
+      fontWeight: "700",
+      marginBottom: "2rem",
+      textAlign: "center"
+    }
+  };
+  const layout = {
+    sidebar: {
+      width: "400px",
+      minWidth: "350px",
+      maxWidth: "500px"
+    },
+    header: {
+      height: "4rem",
+      minHeight: "3.5rem"
+    },
+    content: {
+      padding: "2rem",
+      maxWidth: "none"
+    }
+  };
+  const animations = {
+    duration: {
+      fast: "150ms",
+      normal: "250ms",
+      slow: "350ms"
+    },
+    easing: {
+      ease: "ease",
+      easeIn: "ease-in",
+      easeOut: "ease-out",
+      easeInOut: "ease-in-out"
+    }
+  };
+  const customProperties = {
+    gradients: {
+      primary: "linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500))",
+      primarySubtle: "linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 100%)"
+    },
+    borders: {
+      width: {
+        sm: "1px",
+        md: "3px",
+        lg: "5px"
+      }
+    }
+  };
+  const themeConfig = {
+    theme,
+    colors,
+    typography,
+    spacing,
+    borderRadius,
+    shadows,
+    components,
+    layout,
+    animations,
+    customProperties
+  };
+  function useThemeConfig() {
+    const [config, setConfig] = reactExports.useState(() => {
+      try {
+        const saved = localStorage.getItem("studio4-ui-theme-config");
+        return saved ? JSON.parse(saved) : themeConfig;
+      } catch {
+        return themeConfig;
+      }
+    });
+    const [customOverrides, setCustomOverrides] = reactExports.useState(() => {
+      try {
+        const saved = localStorage.getItem("studio4-ui-theme-overrides");
+        return saved ? JSON.parse(saved) : {};
+      } catch {
+        return {};
+      }
+    });
     reactExports.useEffect(() => {
-      const newHSL = getInitialHSL();
-      setHue(newHSL.h);
-      setSaturation(newHSL.s);
-      setLightness(newHSL.l);
-    }, [color]);
-    const updateColor = (h, s, l) => {
-      const newColor = `hsl(${h}, ${s}%, ${l}%)`;
-      onColorChange(newColor);
+      try {
+        localStorage.setItem("studio4-ui-theme-config", JSON.stringify(config));
+      } catch (error) {
+        console.warn("Failed to save theme config:", error);
+      }
+    }, [config]);
+    reactExports.useEffect(() => {
+      try {
+        localStorage.setItem("studio4-ui-theme-overrides", JSON.stringify(customOverrides));
+      } catch (error) {
+        console.warn("Failed to save theme overrides:", error);
+      }
+    }, [customOverrides]);
+    const cssVariables = reactExports.useMemo(() => {
+      const variables = {};
+      Object.entries(config.colors.brand).forEach(([colorName, scale]) => {
+        Object.entries(scale).forEach(([weight, value]) => {
+          variables[`--color-${colorName}-${weight}`] = value;
+        });
+      });
+      Object.entries(config.colors.semantic).forEach(([name, value]) => {
+        const kebabName = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+        variables[`--color-${kebabName}`] = value;
+      });
+      Object.entries(config.typography.fontSize).forEach(([size, value]) => {
+        variables[`--font-size-${size}`] = value;
+      });
+      Object.entries(config.typography.fontWeight).forEach(([weight, value]) => {
+        variables[`--font-weight-${weight}`] = value;
+      });
+      Object.entries(config.spacing).forEach(([size, value]) => {
+        variables[`--spacing-${size}`] = value;
+      });
+      Object.entries(config.borderRadius).forEach(([size, value]) => {
+        variables[`--border-radius-${size}`] = value;
+      });
+      variables["--gradient-primary"] = config.customProperties.gradients.primary;
+      variables["--gradient-primary-subtle"] = config.customProperties.gradients.primarySubtle;
+      Object.entries(config.customProperties.borders.width).forEach(([size, value]) => {
+        variables[`--border-width-${size}`] = value;
+      });
+      return { ...variables, ...customOverrides };
+    }, [config, customOverrides]);
+    reactExports.useEffect(() => {
+      Object.entries(cssVariables).forEach(([property, value]) => {
+        document.documentElement.style.setProperty(property, value);
+      });
+      const studio4Element = document.querySelector("studio4-builder");
+      let styleElement;
+      if (studio4Element && studio4Element.shadowRoot) {
+        const existingStyle = studio4Element.shadowRoot.querySelector("#dynamic-theme-vars");
+        if (existingStyle) {
+          existingStyle.remove();
+        }
+        styleElement = document.createElement("style");
+        styleElement.id = "dynamic-theme-vars";
+        const customPropertiesCSS = Object.entries(cssVariables).map(([property, value]) => `  ${property}: ${value};`).join("\n");
+        const componentCSS = Object.entries(config.components).map(([componentName, styles]) => {
+          const cssRules = Object.entries(styles).filter(([property, value]) => typeof value === "string").map(([property, value]) => {
+            const cssProp = property.replace(/([A-Z])/g, "-$1").toLowerCase();
+            return `  ${cssProp}: ${value};`;
+          }).join("\n");
+          let css = cssRules ? `.${componentName} {
+${cssRules}
+}` : "";
+          if (componentName === "accordion-trigger" && config.components["accordion-trigger-hover"]) {
+            const hoverRules = Object.entries(config.components["accordion-trigger-hover"]).filter(([property, value]) => typeof value === "string").map(([property, value]) => {
+              const cssProp = property.replace(/([A-Z])/g, "-$1").toLowerCase();
+              return `  ${cssProp}: ${value};`;
+            }).join("\n");
+            if (hoverRules) {
+              css += `
+
+.${componentName}:hover {
+${hoverRules}
+}`;
+            }
+          }
+          const hoverComponents = ["sidebar-nav-button", "preview-mode-button", "color-card"];
+          if (hoverComponents.includes(componentName) && config.components[`${componentName}-hover`]) {
+            const hoverRules = Object.entries(config.components[`${componentName}-hover`]).filter(([property, value]) => typeof value === "string").map(([property, value]) => {
+              const cssProp = property.replace(/([A-Z])/g, "-$1").toLowerCase();
+              return `  ${cssProp}: ${value};`;
+            }).join("\n");
+            if (hoverRules) {
+              css += `
+
+.${componentName}:hover {
+${hoverRules}
+}`;
+            }
+          }
+          return css;
+        }).filter(Boolean).join("\n\n");
+        const animationCSS = `
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}`;
+        const cssText = `:host {
+${customPropertiesCSS}
+}
+
+${animationCSS}
+
+${componentCSS}`;
+        styleElement.textContent = cssText;
+        studio4Element.shadowRoot.appendChild(styleElement);
+      }
+      return () => {
+        Object.keys(cssVariables).forEach((property) => {
+          document.documentElement.style.removeProperty(property);
+        });
+        if (styleElement && styleElement.parentNode) {
+          styleElement.remove();
+        }
+      };
+    }, [cssVariables]);
+    const getComponentStyles = (componentName, variant = "default") => {
+      const component = config.components[componentName];
+      if (!component) return {};
+      if (variant === "default") {
+        return component;
+      }
+      return component[variant] || component;
     };
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-muted rounded-xl p-4 space-y-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+    const getColorValue = (colorPath) => {
+      var _a;
+      const [colorName, weight] = colorPath.split("-");
+      return ((_a = config.colors.brand[colorName]) == null ? void 0 : _a[weight]) || colorPath;
+    };
+    const updateColorScale = (colorName, newScale) => {
+      setConfig((prev) => ({
+        ...prev,
+        colors: {
+          ...prev.colors,
+          brand: {
+            ...prev.colors.brand,
+            [colorName]: newScale
+          }
+        }
+      }));
+    };
+    const updateComponent = (componentName, styles) => {
+      setConfig((prev) => ({
+        ...prev,
+        components: {
+          ...prev.components,
+          [componentName]: styles
+          // Replace entirely instead of merging
+        }
+      }));
+    };
+    const addCustomOverride = (property, value) => {
+      setCustomOverrides((prev) => ({
+        ...prev,
+        [property]: value
+      }));
+    };
+    const removeCustomOverride = (property) => {
+      setCustomOverrides((prev) => {
+        const updated = { ...prev };
+        delete updated[property];
+        return updated;
+      });
+    };
+    const exportConfig = () => {
+      return JSON.stringify(config, null, 2);
+    };
+    const importConfig = (newConfig) => {
+      try {
+        const parsedConfig = typeof newConfig === "string" ? JSON.parse(newConfig) : newConfig;
+        setConfig(parsedConfig);
+        return true;
+      } catch (error) {
+        console.error("Failed to import config:", error);
+        return false;
+      }
+    };
+    const resetToDefault = () => {
+      setConfig(themeConfig);
+      setCustomOverrides({});
+    };
+    const syncNewComponents = () => {
+      setConfig((prev) => {
+        const merged = { ...prev };
+        Object.entries(themeConfig.components).forEach(([componentName, defaultStyles]) => {
+          if (!prev.components[componentName]) {
+            merged.components[componentName] = defaultStyles;
+          }
+        });
+        return merged;
+      });
+    };
+    const mergeWithDefaults = () => {
+      setConfig((prev) => {
+        const merged = JSON.parse(JSON.stringify(themeConfig));
+        Object.entries(prev.components).forEach(([componentName, userStyles]) => {
+          if (merged.components[componentName]) {
+            merged.components[componentName] = userStyles;
+          } else {
+            merged.components[componentName] = userStyles;
+          }
+        });
+        merged.colors = prev.colors;
+        merged.typography = prev.typography;
+        merged.spacing = prev.spacing;
+        merged.borderRadius = prev.borderRadius;
+        merged.customProperties = prev.customProperties;
+        return merged;
+      });
+    };
+    return {
+      config,
+      cssVariables,
+      customOverrides,
+      // Helper functions
+      getComponentStyles,
+      getColorValue,
+      // Update functions
+      updateColorScale,
+      updateComponent,
+      addCustomOverride,
+      removeCustomOverride,
+      // Import/Export
+      exportConfig,
+      importConfig,
+      resetToDefault,
+      syncNewComponents,
+      mergeWithDefaults,
+      // Raw config for advanced usage
+      setConfig
+    };
+  }
+  const StyleInput = React.memo(({ componentName, fullKey, value, onChange, onDelete }) => {
+    const [showDelete, setShowDelete] = reactExports.useState(false);
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "flex gap-2 items-center",
+        onMouseEnter: () => setShowDelete(true),
+        onMouseLeave: () => setShowDelete(false),
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "text-xs text-neutral-400 w-24 capitalize", children: [
+            fullKey.split(".").pop(),
+            ":"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "text",
+              value: value || "",
+              onChange: (e) => onChange(componentName, fullKey, e.target.value),
+              className: "flex-1 px-2 py-1 bg-neutral-900 border border-neutral-600 rounded text-xs text-neutral-200",
+              placeholder: "CSS value"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => {
+                console.log("Deleting style:", componentName, fullKey);
+                onDelete(componentName, fullKey);
+              },
+              className: `px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-all ${showDelete ? "opacity-100" : "opacity-0 pointer-events-none"}`,
+              title: "Delete style",
+              children: "×"
+            }
+          )
+        ]
+      }
+    );
+  });
+  function ThemeEditor({ isOpen, onClose }) {
+    const {
+      config,
+      updateColorScale,
+      updateComponent,
+      addCustomOverride,
+      removeCustomOverride,
+      exportConfig,
+      importConfig,
+      resetToDefault,
+      syncNewComponents,
+      mergeWithDefaults,
+      customOverrides
+    } = useThemeConfig();
+    const [activeTab, setActiveTab] = reactExports.useState("colors");
+    const [selectedColor, setSelectedColor] = reactExports.useState("primary");
+    const [selectedWeight, setSelectedWeight] = reactExports.useState("500");
+    const [customProperty, setCustomProperty] = reactExports.useState("");
+    const [customValue, setCustomValue] = reactExports.useState("");
+    const handleColorChange = reactExports.useCallback((weight, value) => {
+      const currentScale = config.colors.brand[selectedColor];
+      updateColorScale(selectedColor, {
+        ...currentScale,
+        [weight]: value
+      });
+    }, [config.colors.brand, selectedColor, updateColorScale]);
+    const handleStyleChange = reactExports.useCallback((componentName, fullKey, value) => {
+      const keys = fullKey.split(".");
+      let newStyles = JSON.parse(JSON.stringify(config.components[componentName]));
+      let current = newStyles;
+      for (let i2 = 0; i2 < keys.length - 1; i2++) {
+        if (!current[keys[i2]]) current[keys[i2]] = {};
+        current = current[keys[i2]];
+      }
+      current[keys[keys.length - 1]] = value;
+      updateComponent(componentName, newStyles);
+    }, [config.components, updateComponent]);
+    const handleStyleDelete = reactExports.useCallback((componentName, fullKey) => {
+      const keys = fullKey.split(".");
+      let newStyles = JSON.parse(JSON.stringify(config.components[componentName]));
+      if (keys.length === 1) {
+        delete newStyles[keys[0]];
+      } else {
+        let current = newStyles;
+        for (let i2 = 0; i2 < keys.length - 1; i2++) {
+          if (!current[keys[i2]]) return;
+          if (i2 === keys.length - 2) {
+            delete current[keys[i2]][keys[keys.length - 1]];
+          } else {
+            current = current[keys[i2]];
+          }
+        }
+      }
+      updateComponent(componentName, newStyles);
+    }, [config.components, updateComponent]);
+    const handleStyleAdd = reactExports.useCallback((componentName, property, value) => {
+      const newStyles = {
+        ...config.components[componentName],
+        [property]: value
+      };
+      updateComponent(componentName, newStyles);
+    }, [config.components, updateComponent]);
+    const renderStyleEditor = reactExports.useCallback((componentName, styles, parentKey = "") => {
+      return Object.entries(styles).map(([key, value]) => {
+        const fullKey = parentKey ? `${parentKey}.${key}` : key;
+        if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "ml-4 space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-neutral-300 capitalize", children: key }),
+            renderStyleEditor(componentName, value, fullKey)
+          ] }, fullKey);
+        }
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(
+          StyleInput,
+          {
+            componentName,
+            fullKey,
+            value,
+            onChange: handleStyleChange,
+            onDelete: handleStyleDelete
+          },
+          fullKey
+        );
+      });
+    }, [handleStyleChange, handleStyleDelete]);
+    const handleExport = reactExports.useCallback(() => {
+      const configJson = exportConfig();
+      navigator.clipboard.writeText(configJson);
+      alert("Theme configuration copied to clipboard!");
+    }, [exportConfig]);
+    const handleImport = reactExports.useCallback(() => {
+      const input = prompt("Paste theme configuration JSON:");
+      if (input) {
+        const success = importConfig(input);
+        if (success) {
+          alert("Theme configuration imported successfully!");
+        } else {
+          alert("Failed to import configuration. Please check the JSON format.");
+        }
+      }
+    }, [importConfig]);
+    const ColorScaleEditor = reactExports.useMemo(() => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2 mb-4", children: Object.keys(config.colors.brand).map((colorName) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setSelectedColor(colorName),
+          className: `px-3 py-2 rounded text-sm font-medium capitalize transition-colors ${selectedColor === colorName ? "bg-primary-500 text-white" : "bg-neutral-700 text-neutral-200 hover:bg-neutral-600"}`,
+          children: colorName
+        },
+        colorName
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-3", children: Object.entries(config.colors.brand[selectedColor]).map(([weight, value]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "text-sm font-medium text-neutral-200", children: [
+          selectedColor,
+          "-",
+          weight
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "div",
+            {
+              className: "w-8 h-8 rounded border-2 border-neutral-600",
+              style: { backgroundColor: value }
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "text",
+              value,
+              onChange: (e) => handleColorChange(weight, e.target.value),
+              className: "flex-1 px-2 py-1 bg-neutral-800 border border-neutral-600 rounded text-sm text-neutral-200",
+              placeholder: "hsl(0, 0%, 50%)"
+            }
+          )
+        ] })
+      ] }, weight)) })
+    ] }), [config.colors.brand, selectedColor, handleColorChange]);
+    const cssProperties = [
+      // Layout
+      "display",
+      "position",
+      "top",
+      "right",
+      "bottom",
+      "left",
+      "float",
+      "clear",
+      "width",
+      "height",
+      "maxWidth",
+      "maxHeight",
+      "minWidth",
+      "minHeight",
+      "margin",
+      "marginTop",
+      "marginRight",
+      "marginBottom",
+      "marginLeft",
+      "padding",
+      "paddingTop",
+      "paddingRight",
+      "paddingBottom",
+      "paddingLeft",
+      "overflow",
+      "overflowX",
+      "overflowY",
+      "visibility",
+      "zIndex",
+      // Flexbox
+      "flex",
+      "flexDirection",
+      "flexWrap",
+      "flexGrow",
+      "flexShrink",
+      "flexBasis",
+      "justifyContent",
+      "alignItems",
+      "alignContent",
+      "alignSelf",
+      "gap",
+      // Grid
+      "gridTemplateColumns",
+      "gridTemplateRows",
+      "gridColumn",
+      "gridRow",
+      "gridGap",
+      "gridColumnGap",
+      "gridRowGap",
+      // Typography
+      "color",
+      "fontSize",
+      "fontWeight",
+      "fontFamily",
+      "fontStyle",
+      "lineHeight",
+      "letterSpacing",
+      "textAlign",
+      "textDecoration",
+      "textTransform",
+      "textOverflow",
+      "whiteSpace",
+      "wordBreak",
+      // Background & Border
+      "background",
+      "backgroundColor",
+      "backgroundImage",
+      "backgroundSize",
+      "backgroundPosition",
+      "backgroundRepeat",
+      "border",
+      "borderTop",
+      "borderRight",
+      "borderBottom",
+      "borderLeft",
+      "borderColor",
+      "borderStyle",
+      "borderWidth",
+      "borderRadius",
+      "borderTopLeftRadius",
+      "borderTopRightRadius",
+      "borderBottomLeftRadius",
+      "borderBottomRightRadius",
+      // Effects
+      "opacity",
+      "boxShadow",
+      "textShadow",
+      "transform",
+      "transformOrigin",
+      "transition",
+      "transitionProperty",
+      "transitionDuration",
+      "transitionTimingFunction",
+      "animation",
+      "animationName",
+      "animationDuration",
+      "animationTimingFunction",
+      // Other
+      "cursor",
+      "pointerEvents",
+      "userSelect",
+      "resize",
+      "listStyle",
+      "outline"
+    ].sort();
+    const ComponentEditor = reactExports.useMemo(() => {
+      const [newStyleProperty, setNewStyleProperty] = reactExports.useState({});
+      const [newStyleValue, setNewStyleValue] = reactExports.useState({});
+      const [showSuggestions, setShowSuggestions] = reactExports.useState({});
+      const [filteredSuggestions, setFilteredSuggestions] = reactExports.useState({});
+      const componentGroups = [
+        {
+          title: "Main Header",
+          components: ["main-header", "header-brand", "header-logo", "header-title", "header-subtitle"]
+        },
+        {
+          title: "Sidebar Container",
+          components: ["sidebar"]
+        },
+        {
+          title: "Sidebar Header",
+          components: ["sidebar-header", "sidebar-header-content", "sidebar-logo", "sidebar-header-text", "sidebar-title", "sidebar-subtitle"]
+        },
+        {
+          title: "Sidebar Navigation (4-Square Grid)",
+          components: ["sidebar-nav-grid", "sidebar-nav-button", "sidebar-nav-button-active", "sidebar-nav-button-hover", "sidebar-nav-number", "sidebar-nav-number-active", "sidebar-nav-label", "sidebar-nav-label-active"]
+        },
+        {
+          title: "Sidebar Content Area",
+          components: ["sidebar-content", "sidebar-section", "content-area", "section"]
+        },
+        {
+          title: "Accordion Components",
+          components: ["accordion", "accordion-item", "accordion-trigger", "accordion-trigger-open", "accordion-trigger-hover", "accordion-content", "accordion-icon"]
+        },
+        {
+          title: "Sidebar Footer",
+          components: ["sidebar-footer"]
+        },
+        {
+          title: "Preview Area",
+          components: ["preview-container", "preview-header", "preview-content", "preview-canvas"]
+        },
+        {
+          title: "Preview Mode Toggle",
+          components: ["preview-mode-toggle", "preview-mode-button", "preview-mode-button-active", "preview-mode-button-hover"]
+        },
+        {
+          title: "Buttons",
+          components: ["button-primary", "button-secondary"]
+        },
+        {
+          title: "Form Components",
+          components: ["input", "label"]
+        },
+        {
+          title: "Card Component",
+          components: ["card"]
+        },
+        {
+          title: "Color Grid Responsive Breakpoints",
+          components: ["color-grid", "color-grid-xs", "color-grid-sm", "color-grid-md", "color-grid-lg", "color-grid-xl"]
+        },
+        {
+          title: "Color Preview Components",
+          components: ["color-card", "color-card-hover", "color-swatch", "color-swatch-number", "color-swatch-label", "color-card-content", "color-card-title", "color-card-value", "color-scale", "color-scale-swatch", "color-preview-title"]
+        }
+      ];
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-neutral-400 mb-4", children: "Edit component styles - Changes apply immediately" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: componentGroups.map((group) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-primary-400 uppercase tracking-wider", children: group.title }),
+          group.components.map((componentName) => {
+            var _a;
+            const styles = config.components[componentName];
+            if (!styles) return null;
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs("details", { className: "bg-neutral-800 rounded p-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("summary", { className: "font-medium text-neutral-200 cursor-pointer capitalize", children: [
+                componentName,
+                componentName === "color-grid" && " (Base: all screens)",
+                componentName === "color-grid-xs" && " (480px+)",
+                componentName === "color-grid-sm" && " (640px+)",
+                componentName === "color-grid-md" && " (768px+)",
+                componentName === "color-grid-lg" && " (1024px+)",
+                componentName === "color-grid-xl" && " (1280px+)"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 space-y-3", children: [
+                renderStyleEditor(componentName, styles),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "pt-3 border-t border-neutral-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 relative", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "input",
+                      {
+                        type: "text",
+                        placeholder: "Property name",
+                        value: newStyleProperty[componentName] || "",
+                        onChange: (e) => {
+                          const value = e.target.value;
+                          setNewStyleProperty({
+                            ...newStyleProperty,
+                            [componentName]: value
+                          });
+                          if (value) {
+                            const filtered = cssProperties.filter(
+                              (prop) => prop.toLowerCase().includes(value.toLowerCase())
+                            );
+                            setFilteredSuggestions({
+                              ...filteredSuggestions,
+                              [componentName]: filtered
+                            });
+                            setShowSuggestions({
+                              ...showSuggestions,
+                              [componentName]: true
+                            });
+                          } else {
+                            setShowSuggestions({
+                              ...showSuggestions,
+                              [componentName]: false
+                            });
+                          }
+                        },
+                        onFocus: () => {
+                          if (newStyleProperty[componentName]) {
+                            const filtered = cssProperties.filter(
+                              (prop) => prop.toLowerCase().includes(newStyleProperty[componentName].toLowerCase())
+                            );
+                            setFilteredSuggestions({
+                              ...filteredSuggestions,
+                              [componentName]: filtered
+                            });
+                            setShowSuggestions({
+                              ...showSuggestions,
+                              [componentName]: true
+                            });
+                          }
+                        },
+                        onBlur: () => {
+                          setTimeout(() => {
+                            setShowSuggestions({
+                              ...showSuggestions,
+                              [componentName]: false
+                            });
+                          }, 200);
+                        },
+                        className: "w-full px-2 py-1 bg-neutral-900 border border-neutral-600 rounded text-xs text-neutral-200"
+                      }
+                    ),
+                    showSuggestions[componentName] && ((_a = filteredSuggestions[componentName]) == null ? void 0 : _a.length) > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute z-10 top-full mt-1 w-full max-h-48 overflow-y-auto bg-neutral-800 border border-neutral-600 rounded shadow-lg", children: filteredSuggestions[componentName].slice(0, 10).map((prop) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => {
+                          setNewStyleProperty({
+                            ...newStyleProperty,
+                            [componentName]: prop
+                          });
+                          setShowSuggestions({
+                            ...showSuggestions,
+                            [componentName]: false
+                          });
+                        },
+                        className: "w-full px-2 py-1 text-left text-xs text-neutral-200 hover:bg-neutral-700 transition-colors",
+                        children: prop
+                      },
+                      prop
+                    )) })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "input",
+                    {
+                      type: "text",
+                      placeholder: "Value",
+                      value: newStyleValue[componentName] || "",
+                      onChange: (e) => setNewStyleValue({
+                        ...newStyleValue,
+                        [componentName]: e.target.value
+                      }),
+                      className: "flex-1 px-2 py-1 bg-neutral-900 border border-neutral-600 rounded text-xs text-neutral-200"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => {
+                        const prop = newStyleProperty[componentName];
+                        const val = newStyleValue[componentName];
+                        if (prop && val) {
+                          handleStyleAdd(componentName, prop, val);
+                          setNewStyleProperty({
+                            ...newStyleProperty,
+                            [componentName]: ""
+                          });
+                          setNewStyleValue({
+                            ...newStyleValue,
+                            [componentName]: ""
+                          });
+                        }
+                      },
+                      className: "px-3 py-1 bg-primary-500 text-white rounded text-xs hover:bg-primary-600 transition-colors",
+                      children: "Add"
+                    }
+                  )
+                ] }) })
+              ] })
+            ] }, componentName);
+          })
+        ] }, group.title)) })
+      ] });
+    }, [config.components, renderStyleEditor, handleStyleAdd, cssProperties]);
+    const CustomPropertiesEditor = reactExports.useMemo(() => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-neutral-400 mb-4", children: "Add custom CSS properties" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 mb-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "input",
           {
             type: "text",
-            value: label,
-            className: "text-sm font-medium bg-transparent border-0 focus:outline-none focus:ring-2 focus:ring-primary rounded px-2 py-1",
-            readOnly: true
+            placeholder: "--custom-property",
+            value: customProperty,
+            onChange: (e) => setCustomProperty(e.target.value),
+            className: "flex-1 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded text-sm text-neutral-200"
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "text-muted-foreground hover:text-foreground", children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "path",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
           {
-            strokeLinecap: "round",
-            strokeLinejoin: "round",
-            strokeWidth: 2,
-            d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            type: "text",
+            placeholder: "value",
+            value: customValue,
+            onChange: (e) => setCustomValue(e.target.value),
+            className: "flex-1 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded text-sm text-neutral-200"
           }
-        ) }) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          className: "h-24 rounded-lg shadow-inner cursor-pointer",
-          style: { backgroundColor: color },
-          onClick: onExpand
-        }
-      ),
-      expanded ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-muted-foreground w-12", children: "HUE" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                value: hue,
-                max: "360",
-                onChange: (e) => {
-                  const newHue = e.target.value;
-                  setHue(newHue);
-                  updateColor(newHue, saturation, lightness);
-                },
-                className: "flex-1 h-1.5"
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => {
+              if (customProperty && customValue) {
+                addCustomOverride(customProperty, customValue);
+                setCustomProperty("");
+                setCustomValue("");
               }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono w-10 text-right", children: [
-              hue,
-              "°"
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-muted-foreground w-12", children: "SAT" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                value: saturation,
-                max: "100",
-                onChange: (e) => {
-                  const newSat = e.target.value;
-                  setSaturation(newSat);
-                  updateColor(hue, newSat, lightness);
-                },
-                className: "flex-1 h-1.5"
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono w-10 text-right", children: [
-              saturation,
-              "%"
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-muted-foreground w-12", children: "LIGHT" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                value: lightness,
-                max: "100",
-                onChange: (e) => {
-                  const newLight = e.target.value;
-                  setLightness(newLight);
-                  updateColor(hue, saturation, newLight);
-                },
-                className: "flex-1 h-1.5"
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono w-10 text-right", children: [
-              lightness,
-              "%"
-            ] })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 text-xs", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 bg-background rounded font-mono", children: color }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "px-2 py-1 bg-background rounded font-mono", children: [
-            "HSL(",
-            hue,
-            ", ",
-            saturation,
-            "%, ",
-            lightness,
-            "%)"
-          ] })
-        ] })
-      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: onExpand,
-          className: "w-full text-left text-xs text-muted-foreground hover:text-foreground",
-          children: "Click to edit →"
-        }
-      )
-    ] });
-  }
-  function LayoutControls({
-    activeLayoutPreset,
-    setActiveLayoutPreset,
-    layoutSettings,
-    updateLayoutSetting
-  }) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
-    const [activeTab, setActiveTab] = reactExports.useState("spacing");
-    const layoutPresets = {
-      "compact": {
-        name: "Compact",
-        description: "Minimal spacing for dense layouts",
-        settings: {
-          spacing: { base: 0.5, scale: 1.2 },
-          sizing: { base: 14, scale: 1.25 },
-          container: { maxWidth: 1200, padding: 16 },
-          grid: { gap: 16, columns: 12 }
-        }
-      },
-      "balanced": {
-        name: "Balanced",
-        description: "Default spacing and sizing",
-        settings: {
-          spacing: { base: 1, scale: 1.5 },
-          sizing: { base: 16, scale: 1.333 },
-          container: { maxWidth: 1280, padding: 24 },
-          grid: { gap: 24, columns: 12 }
-        }
-      },
-      "spacious": {
-        name: "Spacious",
-        description: "Generous spacing for modern layouts",
-        settings: {
-          spacing: { base: 1.5, scale: 1.618 },
-          sizing: { base: 18, scale: 1.414 },
-          container: { maxWidth: 1440, padding: 32 },
-          grid: { gap: 32, columns: 12 }
-        }
-      },
-      "ultra": {
-        name: "Ultra Wide",
-        description: "Maximum spacing for large displays",
-        settings: {
-          spacing: { base: 2, scale: 2 },
-          sizing: { base: 20, scale: 1.5 },
-          container: { maxWidth: 1920, padding: 48 },
-          grid: { gap: 48, columns: 12 }
-        }
-      }
-    };
-    const applyPreset = (presetKey) => {
-      setActiveLayoutPreset(presetKey);
-      const preset = layoutPresets[presetKey];
-      if (preset && preset.settings) {
-        Object.entries(preset.settings).forEach(([category, values]) => {
-          Object.entries(values).forEach(([key, value]) => {
-            updateLayoutSetting(category, key, value);
-          });
-        });
-      }
-    };
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 bg-card z-10 pb-4 mb-4 border-b border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => setActiveTab("spacing"),
-            className: `flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "spacing" ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted"}`,
-            children: "Spacing"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => setActiveTab("sizing"),
-            className: `flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "sizing" ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted"}`,
-            children: "Sizing"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => setActiveTab("containers"),
-            className: `flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "containers" ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted"}`,
-            children: "Containers"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => setActiveTab("presets"),
-            className: `flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "presets" ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted"}`,
-            children: "Presets"
+            },
+            className: "px-4 py-2 bg-primary-500 text-white rounded text-sm font-medium hover:bg-primary-600 transition-colors",
+            children: "Add"
           }
         )
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
-        activeTab === "spacing" && /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-medium", children: "Spacing System" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Base Unit" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: [
-                ((_a = layoutSettings == null ? void 0 : layoutSettings.spacing) == null ? void 0 : _a.base) || 1,
-                "rem"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "0.25",
-                max: "2",
-                step: "0.25",
-                value: ((_b = layoutSettings == null ? void 0 : layoutSettings.spacing) == null ? void 0 : _b.base) || 1,
-                onChange: (e) => updateLayoutSetting("spacing", "base", parseFloat(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Scale Ratio" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: [
-                ((_c = layoutSettings == null ? void 0 : layoutSettings.spacing) == null ? void 0 : _c.scale) || 1.5,
-                "x"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "1.1",
-                max: "2",
-                step: "0.1",
-                value: ((_d = layoutSettings == null ? void 0 : layoutSettings.spacing) == null ? void 0 : _d.scale) || 1.5,
-                onChange: (e) => updateLayoutSetting("spacing", "scale", parseFloat(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-muted rounded-lg p-4 space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-3", children: "Spacing Scale Preview" }),
-            [0, 1, 2, 3, 4, 5].map((level) => {
-              var _a2, _b2;
-              const base = ((_a2 = layoutSettings == null ? void 0 : layoutSettings.spacing) == null ? void 0 : _a2.base) || 1;
-              const scale = ((_b2 = layoutSettings == null ? void 0 : layoutSettings.spacing) == null ? void 0 : _b2.scale) || 1.5;
-              const value = level === 0 ? 0 : base * Math.pow(scale, level - 1);
-              return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono w-16", children: [
-                  "space-",
-                  level
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "div",
-                  {
-                    className: "bg-primary h-2 rounded",
-                    style: { width: `${value * 16}px` }
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground", children: [
-                  value.toFixed(2),
-                  "rem"
-                ] })
-              ] }, level);
-            })
-          ] })
-        ] }) }),
-        activeTab === "sizing" && /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-medium", children: "Typography Sizing" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Base Font Size" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: [
-                ((_e = layoutSettings == null ? void 0 : layoutSettings.sizing) == null ? void 0 : _e.base) || 16,
-                "px"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "12",
-                max: "24",
-                step: "1",
-                value: ((_f = layoutSettings == null ? void 0 : layoutSettings.sizing) == null ? void 0 : _f.base) || 16,
-                onChange: (e) => updateLayoutSetting("sizing", "base", parseInt(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Type Scale" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "select",
-              {
-                value: ((_g = layoutSettings == null ? void 0 : layoutSettings.sizing) == null ? void 0 : _g.scale) || 1.333,
-                onChange: (e) => updateLayoutSetting("sizing", "scale", parseFloat(e.target.value)),
-                className: "text-xs bg-muted px-2 py-1 rounded border-0",
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.125", children: "Minor Second (1.125)" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.2", children: "Minor Third (1.2)" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.25", children: "Major Third (1.25)" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.333", children: "Perfect Fourth (1.333)" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.414", children: "Augmented Fourth (1.414)" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.5", children: "Perfect Fifth (1.5)" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "1.618", children: "Golden Ratio (1.618)" })
-                ]
-              }
-            )
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-muted rounded-lg p-4 space-y-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-3", children: "Type Scale Preview" }),
-            ["xs", "sm", "base", "lg", "xl", "2xl", "3xl"].map((size, index) => {
-              var _a2, _b2;
-              const base = ((_a2 = layoutSettings == null ? void 0 : layoutSettings.sizing) == null ? void 0 : _a2.base) || 16;
-              const scale = ((_b2 = layoutSettings == null ? void 0 : layoutSettings.sizing) == null ? void 0 : _b2.scale) || 1.333;
-              const value = base * Math.pow(scale, index - 2);
-              return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-baseline gap-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-mono w-12", children: size }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "span",
-                  {
-                    style: { fontSize: `${value}px` },
-                    className: "flex-1",
-                    children: "The quick brown fox"
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground", children: [
-                  value.toFixed(0),
-                  "px"
-                ] })
-              ] }, size);
-            })
-          ] })
-        ] }) }),
-        activeTab === "containers" && /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-medium", children: "Container Settings" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Max Width" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: [
-                ((_h = layoutSettings == null ? void 0 : layoutSettings.container) == null ? void 0 : _h.maxWidth) || 1280,
-                "px"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "960",
-                max: "1920",
-                step: "80",
-                value: ((_i = layoutSettings == null ? void 0 : layoutSettings.container) == null ? void 0 : _i.maxWidth) || 1280,
-                onChange: (e) => updateLayoutSetting("container", "maxWidth", parseInt(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Container Padding" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: [
-                ((_j = layoutSettings == null ? void 0 : layoutSettings.container) == null ? void 0 : _j.padding) || 24,
-                "px"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "8",
-                max: "64",
-                step: "8",
-                value: ((_k = layoutSettings == null ? void 0 : layoutSettings.container) == null ? void 0 : _k.padding) || 24,
-                onChange: (e) => updateLayoutSetting("container", "padding", parseInt(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-medium mt-6", children: "Grid System" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Grid Gap" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: [
-                ((_l = layoutSettings == null ? void 0 : layoutSettings.grid) == null ? void 0 : _l.gap) || 24,
-                "px"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "8",
-                max: "48",
-                step: "8",
-                value: ((_m = layoutSettings == null ? void 0 : layoutSettings.grid) == null ? void 0 : _m.gap) || 24,
-                onChange: (e) => updateLayoutSetting("grid", "gap", parseInt(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm text-muted-foreground", children: "Grid Columns" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-mono bg-muted px-2 py-1 rounded", children: ((_n = layoutSettings == null ? void 0 : layoutSettings.grid) == null ? void 0 : _n.columns) || 12 })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                type: "range",
-                min: "4",
-                max: "16",
-                step: "2",
-                value: ((_o = layoutSettings == null ? void 0 : layoutSettings.grid) == null ? void 0 : _o.columns) || 12,
-                onChange: (e) => updateLayoutSetting("grid", "columns", parseInt(e.target.value)),
-                className: "w-full"
-              }
-            )
-          ] })
-        ] }) }),
-        activeTab === "presets" && /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-medium", children: "Layout Presets" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Quick presets for common layout patterns" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: Object.entries(layoutPresets).map(([key, preset]) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      ] }),
+      Object.keys(customOverrides).length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-neutral-200", children: "Custom Properties:" }),
+        Object.entries(customOverrides).map(([property, value]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center bg-neutral-700 p-2 rounded", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-mono text-neutral-300 w-32", children: property }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "text",
+              value,
+              onChange: (e) => addCustomOverride(property, e.target.value),
+              className: "flex-1 px-2 py-1 bg-neutral-800 border border-neutral-600 rounded text-xs text-neutral-200"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
-              onClick: () => applyPreset(key),
-              className: `w-full p-4 rounded-lg border text-left transition-all ${activeLayoutPreset === key ? "border-primary bg-primary/10" : "border-border hover:border-muted-foreground"}`,
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-medium text-sm", children: preset.name }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-1", children: preset.description }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 mt-3 text-xs", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Spacing:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono", children: [
-                      preset.settings.spacing.base,
-                      "rem"
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Base Size:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono", children: [
-                      preset.settings.sizing.base,
-                      "px"
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Container:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono", children: [
-                      preset.settings.container.maxWidth,
-                      "px"
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Grid Gap:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono", children: [
-                      preset.settings.grid.gap,
-                      "px"
-                    ] })
-                  ] })
-                ] })
-              ]
-            },
-            key
-          )) })
-        ] }) })
+              onClick: () => removeCustomOverride(property),
+              className: "px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors",
+              children: "Remove"
+            }
+          )
+        ] }, property))
       ] })
-    ] });
-  }
-  function LivePreview({ css, brandColors, colorPreset, layoutPreset }) {
-    const [deviceView, setDeviceView] = reactExports.useState("desktop");
-    const deviceWidths = {
-      desktop: "100%",
-      tablet: "768px",
-      mobile: "375px"
-    };
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("style", { dangerouslySetInnerHTML: { __html: css } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-6", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold", children: "Live Preview" }),
+    ] }), [customOverrides, customProperty, customValue, addCustomOverride, removeCustomOverride]);
+    if (!isOpen) return null;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-neutral-900 rounded-lg border border-neutral-700 w-full max-w-4xl h-[80vh] flex flex-col", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between p-4 border-b border-neutral-700", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-neutral-100", children: "Theme Editor" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
-              onClick: () => setDeviceView("desktop"),
-              className: `px-3 py-1 text-sm border border-border rounded-md transition-colors ${deviceView === "desktop" ? "bg-muted" : "bg-card hover:bg-muted"}`,
-              children: "Desktop"
+              onClick: () => {
+                syncNewComponents();
+                alert("New components synced! Your custom styles have been preserved.");
+              },
+              className: "px-3 py-1 bg-primary-500 text-white rounded text-sm font-medium hover:bg-primary-600 transition-colors",
+              title: "Add new default components without losing your customizations",
+              children: "Sync New"
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
-              onClick: () => setDeviceView("tablet"),
-              className: `px-3 py-1 text-sm border border-border rounded-md transition-colors ${deviceView === "tablet" ? "bg-muted" : "bg-card hover:bg-muted"}`,
-              children: "Tablet"
+              onClick: () => {
+                mergeWithDefaults();
+                alert("Cleaned deprecated components! Updated to latest configuration.");
+              },
+              className: "px-3 py-1 bg-orange-500 text-white rounded text-sm font-medium hover:bg-orange-600 transition-colors",
+              title: "Remove deprecated components and sync with latest defaults",
+              children: "Clean"
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
-              onClick: () => setDeviceView("mobile"),
-              className: `px-3 py-1 text-sm border border-border rounded-md transition-colors ${deviceView === "mobile" ? "bg-muted" : "bg-card hover:bg-muted"}`,
-              children: "Mobile"
+              onClick: handleExport,
+              className: "px-3 py-1 bg-secondary-500 text-white rounded text-sm font-medium hover:bg-secondary-600 transition-colors",
+              children: "Export"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: handleImport,
+              className: "px-3 py-1 bg-neutral-700 text-neutral-200 rounded text-sm font-medium hover:bg-neutral-600 transition-colors",
+              children: "Import"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => {
+                const confirmed = confirm(
+                  "⚠️ WARNING: This will permanently delete ALL your custom styling and reset to default configuration.\n\nThis action cannot be undone.\n\nAre you sure you want to continue?"
+                );
+                if (confirmed) {
+                  resetToDefault();
+                  alert("Configuration reset to defaults. All custom edits have been lost.");
+                }
+              },
+              className: "px-2 py-1 bg-red-800 text-red-300 border border-red-700 rounded text-xs font-normal hover:bg-red-700 hover:text-white transition-colors",
+              title: "⚠️ WARNING: Will delete all custom edits",
+              children: "Reset All"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: onClose,
+              className: "px-3 py-1 bg-neutral-700 text-neutral-200 rounded text-sm font-medium hover:bg-neutral-600 transition-colors",
+              children: "Close"
             }
           )
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "div",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex border-b border-neutral-700", children: [
+        { key: "colors", label: "Colors" },
+        { key: "components", label: "Components" },
+        { key: "custom", label: "Custom Properties" }
+      ].map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
         {
-          className: "bg-white rounded-lg shadow-2xl overflow-hidden transition-all duration-300",
-          style: {
-            width: deviceWidths[deviceView],
-            maxWidth: "100%"
-          },
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "section", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "title", children: "Build Beautiful Themes" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "subtitle", children: "Visual theme creation for WordPress" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text", children: "Experience the power of the S4 system. Create consistent, scalable designs with our intuitive visual builder. Real-time preview shows your changes instantly." }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4 justify-center mt-6", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "button-primary", children: "Get Started" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "button-secondary", children: "Learn More" })
-              ] })
-            ] }) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "section", style: { background: "white" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "title text-center", children: "Feature Grid" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid", style: { gridTemplateColumns: deviceView === "mobile" ? "1fr" : null }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 border rounded-lg", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "subtitle", children: "Color System" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text", children: "Powerful color management with brand tokens and presets." })
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 border rounded-lg", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "subtitle", children: "Layout Control" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text", children: "Flexible spacing and sizing with mathematical precision." })
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 border rounded-lg", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "subtitle", children: "Live Preview" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text", children: "See your changes instantly across different devices." })
-                ] })
-              ] })
-            ] }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "section", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "title", children: "Typography Scale" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "title", children: "Heading Level 1" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "subtitle", children: "Heading Level 2" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text", children: "Regular body text demonstrating the type scale and line height. The S4 system ensures consistent typography across your entire site." }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text", style: { fontSize: "var(--text-sm)" }, children: "Small text for captions and secondary information." })
-              ] })
-            ] }) })
-          ]
-        }
-      ) })
-    ] });
+          onClick: () => setActiveTab(tab.key),
+          className: `px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.key ? "text-primary-400 border-b-2 border-primary-500" : "text-neutral-400 hover:text-neutral-200"}`,
+          children: tab.label
+        },
+        tab.key
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 p-4 overflow-y-auto", children: [
+        activeTab === "colors" && ColorScaleEditor,
+        activeTab === "components" && ComponentEditor,
+        activeTab === "custom" && CustomPropertiesEditor
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-t border-neutral-700 p-4 bg-neutral-800", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-neutral-200 mb-3", children: "Live Preview" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 flex-wrap", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "px-4 py-2 bg-primary-500 text-white rounded font-medium", children: "Primary Button" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "px-4 py-2 bg-neutral-700 text-neutral-200 border border-neutral-600 rounded font-medium", children: "Secondary Button" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3 py-2 bg-neutral-700 border border-neutral-600 rounded", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-4 h-4 bg-primary-500 rounded-full" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3 py-2 bg-neutral-800 border border-neutral-600 rounded text-sm text-neutral-300", children: "Sample Card" })
+        ] })
+      ] })
+    ] }) });
   }
-  const brandTokens = {
-    colors: {
-      color1: {
-        h: 172,
-        s: 50,
-        l: 40,
-        name: "Primary"
-      },
-      color2: {
-        h: 92,
-        s: 50,
-        l: 40,
-        name: "Secondary"
-      },
-      color3: {
-        h: 0,
-        s: 0,
-        l: 50,
-        name: "Neutral"
-      },
-      color4: {
-        h: 0,
-        s: 0,
-        l: 100,
-        name: "Base"
-      }
-    }
+  const useComponentStyles = (componentName) => {
+    const { getComponentStyles } = useThemeConfig();
+    return getComponentStyles(componentName);
   };
-  const colorPresets = {
-    "default-colors": {
-      name: "Default Colors",
-      description: "Standard color theme",
-      assignments: {
-        section: {
-          bg: "color4"
-        },
-        container: {
-          bg: "transparent"
-        },
-        wrapper: {
-          bg: "color4"
-        },
-        pretitle: {
-          color: "color1"
-        },
-        title: {
-          color: "color3"
-        },
-        subtitle: {
-          color: "color3"
-        },
-        description: {
-          color: "color3"
-        }
+  const MainHeader = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("main-header");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "header",
+      {
+        className: `main-header ${className}`,
+        style: styles,
+        ...props,
+        children
       }
-    },
-    "emphasis-colors": {
-      name: "Emphasis Colors",
-      description: "High contrast theme",
-      assignments: {
-        section: {
-          bg: "color1"
-        },
-        container: {
-          bg: "transparent"
-        },
-        wrapper: {
-          bg: "color4"
-        },
-        pretitle: {
-          color: "color1"
-        },
-        title: {
-          color: "color3"
-        },
-        subtitle: {
-          color: "color3"
-        },
-        description: {
-          color: "color3"
-        }
-      }
-    }
+    );
   };
-  const helperPresets = {
-    typography: {
-      hierarchy: {
-        name: "Typography Hierarchy",
-        description: "Creates visual hierarchy through lightness modifications",
-        modifications: {
-          title: {
-            lightness: {
-              operation: "set",
-              value: 90
-            },
-            opacity: 1
-          },
-          pretitle: {
-            lightness: {
-              operation: "set",
-              value: 70
-            },
-            opacity: 0.9
-          },
-          subtitle: {
-            lightness: {
-              operation: "set",
-              value: 70
-            },
-            opacity: 0.8
-          },
-          description: {
-            lightness: {
-              operation: "set",
-              value: 60
-            },
-            opacity: 0.7
-          }
-        }
-      },
-      "high-contrast": {
-        name: "High Contrast",
-        description: "Maximum contrast for accessibility",
-        modifications: {
-          title: {
-            lightness: {
-              operation: "set",
-              value: 10
-            }
-          },
-          pretitle: {
-            lightness: {
-              operation: "set",
-              value: 30
-            }
-          },
-          subtitle: {
-            lightness: {
-              operation: "set",
-              value: 20
-            }
-          },
-          description: {
-            lightness: {
-              operation: "set",
-              value: 40
-            }
-          }
-        }
+  const HeaderBrand = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("header-brand");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `header-brand ${className}`,
+        style: styles,
+        ...props,
+        children
       }
-    },
-    interactive: {
-      hover: {
-        name: "Hover States",
-        description: "Interactive hover modifications",
-        modifications: {
-          all: {
-            lightness: {
-              operation: "adjust",
-              value: -10
-            },
-            saturation: {
-              operation: "adjust",
-              value: 10
-            }
-          }
-        }
-      },
-      active: {
-        name: "Active States",
-        description: "Active/pressed state modifications",
-        modifications: {
-          all: {
-            lightness: {
-              operation: "adjust",
-              value: -20
-            },
-            saturation: {
-              operation: "adjust",
-              value: 15
-            }
-          }
-        }
-      }
-    },
-    saturation: {
-      vibrant: {
-        name: "Vibrant",
-        description: "Increased color saturation",
-        modifications: {
-          all: {
-            saturation: {
-              operation: "multiply",
-              value: 1.5
-            }
-          }
-        }
-      },
-      muted: {
-        name: "Muted",
-        description: "Reduced color saturation",
-        modifications: {
-          all: {
-            saturation: {
-              operation: "multiply",
-              value: 0.5
-            }
-          }
-        }
-      },
-      grayscale: {
-        name: "Grayscale",
-        description: "Remove all color",
-        modifications: {
-          all: {
-            saturation: {
-              operation: "set",
-              value: 0
-            }
-          }
-        }
-      }
-    }
+    );
   };
-  const scopes = {
-    layout: {
-      hero: {
-        name: "Hero Scope",
-        modifiers: {
-          title: {
-            scale: 1.5
-          },
-          subtitle: {
-            scale: 1.2
-          },
-          spacing: {
-            scale: 1.5
-          }
-        }
-      },
-      card: {
-        name: "Card Scope",
-        modifiers: {
-          title: {
-            scale: 0.8
-          },
-          subtitle: {
-            scale: 0.9
-          },
-          spacing: {
-            scale: 0.8
-          }
-        }
-      },
-      sidebar: {
-        name: "Sidebar Scope",
-        modifiers: {
-          title: {
-            scale: 0.7
-          },
-          subtitle: {
-            scale: 0.8
-          },
-          spacing: {
-            scale: 0.6
-          }
-        }
+  const HeaderLogo = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("header-logo");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `header-logo ${className}`,
+        style: styles,
+        ...props,
+        children
       }
-    }
+    );
   };
-  const calculations = {
-    colorOperations: {
-      set: "Sets the value directly",
-      adjust: "Adds or subtracts from current value",
-      multiply: "Multiplies current value by factor",
-      divide: "Divides current value by factor"
-    },
-    validRanges: {
-      hue: {
-        min: 0,
-        max: 360,
-        wrap: true
-      },
-      saturation: {
-        min: 0,
-        max: 100,
-        wrap: false
-      },
-      lightness: {
-        min: 0,
-        max: 100,
-        wrap: false
-      },
-      opacity: {
-        min: 0,
-        max: 1,
-        wrap: false
+  const HeaderTitle = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("header-title");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "h1",
+      {
+        className: `header-title ${className}`,
+        style: styles,
+        ...props,
+        children
       }
-    }
+    );
   };
-  const presetData = {
-    brandTokens,
-    colorPresets,
-    helperPresets,
-    scopes,
-    calculations
+  const HeaderSubtitle = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("header-subtitle");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        className: `header-subtitle ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const Sidebar = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("sidebar");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "aside",
+      {
+        className: `sidebar ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const SidebarNavGrid = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("sidebar-nav-grid");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `sidebar-nav-grid ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const SidebarNavButton = ({ children, active = false, className = "", ...props }) => {
+    const baseStyles = useComponentStyles("sidebar-nav-button");
+    const activeStyles = useComponentStyles("sidebar-nav-button-active");
+    const styles = active ? { ...baseStyles, ...activeStyles } : baseStyles;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: `sidebar-nav-button ${active ? "sidebar-nav-button-active" : ""} ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const SidebarNavNumber = ({ children, active = false, className = "", ...props }) => {
+    const baseStyles = useComponentStyles("sidebar-nav-number");
+    const activeStyles = useComponentStyles("sidebar-nav-number-active");
+    const styles = active ? { ...baseStyles, ...activeStyles } : baseStyles;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `sidebar-nav-number ${active ? "sidebar-nav-number-active" : ""} ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const SidebarNavLabel = ({ children, active = false, className = "", ...props }) => {
+    const baseStyles = useComponentStyles("sidebar-nav-label");
+    const activeStyles = useComponentStyles("sidebar-nav-label-active");
+    const styles = active ? { ...baseStyles, ...activeStyles } : baseStyles;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `sidebar-nav-label ${active ? "sidebar-nav-label-active" : ""} ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const SidebarFooter = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("sidebar-footer");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `sidebar-footer ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ButtonPrimary = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("button-primary");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: `button-primary ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ButtonSecondary = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("button-secondary");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: `button-secondary ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const PreviewContainer = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("preview-container");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `preview-container ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const PreviewHeader = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("preview-header");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `preview-header ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const PreviewContent = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("preview-content");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `preview-content ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const PreviewCanvas = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("preview-canvas");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `preview-canvas ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const PreviewModeToggle = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("preview-mode-toggle");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `preview-mode-toggle ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const PreviewModeButton = ({ children, active = false, className = "", ...props }) => {
+    const baseStyles = useComponentStyles("preview-mode-button");
+    const activeStyles = useComponentStyles("preview-mode-button-active");
+    const styles = active ? { ...baseStyles, ...activeStyles } : baseStyles;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: `preview-mode-button ${active ? "preview-mode-button-active" : ""} ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorGrid = ({ children, className = "", ...props }) => {
+    const baseStyles = useComponentStyles("color-grid");
+    const xsStyles = useComponentStyles("color-grid-xs") || {};
+    const smStyles = useComponentStyles("color-grid-sm") || {};
+    const mdStyles = useComponentStyles("color-grid-md") || {};
+    const lgStyles = useComponentStyles("color-grid-lg") || {};
+    const xlStyles = useComponentStyles("color-grid-xl") || {};
+    React.useEffect(() => {
+      var _a;
+      const shadowRoot = (_a = document.querySelector("studio4-builder")) == null ? void 0 : _a.shadowRoot;
+      if (shadowRoot && baseStyles) {
+        const existingStyle = shadowRoot.querySelector("#color-grid-responsive");
+        if (existingStyle) {
+          existingStyle.remove();
+        }
+        const style = document.createElement("style");
+        style.id = "color-grid-responsive";
+        style.innerHTML = `
+        /* Base: Mobile (all screens) */
+        .color-grid {
+          display: ${baseStyles.display || "grid"} !important;
+          grid-template-columns: ${baseStyles.gridTemplateColumns || "repeat(1, minmax(0, 1fr))"} !important;
+          gap: ${baseStyles.gap || "1rem"} !important;
+          width: ${baseStyles.width || "100%"} !important;
+        }
+        
+        /* Extra small screens: 480px+ */
+        @media (min-width: 480px) {
+          .color-grid {
+            grid-template-columns: ${xsStyles.gridTemplateColumns || baseStyles.gridTemplateColumns || "repeat(1, minmax(0, 1fr))"} !important;
+            gap: ${xsStyles.gap || baseStyles.gap || "1rem"} !important;
+          }
+        }
+        
+        /* Small screens: 640px+ */
+        @media (min-width: 640px) {
+          .color-grid {
+            grid-template-columns: ${smStyles.gridTemplateColumns || "repeat(2, minmax(0, 1fr))"} !important;
+            gap: ${smStyles.gap || "1rem"} !important;
+          }
+        }
+        
+        /* Medium screens: 768px+ */
+        @media (min-width: 768px) {
+          .color-grid {
+            grid-template-columns: ${mdStyles.gridTemplateColumns || "repeat(2, minmax(0, 1fr))"} !important;
+            gap: ${mdStyles.gap || "1.25rem"} !important;
+          }
+        }
+        
+        /* Large screens: 1024px+ */
+        @media (min-width: 1024px) {
+          .color-grid {
+            grid-template-columns: ${lgStyles.gridTemplateColumns || "repeat(3, minmax(0, 1fr))"} !important;
+            gap: ${lgStyles.gap || "1.5rem"} !important;
+          }
+        }
+        
+        /* Extra large screens: 1280px+ */
+        @media (min-width: 1280px) {
+          .color-grid {
+            grid-template-columns: ${xlStyles.gridTemplateColumns || "repeat(4, minmax(0, 1fr))"} !important;
+            gap: ${xlStyles.gap || "1.75rem"} !important;
+          }
+        }
+      `;
+        shadowRoot.appendChild(style);
+      }
+    }, [baseStyles, xsStyles, smStyles, mdStyles, lgStyles, xlStyles]);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `color-grid ${className}`,
+        style: baseStyles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorCard = ({ children, className = "", ...props }) => {
+    const baseStyles = useComponentStyles("color-card");
+    const hoverStyles = useComponentStyles("color-card-hover");
+    React.useEffect(() => {
+      var _a;
+      const shadowRoot = (_a = document.querySelector("studio4-builder")) == null ? void 0 : _a.shadowRoot;
+      if (shadowRoot && hoverStyles) {
+        const existingStyle = shadowRoot.querySelector("#color-card-hover-styles");
+        if (existingStyle) {
+          existingStyle.remove();
+        }
+        const style = document.createElement("style");
+        style.id = "color-card-hover-styles";
+        style.innerHTML = `
+        .color-card:hover {
+          box-shadow: ${hoverStyles.boxShadow} !important;
+          transform: ${hoverStyles.transform} !important;
+        }
+      `;
+        shadowRoot.appendChild(style);
+      }
+    }, [hoverStyles]);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `color-card ${className}`,
+        style: baseStyles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorSwatch = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-swatch");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `color-swatch ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorSwatchNumber = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-swatch-number");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "span",
+      {
+        className: `color-swatch-number ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorSwatchLabel = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-swatch-label");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "span",
+      {
+        className: `color-swatch-label ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorCardContent = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-card-content");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `color-card-content ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorCardTitle = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-card-title");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "h3",
+      {
+        className: `color-card-title ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorCardValue = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-card-value");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        className: `color-card-value ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorScale = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-scale");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `color-scale ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
+  };
+  const ColorScaleSwatch = ({ className = "", ...props }) => {
+    const styles = useComponentStyles("color-scale-swatch");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: `color-scale-swatch ${className}`,
+        style: styles,
+        ...props
+      }
+    );
+  };
+  const ColorPreviewTitle = ({ children, className = "", ...props }) => {
+    const styles = useComponentStyles("color-preview-title");
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "h2",
+      {
+        className: `color-preview-title ${className}`,
+        style: styles,
+        ...props,
+        children
+      }
+    );
   };
   function S4ThemeBuilder() {
     const {
-      theme,
       s4BrandColors,
       s4ActiveColorPreset,
-      s4ActiveLayoutPreset,
-      s4ActiveHelpers,
-      s4LayoutSettings,
-      setS4BrandColors,
       updateS4BrandColor,
-      setS4ActiveColorPreset,
-      setS4ActiveLayoutPreset,
-      setS4ActiveHelpers,
-      updateS4LayoutSetting
+      setS4ActiveColorPreset
     } = useStore();
-    const [processor] = reactExports.useState(() => new S4PresetProcessor(presetData));
+    const [activeTab, setActiveTab] = reactExports.useState("theme");
+    const [expandedSection, setExpandedSection] = reactExports.useState("colors");
+    const [selectedColor, setSelectedColor] = reactExports.useState("color1");
     const [generatedCSS, setGeneratedCSS] = reactExports.useState("");
-    const [activeSection, setActiveSection] = reactExports.useState("colors");
-    console.log("Active section:", activeSection);
+    const [previewMode, setPreviewMode] = reactExports.useState("preview");
+    const [isThemeEditorOpen, setIsThemeEditorOpen] = reactExports.useState(false);
+    useThemeConfig();
+    const toggleFullscreen = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    };
     reactExports.useEffect(() => {
-      const spacing = (s4LayoutSettings == null ? void 0 : s4LayoutSettings.spacing) || { base: 1, scale: 1.5 };
-      const sizing = (s4LayoutSettings == null ? void 0 : s4LayoutSettings.sizing) || { base: 16, scale: 1.333 };
-      const container = (s4LayoutSettings == null ? void 0 : s4LayoutSettings.container) || { maxWidth: 1280, padding: 24 };
-      const grid = (s4LayoutSettings == null ? void 0 : s4LayoutSettings.grid) || { gap: 24, columns: 12 };
-      const spaceScale = Array.from({ length: 6 }, (_, i2) => {
-        const value = i2 === 0 ? 0 : spacing.base * Math.pow(spacing.scale, i2 - 1);
-        return `  --space-${i2}: ${value}rem;`;
-      }).join("\n");
-      const typeScale = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl"].map((size, index) => {
-        const value = sizing.base * Math.pow(sizing.scale, index - 2);
-        return `  --text-${size}: ${value / 16}rem;`;
-      }).join("\n");
-      const css = `
+      const handleKeyPress = (e) => {
+        if (e.shiftKey && e.key === "F") {
+          e.preventDefault();
+          toggleFullscreen();
+        }
+      };
+      window.addEventListener("keydown", handleKeyPress);
+      return () => window.removeEventListener("keydown", handleKeyPress);
+    }, []);
+    reactExports.useEffect(() => {
+      const css = `/* Studio4 Generated CSS Variables */
 :root {
-  /* Brand Colors */
+  /* Layer 1: Brand Colors */
   --color1: ${s4BrandColors.color1};
   --color2: ${s4BrandColors.color2};
   --color3: ${s4BrandColors.color3};
   --color4: ${s4BrandColors.color4};
   
-  /* Spacing Scale */
-${spaceScale}
+  /* Color Scales (50-950) */
+  --color1-50: hsl(from ${s4BrandColors.color1} h s 95%);
+  --color1-100: hsl(from ${s4BrandColors.color1} h s 90%);
+  --color1-200: hsl(from ${s4BrandColors.color1} h s 80%);
+  --color1-300: hsl(from ${s4BrandColors.color1} h s 70%);
+  --color1-400: hsl(from ${s4BrandColors.color1} h s 60%);
+  --color1-500: ${s4BrandColors.color1};
+  --color1-600: hsl(from ${s4BrandColors.color1} h s 40%);
+  --color1-700: hsl(from ${s4BrandColors.color1} h s 30%);
+  --color1-800: hsl(from ${s4BrandColors.color1} h s 20%);
+  --color1-900: hsl(from ${s4BrandColors.color1} h s 10%);
+  --color1-950: hsl(from ${s4BrandColors.color1} h s 5%);
   
-  /* Type Scale */
-${typeScale}
-  
-  /* Container */
-  --container-max-width: ${container.maxWidth}px;
-  --container-padding: ${container.padding}px;
-  
-  /* Grid */
-  --grid-gap: ${grid.gap}px;
-  --grid-columns: ${grid.columns};
+  /* Layer 2: Global Elements (placeholders) */
+  --section-bg: transparent;
+  --section-padding: 4rem 2rem;
+  --container-max-width: 1280px;
+  --wrapper-bg: transparent;
+  --wrapper-padding: 2rem;
+  --title-color: var(--color3);
+  --title-font-size: 2.5rem;
+  --text-color: var(--color3);
+  --text-font-size: 1rem;
+  --button-primary-bg: var(--color1);
+  --button-primary-color: white;
+  --button-secondary-bg: transparent;
+  --button-secondary-color: var(--color1);
+  --button-secondary-border: 2px solid var(--color1);
 }
 
-/* S4 System CSS */
-.section { 
-  background: var(--color4);
-  padding: var(--space-4) var(--container-padding);
-}
-.container {
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(var(--grid-columns), 1fr);
-  gap: var(--grid-gap);
-}
-.title { 
-  color: var(--color3);
-  font-size: var(--text-2xl);
-  margin-bottom: var(--space-2);
-}
-.subtitle {
-  color: var(--color3);
-  font-size: var(--text-lg);
-  opacity: 0.9;
-  margin-bottom: var(--space-1);
-}
-.text { 
-  color: var(--color3);
-  font-size: var(--text-base);
-  opacity: 0.8;
-  line-height: 1.6;
-}
-.button-primary { 
-  background: var(--color1);
-  color: white;
-  padding: var(--space-2) var(--space-3);
-  border-radius: 0.5rem;
-  font-size: var(--text-sm);
-}
-.button-secondary { 
-  color: var(--color1);
-  border: 2px solid var(--color1);
-  padding: var(--space-2) var(--space-3);
-  border-radius: 0.5rem;
-  font-size: var(--text-sm);
-}
-`;
+/* Layer 3: Color Presets */
+[data-preset="default-colors"] .section { --section-bg: var(--color4); }
+[data-preset="default-colors"] .wrapper { --wrapper-bg: white; }
+[data-preset="default-colors"] .title { --title-color: var(--color3); }
+[data-preset="default-colors"] .text { --text-color: var(--color3); }
+
+/* Layer 4: Helper Presets */
+[data-helper="dark-mode"] .section { --section-bg: var(--color3); }
+[data-helper="dark-mode"] .title { --title-color: var(--color4); }
+[data-helper="dark-mode"] .text { --text-color: var(--color4); }`;
       setGeneratedCSS(css);
-    }, [s4BrandColors, s4ActiveColorPreset, s4ActiveLayoutPreset, s4ActiveHelpers, s4LayoutSettings]);
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex h-full bg-background text-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: "w-64 bg-card border-r border-border flex flex-col", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-6 border-b border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-10 bg-gradient-to-br from-[#b25977] to-[#b8874d] rounded-lg flex items-center justify-center text-white font-bold", children: "S4" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-semibold", children: "Studio4" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Visual Theme Builder" })
+    }, [s4BrandColors]);
+    const parseHSL = (hslString) => {
+      const match = hslString.match(/hsl\((\d+),?\s*(\d+)%,?\s*(\d+)%\)/);
+      if (match) {
+        return {
+          h: parseInt(match[1]),
+          s: parseInt(match[2]),
+          l: parseInt(match[3])
+        };
+      }
+      if (hslString.startsWith("#")) {
+        return hexToHSL(hslString);
+      }
+      return { h: 0, s: 0, l: 50 };
+    };
+    const hexToHSL = (hex) => {
+      hex = hex.replace("#", "");
+      const r = parseInt(hex.substr(0, 2), 16) / 255;
+      const g = parseInt(hex.substr(2, 2), 16) / 255;
+      const b = parseInt(hex.substr(4, 2), 16) / 255;
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r:
+            h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+            break;
+          case g:
+            h = ((b - r) / d + 2) / 6;
+            break;
+          case b:
+            h = ((r - g) / d + 4) / 6;
+            break;
+        }
+      }
+      return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100)
+      };
+    };
+    const currentColorHSL = parseHSL(s4BrandColors[selectedColor]);
+    const updateSelectedColor = (h, s, l) => {
+      const newColor = `hsl(${h}, ${s}%, ${l}%)`;
+      updateS4BrandColor(selectedColor, newColor);
+    };
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full bg-neutral-950 text-neutral-50", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(MainHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(HeaderBrand, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(HeaderLogo, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "40", height: "40", viewBox: "0 0 103 104", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "3.5", y: "3.49963", width: "95.6918", height: "96.1796", rx: "15.22", stroke: "url(#paint0_linear_s4_logo)", strokeWidth: "7" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M13.9529 17.8661V22.3476C13.9529 23.343 15.1542 23.8438 15.8612 23.1432L22.5479 16.5173C23.2585 15.8132 22.7599 14.6017 21.7596 14.6017H17.2788C16.9873 14.6017 16.7072 14.7154 16.4982 14.9186L14.2922 17.0631C14.0753 17.2739 13.9529 17.5636 13.9529 17.8661Z", fill: "hsl(337, 35%, 52%)", fillOpacity: "0.7" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M88.4811 17.8661V22.3476C88.4811 23.343 87.2798 23.8438 86.5727 23.1432L79.886 16.5173C79.1755 15.8132 79.6741 14.6017 80.6744 14.6017H85.1551C85.4467 14.6017 85.7268 14.7154 85.9358 14.9186L88.1418 17.0631C88.3587 17.2739 88.4811 17.5636 88.4811 17.8661Z", fill: "hsl(29, 44%, 53%)", fillOpacity: "0.7" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M17.2173 88.1299H21.6988C22.6942 88.1299 23.195 86.9286 22.4944 86.2215L15.8684 79.5348C15.1644 78.8243 13.9529 79.3229 13.9529 80.3232V84.8039C13.9529 85.0955 14.0666 85.3756 14.2698 85.5846L16.4143 87.7906C16.6251 88.0075 16.9148 88.1299 17.2173 88.1299Z", fill: "hsl(29, 44%, 53%)", fillOpacity: "0.7" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M85.2166 88.1299H80.7351C79.7398 88.1299 79.239 86.9286 79.9396 86.2215L86.5655 79.5348C87.2696 78.8243 88.4811 79.3229 88.4811 80.3232V84.8039C88.4811 85.0955 88.3674 85.3756 88.1642 85.5846L86.0197 87.7906C85.8088 88.0075 85.5192 88.1299 85.2166 88.1299Z", fill: "hsl(337, 35%, 52%)", fillOpacity: "0.7" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M66.2096 37.8214C65.8459 35.156 64.3459 33.0913 61.7096 31.6272C59.0732 30.1444 55.755 29.4029 51.755 29.4029C48.8914 29.4029 46.4141 29.7784 44.3232 30.5292C42.2323 31.2612 40.6073 32.2748 39.4482 33.57C38.3118 34.8463 37.7437 36.301 37.7437 37.9341C37.7437 39.3043 38.13 40.4868 38.9027 41.4816C39.6982 42.4765 40.7323 43.3117 42.005 43.9875C43.3005 44.6444 44.6868 45.1982 46.1641 45.6486C47.6414 46.0804 49.0618 46.437 50.4255 46.7186L57.2437 48.1826C59.4709 48.6331 61.755 49.2432 64.0959 50.0127C66.4368 50.7823 68.6073 51.7959 70.6073 53.0535C72.6073 54.3111 74.2209 55.8691 75.4482 57.7273C76.6982 59.5856 77.3232 61.8099 77.3232 64.4002C77.3232 67.6662 76.3005 70.5662 74.255 73.1002C72.2323 75.6342 69.2891 77.6332 65.4255 79.0973C61.5846 80.5614 56.9368 81.2935 51.4823 81.2935C46.255 81.2935 41.7323 80.6083 37.9141 79.2381C34.0959 77.8679 31.1073 75.9251 28.9482 73.4099C26.7891 70.8759 25.5959 67.8727 25.3687 64.4002H35.9368C36.1414 66.4837 36.9596 68.2199 38.3914 69.6089C39.8459 70.9792 41.6982 72.0022 43.9482 72.6779C46.2209 73.3348 48.7096 73.6633 51.4141 73.6633C54.3914 73.6633 57.0391 73.2785 59.3573 72.5089C61.6982 71.7206 63.5391 70.6319 64.88 69.2429C66.2209 67.8351 66.8914 66.1927 66.8914 64.3157C66.8914 62.6076 66.3005 61.2092 65.1187 60.1205C63.9596 59.0319 62.38 58.1309 60.38 57.4176C58.4027 56.7044 56.1641 56.0756 53.6641 55.5312L45.4141 53.673C39.8232 52.4153 35.3914 50.5665 32.1187 48.1263C28.8687 45.6862 27.2437 42.4577 27.2437 38.4408C27.2437 35.1185 28.3346 32.2185 30.5164 29.7408C32.6982 27.2631 35.6527 25.3392 39.38 23.9689C43.1073 22.5799 47.3118 21.8854 51.9937 21.8854C56.7209 21.8854 60.8914 22.5706 64.505 23.9408C68.1414 25.311 71.005 27.1974 73.0959 29.6C75.1868 31.9839 76.2777 34.7243 76.3687 37.8214H66.2096Z", fill: "url(#paint1_linear_s4_logo)" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "paint0_linear_s4_logo", x1: "1.23267e-06", y1: "8.7248", x2: "99.6891", y2: "102.708", gradientUnits: "userSpaceOnUse", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { stopColor: "hsl(337, 35%, 52%)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "1", stopColor: "hsl(29, 44%, 53%)" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "paint1_linear_s4_logo", x1: "25.3687", y1: "26.9091", x2: "81.8625", y2: "73.7083", gradientUnits: "userSpaceOnUse", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { stopColor: "hsl(337, 35%, 52%)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "1", stopColor: "hsl(29, 44%, 53%)" })
+            ] })
           ] })
         ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "flex-1 p-4 space-y-1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              onClick: () => setActiveSection("colors"),
-              className: `w-full flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${activeSection === "colors" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"}`,
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "path",
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(HeaderTitle, { children: "Studio4" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(HeaderSubtitle, { children: "Visual Theme Builder" })
+        ] })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-1 overflow-hidden", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Sidebar, { className: "w-[400px] bg-neutral-900 border-r-[6px] border-neutral-800 flex flex-col", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(SidebarNavGrid, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              SidebarNavButton,
+              {
+                active: activeTab === "theme",
+                onClick: () => setActiveTab("theme"),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavNumber, { active: activeTab === "theme", children: "1" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavLabel, { active: activeTab === "theme", children: "Theme" })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              SidebarNavButton,
+              {
+                active: activeTab === "presets",
+                onClick: () => setActiveTab("presets"),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavNumber, { active: activeTab === "presets", children: "2" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavLabel, { active: activeTab === "presets", children: "Presets" })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              SidebarNavButton,
+              {
+                active: activeTab === "components",
+                onClick: () => setActiveTab("components"),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavNumber, { active: activeTab === "components", children: "3" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavLabel, { active: activeTab === "components", children: "Components" })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              SidebarNavButton,
+              {
+                active: activeTab === "sections",
+                onClick: () => setActiveTab("sections"),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavNumber, { active: activeTab === "sections", children: "4" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarNavLabel, { active: activeTab === "sections", children: "Sections" })
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 overflow-y-auto", children: [
+            activeTab === "theme" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-b border-neutral-700", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
                   {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeWidth: 2,
-                    d: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+                    onClick: () => setExpandedSection(expandedSection === "colors" ? null : "colors"),
+                    className: `w-full py-3 flex items-center justify-between transition-colors relative bg-neutral-800 hover:bg-neutral-700 ${expandedSection === "colors" ? "border-l-4 border-b-4 border-l-primary-500 border-b-primary-500" : ""}`,
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-6", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all ${expandedSection === "colors" ? "bg-gradient-to-br from-primary-500 to-secondary-500 text-white font-bold animate-pulse" : "bg-transparent text-primary-500 font-semibold"}`, children: "1" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Colors" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "svg",
+                        {
+                          className: `w-4 h-4 transition-transform mr-6 ${expandedSection === "colors" ? "rotate-180" : ""}`,
+                          fill: "none",
+                          stroke: "currentColor",
+                          viewBox: "0 0 24 24",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" })
+                        }
+                      )
+                    ]
                   }
-                ) }),
-                "Colors"
-              ]
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              onClick: () => setActiveSection("layouts"),
-              className: `w-full flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${activeSection === "layouts" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"}`,
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "path",
+                ),
+                expandedSection === "colors" && /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-4 space-y-4 bg-neutral-800/20", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium text-neutral-50", children: "Brand Color Selection" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      "select",
+                      {
+                        value: selectedColor,
+                        onChange: (e) => setSelectedColor(e.target.value),
+                        className: "w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors",
+                        children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "color1", children: "Color 1 - Primary Brand" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "color2", children: "Color 2 - Secondary Brand" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "color3", children: "Color 3 - Dark Neutral" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "color4", children: "Color 4 - Light Base" })
+                        ]
+                      }
+                    )
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium text-neutral-50", children: "Current Color" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "div",
+                        {
+                          className: "flex-1 h-16 rounded-lg border-2 border-neutral-700 shadow-inner",
+                          style: { backgroundColor: s4BrandColors[selectedColor] }
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 text-xs", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono bg-neutral-800 px-2 py-1 rounded", children: s4BrandColors[selectedColor] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono bg-neutral-800 px-2 py-1 rounded", children: [
+                          "HSL(",
+                          currentColorHSL.h,
+                          ", ",
+                          currentColorHSL.s,
+                          "%, ",
+                          currentColorHSL.l,
+                          "%)"
+                        ] })
+                      ] })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 bg-neutral-900/50 p-4 rounded-lg border border-neutral-700", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "text-sm font-medium", children: "Color Adjustments" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-xs", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Hue" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono bg-neutral-800 px-2 py-0.5 rounded", children: [
+                          currentColorHSL.h,
+                          "°"
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "input",
+                        {
+                          type: "range",
+                          min: "0",
+                          max: "360",
+                          value: currentColorHSL.h,
+                          onChange: (e) => updateSelectedColor(e.target.value, currentColorHSL.s, currentColorHSL.l),
+                          className: "w-full accent-primary"
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-xs", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Saturation" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono bg-neutral-800 px-2 py-0.5 rounded", children: [
+                          currentColorHSL.s,
+                          "%"
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "input",
+                        {
+                          type: "range",
+                          min: "0",
+                          max: "100",
+                          value: currentColorHSL.s,
+                          onChange: (e) => updateSelectedColor(currentColorHSL.h, e.target.value, currentColorHSL.l),
+                          className: "w-full accent-primary"
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-xs", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Lightness" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono bg-neutral-800 px-2 py-0.5 rounded", children: [
+                          currentColorHSL.l,
+                          "%"
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "input",
+                        {
+                          type: "range",
+                          min: "0",
+                          max: "100",
+                          value: currentColorHSL.l,
+                          onChange: (e) => updateSelectedColor(currentColorHSL.h, currentColorHSL.s, e.target.value),
+                          className: "w-full accent-primary"
+                        }
+                      )
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-2", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "button-primary flex-1 px-4 py-2.5 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg text-sm font-medium hover:opacity-90 shadow-lg transition-all", children: "Apply to Theme" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "button-secondary px-4 py-2.5 bg-neutral-700 text-neutral-200 rounded-lg text-sm font-medium hover:bg-neutral-600 border border-neutral-600", children: "Reset" })
+                  ] })
+                ] }) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-b border-neutral-700", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
                   {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeWidth: 2,
-                    d: "M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                    onClick: () => setExpandedSection(expandedSection === "typography" ? null : "typography"),
+                    className: `w-full py-3 flex items-center justify-between transition-colors relative bg-neutral-800 hover:bg-neutral-700 ${expandedSection === "typography" ? "border-l-4 border-b-4 border-l-primary-500 border-b-primary-500" : ""}`,
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-6", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all ${expandedSection === "typography" ? "bg-gradient-to-br from-primary-500 to-secondary-500 text-white font-bold animate-pulse" : "bg-transparent text-primary-500 font-semibold"}`, children: "2" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Typography" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "svg",
+                        {
+                          className: `w-4 h-4 transition-transform mr-6 ${expandedSection === "typography" ? "rotate-180" : ""}`,
+                          fill: "none",
+                          stroke: "currentColor",
+                          viewBox: "0 0 24 24",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" })
+                        }
+                      )
+                    ]
                   }
-                ) }),
-                "Layouts"
-              ]
-            }
-          )
+                ),
+                expandedSection === "typography" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-4 space-y-4 bg-neutral-800/20", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-neutral-400", children: "Typography controls coming soon..." }) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-b border-neutral-700", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: () => setExpandedSection(expandedSection === "elements" ? null : "elements"),
+                    className: `w-full py-3 flex items-center justify-between transition-colors relative bg-neutral-800 hover:bg-neutral-700 ${expandedSection === "elements" ? "border-l-4 border-b-4 border-l-primary-500 border-b-primary-500" : ""}`,
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-6", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${expandedSection === "elements" ? "bg-primary-500 text-white" : "bg-secondary-500 text-white"}`, children: "3" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Elements" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "svg",
+                        {
+                          className: `w-4 h-4 transition-transform mr-6 ${expandedSection === "elements" ? "rotate-180" : ""}`,
+                          fill: "none",
+                          stroke: "currentColor",
+                          viewBox: "0 0 24 24",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" })
+                        }
+                      )
+                    ]
+                  }
+                ),
+                expandedSection === "elements" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-4 space-y-4 bg-neutral-800/20", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-neutral-400", children: "Global elements configuration coming soon..." }) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-b border-neutral-700", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: () => setExpandedSection(expandedSection === "layouts" ? null : "layouts"),
+                    className: `w-full py-3 flex items-center justify-between transition-colors relative bg-neutral-800 hover:bg-neutral-700 ${expandedSection === "layouts" ? "border-l-4 border-b-4 border-l-primary-500 border-b-primary-500" : ""}`,
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-6", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${expandedSection === "layouts" ? "bg-primary-500 text-white" : "bg-secondary-500 text-white"}`, children: "4" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: "Layouts" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "svg",
+                        {
+                          className: `w-4 h-4 transition-transform mr-6 ${expandedSection === "layouts" ? "rotate-180" : ""}`,
+                          fill: "none",
+                          stroke: "currentColor",
+                          viewBox: "0 0 24 24",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" })
+                        }
+                      )
+                    ]
+                  }
+                ),
+                expandedSection === "layouts" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-4 space-y-4 bg-neutral-800/20", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-neutral-400", children: "Component layout transformations coming soon..." }) })
+              ] })
+            ] }),
+            activeTab === "presets" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-neutral-400", children: "Color presets and theme variations will appear here..." }) }),
+            activeTab === "components" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-neutral-400", children: "Component scopes will appear here..." }) }),
+            activeTab === "sections" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-neutral-400", children: "Section layouts and templates will appear here..." }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(SidebarFooter, { children: [
+            (window.location.hostname === "localhost" || window.location.search.includes("dev=true")) && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              ButtonSecondary,
+              {
+                onClick: () => setIsThemeEditorOpen(true),
+                className: "w-full flex items-center justify-center gap-2",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "path",
+                    {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: 2,
+                      d: "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
+                    }
+                  ) }),
+                  "UI Theme Editor"
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonPrimary, { className: "w-full", children: "Export Theme" })
+          ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 border-t border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90", children: "Export Theme" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(PreviewContainer, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(PreviewHeader, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(PreviewModeToggle, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                PreviewModeButton,
+                {
+                  onClick: () => setPreviewMode("preview"),
+                  active: previewMode === "preview",
+                  children: "Preview"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                PreviewModeButton,
+                {
+                  onClick: () => setPreviewMode("html"),
+                  active: previewMode === "html",
+                  children: "HTML"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                PreviewModeButton,
+                {
+                  onClick: () => setPreviewMode("css"),
+                  active: previewMode === "css",
+                  children: "CSS"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "p-2 hover:bg-neutral-700 rounded-md transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "p-2 hover:bg-neutral-700 rounded-md transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" }) }) })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(PreviewContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(PreviewCanvas, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("style", { dangerouslySetInnerHTML: { __html: generatedCSS } }),
+            previewMode === "preview" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              expandedSection === "colors" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ColorPreviewTitle, { children: "Color System Preview" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ColorGrid, { children: Object.entries(s4BrandColors).map(([key, color], index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ColorCard, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    ColorSwatch,
+                    {
+                      style: {
+                        backgroundColor: color,
+                        color: index < 2 ? "white" : index === 2 ? "white" : "black"
+                      },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ColorSwatchNumber, { children: index + 1 }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ColorSwatchLabel, { children: key === "color1" ? "Primary" : key === "color2" ? "Secondary" : key === "color3" ? "Dark" : "Light" })
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(ColorCardContent, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ColorCardTitle, { children: key === "color1" ? "Primary Brand" : key === "color2" ? "Secondary Brand" : key === "color3" ? "Dark Neutral" : "Light Base" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ColorCardValue, { children: color }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ColorScale, { children: [90, 70, 50, 30, 10].map((lightness) => {
+                      const hsl = parseHSL(color);
+                      return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        ColorScaleSwatch,
+                        {
+                          style: { backgroundColor: `hsl(${hsl.h}, ${hsl.s}%, ${lightness}%)` }
+                        },
+                        lightness
+                      );
+                    }) })
+                  ] })
+                ] }, key)) })
+              ] }),
+              expandedSection === "typography" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold mb-8 text-center", children: "Typography Preview" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-neutral-400", children: "Typography system preview coming soon..." })
+              ] }),
+              expandedSection === "elements" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold mb-8 text-center", children: "Global Elements Preview" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-neutral-400", children: "Elements preview coming soon..." })
+              ] }),
+              expandedSection === "layouts" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold mb-8 text-center", children: "Layout Transformations" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-neutral-400", children: "Component layout preview coming soon..." })
+              ] }),
+              !expandedSection && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto text-center", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold mb-4", children: "Welcome to Studio4" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-neutral-400", children: "Select a section from the sidebar to begin customizing your theme." })
+              ] })
+            ] }),
+            previewMode === "html" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-4xl mx-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("pre", { className: "bg-neutral-800 p-6 rounded-lg border border-neutral-700 overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-sm font-mono", children: `<!-- Studio4 Generated HTML -->
+<section class="section" data-scope="default">
+  <div class="container">
+    <div class="wrapper">
+      <h1 class="title">Your Title Here</h1>
+      <p class="text">Your content goes here with the S4 design system applied.</p>
+      <button class="button-primary">Primary Action</button>
+      <button class="button-secondary">Secondary Action</button>
+    </div>
+  </div>
+</section>` }) }) }),
+            previewMode === "css" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-4xl mx-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("pre", { className: "bg-neutral-800 p-6 rounded-lg border border-neutral-700 overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-sm font-mono", children: generatedCSS }) }) })
+          ] }) })
+        ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 flex", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-96 bg-card border-r border-border overflow-y-auto", children: [
-          activeSection === "colors" && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            ColorControls,
-            {
-              brandColors: s4BrandColors,
-              setBrandColors: setS4BrandColors,
-              updateBrandColor: updateS4BrandColor,
-              activePreset: s4ActiveColorPreset,
-              setActivePreset: setS4ActiveColorPreset
-            }
-          ),
-          activeSection === "layouts" && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            LayoutControls,
-            {
-              activeLayoutPreset: s4ActiveLayoutPreset,
-              setActiveLayoutPreset: setS4ActiveLayoutPreset,
-              layoutSettings: s4LayoutSettings,
-              updateLayoutSetting: updateS4LayoutSetting
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-muted/30 p-8 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          LivePreview,
-          {
-            css: generatedCSS,
-            brandColors: s4BrandColors,
-            colorPreset: s4ActiveColorPreset,
-            layoutPreset: s4ActiveLayoutPreset
-          }
-        ) })
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        ThemeEditor,
+        {
+          isOpen: isThemeEditorOpen,
+          onClose: () => setIsThemeEditorOpen(false)
+        }
+      )
     ] });
   }
   function ShadowApp(props = {}) {
@@ -26188,8 +27276,9 @@ ${typeScale}
       apiNonce = "",
       pluginVersion = "1.0.0",
       isAdmin = false,
-      theme = "dark",
-      tailwindCSS = ""
+      theme: theme2 = "dark",
+      tailwindCSS = "",
+      fullPage = false
     } = props;
     const { openPanel, updateSettings } = useStore();
     const { setServerData } = useWordPressStore();
@@ -26202,20 +27291,17 @@ ${typeScale}
         apiNonce,
         pluginVersion,
         isAdmin,
-        theme,
-        tailwindCSS
+        theme: theme2,
+        tailwindCSS,
+        fullPage
       });
       if (settings && Object.keys(settings).length > 0) {
         updateSettings(settings);
       }
-    }, []);
-    reactExports.useEffect(() => {
-      const { autoOpenPanel } = useStore.getState().settings;
-      if (autoOpenPanel && window.innerWidth > 768) {
-        const timer = setTimeout(() => openPanel(), 500);
-        return () => clearTimeout(timer);
+      if (fullPage) {
+        openPanel();
       }
-    }, [openPanel]);
+    }, []);
     const decodedCSS = tailwindCSS ? atob(tailwindCSS) : "";
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       decodedCSS && /* @__PURE__ */ jsxRuntimeExports.jsx("style", { dangerouslySetInnerHTML: { __html: decodedCSS } }),
@@ -26240,7 +27326,7 @@ ${typeScale}
       this.render();
     }
     static get observedAttributes() {
-      return ["user-role", "site-url", "user-id", "settings", "api-nonce", "plugin-version", "is-admin", "theme", "tailwind-css"];
+      return ["user-role", "site-url", "user-id", "settings", "api-nonce", "plugin-version", "is-admin", "theme", "tailwind-css", "full-page"];
     }
     render() {
       let settings = {};
@@ -26261,7 +27347,8 @@ ${typeScale}
         pluginVersion: this.getAttribute("plugin-version") || "1.0.0",
         isAdmin: this.getAttribute("is-admin") === "true",
         theme: this.getAttribute("theme") || "dark",
-        tailwindCSS: this.getAttribute("tailwind-css") || ""
+        tailwindCSS: this.getAttribute("tailwind-css") || "",
+        fullPage: this.getAttribute("full-page") === "true"
       };
       if (!this.root) {
         this.root = client.createRoot(this.shadowRoot);

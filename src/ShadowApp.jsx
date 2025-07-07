@@ -13,7 +13,8 @@ export function ShadowApp(props = {}) {
     pluginVersion = '1.0.0',
     isAdmin = false,
     theme = 'dark',
-    tailwindCSS = ''
+    tailwindCSS = '',
+    fullPage = false
   } = props;
 
   const { openPanel, updateSettings } = useStore();
@@ -30,17 +31,24 @@ export function ShadowApp(props = {}) {
       pluginVersion,
       isAdmin,
       theme,
-      tailwindCSS
+      tailwindCSS,
+      fullPage
     });
 
     // Update store settings with any server settings
     if (settings && Object.keys(settings).length > 0) {
       updateSettings(settings);
     }
+
+    // Auto-open panel in full-page mode
+    if (fullPage) {
+      openPanel();
+    }
   }, []); // Empty dependency array to run only once
 
   // Note: Panel auto-open behavior is now handled by Zustand store persistence
   // The panel will maintain its last open/closed state across page reloads
+  // Exception: Full-page mode will always force the panel open
 
   // Decode the base64 CSS content
   const decodedCSS = tailwindCSS ? atob(tailwindCSS) : '';

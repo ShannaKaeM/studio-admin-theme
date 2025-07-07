@@ -31,10 +31,10 @@ export const useStore = create(
       
       // S4 Theme Builder State
       s4BrandColors: {
-        color1: '#b25977', // Rose
-        color2: '#b8874d', // Gold
-        color3: 'hsl(0, 0%, 20%)', // Neutral Dark
-        color4: 'hsl(0, 0%, 98%)', // Base Light
+        color1: 'hsl(337, 35%, 52%)', // Studio4 Pink Primary
+        color2: 'hsl(29, 44%, 53%)',  // Studio4 Tangerine Secondary
+        color3: 'hsl(0, 0%, 20%)',    // Neutral Dark
+        color4: 'hsl(0, 0%, 98%)',    // Base Light
       },
       s4ActiveColorPreset: 'default-colors',
       s4ActiveLayoutPreset: 'balanced',

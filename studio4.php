@@ -61,8 +61,13 @@ class Studio4 {
         add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorAssets']);
         add_action('rest_api_init', [$this, 'initRestApi']);
         
+        // Frontend page hooks
+        add_action('template_redirect', [$this, 'handleStudio4Page']);
+        add_filter('query_vars', [$this, 'addQueryVars']);
+        
         // Admin hooks
         add_action('admin_menu', [$this, 'addAdminMenu']);
+        add_action('admin_notices', [$this, 'showRewriteNotice']);
         
         // Plugin lifecycle hooks
         register_activation_hook(__FILE__, [$this, 'onActivation']);
@@ -78,6 +83,9 @@ class Studio4 {
     public function onInit() {
         // Load text domain
         load_plugin_textdomain('studio4', false, dirname(STUDIO4_BASENAME) . '/languages');
+        
+        // Add rewrite rules for studio4 page
+        add_rewrite_rule('^studio4/?$', 'index.php?studio4_page=1', 'top');
         
         // Initialize database tables if needed
         $this->initDatabase();
@@ -379,8 +387,14 @@ class Studio4 {
             'api_key' => ''
         ]);
         
-        // Flush rewrite rules
+        // Add rewrite rules before flushing
+        add_rewrite_rule('^studio4/?$', 'index.php?studio4_page=1', 'top');
+        
+        // Flush rewrite rules to activate new rules
         flush_rewrite_rules();
+        
+        // Mark that rewrite rules have been flushed
+        update_option('studio4_rewrite_flushed', true);
     }
     
     /**
@@ -427,6 +441,144 @@ class Studio4 {
         
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
+    }
+    
+    /**
+     * Add query vars for studio4 page
+     */
+    public function addQueryVars($vars) {
+        $vars[] = 'studio4_page';
+        return $vars;
+    }
+    
+    /**
+     * Handle studio4 page requests
+     */
+    public function handleStudio4Page() {
+        if (get_query_var('studio4_page')) {
+            $this->renderStudio4Page();
+            exit;
+        }
+    }
+    
+    /**
+     * Render the studio4 frontend page
+     */
+    private function renderStudio4Page() {
+        // Get current user info
+        $current_user = wp_get_current_user();
+        $user_roles = $current_user->roles;
+        $user_role = !empty($user_roles) ? $user_roles[0] : 'subscriber';
+        
+        // Get Tailwind CSS for frontend page
+        $tailwind_css = $this->getTailwindCSS();
+        
+        // Set proper headers
+        header('Content-Type: text/html; charset=utf-8');
+        
+        ?>
+        <!DOCTYPE html>
+        <html <?php language_attributes(); ?>>
+        <head>
+            <meta charset="<?php bloginfo('charset'); ?>">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Studio4 - Visual Design System Builder</title>
+            <meta name="robots" content="noindex, nofollow">
+            
+            <!-- Load WordPress head for any essential styles/scripts -->
+            <?php wp_head(); ?>
+            
+            <style>
+                /* Reset and full-page styling for Studio4 */
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: system-ui, -apple-system, sans-serif;
+                    background: #0f0f0f;
+                    color: #f5f5f5;
+                    overflow: hidden;
+                }
+                
+                #studio4-fullpage {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    z-index: 999999;
+                }
+                
+                /* Hide WordPress admin bar if present */
+                #wpadminbar {
+                    display: none !important;
+                }
+                
+                html {
+                    margin-top: 0 !important;
+                }
+            </style>
+        </head>
+        <body class="studio4-page">
+            <div id="studio4-fullpage">
+                <!-- Studio4 Builder Component -->
+                <studio4-builder 
+                    user-role="<?php echo esc_attr($user_role); ?>"
+                    site-url="<?php echo esc_attr(home_url()); ?>"
+                    user-id="<?php echo esc_attr($current_user->ID); ?>"
+                    settings='<?php echo esc_attr(json_encode(get_option('studio4_settings', []))); ?>'
+                    api-nonce="<?php echo esc_attr(wp_create_nonce('studio4_nonce')); ?>"
+                    plugin-version="<?php echo esc_attr(STUDIO4_VERSION); ?>"
+                    is-admin="<?php echo esc_attr(current_user_can('manage_options') ? 'true' : 'false'); ?>"
+                    theme="dark"
+                    full-page="true"
+                    <?php if (!empty($tailwind_css)) : ?>
+                    tailwind-css="<?php echo base64_encode($tailwind_css); ?>"
+                    <?php endif; ?>
+                ></studio4-builder>
+            </div>
+            
+            <?php wp_footer(); ?>
+            
+            <script>
+                // Ensure the Studio4 interface opens automatically on this page
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Force panel to open since this is a dedicated page
+                    setTimeout(function() {
+                        const studioElement = document.querySelector('studio4-builder');
+                        if (studioElement && studioElement.shadowRoot) {
+                            // Try to trigger panel open through the custom element's methods
+                            const event = new CustomEvent('studio4:forceOpen');
+                            studioElement.dispatchEvent(event);
+                        }
+                    }, 500);
+                });
+                
+                // Handle escape key to close/redirect
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        if (confirm('Close Studio4 and return to site?')) {
+                            window.location.href = '<?php echo esc_js(home_url()); ?>';
+                        }
+                    }
+                });
+            </script>
+        </body>
+        </html>
+        <?php
+    }
+    
+    /**
+     * Show admin notice for rewrite rules
+     */
+    public function showRewriteNotice() {
+        // Only show on admin pages and only if rules might not be flushed
+        if (!get_option('studio4_rewrite_flushed', false)) {
+            ?>
+            <div class="notice notice-info is-dismissible">
+                <p><strong>Studio4:</strong> Rewrite rules need to be flushed. Please go to <a href="<?php echo admin_url('options-permalink.php'); ?>">Settings > Permalinks</a> and click "Save Changes" to activate the /studio4/ page.</p>
+            </div>
+            <?php
+        }
     }
     
     /**
