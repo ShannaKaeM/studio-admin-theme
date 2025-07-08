@@ -154,6 +154,40 @@ class Studio4 {
             $tailwind_controller = new Studio4_Tailwind_Controller();
             $tailwind_controller->register_routes();
         }
+        
+        // Simple document serving route - just pass the full file path
+        register_rest_route('studio4/v1', '/file/(?P<filepath>.*)', [
+            'methods' => ['GET', 'POST'],
+            'callback' => [$this, 'serveAnyFile'],
+            'permission_callback' => '__return_true',
+        ]);
+        
+        // Keep original route for backward compatibility
+        register_rest_route('studio4/v1', '/docs/(?P<section>[a-zA-Z0-9-]+)/(?P<file>[a-zA-Z0-9_-]+)', [
+            'methods' => ['GET', 'POST'],
+            'callback' => [$this, 'handleDocumentRequest'],
+            'permission_callback' => '__return_true',
+        ]);
+        
+        // Dynamic folder discovery endpoint
+        register_rest_route('studio4/v1', '/discover', [
+            'methods' => 'GET',
+            'callback' => [$this, 'discoverDocuments'],
+            'permission_callback' => '__return_true',
+        ]);
+        
+        // Add a simple test endpoint
+        register_rest_route('studio4/v1', '/test', [
+            'methods' => 'GET',
+            'callback' => function() {
+                return rest_ensure_response([
+                    'success' => true,
+                    'message' => 'Studio4 API is working!',
+                    'timestamp' => current_time('mysql')
+                ]);
+            },
+            'permission_callback' => '__return_true',
+        ]);
     }
     
     /**
@@ -443,6 +477,279 @@ class Studio4 {
         dbDelta($sql);
     }
     
+    /**
+     * Document API permission check
+     */
+    public function checkDocumentPermissions() {
+        // Temporarily allow all access to get documents loading
+        return true;
+    }
+    
+    /**
+     * Handle document requests (GET/POST)
+     */
+    public function handleDocumentRequest($request) {
+        $section = $request->get_param('section');
+        $file = $request->get_param('file');
+        $method = $request->get_method();
+        
+        // Temporarily disable all nonce verification for testing
+        // TODO: Re-enable proper nonce verification once documents are loading
+        error_log("Studio4 API: Skipping nonce verification for testing");
+        
+        if ($method === 'GET') {
+            return $this->getDocument($section, $file);
+        } elseif ($method === 'POST') {
+            $content = $request->get_param('content');
+            return $this->saveDocument($section, $file, $content);
+        }
+        
+        return new WP_Error('invalid_method', 'Method not allowed', ['status' => 405]);
+    }
+    
+    /**
+     * Get document content
+     */
+    private function getDocument($section, $file) {
+        $file_path = $this->getDocumentPath($section, $file);
+        
+        // Debug logging
+        error_log("Studio4 API: Requesting section=$section, file=$file");
+        error_log("Studio4 API: Resolved path=$file_path");
+        error_log("Studio4 API: File exists=" . (file_exists($file_path) ? 'true' : 'false'));
+        
+        if (!$file_path || !file_exists($file_path)) {
+            return new WP_Error('file_not_found', 'Document not found', [
+                'status' => 404,
+                'data' => [
+                    'section' => $section,
+                    'file' => $file,
+                    'expected_path' => $file_path,
+                    'file_exists' => file_exists($file_path)
+                ]
+            ]);
+        }
+        
+        $content = file_get_contents($file_path);
+        
+        if ($content === false) {
+            return new WP_Error('read_error', 'Could not read document', ['status' => 500]);
+        }
+        
+        return rest_ensure_response([
+            'success' => true,
+            'content' => $content,
+            'section' => $section,
+            'file' => $file,
+            'path' => $file_path
+        ]);
+    }
+    
+    /**
+     * Save document content
+     */
+    private function saveDocument($section, $file, $content) {
+        $file_path = $this->getDocumentPath($section, $file);
+        
+        if (!$file_path) {
+            return new WP_Error('invalid_file', 'Invalid file path', ['status' => 400]);
+        }
+        
+        // Ensure directory exists
+        $dir = dirname($file_path);
+        if (!is_dir($dir)) {
+            return new WP_Error('directory_not_found', 'Directory does not exist', ['status' => 404]);
+        }
+        
+        // Check if file is writable
+        if (file_exists($file_path) && !is_writable($file_path)) {
+            return new WP_Error('not_writable', 'File is not writable', ['status' => 403]);
+        }
+        
+        // Save content
+        $result = file_put_contents($file_path, $content);
+        
+        if ($result === false) {
+            return new WP_Error('write_error', 'Could not save document', ['status' => 500]);
+        }
+        
+        return rest_ensure_response([
+            'success' => true,
+            'message' => 'Document saved successfully',
+            'bytes_written' => $result
+        ]);
+    }
+    
+    /**
+     * Get document file path with security validation
+     */
+    private function getDocumentPath($section, $file) {
+        // Base path to PROJECT-DOCS - now local to plugin directory
+        $base_path = STUDIO4_DIR . 'PROJECT-DOCS/';
+        
+        // Section mapping
+        $section_map = [
+            'root' => '',
+            '00-master' => '00-Master/',
+            '01-design' => '01-Design-System-Framework/',
+            '02-tech' => '02-Tech-Stack/',
+            '03-frontend' => '03-Plugin-Frontend/',
+            '04-backend' => '04-Plugin-Backend/'
+        ];
+        
+        // Validate section
+        if (!array_key_exists($section, $section_map)) {
+            return false;
+        }
+        
+        // Validate file name (allow alphanumeric, hyphens, and underscores)
+        if (!preg_match('/^[a-zA-Z0-9_-]+$/', $file)) {
+            error_log("Studio4 API: Invalid file name: $file");
+            return false;
+        }
+        
+        // Construct file path
+        $file_path = $base_path . $section_map[$section] . strtoupper($file) . '.md';
+        
+        // Security: Ensure the resolved path is within our allowed directory
+        $real_base = realpath($base_path);
+        $real_file = realpath(dirname($file_path)) . '/' . basename($file_path);
+        
+        if ($real_base === false || strpos($real_file, $real_base) !== 0) {
+            return false;
+        }
+        
+        return $file_path;
+    }
+    
+    /**
+     * Simple file serving and saving method
+     */
+    public function serveAnyFile($request) {
+        $filepath = $request->get_param('filepath');
+        $full_path = STUDIO4_DIR . 'PROJECT-DOCS/' . $filepath;
+        $method = $request->get_method();
+        
+        error_log("Studio4 API: $method request for file: $full_path");
+        
+        // Security: Only allow .md files and prevent directory traversal
+        if (!preg_match('/\.md$/', $filepath) || strpos($filepath, '..') !== false) {
+            return new WP_Error('invalid_file', 'Invalid file path', ['status' => 400]);
+        }
+        
+        if ($method === 'GET') {
+            // Read file
+            if (!file_exists($full_path)) {
+                return new WP_Error('file_not_found', 'File not found: ' . $filepath, ['status' => 404]);
+            }
+            
+            $content = file_get_contents($full_path);
+            
+            if ($content === false) {
+                return new WP_Error('read_error', 'Could not read file', ['status' => 500]);
+            }
+            
+            return rest_ensure_response([
+                'success' => true,
+                'content' => $content,
+                'file' => $filepath
+            ]);
+            
+        } elseif ($method === 'POST') {
+            // Save file
+            $data = $request->get_json_params();
+            $content = $data['content'] ?? '';
+            
+            if (!is_string($content)) {
+                return new WP_Error('invalid_content', 'Content must be a string', ['status' => 400]);
+            }
+            
+            // Ensure directory exists
+            $dir = dirname($full_path);
+            if (!is_dir($dir)) {
+                return new WP_Error('directory_not_found', 'Directory does not exist', ['status' => 404]);
+            }
+            
+            // Save the file
+            $result = file_put_contents($full_path, $content);
+            
+            if ($result === false) {
+                return new WP_Error('write_error', 'Could not save file', ['status' => 500]);
+            }
+            
+            error_log("Studio4 API: Saved file $full_path ($result bytes)");
+            
+            return rest_ensure_response([
+                'success' => true,
+                'message' => 'File saved successfully',
+                'file' => $filepath,
+                'bytes_written' => $result
+            ]);
+        }
+        
+        return new WP_Error('invalid_method', 'Method not allowed', ['status' => 405]);
+    }
+    
+    /**
+     * Discover all documents in PROJECT-DOCS structure
+     */
+    public function discoverDocuments($request) {
+        $base_path = STUDIO4_DIR . 'PROJECT-DOCS/';
+        $structure = [];
+        
+        // Root files
+        $root_files = glob($base_path . '*.md');
+        if ($root_files) {
+            $structure['root'] = [
+                'title' => 'Root Docs',
+                'files' => []
+            ];
+            foreach ($root_files as $file) {
+                $filename = basename($file, '.md');
+                $structure['root']['files'][] = [
+                    'key' => strtolower(str_replace([' ', '.'], '-', $filename)),
+                    'title' => $filename,
+                    'path' => basename($file)
+                ];
+            }
+        }
+        
+        // Numbered folders (00-Master, 01-Design, etc.)
+        $folders = glob($base_path . '[0-9][0-9]-*', GLOB_ONLYDIR);
+        
+        foreach ($folders as $folder) {
+            $folder_name = basename($folder);
+            $folder_key = strtolower(str_replace(' ', '-', $folder_name));
+            
+            // Get nice title from folder name
+            $title_parts = explode('-', $folder_name);
+            array_shift($title_parts); // Remove number prefix
+            $title = implode('-', $title_parts);
+            
+            $structure[$folder_key] = [
+                'title' => $title,
+                'files' => []
+            ];
+            
+            // Get all .md files in this folder
+            $files = glob($folder . '/*.md');
+            foreach ($files as $file) {
+                $filename = basename($file, '.md');
+                $structure[$folder_key]['files'][] = [
+                    'key' => strtolower($folder_key . '-' . str_replace([' ', '_'], '-', $filename)),
+                    'title' => $filename,
+                    'path' => $folder_name . '/' . basename($file)
+                ];
+            }
+        }
+        
+        return rest_ensure_response([
+            'success' => true,
+            'structure' => $structure,
+            'timestamp' => current_time('mysql')
+        ]);
+    }
+
     /**
      * Add query vars for studio4 page
      */

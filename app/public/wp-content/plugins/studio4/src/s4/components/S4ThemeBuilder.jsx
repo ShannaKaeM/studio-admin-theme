@@ -62,6 +62,67 @@ export function S4ThemeBuilder() {
   const [previewMode, setPreviewMode] = useState('preview'); // 'preview', 'html', 'css'
   const [isThemeEditorOpen, setIsThemeEditorOpen] = useState(false);
   
+  // Typography State
+  const [selectedTypographyElement, setSelectedTypographyElement] = useState('title');
+  const [typographyElements, setTypographyElements] = useState({
+    'title': {
+      fontSize: 'var(--base-text-size)',
+      fontWeight: '700',
+      lineHeight: '1.2',
+      color: 'var(--base-color)',
+      margin: '0 0 1rem 0',
+      textTransform: 'none'
+    },
+    'pretitle': {
+      fontSize: 'var(--base-text-size)', 
+      fontWeight: '500',
+      lineHeight: '1.4',
+      color: 'var(--base-color)',
+      margin: '0 0 0.5rem 0',
+      textTransform: 'uppercase'
+    },
+    'subtitle': {
+      fontSize: 'var(--base-text-size)',
+      fontWeight: '400', 
+      lineHeight: '1.4',
+      color: 'var(--base-color)',
+      margin: '0 0 1.5rem 0',
+      textTransform: 'none'
+    },
+    'description': {
+      fontSize: 'var(--base-text-size)',
+      fontWeight: '400',
+      lineHeight: '1.6',
+      color: 'var(--base-color)', 
+      margin: '0 0 1rem 0',
+      textTransform: 'none'
+    },
+    'body': {
+      fontSize: 'var(--base-text-size)',
+      fontWeight: '400',
+      lineHeight: '1.5',
+      color: 'var(--base-color)',
+      margin: '0 0 1rem 0', 
+      textTransform: 'none'
+    },
+    'caption': {
+      fontSize: 'var(--base-text-size)',
+      fontWeight: '400',
+      lineHeight: '1.4',
+      color: 'var(--base-color)',
+      margin: '0.5rem 0',
+      textTransform: 'none'
+    },
+    'label': {
+      fontSize: 'var(--base-text-size)',
+      fontWeight: '500', 
+      lineHeight: '1.2',
+      color: 'var(--base-color)',
+      margin: '0 0 0.25rem 0',
+      textTransform: 'none'
+    }
+  });
+  
   // Theme configuration hook
   const { config: themeConfig, getComponentStyles } = useThemeConfig();
   
@@ -82,64 +143,117 @@ export function S4ThemeBuilder() {
         e.preventDefault();
         toggleFullscreen();
       }
+      
+      // Toggle Theme Editor (Cmd+4 on Mac, Ctrl+4 on Windows/Linux)
+      if ((e.metaKey && e.key === '4') || (e.ctrlKey && e.key === '4')) {
+        e.preventDefault();
+        // Only show for dev mode
+        if (window.location.hostname === 'localhost' || window.location.search.includes('dev=true')) {
+          setIsThemeEditorOpen(prev => !prev);
+        }
+      }
     };
     
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
   
+  // Typography update functions
+  const updateTypographyElement = (property, value) => {
+    setTypographyElements(prev => ({
+      ...prev,
+      [selectedTypographyElement]: {
+        ...prev[selectedTypographyElement],
+        [property]: value
+      }
+    }));
+  };
+
+  const addTypographyElement = (name) => {
+    setTypographyElements(prev => ({
+      ...prev,
+      [name]: {
+        fontSize: 'var(--base-text-size)',
+        fontWeight: '400',
+        lineHeight: '1.4',
+        color: 'var(--base-color)',
+        margin: '0 0 1rem 0',
+        textTransform: 'none'
+      }
+    }));
+    setSelectedTypographyElement(name);
+  };
+
+  const deleteTypographyElement = (name) => {
+    if (Object.keys(typographyElements).length > 1) {
+      const newElements = { ...typographyElements };
+      delete newElements[name];
+      setTypographyElements(newElements);
+      setSelectedTypographyElement(Object.keys(newElements)[0]);
+    }
+  };
+
   // Generate CSS whenever settings change
   useEffect(() => {
-    const css = `/* Studio4 Generated CSS Variables */
+    const css = `/* Studio4 Generated Theme CSS */
 :root {
-  /* Layer 1: Brand Colors */
+  /* Base Variables */
+  --base-color: hsl(0, 0%, 0%);
+  --base-text-size: 1rem;
+  
+  /* Brand Colors */
   --color1: ${s4BrandColors.color1};
   --color2: ${s4BrandColors.color2};
   --color3: ${s4BrandColors.color3};
   --color4: ${s4BrandColors.color4};
-  
-  /* Color Scales (50-950) */
-  --color1-50: hsl(from ${s4BrandColors.color1} h s 95%);
-  --color1-100: hsl(from ${s4BrandColors.color1} h s 90%);
-  --color1-200: hsl(from ${s4BrandColors.color1} h s 80%);
-  --color1-300: hsl(from ${s4BrandColors.color1} h s 70%);
-  --color1-400: hsl(from ${s4BrandColors.color1} h s 60%);
-  --color1-500: ${s4BrandColors.color1};
-  --color1-600: hsl(from ${s4BrandColors.color1} h s 40%);
-  --color1-700: hsl(from ${s4BrandColors.color1} h s 30%);
-  --color1-800: hsl(from ${s4BrandColors.color1} h s 20%);
-  --color1-900: hsl(from ${s4BrandColors.color1} h s 10%);
-  --color1-950: hsl(from ${s4BrandColors.color1} h s 5%);
-  
-  /* Layer 2: Global Elements (placeholders) */
-  --section-bg: transparent;
-  --section-padding: 4rem 2rem;
-  --container-max-width: 1280px;
-  --wrapper-bg: transparent;
-  --wrapper-padding: 2rem;
-  --title-color: var(--color3);
-  --title-font-size: 2.5rem;
-  --text-color: var(--color3);
-  --text-font-size: 1rem;
-  --button-primary-bg: var(--color1);
-  --button-primary-color: white;
-  --button-secondary-bg: transparent;
-  --button-secondary-color: var(--color1);
-  --button-secondary-border: 2px solid var(--color1);
 }
 
-/* Layer 3: Color Presets */
-[data-preset="default-colors"] .section { --section-bg: var(--color4); }
-[data-preset="default-colors"] .wrapper { --wrapper-bg: white; }
-[data-preset="default-colors"] .title { --title-color: var(--color3); }
-[data-preset="default-colors"] .text { --text-color: var(--color3); }
+/* Global Elements - Card */
+.card {
+  --card-bg: white;
+  --card-padding: 1.5rem;
+  --card-border-radius: 0.5rem;
+  --card-border: 1px solid hsl(0, 0%, 90%);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  background: var(--card-bg);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-/* Layer 4: Helper Presets */
-[data-helper="dark-mode"] .section { --section-bg: var(--color3); }
-[data-helper="dark-mode"] .title { --title-color: var(--color4); }
-[data-helper="dark-mode"] .text { --text-color: var(--color4); }`;
+/* Component Scopes */
+[data-scope="card"] {
+  /* Base card styling applied */
+}
+
+/* Helper Scopes */
+[data-scope="card"][data-helper="color-preview"] {
+  --card-padding: 0;
+  --card-border-radius: 0.75rem;
+}
+
+[data-scope="card"][data-helper="text-preview"] {
+  --card-padding: 1.5rem;
+  --card-bg: white;
+}
+
+/* Typography Elements */
+${Object.entries(typographyElements).map(([name, styles]) => `
+.${name} {
+  font-size: ${styles.fontSize};
+  font-weight: ${styles.fontWeight};
+  line-height: ${styles.lineHeight};
+  color: ${styles.color};
+  margin: ${styles.margin};
+  text-transform: ${styles.textTransform};
+}`).join('')}`;
     setGeneratedCSS(css);
-  }, [s4BrandColors]);
+  }, [s4BrandColors, typographyElements]);
   
   // Helper to parse HSL
   const parseHSL = (hslString) => {
@@ -436,7 +550,105 @@ export function S4ThemeBuilder() {
                 
                 {expandedSection === 'typography' && (
                   <div className="px-6 py-4 space-y-4 bg-neutral-800/20">
-                    <p className="text-sm text-neutral-400">Typography controls coming soon...</p>
+                    {/* Typography Element Selector */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-neutral-50">Typography Element</label>
+                      <div className="flex gap-2">
+                        <select
+                          value={selectedTypographyElement}
+                          onChange={(e) => setSelectedTypographyElement(e.target.value)}
+                          className="flex-1 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+                        >
+                          {Object.keys(typographyElements).map(name => (
+                            <option key={name} value={name}>
+                              {name.charAt(0).toUpperCase() + name.slice(1)}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={() => {
+                            const newName = prompt('Enter new element name:');
+                            if (newName && !typographyElements[newName.toLowerCase()]) {
+                              addTypographyElement(newName.toLowerCase());
+                            }
+                          }}
+                          className="px-3 py-2 bg-primary-500 text-white rounded-md text-sm hover:bg-primary-600 transition-colors"
+                        >
+                          Add
+                        </button>
+                        <button
+                          onClick={() => deleteTypographyElement(selectedTypographyElement)}
+                          disabled={Object.keys(typographyElements).length <= 1}
+                          className="px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Typography Properties */}
+                    <div className="space-y-4 bg-neutral-900/50 p-4 rounded-lg border border-neutral-700">
+                      <h4 className="text-sm font-medium">Properties for {selectedTypographyElement}</h4>
+                      
+                      {/* Font Weight */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-neutral-300">Font Weight</label>
+                        <select
+                          value={typographyElements[selectedTypographyElement]?.fontWeight || '400'}
+                          onChange={(e) => updateTypographyElement('fontWeight', e.target.value)}
+                          className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-sm focus:border-primary-500"
+                        >
+                          <option value="100">Thin (100)</option>
+                          <option value="200">Extra Light (200)</option>
+                          <option value="300">Light (300)</option>
+                          <option value="400">Normal (400)</option>
+                          <option value="500">Medium (500)</option>
+                          <option value="600">Semi Bold (600)</option>
+                          <option value="700">Bold (700)</option>
+                          <option value="800">Extra Bold (800)</option>
+                          <option value="900">Black (900)</option>
+                        </select>
+                      </div>
+
+                      {/* Line Height */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-neutral-300">Line Height</label>
+                        <input
+                          type="text"
+                          value={typographyElements[selectedTypographyElement]?.lineHeight || '1.4'}
+                          onChange={(e) => updateTypographyElement('lineHeight', e.target.value)}
+                          className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-sm focus:border-primary-500"
+                          placeholder="1.4"
+                        />
+                      </div>
+
+                      {/* Margin */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-neutral-300">Margin</label>
+                        <input
+                          type="text"
+                          value={typographyElements[selectedTypographyElement]?.margin || '0 0 1rem 0'}
+                          onChange={(e) => updateTypographyElement('margin', e.target.value)}
+                          className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-sm focus:border-primary-500"
+                          placeholder="0 0 1rem 0"
+                        />
+                      </div>
+
+                      {/* Text Transform */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-neutral-300">Text Transform</label>
+                        <select
+                          value={typographyElements[selectedTypographyElement]?.textTransform || 'none'}
+                          onChange={(e) => updateTypographyElement('textTransform', e.target.value)}
+                          className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-sm focus:border-primary-500"
+                        >
+                          <option value="none">None</option>
+                          <option value="uppercase">UPPERCASE</option>
+                          <option value="lowercase">lowercase</option>
+                          <option value="capitalize">Capitalize</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -501,19 +713,6 @@ export function S4ThemeBuilder() {
         </div>
         
         <SidebarFooter>
-          {/* Dev-only Theme Editor - Hidden from regular users */}
-          {(window.location.hostname === 'localhost' || window.location.search.includes('dev=true')) && (
-            <ButtonSecondary 
-              onClick={() => setIsThemeEditorOpen(true)}
-              className="w-full flex items-center justify-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-              </svg>
-              UI Theme Editor
-            </ButtonSecondary>
-          )}
           <ButtonPrimary className="w-full">
             Export Theme
           </ButtonPrimary>
@@ -572,10 +771,10 @@ export function S4ThemeBuilder() {
           <div className="w-full">
             <ColorPreviewTitle>Color System Preview</ColorPreviewTitle>
             
-            {/* 4 Color Grid - Responsive */}
+            {/* S4 Color Cards Grid */}
             <ColorGrid>
               {Object.entries(s4BrandColors).map(([key, color], index) => (
-                <ColorCard key={key}>
+                <div key={key} className="card" data-scope="card" data-helper="color-preview">
                   <ColorSwatch 
                     style={{ 
                       backgroundColor: color,
@@ -610,16 +809,42 @@ export function S4ThemeBuilder() {
                       })}
                     </ColorScale>
                   </ColorCardContent>
-                </ColorCard>
+                </div>
               ))}
             </ColorGrid>
           </div>
         )}
         
         {expandedSection === 'typography' && (
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8 text-center">Typography Preview</h2>
-            <p className="text-center text-neutral-400">Typography system preview coming soon...</p>
+          <div className="w-full">
+            <ColorPreviewTitle>Typography System Preview</ColorPreviewTitle>
+            
+            {/* S4 Typography Cards Grid */}
+            <ColorGrid>
+              {Object.entries(typographyElements).map(([name, styles]) => (
+                <div key={name} className="card" data-scope="card" data-helper="text-preview">
+                  <ColorCardContent>
+                    <ColorCardTitle className="text-neutral-500 uppercase tracking-wide text-xs font-medium mb-4">
+                      {name}
+                    </ColorCardTitle>
+                    
+                    {/* Real Typography Element - Uses Generated CSS */}
+                    <div className={name}>
+                      {name === 'title' && 'Your Main Heading Here'}
+                      {name === 'pretitle' && 'Small Label Text'}
+                      {name === 'subtitle' && 'Supporting headline text that provides context'}
+                      {name === 'description' && 'A longer description paragraph that explains the content and provides more detailed information about the topic.'}
+                      {name === 'body' && 'This is regular body text that would be used for the main content of articles and other written material.'}
+                      {name === 'caption' && 'Caption text for images or media'}
+                      {name === 'label' && 'Form Label'}
+                      {!['title', 'pretitle', 'subtitle', 'description', 'body', 'caption', 'label'].includes(name) && 
+                        `Sample text for ${name} element`
+                      }
+                    </div>
+                  </ColorCardContent>
+                </div>
+              ))}
+            </ColorGrid>
           </div>
         )}
         
@@ -661,12 +886,26 @@ export function S4ThemeBuilder() {
           </div>
         )}
         
-        {/* CSS Mode */}
+        {/* CSS Mode - Editable */}
         {previewMode === 'css' && (
           <div className="max-w-4xl mx-auto">
-            <pre className="bg-neutral-800 p-6 rounded-lg border border-neutral-700 overflow-x-auto">
-              <code className="text-sm font-mono">{generatedCSS}</code>
-            </pre>
+            <div className="bg-neutral-800 p-6 rounded-lg border border-neutral-700">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-sm font-medium text-neutral-200">Generated CSS</h3>
+                <button 
+                  onClick={() => setGeneratedCSS(generatedCSS)}
+                  className="px-3 py-1 bg-primary-500 text-white rounded text-xs hover:bg-primary-600 transition-colors"
+                >
+                  Apply Changes
+                </button>
+              </div>
+              <textarea
+                value={generatedCSS}
+                onChange={(e) => setGeneratedCSS(e.target.value)}
+                className="w-full h-96 bg-neutral-900 text-neutral-100 font-mono text-sm p-4 rounded border border-neutral-600 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-none"
+                spellCheck={false}
+              />
+            </div>
           </div>
         )}
         

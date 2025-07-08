@@ -22,6 +22,9 @@ export function ShadowApp(props = {}) {
 
   // Initialize server data from props (only run once)
   useEffect(() => {
+    // Make API nonce globally available for fetch requests
+    window.studio4ApiNonce = apiNonce;
+    
     setServerData({
       userRole,
       siteUrl,
