@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Grid Concepts - STUDIO 4-Layer Architecture</title>
+    <style>
+        /* ============================================ */
+        /* LAYER 1: GLOBAL ELEMENT COMPONENTS              */
+        /* ============================================ */
+        :root {
+            /* Main Colors - Change these to update everything */
+            --color1: hsl(337, 35%, 52%);  /* Primary pink #b25977 */
+            --color2: hsl(29, 44%, 53%);   /* Secondary tangerine #b8874d */
+            --color3: hsl(0, 0%, 46%); /* Neutral */
+            --color4: hsl(0, 0%, 46%); /* Base */
+            
+            /* Color1 Scale (50-950) - Generated from main color1 pink */
+            --color1-50: hsl(337, 70%, 97%);
+            --color1-100: hsl(337, 60%, 91%);
+            --color1-200: hsl(337, 55%, 83%);
+            --color1-300: hsl(337, 45%, 70%);
+            --color1-400: hsl(337, 40%, 61%);
+            --color1-500: hsl(337, 35%, 52%);  /* Base color1 #b25977 */
+            --color1-600: hsl(337, 38%, 42%);
+            --color1-700: hsl(337, 42%, 32%);
+            --color1-800: hsl(337, 45%, 26%);
+            --color1-900: hsl(337, 50%, 21%);
+            --color1-950: hsl(337, 60%, 11%);
+            
+            /* Color2 Scale (50-950) - Generated from main color2 tangerine */
+            --color2-50: hsl(29, 70%, 96%);
+            --color2-100: hsl(29, 60%, 89%);
+            --color2-200: hsl(29, 55%, 79%);
+            --color2-300: hsl(29, 50%, 69%);
+            --color2-400: hsl(29, 47%, 61%);
+            --color2-500: hsl(29, 44%, 53%);  /* Base color2 #b8874d */
+            --color2-600: hsl(29, 47%, 43%);
+            --color2-700: hsl(29, 50%, 33%);
+            --color2-800: hsl(29, 53%, 27%);
+            --color2-900: hsl(29, 58%, 22%);
+            --color2-950: hsl(29, 65%, 12%);
+            
+            /* Neutral Scale (50-950) - Generated from main neutral */
+            --color3-50: hsl(0, 0%, 97%);
+            --color3-100: hsl(0, 0%, 93%);
+            --color3-200: hsl(0, 0%, 85%);
+            --color3-300: hsl(0, 0%, 73%);
+            --color3-400: hsl(0, 0%, 58%);
+            --color3-500: hsl(0, 0%, 46%);  /* Base neutral */
+            --color3-600: hsl(0, 0%, 36%);
+            --color3-700: hsl(0, 0%, 28%);
+            --color3-800: hsl(0, 0%, 18%);
+            --color3-900: hsl(0, 0%, 11%);
+            --color3-950: hsl(0, 0%, 4%);
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* === TEXT COMPONENT === */
+
+        .text {  
+        /* === TYPOGRAPHY === */
+        /* Core text styling properties */
+        --text-font-family: var(--font-family);
+        --text-font-size: 1rem;
+        --text-font-weight: 500;
+        --text-font-style: normal;
+        --text-font-variant: normal;
+        --text-line-height: 1.4;
+        --text-letter-spacing: 0;
+        --text-color: var(--color3);
+    
+        /* === TEXT APPEARANCE === */
+        /* Visual text effects and styling */
+        --text-text-transform: none;
+        --text-text-decoration: none;
+        --text-text-shadow: none;
+        --text-opacity: 1;
+        --text-filter: none;
+        --text-text-stroke: none;
+        --text-text-fill-color: inherit;
+    
+        /* === TEXT BEHAVIOR === */
+        /* Text flow and interaction properties */
+        --text-white-space: normal;
+        --text-text-overflow: ellipsis;
+        --text-vertical-align: baseline;
+        --text-cursor: default;
+        --text-user-select: text;
+    
+        /* === LAYOUT & POSITIONING === */
+        /* Display and positioning properties */
+        --text-display: block;
+        --text-margin: 0;
+        --text-padding: 0;
+        --text-grid-area: auto;
+    
+        /* === DIMENSIONS === */
+        /* Size control for icons and elements */
+        --text-width: auto;
+        --text-height: auto;
+        --text-min-width: 0;
+        --text-max-width: none;
+        --text-min-height: 0;
+        --text-max-height: none;
+        --text-aspect-ratio: auto;
+    
+        /* === BACKGROUND & BORDER === */
+        /* Visual container properties */
+        --text-background: transparent;
+        --text-border: none;
+        --text-border-radius: 0;
+    
+        /* === INTERACTIVE STATES === */
+        /* Animation and state properties */
+        --text-transition: color 0.2s ease;
+        --text-transform: none;
+    
+        /* === APPLIED PROPERTIES === */
+        /* Typography */
+        font-family: var(--text-font-family);
+        font-size: var(--text-font-size);
+        font-weight: var(--text-font-weight);
+        font-style: var(--text-font-style);
+        font-variant: var(--text-font-variant);
+        line-height: var(--text-line-height);
+        letter-spacing: var(--text-letter-spacing);
+        color: var(--text-color);
+    
+        /* Text Appearance */
+        text-transform: var(--text-text-transform);
+        text-decoration: var(--text-text-decoration);
+        text-shadow: var(--text-text-shadow);
+        opacity: var(--text-opacity);
+        filter: var(--text-filter);
+        -webkit-text-stroke: var(--text-text-stroke);
+        -webkit-text-fill-color: var(--text-text-fill-color);
+    
+        /* Text Behavior */
+        white-space: var(--text-white-space);
+        text-overflow: var(--text-text-overflow);
+        vertical-align: var(--text-vertical-align);
+        cursor: var(--text-cursor);
+        user-select: var(--text-user-select);
+    
+        /* Layout & Positioning */
+        display: var(--text-display);
+        margin: var(--text-margin);
+        padding: var(--text-padding);
+        grid-area: var(--text-grid-area);
+    
+        /* Dimensions */
+        width: var(--text-width);
+        height: var(--text-height);
+        min-width: var(--text-min-width);
+        max-width: var(--text-max-width);
+        min-height: var(--text-min-height);
+        max-height: var(--text-max-height);
+        aspect-ratio: var(--text-aspect-ratio);
+    
+        /* Background & Border */
+        background: var(--text-background);
+        border: var(--text-border);
+        border-radius: var(--text-border-radius);
+    
+        /* Interactive States */
+        transition: var(--text-transition);
+        transform: var(--text-transform);
+    }
+            
+
+        
+        .box {
+            /* Display & Layout */
+            --box-display: block;
+            --box-position: relative;
+            --box-z-index: 1;
+            --box-overflow: visible;
+
+            /* Dimensions */
+            --box-width: auto;
+            --box-height: auto;
+            --box-min-width: 10px;
+            --box-max-width: none;
+            --box-min-height: 10px;
+            --box-max-height: none;
+
+            /* Spacing */
+            --box-padding: 0;
+            --box-margin: 0;
+
+            /* Background */
+            --box-background: transparent;
+            --box-background-image: none;
+            --box-background-size: cover;
+            --box-background-position: center;
+            --box-background-repeat: no-repeat;
+
+            /* Border */
+            --box-border: none;
+            --box-border-width: 0;
+            --box-border-style: solid;
+            --box-border-color: transparent;
+            --box-border-radius: 0;
+            --box-border-bottom: none;
+
+            /* Shadow */
+            --box-box-shadow: none;
+
+            /* Opacity & Filters */
+            --box-opacity: 1;
+            --box-filter: none;
+            --box-backdrop-filter: none;
+            
+            /* Grid Layout */
+            --box-grid-area: auto;
+
+            /* === LAYOUT PROPERTIES === */
+            /* Display Type */
+            --box-layout-display: block; /* grid | flex | inline-grid | inline-flex | block */
+
+            /* Basic Grid Options */
+            --box-layout-grid-template-columns: none;
+            --box-layout-grid-template-rows: none;
+            --box-layout-grid-template-areas: none;
+            --box-layout-grid-gap: 0;
+            --box-layout-grid-align-items: stretch;
+            --box-layout-grid-justify-content: start;
+            
+            /* Advanced Grid Options */
+            --box-layout-grid-auto-columns: auto;
+            --box-layout-grid-auto-rows: auto;
+            --box-layout-grid-auto-flow: row;
+            --box-layout-grid-column-gap: var(--box-layout-grid-gap);
+            --box-layout-grid-row-gap: var(--box-layout-grid-gap);
+            --box-layout-grid-justify-items: stretch;
+            --box-layout-grid-align-content: start;
+            --box-layout-grid-place-items: var(--box-layout-grid-align-items) var(--box-layout-grid-justify-items);
+            --box-layout-grid-place-content: var(--box-layout-grid-align-content) var(--box-layout-grid-justify-content);
+
+            /* Flex Options */
+            --box-layout-flex-direction: row;
+            --box-layout-flex-wrap: nowrap;
+            --box-layout-flex-flow: var(--box-layout-flex-direction) var(--box-layout-flex-wrap);
+            --box-layout-justify-content: flex-start;
+            --box-layout-align-items: stretch;
+            --box-layout-align-content: stretch;
+            --box-layout-gap: 0;
+            --box-layout-row-gap: var(--box-layout-gap);
+            --box-layout-column-gap: var(--box-layout-gap);
+
+            /* === APPLIED PROPERTIES === */
+
+            display: var(--box-layout-display, var(--box-display, block));
+            position: var(--box-position);
+            z-index: var(--box-z-index);
+            overflow: var(--box-overflow);
+            width: var(--box-width);
+            height: var(--box-height);
+            min-width: var(--box-min-width);
+            max-width: var(--box-max-width);
+            min-height: var(--box-min-height);
+            max-height: var(--box-max-height);
+            padding: var(--box-padding);
+            margin: var(--box-margin);
+            background: var(--box-background);
+            background-image: var(--box-background-image);
+            background-size: var(--box-background-size);
+            background-position: var(--box-background-position);
+            background-repeat: var(--box-background-repeat);
+            border: var(--box-border);
+            border-width: var(--box-border-width);
+            border-style: var(--box-border-style);
+            border-color: var(--box-border-color);
+            border-radius: var(--box-border-radius);
+            border-bottom: var(--box-border-bottom);
+            box-shadow: var(--box-box-shadow);
+            opacity: var(--box-opacity);
+            filter: var(--box-filter);
+            backdrop-filter: var(--box-backdrop-filter);
+            grid-area: var(--box-grid-area);
+            
+            /* Layout Properties */
+            grid-template-columns: var(--box-layout-grid-template-columns);
+            grid-template-rows: var(--box-layout-grid-template-rows);
+            grid-template-areas: var(--box-layout-grid-template-areas);
+            grid-gap: var(--box-layout-grid-gap);
+            grid-column-gap: var(--box-layout-grid-column-gap);
+            grid-row-gap: var(--box-layout-grid-row-gap);
+            grid-auto-columns: var(--box-layout-grid-auto-columns);
+            grid-auto-rows: var(--box-layout-grid-auto-rows);
+            grid-auto-flow: var(--box-layout-grid-auto-flow);
+            align-items: var(--box-layout-grid-align-items, var(--box-layout-align-items));
+            justify-content: var(--box-layout-grid-justify-content, var(--box-layout-justify-content));
+            justify-items: var(--box-layout-grid-justify-items);
+            align-content: var(--box-layout-grid-align-content, var(--box-layout-align-content));
+            place-items: var(--box-layout-grid-place-items);
+            place-content: var(--box-layout-grid-place-content);
+            
+            /* Flex Properties */
+            flex-direction: var(--box-layout-flex-direction);
+            flex-wrap: var(--box-layout-flex-wrap);
+            flex-flow: var(--box-layout-flex-flow);
+            gap: var(--box-layout-gap);
+            row-gap: var(--box-layout-row-gap);
+            column-gap: var(--box-layout-column-gap);
+        } 
+        
+        
+
+        /* ============================================ */
+        /* LAYER 3: SECTION SCOPES (Simple Overrides) */
+        /* ============================================ */
+        
+        [data-scope="section"]{
+        --box-width: 100%;
+        }
+
+        [data-scope="container"]{
+        --box-width: 100%;
+        --box-max-width: 1200px;
+        --box-margin: auto;
+        --box-padding: 0;
+        }
+            
+        [data-scope="header"]{
+        --box-padding: 1rem 2rem;
+        --box-width: 100%;
+        --box-background: var(--color2-500);
+        --box-grid-area: a;
+        --box-layout-display: grid;
+        --box-layout-grid-template-columns: 1fr 2fr 1fr;
+        --box-layout-grid-template-areas: "a b c";
+        --box-layout-grid-gap: 1rem;
+        --box-layout-grid-align-items: center;
+        --box-layout-grid-justify-content: space-between;
+        }
+
+        [data-scope="brand-box"]{
+        --box-background: transparent;
+        --box-grid-area: a;
+        --box-width: 100%;
+        --box-height: auto;
+        --box-layout-display: flex;
+        --box-layout-flex-direction: row;
+        }
+
+        [data-scope="icon"]{
+        --text-font-size: 2rem;
+        --text-font-weight: 600;
+        --text-color: var(--color3-50);
+        --text-background: var(--color1-500);
+        --text-padding: .5rem;
+        --text-width: 3rem;
+        --text-height: 3rem;
+        --text-border-radius: 5px;
+        --text-text-transform: uppercase;
+        }
+
+        [data-scope="title"]{
+        --text-font-size: 2rem;
+        --text-font-weight: 600;
+        --text-color: var(--color3-50);
+        }
+
+        [data-scope="nav-box"]{
+        --box-background: transparent;
+        --box-grid-area: b;
+        --box-layout-display: grid;
+        --box-layout-grid-template-columns: repeat(3, 1fr);
+        --box-layout-grid-template-rows: 1fr;
+        --box-layout-grid-template-areas: "a b c";
+        --box-layout-grid-gap: 0.5rem;
+        --box-layout-grid-align-items: center;
+        } 
+            
+        [data-scope="nav-item"]{
+        --text-font-size: 1rem;
+        --text-font-weight: 500;
+        --text-color: var(--color3-200);
+        }
+
+        [data-scope="action-box"]{
+        --box-background: transparent;
+        --box-grid-area: c;
+        --box-width: 100%;
+        --box-height: auto;
+        --box-display: flex;
+        --layout-flex-direction: row;
+        }
+
+        [data-scope="button"]{
+        --text-font-size: 1rem;
+        --text-font-weight: 500;
+        --text-color: var(--color3-200);
+        --text-background: var(--color1-500);
+        --text-padding: .5rem;
+        --text-width: 3rem;
+        --text-height: 3rem;
+        --text-border-radius: 5px;
+        --text-text-transform: uppercase;
+        }
+
+        [data-scope="sidebar"]{
+        --box-width: 300px;
+        --box-background: var(--color3-800);
+        --box-padding: 1rem;
+        --box-grid-area: b;
+        --box-layout-display: grid;
+        --box-layout-grid-template-columns: 1fr;
+        --box-layout-grid-template-rows: 1fr 3fr 1fr;
+        --box-layout-grid-template-areas: "a" "b" "c";
+        --box-layout-grid-gap: 1rem;
+        } 
+
+        [data-scope="footer"]{
+        --box-min-height: 100px;
+        } 
+        
+        [data-scope="preview"]{
+        --box-grid-area: c;
+        --box-background: var(--color3-200);
+        --box-padding: 1rem;
+        --box-height: 100%;
+       }        
+            
+        [data-scope="dashboard"] {
+            
+        [data-scope="container"]{
+            --box-layout-display: grid;
+            --box-max-width: none;
+            --box-min-height: 100vh;
+            --box-layout-grid-template-columns: 1fr;
+            --box-layout-grid-template-rows: auto 1fr auto;
+            --box-layout-grid-template-areas: "a" "b" "c";
+            --box-layout-grid-gap: 1rem;
+        }
+        }
+ 
+
+        /* ============================================ */
+        /* BASE RESET & BODY STYLES                    */
+        /* ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <div data-scope="dashboard">
+        <div class="box" data-scope="section">
+            <div class="box" data-scope="container">
+                <!-- Header Area -->
+                <div class="box" data-scope="header">
+                    <!-- Brand Box -->
+                    <div class="box" data-scope="brand-box">
+                        <div class="text" data-scope="icon">S</div>
+                        <div class="text" data-scope="title">studio4</div>
+                        <div class="text" data-scope="subtitle">VISUAL THEME BUILDER</div>
+                    </div>
+                    <!-- Nav Box -->
+                    <div class="box" data-scope="nav-box">
+                        <div class="text" data-scope="nav-item">nav-item1</div>
+                        <div class="text" data-scope="nav-item">nav-item2</div>
+                        <div class="text" data-scope="nav-item">nav-item3</div>
+                    </div>
+                    <!-- Action Box -->
+                    <div class="box" data-scope="action-box">
+                        <div class="text" data-scope="button">Button1</div>
+                        <div class="text" data-scope="button">Button2</div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Area -->
+                <div class="box" data-scope="sidebar">
+                    <div class="box" data-scope="header">
+                        <div class="text">Sidebar Header</div>
+                    </div>
+                    <div class="box" data-scope="nav-box">
+                        <div class="text" data-scope="nav-item">Sidebar Nav 1</div>
+                        <div class="text" data-scope="nav-item">Sidebar Nav 2</div>
+                    </div>
+                    <div class="box" data-scope="footer">
+                        <div class="text">Sidebar Footer</div>
+                    </div>
+                </div>
+                
+                <!-- Preview Area -->
+                <div class="box" data-scope="preview">
+                    <div class="text">Preview Content</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

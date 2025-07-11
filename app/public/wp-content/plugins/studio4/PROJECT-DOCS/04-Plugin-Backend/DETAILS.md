@@ -38,25 +38,11 @@ Revolutionary theme-aware React component system where every UI element automati
 **Goal**: Provide direct access to all PROJECT-DOCS within the backend interface for efficient project management during complex refactor work.
 
 ### Top-Level Tab Architecture
-Three-tab system to reveal three different sidebars, Theme, Docs, and Files :
+Tabs at the top controle the sidbar content. Sidebar content is orgainzed by accordians with content. 
 
 #### 🎨 Theme Tab (Primary Pink)
 - **Colors Accordion**: Brand color management with HSL controls
 - **Components Accordion**: Theme-aware React component library editing
-
-#### 📚 Docs Tab (Secondary Tangerine)  
-- **Root Docs**: Claude.md (session memory), ClaudeAlways.md (rules)
-- **00-Master**: Master project checklist
-- **01-Design**: Design system checklists, details, whiteboard
-- **02-Tech**: Technical architecture checklists, details, whiteboard  
-- **03-Frontend**: Frontend plugin checklists, details, whiteboard
-- **04-Backend**: Backend plugin checklists, details, whiteboard
-
-#### 📁 Files Tab (Neutral Gray)
-- **Technical Reference Files**: Live access to key system files
-- **Configuration Files**: ui-theme-config.json (live from current state)
-- **Component Files**: useThemeConfig.js, UIComponents.jsx
-- **Documentation**: Architecture guides and system references
 
 ### Document Editing Features - **COMPLETE & WORKING**
 - **Dynamic File Discovery**: API endpoint auto-discovers all PROJECT-DOCS structure
@@ -79,25 +65,6 @@ Three-tab system to reveal three different sidebars, Theme, Docs, and Files :
 - **Security**: Input validation, path sanitization, file type restrictions
 - **Error Handling**: Comprehensive error responses for debugging
 
-### "Eating Our Own Dog Food" Validation
-- **Meta System**: Interface uses our own theme-aware React components
-- **Single Interface**: Theme development + Complete project management
-- **Complex Project Management**: Proven effective for managing multi-phase S4 integration
-- **Architecture Validation**: If good enough for our complex project, ready for users
-
-## PLANNED UI REFACTOR
-Apply the Design System Framework to the meta UI itself.
-
-### UI-4LayerSystem Branch Strategy
-1. **Apply [data] scopes** to UI components
-2. **Use same CSS variable system** as user themes
-3. **Test card global scope** in actual interface
-4. **Rebuild JSON system** to match S4 architecture
-
-### Benefits
-- **Consistency**: Meta UI uses same system as user themes
-- **Testing**: Dogfood our own Design System Framework
-- **Simplification**: One system for everything
 
 ## WEB COMPONENT SYSTEM
 Enhanced web component architecture for better integration.
@@ -107,9 +74,3 @@ Enhanced web component architecture for better integration.
 - **Attribute passing**: WordPress data to React
 - **CSS injection**: Dynamic style updates
 - **State management**: Zustand with persistence
-
-### Planned Enhancements
-- **Improved attribute system**: Better data flow
-- **Performance optimization**: Faster rendering
-- **Debug tools**: Component inspection
-- **Documentation generation**: Auto-generated component docs

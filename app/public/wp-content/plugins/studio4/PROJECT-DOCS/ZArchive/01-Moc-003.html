@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Grid Concepts - STUDIO 4-Layer Architecture</title>
+    <style>
+        /* ============================================ */
+        /* LAYER 1: ROOT THEME VARIABLES               */
+        /* ============================================ */
+        :root {
+            /* Color Scale */
+            --color1: #7a9b57;  /* primary */
+            --color2: #4a6741;  /* secondary */
+            --color3: #2d2d2d;  /* neutral*/
+            --color4: #ffffff;  /* base */
+            --color5: #e661ae;  /* other */
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ============================================ */
+        /* LAYER 2: BASE COMPONENTS                    */
+        /* ============================================ */
+        
+        /* Section Component - Main structural container */
+        .box {
+            --box-display: grid;
+            --box-grid-template-columns: 1fr;
+            --box-grid-template-rows: auto;
+            --box-grid-template-areas: "a" "b" "c";
+            --box-grid-area: a;
+            --box-gap: 2rem;
+            --box-padding: 2rem;
+            --box-width: 100%;
+            --box-max-width: none;
+            --box-background: transparent;
+            --box-justify-items: stretch;
+            --box-align-items: stretch;
+            --box-justify-content: start;
+            --box-align-content: start;
+            --box-grid-auto-flow: row;
+            --box-grid-auto-columns: 1fr;
+            --box-grid-auto-rows: auto;
+            --box-min-height: auto;
+            --box-height: auto;
+            --box-position: relative;
+            --box-z-index: 1;
+            
+            display: var(--box-display);
+            grid-template-columns: var(--box-grid-template-columns);
+            grid-template-rows: var(--box-grid-template-rows);
+            grid-template-areas: var(--box-grid-template-areas);
+            grid-area: var(--box-grid-area);
+            gap: var(--box-gap);
+            padding: var(--box-padding);
+            width: var(--box-width);
+            max-width: var(--box-max-width);
+            background: var(--box-background);
+            justify-items: var(--box-justify-items);
+            align-items: var(--box-align-items);
+            justify-content: var(--box-justify-content);
+            align-content: var(--box-align-content);
+            grid-auto-flow: var(--box-grid-auto-flow);
+            grid-auto-columns: var(--box-grid-auto-columns);
+            grid-auto-rows: var(--box-grid-auto-rows);
+            min-height: var(--box-min-height);
+            height: var(--box-height);
+            position: var(--box-position);
+            z-index: var(--box-z-index);
+        }
+
+        
+
+        /* Typography Components */
+        .title {
+            --title-color: var(--color3);
+            --title-size: 1.5rem;
+            --title-weight: 600;
+            --title-margin: 0 0 0.5rem 0;
+            --title-grid-area: auto;
+            
+            color: var(--title-color);
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            margin: var(--title-margin);
+            grid-area: var(--title-grid-area);
+            font-family: var(--font-family);
+        }
+
+        .subtitle {
+            --subtitle-color: #666;
+            --subtitle-size: 1rem;
+            --subtitle-weight: 400;
+            --subtitle-margin: 0;
+            --subtitle-grid-area: auto;
+            
+            color: var(--subtitle-color);
+            font-size: var(--subtitle-size);
+            font-weight: var(--subtitle-weight);
+            margin: var(--subtitle-margin);
+            grid-area: var(--subtitle-grid-area);
+            font-family: var(--font-family);
+        }
+         /* ============================================ */
+        /* TIER 3: GLOBAL COMPONENTS/SCOPES            */
+        /* ============================================ */
+
+        [data-scope="dashboard"] {
+            --box-grid-template-rows: auto 1fr;
+            --box-grid-template-columns: 300px 1fr;
+            --box-grid-template-areas: 
+                "a a"
+                "b c";
+            --box-gap: 1rem;
+            --box-padding: 1rem;
+            --box-background: var(--color1);
+            --box-min-height: 100vh;
+            
+             /* Header Helper Scope */
+        [helper-scope="a"] {
+            --box-background: var(--color3);
+            --box-padding: 1rem;
+            --box-width: 100%;
+            --box-grid-area: a;
+            --box-grid-template-columns: 1fr 2fr 1fr;
+            --box-grid-template-rows: 1fr;
+            --box-grid-template-areas: "a b c";
+            --box-gap: 1rem;
+            --box-justify-content: space-between;
+            --box-align-items: center;
+            
+            /* Header content helper scopes */
+            [helper-scope="a"] {
+                --box-background: var(--color1);
+                --box-padding: 0.5rem;
+            }
+            
+            [helper-scope="b"] {
+                --box-background: var(--color2);
+                --box-padding: 0.5rem;
+            }
+            
+            [helper-scope="c"] {
+                --box-background: var(--color4);
+                --box-padding: 0.5rem;
+            }
+        }
+        
+        /* Sidebar Helper Scope */
+        [helper-scope="b"] {
+            --box-background: var(--color2);
+            --box-padding: 1rem;
+            --box-width: 300px;
+            --box-grid-area: b;
+            --box-grid-template-columns: 1fr;
+            --box-grid-template-rows: auto 1fr auto;
+            --box-grid-template-areas: "a" "b" "c";
+            --box-gap: 1rem;
+            
+            /* Sidebar content helper scopes */
+            [helper-scope="a"] {
+                --box-background: var(--color1);
+                --box-padding: 0.5rem;
+            }
+            
+            [helper-scope="b"] {
+                --box-background: var(--color3);
+                --box-padding: 0.5rem;
+            }
+            
+            [helper-scope="c"] {
+                --box-background: var(--color4);
+                --box-padding: 0.5rem;
+            }
+        }
+        
+        /* Body Helper Scope */
+        [helper-scope="c"] {
+            --box-background: var(--color4);
+            --box-padding: 1rem;
+            --box-width: 100%;
+            --box-grid-area: c;
+            --box-grid-template-columns: 1fr;
+            --box-grid-template-rows: auto 1fr;
+            --box-grid-template-areas: "a" "b";
+            --box-gap: 1rem;
+            
+            /* Body content helper scopes */
+            [helper-scope="a"] {
+                --box-background: var(--color1);
+                --box-padding: 0.5rem;
+            }
+            
+            [helper-scope="b"] {
+                --box-background: var(--color5);
+                --box-padding: 0.5rem;
+            }
+        }
+    }
+
+
+        /* ============================================ */
+        /* TIER 4: BRAND COMPONENTS/HELPER SCOPES      */
+        /* ============================================ */
+        
+        /* Grid Position Helper Scopes */
+        [helper-scope="a"] { grid-area: a; }
+        [helper-scope="b"] { grid-area: b; }
+        [helper-scope="c"] { grid-area: c; }
+        
+       
+
+        /* ============================================ */
+        /* BASE RESET & BODY STYLES                    */
+        /* ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <div class="box" data-scope="dashboard">
+        <div class="box" helper-scope="a">
+            <div class="box" helper-scope="a">Header A</div>
+            <div class="box" helper-scope="b">Header B</div>
+            <div class="box" helper-scope="c">Header C</div>
+        </div>
+        
+        <div class="box" helper-scope="b">
+            <div class="box" helper-scope="a">Sidebar A</div>
+            <div class="box" helper-scope="b">Sidebar B</div>
+            <div class="box" helper-scope="c">Sidebar C</div>
+        </div>
+        
+        <div class="box" helper-scope="c">
+            <div class="box" helper-scope="a">Body A</div>
+            <div class="box" helper-scope="b">Body B</div>
+        </div>
+    </div>
+</body>
+</html>

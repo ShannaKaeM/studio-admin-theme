@@ -1,20 +1,20 @@
 # DESIGN SYSTEM FRAMEWORK - DETAILS
 
-> **Working Example**: See `S4-SYSTEM-Example-5.html` for complete implementation with layout transformation controls.
+> **Working Example**: coming soon
 
 ## GLOBAL ELEMENT CRITERIA
 - **Single UI element** (wrapper, title, button, text, link)
 - **ALL properties defined** (background, padding, border, color, etc.)
-- **Uses CSS variables** for complete themability
+- **Uses & Defines CSS variables** for complete themability and scope isolation overwriting.
 - **NOT combinations** (no "card" - that's a scope)
 
 ## SCOPE CONCEPTS
-- **Component Scopes**: Groups of global elements that override base properties
+- **Component Scopes**: Highly reusable grouped elements generic but semantic, ie. card, hero, modal, etc.
   - Example: Card wrapper `max-width: 300px`, Hero wrapper `max-width: 600px`
   - Example: Card title `1.2rem`, Hero title `3rem`
-- **Helper Scopes**: Modifications applied to any scope
+- **Helper Scopes**: Specific styling that can be applied to multiple scopes, ie. holiday, featured-agent/featured-property, etc.
   - Example: Holiday changes title color to red on any component
-  - Example: Featured updates styling across multiple scopes
+  - Example: Featured-agent and featured-property can be applied to a base card scope for specific styling but it can also be applied to a hero or any other scope. very powerful. define all styles for featured agents in one place. ie secondary bg color on profile image and secondary buttons. while featured property uses primary icons and primary buttons. 
 - **Data Attributes**: `data-scope="hero"` and `data-helper="holiday"`
   - Highest specificity wins (last scope applied)
 

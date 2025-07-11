@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S4 Dashboard Mockup - Studio4 Theme Builder</title>
+    <style>
+        /* ============================================ */
+        /* TIER 1: BRAND TOKENS                        */
+        /* ============================================ */
+        :root {
+            /* S4 Base Colors - From actual Studio4 */
+            --color1: hsl(88, 33%, 43%);    /* Primary Green */
+            --color2: hsl(201, 30%, 30%);   /* Secondary Blue */
+            --color3: hsl(0, 0%, 15%);      /* Dark Neutral */
+            --color4: hsl(0, 0%, 100%);     /* Light Base */
+            
+            /* UI-specific colors */
+            --ui-bg-dark: hsl(0, 0%, 10%);
+            --ui-bg-panel: hsl(0, 0%, 12%);
+            --ui-bg-card: hsl(0, 0%, 14%);
+            --ui-border: hsl(0, 0%, 20%);
+            --ui-text-primary: hsl(0, 0%, 95%);
+            --ui-text-secondary: hsl(0, 0%, 60%);
+            
+            /* Typography scale */
+            --font-size-base: 14px;
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ============================================ */
+        /* TIER 2: GLOBAL ELEMENTS                     */
+        /* ============================================ */
+        
+        /* Wrapper - Universal container */
+        .wrapper {
+            --wrapper-width: 100%;
+            --wrapper-height: auto;
+            --wrapper-background: transparent;
+            --wrapper-padding: 0;
+            --wrapper-margin: 0;
+            --wrapper-border-radius: 0;
+            --wrapper-border: none;
+            --wrapper-overflow: visible;
+            
+            width: var(--wrapper-width);
+            height: var(--wrapper-height);
+            background: var(--wrapper-background);
+            padding: var(--wrapper-padding);
+            margin: var(--wrapper-margin);
+            border-radius: var(--wrapper-border-radius);
+            border: var(--wrapper-border);
+            overflow: var(--wrapper-overflow);
+            box-sizing: border-box;
+        }
+
+        /* Layout - Arrangement system */
+        .layout {
+            --layout-display: block;
+            --layout-grid-template: none;
+            --layout-flex-direction: row;
+            --layout-align-items: stretch;
+            --layout-justify-content: flex-start;
+            --layout-gap: 0;
+            
+            display: var(--layout-display);
+            grid-template: var(--layout-grid-template);
+            flex-direction: var(--layout-flex-direction);
+            align-items: var(--layout-align-items);
+            justify-content: var(--layout-justify-content);
+            gap: var(--layout-gap);
+        }
+
+        /* Typography Elements */
+        .title {
+            --title-color: var(--ui-text-primary);
+            --title-size: 1rem;
+            --title-weight: 600;
+            --title-margin: 0;
+            
+            color: var(--title-color);
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            margin: var(--title-margin);
+            font-family: var(--font-family);
+        }
+
+        .subtitle {
+            --subtitle-color: var(--ui-text-secondary);
+            --subtitle-size: 0.875rem;
+            --subtitle-weight: 400;
+            --subtitle-margin: 0;
+            
+            color: var(--subtitle-color);
+            font-size: var(--subtitle-size);
+            font-weight: var(--subtitle-weight);
+            margin: var(--subtitle-margin);
+            font-family: var(--font-family);
+        }
+
+        .label {
+            --label-color: var(--ui-text-secondary);
+            --label-size: 0.75rem;
+            --label-weight: 500;
+            --label-margin: 0 0 0.5rem 0;
+            
+            color: var(--label-color);
+            font-size: var(--label-size);
+            font-weight: var(--label-weight);
+            margin: var(--label-margin);
+            font-family: var(--font-family);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Interactive Elements */
+        .button {
+            --button-background: var(--color1);
+            --button-color: var(--color4);
+            --button-padding: 0.5rem 1rem;
+            --button-border-radius: 6px;
+            --button-border: none;
+            --button-font-size: 0.875rem;
+            --button-font-weight: 500;
+            --button-cursor: pointer;
+            
+            background: var(--button-background);
+            color: var(--button-color);
+            padding: var(--button-padding);
+            border-radius: var(--button-border-radius);
+            border: var(--button-border);
+            font-size: var(--button-font-size);
+            font-weight: var(--button-font-weight);
+            cursor: var(--button-cursor);
+            font-family: var(--font-family);
+            transition: all 0.2s ease;
+        }
+
+        .tab {
+            --tab-background: transparent;
+            --tab-color: var(--ui-text-secondary);
+            --tab-padding: 1rem;
+            --tab-border-radius: 8px;
+            --tab-border: 2px solid transparent;
+            --tab-cursor: pointer;
+            
+            background: var(--tab-background);
+            color: var(--tab-color);
+            padding: var(--tab-padding);
+            border-radius: var(--tab-border-radius);
+            border: var(--tab-border);
+            cursor: var(--tab-cursor);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .badge {
+            --badge-background: var(--color1);
+            --badge-color: var(--color4);
+            --badge-size: 1.5rem;
+            --badge-font-size: 0.875rem;
+            
+            background: var(--badge-background);
+            color: var(--badge-color);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            font-size: var(--badge-font-size);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Form Elements */
+        .select {
+            --select-background: var(--ui-bg-card);
+            --select-color: var(--ui-text-primary);
+            --select-padding: 0.5rem;
+            --select-border: 1px solid var(--ui-border);
+            --select-border-radius: 4px;
+            
+            background: var(--select-background);
+            color: var(--select-color);
+            padding: var(--select-padding);
+            border: var(--select-border);
+            border-radius: var(--select-border-radius);
+            font-family: var(--font-family);
+            width: 100%;
+        }
+
+        .slider {
+            --slider-height: 4px;
+            --slider-background: var(--ui-border);
+            --slider-fill: var(--color1);
+            --slider-thumb-size: 16px;
+            
+            -webkit-appearance: none;
+            width: 100%;
+            height: var(--slider-height);
+            background: var(--slider-background);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: var(--slider-thumb-size);
+            height: var(--slider-thumb-size);
+            background: var(--slider-fill);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Card Element */
+        .card {
+            --card-background: var(--ui-bg-card);
+            --card-padding: 1.5rem;
+            --card-border-radius: 12px;
+            --card-border: 1px solid var(--ui-border);
+            
+            background: var(--card-background);
+            padding: var(--card-padding);
+            border-radius: var(--card-border-radius);
+            border: var(--card-border);
+        }
+
+        /* Color Display */
+        .color-swatch {
+            --swatch-size: 3rem;
+            --swatch-border-radius: 8px;
+            
+            width: var(--swatch-size);
+            height: var(--swatch-size);
+            border-radius: var(--swatch-border-radius);
+            border: 1px solid var(--ui-border);
+        }
+
+        /* ============================================ */
+        /* TIER 3: COMPONENT SCOPES                    */
+        /* ============================================ */
+        
+        /* Dashboard Layout */
+        [data-scope="dashboard"] * {
+            --wrapper-height: 100vh;
+            --wrapper-background: var(--ui-bg-dark);
+            --layout-display: grid;
+            --layout-grid-template: "sidebar main" 1fr / 320px 1fr;
+        }
+
+        /* Sidebar Component */
+        [data-scope="sidebar"] * {
+            --wrapper-background: var(--ui-bg-panel);
+            --wrapper-padding: 1.5rem;
+            --wrapper-height: 100vh;
+            --wrapper-overflow: auto;
+            --layout-display: flex;
+            --layout-flex-direction: column;
+            --layout-gap: 2rem;
+        }
+
+        /* Logo Component */
+        [data-scope="logo"] * {
+            --layout-display: flex;
+            --layout-align-items: center;
+            --layout-gap: 0.75rem;
+            --title-size: 1.25rem;
+            --title-weight: 500;
+        }
+
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            background: var(--color1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--color4);
+        }
+
+        /* Navigation Grid */
+        [data-scope="nav-grid"] * {
+            --layout-display: grid;
+            --layout-grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+            --layout-gap: 0.75rem;
+        }
+
+        /* Tab Active State */
+        [data-scope="nav-grid"] .tab[data-state="active"] {
+            --tab-background: var(--color1);
+            --tab-color: var(--color4);
+        }
+
+        /* Color Picker Section */
+        [data-scope="color-picker"] * {
+            --wrapper-background: var(--ui-bg-card);
+            --wrapper-padding: 1.5rem;
+            --wrapper-border-radius: 12px;
+            --layout-display: flex;
+            --layout-flex-direction: column;
+            --layout-gap: 1rem;
+        }
+
+        /* Color Display */
+        [data-scope="color-display"] * {
+            --wrapper-height: 100px;
+            --wrapper-border-radius: 8px;
+            --wrapper-margin: 1rem 0;
+        }
+
+        /* Slider Group */
+        [data-scope="slider-group"] * {
+            --layout-display: flex;
+            --layout-flex-direction: column;
+            --layout-gap: 0.5rem;
+        }
+
+        /* Button Group */
+        [data-scope="button-group"] * {
+            --layout-display: flex;
+            --layout-gap: 0.75rem;
+            --button-padding: 0.75rem 1.5rem;
+        }
+
+        /* Main Content Area */
+        [data-scope="main"] * {
+            --wrapper-padding: 2rem;
+            --layout-display: flex;
+            --layout-flex-direction: column;
+            --layout-gap: 2rem;
+        }
+
+        /* Tab Bar */
+        [data-scope="tab-bar"] * {
+            --layout-display: flex;
+            --layout-gap: 1rem;
+            --wrapper-padding: 0 0 1rem 0;
+            --wrapper-border: 0 0 1px 0 solid var(--ui-border);
+        }
+
+        /* Color Grid */
+        [data-scope="color-grid"] * {
+            --layout-display: grid;
+            --layout-grid-template: repeat(auto-fit, minmax(250px, 1fr));
+            --layout-gap: 1.5rem;
+        }
+
+        /* Color Card */
+        [data-scope="color-card"] * {
+            --card-background: var(--ui-bg-card);
+            --layout-display: flex;
+            --layout-flex-direction: column;
+            --layout-gap: 1rem;
+        }
+
+        /* Swatch Row */
+        [data-scope="swatch-row"] * {
+            --layout-display: flex;
+            --layout-gap: 0.5rem;
+            --swatch-size: 2rem;
+        }
+
+        /* ============================================ */
+        /* TIER 4: HELPER SCOPES                       */
+        /* ============================================ */
+        
+        /* Primary Helper */
+        [data-helper="primary"] * {
+            --button-background: var(--color1);
+            --button-color: var(--color4);
+        }
+
+        /* Secondary Helper */
+        [data-helper="secondary"] * {
+            --button-background: transparent;
+            --button-color: var(--ui-text-secondary);
+            --button-border: 1px solid var(--ui-border);
+        }
+
+        /* ============================================ */
+        /* BASE STYLES                                 */
+        /* ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            color: var(--ui-text-primary);
+            background: var(--ui-bg-dark);
+        }
+
+        /* Utility styles for demo */
+        .slider-value {
+            font-size: 0.75rem;
+            color: var(--ui-text-secondary);
+            min-width: 3rem;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Container -->
+    <div class="wrapper" data-scope="dashboard">
+        <div class="layout">
+            
+            <!-- Sidebar -->
+            <aside class="wrapper" data-scope="sidebar" style="grid-area: sidebar;">
+                <div class="layout">
+                    
+                    <!-- Logo -->
+                    <div class="wrapper" data-scope="logo">
+                        <div class="layout">
+                            <div class="logo-icon">S</div>
+                            <h1 class="title">studio4</h1>
+                            <span class="subtitle">VISUAL THEME BUILDER</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Grid -->
+                    <nav class="wrapper" data-scope="nav-grid">
+                        <div class="layout">
+                            <button class="tab" data-state="active">
+                                <span class="badge">1</span>
+                                <span class="subtitle">Theme</span>
+                            </button>
+                            <button class="tab">
+                                <span class="badge">2</span>
+                                <span class="subtitle">Presets</span>
+                            </button>
+                            <button class="tab">
+                                <span class="badge">3</span>
+                                <span class="subtitle">Components</span>
+                            </button>
+                            <button class="tab">
+                                <span class="badge">4</span>
+                                <span class="subtitle">Sections</span>
+                            </button>
+                        </div>
+                    </nav>
+                    
+                    <!-- Colors Section -->
+                    <section class="wrapper">
+                        <h2 class="title">Colors</h2>
+                        
+                        <!-- Color Picker -->
+                        <div class="wrapper" data-scope="color-picker">
+                            <div class="layout">
+                                <!-- Color Selector -->
+                                <select class="select">
+                                    <option>Color 1 - Primary Brand</option>
+                                    <option>Color 2 - Secondary Brand</option>
+                                    <option>Color 3 - Dark Neutral</option>
+                                    <option>Color 4 - Light Base</option>
+                                </select>
+                                
+                                <!-- Current Color Display -->
+                                <div class="wrapper" data-scope="color-display" style="background: var(--color1);">
+                                    <div class="layout"></div>
+                                </div>
+                                
+                                <!-- Color Values -->
+                                <div class="wrapper">
+                                    <p class="subtitle">hsl(88, 33%, 43%)</p>
+                                </div>
+                                
+                                <!-- Sliders -->
+                                <div class="wrapper" data-scope="slider-group">
+                                    <div class="layout">
+                                        <!-- Hue -->
+                                        <div class="wrapper">
+                                            <label class="label">Hue</label>
+                                            <div class="layout" style="display: flex; align-items: center; gap: 1rem;">
+                                                <input type="range" class="slider" min="0" max="360" value="88">
+                                                <span class="slider-value">88°</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Saturation -->
+                                        <div class="wrapper">
+                                            <label class="label">Saturation</label>
+                                            <div class="layout" style="display: flex; align-items: center; gap: 1rem;">
+                                                <input type="range" class="slider" min="0" max="100" value="33">
+                                                <span class="slider-value">33%</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Lightness -->
+                                        <div class="wrapper">
+                                            <label class="label">Lightness</label>
+                                            <div class="layout" style="display: flex; align-items: center; gap: 1rem;">
+                                                <input type="range" class="slider" min="0" max="100" value="43">
+                                                <span class="slider-value">43%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Buttons -->
+                                <div class="wrapper" data-scope="button-group">
+                                    <div class="layout">
+                                        <button class="button" data-helper="primary">Apply to Theme</button>
+                                        <button class="button" data-helper="secondary">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Export Button -->
+                        <button class="button" data-helper="primary" style="width: 100%; margin-top: 2rem;">Export Theme</button>
+                    </section>
+                    
+                </div>
+            </aside>
+            
+            <!-- Main Content -->
+            <main class="wrapper" data-scope="main" style="grid-area: main;">
+                <div class="layout">
+                    
+                    <!-- Tab Bar -->
+                    <div class="wrapper" data-scope="tab-bar">
+                        <div class="layout">
+                            <button class="button" data-helper="secondary">Preview</button>
+                            <button class="button" data-helper="secondary">HTML</button>
+                            <button class="button" data-helper="secondary">CSS</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Color Grid -->
+                    <div class="wrapper" data-scope="color-grid">
+                        <div class="layout">
+                            
+                            <!-- Primary Brand Card -->
+                            <div class="card" data-scope="color-card">
+                                <div class="layout">
+                                    <div class="wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span class="badge" style="background: var(--color1);">1</span>
+                                        <span class="label">Primary</span>
+                                    </div>
+                                    <h3 class="title">Primary Brand</h3>
+                                    <p class="subtitle">hsl(88, 33%, 43%)</p>
+                                    <div class="wrapper" data-scope="swatch-row">
+                                        <div class="layout">
+                                            <div class="color-swatch" style="background: hsl(88, 33%, 20%);"></div>
+                                            <div class="color-swatch" style="background: hsl(88, 33%, 30%);"></div>
+                                            <div class="color-swatch" style="background: hsl(88, 33%, 43%);"></div>
+                                            <div class="color-swatch" style="background: hsl(88, 33%, 60%);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Secondary Brand Card -->
+                            <div class="card" data-scope="color-card">
+                                <div class="layout">
+                                    <div class="wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span class="badge" style="background: var(--color2);">2</span>
+                                        <span class="label">Secondary</span>
+                                    </div>
+                                    <h3 class="title">Secondary Brand</h3>
+                                    <p class="subtitle">hsl(201, 30%, 30%)</p>
+                                    <div class="wrapper" data-scope="swatch-row">
+                                        <div class="layout">
+                                            <div class="color-swatch" style="background: hsl(201, 30%, 15%);"></div>
+                                            <div class="color-swatch" style="background: hsl(201, 30%, 25%);"></div>
+                                            <div class="color-swatch" style="background: hsl(201, 30%, 30%);"></div>
+                                            <div class="color-swatch" style="background: hsl(201, 30%, 45%);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Dark Neutral Card -->
+                            <div class="card" data-scope="color-card">
+                                <div class="layout">
+                                    <div class="wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span class="badge" style="background: var(--color3);">3</span>
+                                        <span class="label">Dark</span>
+                                    </div>
+                                    <h3 class="title">Dark Neutral</h3>
+                                    <p class="subtitle">hsl(0, 0%, 15%)</p>
+                                    <div class="wrapper" data-scope="swatch-row">
+                                        <div class="layout">
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 5%);"></div>
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 10%);"></div>
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 15%);"></div>
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 25%);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Light Base Card -->
+                            <div class="card" data-scope="color-card">
+                                <div class="layout">
+                                    <div class="wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span class="badge" style="background: var(--color3); color: var(--color3);">4</span>
+                                        <span class="label">Light</span>
+                                    </div>
+                                    <h3 class="title">Light Base</h3>
+                                    <p class="subtitle">hsl(0, 0%, 100%)</p>
+                                    <div class="wrapper" data-scope="swatch-row">
+                                        <div class="layout">
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 70%);"></div>
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 80%);"></div>
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 90%);"></div>
+                                            <div class="color-swatch" style="background: hsl(0, 0%, 100%);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </main>
+            
+        </div>
+    </div>
+</body>
+</html>

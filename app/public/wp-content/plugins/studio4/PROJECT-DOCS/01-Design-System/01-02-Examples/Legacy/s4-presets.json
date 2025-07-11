@@ -1,0 +1,181 @@
+{
+  "brandTokens": {
+    "colors": {
+      "color1": { "h": 172, "s": 50, "l": 40, "name": "Primary" },
+      "color2": { "h": 92, "s": 50, "l": 40, "name": "Secondary" },
+      "color3": { "h": 0, "s": 0, "l": 50, "name": "Neutral" },
+      "color4": { "h": 0, "s": 0, "l": 100, "name": "Base" }
+    }
+  },
+  
+  "colorPresets": {
+    "default-colors": {
+      "name": "Default Colors",
+      "description": "Standard color theme",
+      "assignments": {
+        "section": { "bg": "color4" },
+        "container": { "bg": "transparent" },
+        "wrapper": { "bg": "color4" },
+        "pretitle": { "color": "color1" },
+        "title": { "color": "color3" },
+        "subtitle": { "color": "color3" },
+        "description": { "color": "color3" }
+      }
+    },
+    "emphasis-colors": {
+      "name": "Emphasis Colors",
+      "description": "High contrast theme",
+      "assignments": {
+        "section": { "bg": "color1" },
+        "container": { "bg": "transparent" },
+        "wrapper": { "bg": "color4" },
+        "pretitle": { "color": "color1" },
+        "title": { "color": "color3" },
+        "subtitle": { "color": "color3" },
+        "description": { "color": "color3" }
+      }
+    }
+  },
+  
+  "helperPresets": {
+    "typography": {
+      "hierarchy": {
+        "name": "Typography Hierarchy",
+        "description": "Creates visual hierarchy through lightness modifications",
+        "modifications": {
+          "title": { 
+            "lightness": { "operation": "set", "value": 90 },
+            "opacity": 1.0
+          },
+          "pretitle": { 
+            "lightness": { "operation": "set", "value": 70 },
+            "opacity": 0.9
+          },
+          "subtitle": { 
+            "lightness": { "operation": "set", "value": 70 },
+            "opacity": 0.8
+          },
+          "description": { 
+            "lightness": { "operation": "set", "value": 60 },
+            "opacity": 0.7
+          }
+        }
+      },
+      "high-contrast": {
+        "name": "High Contrast",
+        "description": "Maximum contrast for accessibility",
+        "modifications": {
+          "title": { 
+            "lightness": { "operation": "set", "value": 10 }
+          },
+          "pretitle": { 
+            "lightness": { "operation": "set", "value": 30 }
+          },
+          "subtitle": { 
+            "lightness": { "operation": "set", "value": 20 }
+          },
+          "description": { 
+            "lightness": { "operation": "set", "value": 40 }
+          }
+        }
+      }
+    },
+    
+    "interactive": {
+      "hover": {
+        "name": "Hover States",
+        "description": "Interactive hover modifications",
+        "modifications": {
+          "all": {
+            "lightness": { "operation": "adjust", "value": -10 },
+            "saturation": { "operation": "adjust", "value": 10 }
+          }
+        }
+      },
+      "active": {
+        "name": "Active States",
+        "description": "Active/pressed state modifications",
+        "modifications": {
+          "all": {
+            "lightness": { "operation": "adjust", "value": -20 },
+            "saturation": { "operation": "adjust", "value": 15 }
+          }
+        }
+      }
+    },
+    
+    "saturation": {
+      "vibrant": {
+        "name": "Vibrant",
+        "description": "Increased color saturation",
+        "modifications": {
+          "all": {
+            "saturation": { "operation": "multiply", "value": 1.5 }
+          }
+        }
+      },
+      "muted": {
+        "name": "Muted",
+        "description": "Reduced color saturation",
+        "modifications": {
+          "all": {
+            "saturation": { "operation": "multiply", "value": 0.5 }
+          }
+        }
+      },
+      "grayscale": {
+        "name": "Grayscale",
+        "description": "Remove all color",
+        "modifications": {
+          "all": {
+            "saturation": { "operation": "set", "value": 0 }
+          }
+        }
+      }
+    }
+  },
+  
+  "scopes": {
+    "layout": {
+      "hero": {
+        "name": "Hero Scope",
+        "modifiers": {
+          "title": { "scale": 1.5 },
+          "subtitle": { "scale": 1.2 },
+          "spacing": { "scale": 1.5 }
+        }
+      },
+      "card": {
+        "name": "Card Scope",
+        "modifiers": {
+          "title": { "scale": 0.8 },
+          "subtitle": { "scale": 0.9 },
+          "spacing": { "scale": 0.8 }
+        }
+      },
+      "sidebar": {
+        "name": "Sidebar Scope",
+        "modifiers": {
+          "title": { "scale": 0.7 },
+          "subtitle": { "scale": 0.8 },
+          "spacing": { "scale": 0.6 }
+        }
+      }
+    }
+  },
+  
+  "calculations": {
+    "colorOperations": {
+      "set": "Sets the value directly",
+      "adjust": "Adds or subtracts from current value",
+      "multiply": "Multiplies current value by factor",
+      "divide": "Divides current value by factor"
+    },
+    "validRanges": {
+      "hue": { "min": 0, "max": 360, "wrap": true },
+      "saturation": { "min": 0, "max": 100, "wrap": false },
+      "lightness": { "min": 0, "max": 100, "wrap": false },
+      "opacity": { "min": 0, "max": 1, "wrap": false }
+    }
+  }
+}

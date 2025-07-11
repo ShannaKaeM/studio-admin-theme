@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Preset System - STUDIO 4-Layer Architecture</title>
+    <style>
+        /* ============================================ */
+        /* LAYER 1: ROOT THEME VARIABLES               */
+        /* ============================================ */
+        :root {
+            /* Color Scale */
+            --color1: #7a9b57;  /* Primary Green */
+            --color2: #4a6741;  /* Secondary Green */
+            --color3: #2d2d2d;  /* Dark Gray */
+            --color4: #ffffff;  /* White */
+            --color5: #f8f9fa;  /* Light Gray */
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ============================================ */
+        /* LAYER 2: BASE COMPONENTS                    */
+        /* ============================================ */
+        
+        /* Section Component - Main structural container */
+        .section {
+            --section-display: grid;
+            --section-grid-template-columns: 1fr;
+            --section-grid-template-rows: auto;
+            --section-grid-template-areas: "a";
+            --section-gap: 2rem;
+            --section-padding: 2rem;
+            --section-width: 100%;
+            --section-max-width: none;
+            --section-background: transparent;
+            
+            display: var(--section-display);
+            grid-template-columns: var(--section-grid-template-columns);
+            grid-template-rows: var(--section-grid-template-rows);
+            grid-template-areas: var(--section-grid-template-areas);
+            gap: var(--section-gap);
+            padding: var(--section-padding);
+            width: var(--section-width);
+            max-width: var(--section-max-width);
+            background: var(--section-background);
+            box-sizing: border-box;
+        }
+
+        /* Panel Component - Content containers */
+        .panel {
+            --panel-display: grid;
+            --panel-grid-template-columns: 1fr;
+            --panel-grid-template-rows: auto 1fr auto;
+            --panel-grid-template-areas: "a" "b" "c";
+            --panel-gap: 1rem;
+            --panel-padding: 1.5rem;
+            --panel-background: var(--color5);
+            --panel-border-radius: 0.5rem;
+            --panel-border: 1px solid #e0e0e0;
+            --panel-grid-area: a;
+            
+            display: var(--panel-display);
+            grid-template-columns: var(--panel-grid-template-columns);
+            grid-template-rows: var(--panel-grid-template-rows);
+            grid-template-areas: var(--panel-grid-template-areas);
+            gap: var(--panel-gap);
+            padding: var(--panel-padding);
+            background: var(--panel-background);
+            border-radius: var(--panel-border-radius);
+            border: var(--panel-border);
+            grid-area: var(--panel-grid-area);
+            box-sizing: border-box;
+        }
+
+        /* Content Component - Individual content blocks */
+        .content {
+            --content-display: block;
+            --content-grid-area: a;
+            --content-padding: 0.5rem;
+            --content-background: transparent;
+            --content-border-radius: 0;
+            
+            display: var(--content-display);
+            grid-area: var(--content-grid-area);
+            padding: var(--content-padding);
+            background: var(--content-background);
+            border-radius: var(--content-border-radius);
+            box-sizing: border-box;
+        }
+
+        /* Typography Components */
+        .title {
+            --title-color: var(--color3);
+            --title-size: 1.5rem;
+            --title-weight: 600;
+            --title-margin: 0 0 0.5rem 0;
+            --title-grid-area: auto;
+            
+            color: var(--title-color);
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            margin: var(--title-margin);
+            grid-area: var(--title-grid-area);
+            font-family: var(--font-family);
+        }
+
+        .subtitle {
+            --subtitle-color: #666;
+            --subtitle-size: 1rem;
+            --subtitle-weight: 400;
+            --subtitle-margin: 0;
+            --subtitle-grid-area: auto;
+            
+            color: var(--subtitle-color);
+            font-size: var(--subtitle-size);
+            font-weight: var(--subtitle-weight);
+            margin: var(--subtitle-margin);
+            grid-area: var(--subtitle-grid-area);
+            font-family: var(--font-family);
+        }
+
+        /* ============================================ */
+        /* LAYER 3: DASHBOARD SCOPE                    */
+        /* ============================================ */
+        
+        [data-scope="dashboard"] {
+            /* Base Dashboard Configuration */
+            .section {
+                --section-gap: 1rem;
+                --section-padding: 1rem;
+                --section-background: #f0f0f0;
+                --section-min-height: 100vh;
+            }
+            
+            /* Panel Grid Area Assignment via nth-child */
+            .section .panel:nth-child(1) { --panel-grid-area: panel-a; }
+            .section .panel:nth-child(2) { --panel-grid-area: panel-b; }
+            .section .panel:nth-child(3) { --panel-grid-area: panel-c; }
+            .section .panel:nth-child(4) { --panel-grid-area: panel-d; }
+            
+            /* Content Grid Area Assignment via nth-child */
+            .panel .content:nth-child(1) { --content-grid-area: a; }
+            .panel .content:nth-child(2) { --content-grid-area: b; }
+            .panel .content:nth-child(3) { --content-grid-area: c; }
+            .panel .content:nth-child(4) { --content-grid-area: d; }
+            
+            /* Panel Styling */
+            .panel {
+                --panel-background: var(--color4);
+                --panel-border: 1px solid #ddd;
+                --panel-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+        }
+
+        /* ============================================ */
+        /* LAYER 4: GRID PRESET SYSTEM                 */
+        /* ============================================ */
+
+        /* DASHBOARD LAYOUT PRESETS */
+        /* Control main panel arrangement */
+
+        /* Dashboard 3-Column Layout */
+        [data-scope="dashboard"][data-preset="dashboard-3-col"] {
+            .section {
+                --section-grid-template-columns: 300px 1fr 300px;
+                --section-grid-template-rows: auto 1fr;
+                --section-grid-template-areas: 
+                    "panel-a panel-a panel-a"
+                    "panel-b panel-c panel-d";
+            }
+        }
+
+        /* Dashboard Header-Sidebar Layout */
+        [data-scope="dashboard"][data-preset="dashboard-header-sidebar"] {
+            .section {
+                --section-grid-template-columns: 250px 1fr;
+                --section-grid-template-rows: auto 1fr;
+                --section-grid-template-areas: 
+                    "panel-a panel-a"
+                    "panel-b panel-c";
+            }
+            
+            /* Header Panel Row Layout Override */
+            .panel:nth-child(1) {
+                --panel-grid-template-columns: auto 1fr auto;
+                --panel-grid-template-rows: 1fr;
+                --panel-grid-template-areas: "a b c";
+                --panel-background: var(--color1);
+            }
+            
+            .panel:nth-child(1) .title {
+                --title-color: var(--color4);
+            }
+            
+            .panel:nth-child(1) .subtitle {
+                --subtitle-color: rgba(255,255,255,0.8);
+            }
+        }
+
+        /* Dashboard 3-Row Layout */
+        [data-scope="dashboard"][data-preset="dashboard-3-row"] {
+            .section {
+                --section-grid-template-columns: 1fr;
+                --section-grid-template-rows: auto auto 1fr;
+                --section-grid-template-areas: 
+                    "panel-a"
+                    "panel-b"
+                    "panel-c";
+            }
+        }
+
+        /* PANEL CONTENT PRESETS */
+        /* Control internal panel content layout */
+
+        /* 3-Row Horizontal Layout */
+        [data-scope="dashboard"][data-preset*="grid-3-row"] .panel,
+        [data-scope="dashboard"] .panel[data-preset="grid-3-row"] {
+            --panel-grid-template-columns: 1fr 1fr 1fr;
+            --panel-grid-template-rows: 1fr;
+            --panel-grid-template-areas: "a b c";
+        }
+
+        /* 3-Column Vertical Layout */
+        [data-scope="dashboard"][data-preset*="grid-3-col"] .panel,
+        [data-scope="dashboard"] .panel[data-preset="grid-3-col"] {
+            --panel-grid-template-columns: 1fr;
+            --panel-grid-template-rows: auto auto 1fr;
+            --panel-grid-template-areas: "a" "b" "c";
+        }
+
+        /* 2x2 Grid Layout */
+        [data-scope="dashboard"][data-preset*="grid-2x2"] .panel,
+        [data-scope="dashboard"] .panel[data-preset="grid-2x2"] {
+            --panel-grid-template-columns: 1fr 1fr;
+            --panel-grid-template-rows: 1fr 1fr;
+            --panel-grid-template-areas: 
+                "a b"
+                "c d";
+        }
+
+        /* 1x3 Equal Height Rows */
+        [data-scope="dashboard"][data-preset*="grid-1x3"] .panel,
+        [data-scope="dashboard"] .panel[data-preset="grid-1x3"] {
+            --panel-grid-template-columns: 1fr;
+            --panel-grid-template-rows: 1fr 1fr 1fr;
+            --panel-grid-template-areas: "a" "b" "c";
+        }
+
+        /* ============================================ */
+        /* PRESET DEMO STYLES                          */
+        /* ============================================ */
+        
+        .preset-demo {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #fff;
+            border: 2px solid var(--color1);
+            border-radius: 8px;
+        }
+        
+        .preset-demo h3 {
+            color: var(--color1);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .preset-demo p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .preset-code {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--color2);
+            margin: 1rem 0;
+        }
+
+        /* ============================================ */
+        /* BASE RESET & BODY STYLES                    */
+        /* ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Layout using Grid Preset System -->
+    <div data-scope="dashboard" data-preset="dashboard-header-sidebar">
+        <div class="section">
+            
+            <!-- Header Panel (spans full width) -->
+            <div class="panel">
+                <div class="content">
+                    <div class="title">Grid Preset System</div>
+                    <div class="subtitle">Two-level preset architecture</div>
+                </div>
+                <div class="content">
+                    <div class="title">Dashboard Presets</div>
+                    <div class="subtitle">Main panel arrangement</div>
+                </div>
+                <div class="content">
+                    <div class="title">Panel Presets</div>
+                    <div class="subtitle">Content layout control</div>
+                </div>
+            </div>
+            
+            <!-- Left Sidebar Panel -->
+            <div class="panel" data-preset="grid-3-col">
+                <div class="content">
+                    <div class="title">Dashboard Presets</div>
+                    <div class="subtitle">Main layout control</div>
+                </div>
+                <div class="content">
+                    <div class="preset-demo">
+                        <h3>dashboard-3-col</h3>
+                        <p>Three-column layout with fixed sidebars</p>
+                        <div class="preset-code">300px 1fr 300px</div>
+                    </div>
+                    
+                    <div class="preset-demo">
+                        <h3>dashboard-header-sidebar</h3>
+                        <p>Classic header + sidebar layout</p>
+                        <div class="preset-code">Currently Active ✅</div>
+                    </div>
+                    
+                    <div class="preset-demo">
+                        <h3>dashboard-3-row</h3>
+                        <p>Stacked rows for mobile/single-column</p>
+                        <div class="preset-code">1fr / auto auto 1fr</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="subtitle">Switch via data-preset attribute</div>
+                </div>
+            </div>
+            
+            <!-- Main Content Panel -->
+            <div class="panel" data-preset="grid-2x2">
+                <div class="content">
+                    <div class="title">Panel Content Presets</div>
+                    <div class="subtitle">Internal layout control</div>
+                </div>
+                <div class="content">
+                    <h3 style="margin-bottom: 1rem; color: var(--color2);">grid-3-row</h3>
+                    <p style="line-height: 1.6;">Horizontal row layout - perfect for navigation bars, toolbars, or side-by-side content blocks.</p>
+                    <div class="preset-code">grid-template-areas: "a b c";</div>
+                </div>
+                <div class="content">
+                    <h3 style="margin-bottom: 1rem; color: var(--color2);">grid-3-col</h3>
+                    <p style="line-height: 1.6;">Vertical column layout - ideal for traditional content with header, body, and footer sections.</p>
+                    <div class="preset-code">grid-template-areas: "a" "b" "c";</div>
+                </div>
+                <div class="content">
+                    <h3 style="margin-bottom: 1rem; color: var(--color2);">grid-2x2 (Active)</h3>
+                    <p style="line-height: 1.6;">2x2 grid layout - perfect for dashboards, cards, or any four-quadrant content arrangement.</p>
+                    <div class="preset-code">grid-template-areas: "a b" "c d";</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Demonstration Section -->
+    <div style="padding: 2rem; background: white; margin: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <h2 style="color: var(--color1); margin-bottom: 1.5rem;">Grid Preset System Features</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <h3 style="color: var(--color2); margin-bottom: 1rem;">🏗️ Two-Level Architecture</h3>
+                <ul style="line-height: 1.8; padding-left: 1.5rem;">
+                    <li><strong>Dashboard Presets:</strong> Control main panel arrangement</li>
+                    <li><strong>Panel Presets:</strong> Control internal content layout</li>
+                    <li><strong>Composable:</strong> Mix and match any combination</li>
+                    <li><strong>Declarative:</strong> Single HTML attribute changes entire layout</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3 style="color: var(--color2); margin-bottom: 1rem;">⚡ Performance Benefits</h3>
+                <ul style="line-height: 1.8; padding-left: 1.5rem;">
+                    <li><strong>CSS Variables:</strong> Fastest CSS feature for updates</li>
+                    <li><strong>No JavaScript:</strong> Pure CSS implementation</li>
+                    <li><strong>Hardware Accelerated:</strong> CSS Grid optimizations</li>
+                    <li><strong>Minimal Reflow:</strong> Efficient layout calculations</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border-left: 4px solid var(--color1);">
+            <h3 style="color: var(--color1); margin-bottom: 1rem;">🎯 Usage Examples</h3>
+            <div style="font-family: monospace; font-size: 0.9rem; line-height: 1.6;">
+                <div style="margin-bottom: 0.5rem;"><strong>Dashboard Layout:</strong> &lt;div data-scope="dashboard" data-preset="dashboard-3-col"&gt;</div>
+                <div style="margin-bottom: 0.5rem;"><strong>Panel Content:</strong> &lt;div class="panel" data-preset="grid-2x2"&gt;</div>
+                <div style="margin-bottom: 0.5rem;"><strong>Combined:</strong> data-preset="dashboard-header-sidebar grid-3-row"</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: linear-gradient(135deg, var(--color1), var(--color2)); color: white; border-radius: 6px;">
+            <h3 style="margin-bottom: 0.5rem;">🚀 Key Innovation</h3>
+            <p style="margin: 0; line-height: 1.6;">This system bridges design tokens and layout implementation through CSS custom properties, enabling complex layouts to be controlled by a single HTML attribute change!</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Grid Concepts - STUDIO 4-Layer Architecture</title>
+    <style>
+        /* ============================================ */
+        /* LAYER 1: ROOT THEME VARIABLES               */
+        /* ============================================ */
+        :root {
+            /* Color Scale */
+            --color1: #7a9b57;  /* Primary Green */
+            --color2: #4a6741;  /* Secondary Green */
+            --color3: #2d2d2d;  /* Dark Gray */
+            --color4: #ffffff;  /* White */
+            --color5: #f8f9fa;  /* Light Gray */
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ============================================ */
+        /* LAYER 2: BASE COMPONENTS                    */
+        /* ============================================ */
+        
+        /* Section Component - Main structural container */
+        .section {
+            --section-display: grid;
+            --section-grid-template-columns: 1fr;
+            --section-grid-template-rows: auto;
+            --section-grid-template-areas: "a";
+            --section-gap: 2rem;
+            --section-padding: 2rem;
+            --section-width: 100%;
+            --section-max-width: none;
+            --section-background: transparent;
+            
+            display: var(--section-display);
+            grid-template-columns: var(--section-grid-template-columns);
+            grid-template-rows: var(--section-grid-template-rows);
+            grid-template-areas: var(--section-grid-template-areas);
+            gap: var(--section-gap);
+            padding: var(--section-padding);
+            width: var(--section-width);
+            max-width: var(--section-max-width);
+            background: var(--section-background);
+            box-sizing: border-box;
+        }
+
+        /* Panel Component - Content containers */
+        .panel {
+            --panel-display: grid;
+            --panel-grid-template-columns: 1fr;
+            --panel-grid-template-rows: auto 1fr auto;
+            --panel-grid-template-areas: "a" "b" "c";
+            --panel-gap: 1rem;
+            --panel-padding: 1.5rem;
+            --panel-background: var(--color5);
+            --panel-border-radius: 0.5rem;
+            --panel-border: 1px solid #e0e0e0;
+            --panel-grid-area: a;
+            
+            display: var(--panel-display);
+            grid-template-columns: var(--panel-grid-template-columns);
+            grid-template-rows: var(--panel-grid-template-rows);
+            grid-template-areas: var(--panel-grid-template-areas);
+            gap: var(--panel-gap);
+            padding: var(--panel-padding);
+            background: var(--panel-background);
+            border-radius: var(--panel-border-radius);
+            border: var(--panel-border);
+            grid-area: var(--panel-grid-area);
+            box-sizing: border-box;
+        }
+
+        /* Content Component - Individual content blocks */
+        .content {
+            --content-display: block;
+            --content-grid-area: a;
+            --content-padding: 0.5rem;
+            --content-background: transparent;
+            --content-border-radius: 0;
+            
+            display: var(--content-display);
+            grid-area: var(--content-grid-area);
+            padding: var(--content-padding);
+            background: var(--content-background);
+            border-radius: var(--content-border-radius);
+            box-sizing: border-box;
+        }
+
+        /* Typography Components */
+        .title {
+            --title-color: var(--color3);
+            --title-size: 1.5rem;
+            --title-weight: 600;
+            --title-margin: 0 0 0.5rem 0;
+            --title-grid-area: auto;
+            
+            color: var(--title-color);
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            margin: var(--title-margin);
+            grid-area: var(--title-grid-area);
+            font-family: var(--font-family);
+        }
+
+        .subtitle {
+            --subtitle-color: #666;
+            --subtitle-size: 1rem;
+            --subtitle-weight: 400;
+            --subtitle-margin: 0;
+            --subtitle-grid-area: auto;
+            
+            color: var(--subtitle-color);
+            font-size: var(--subtitle-size);
+            font-weight: var(--subtitle-weight);
+            margin: var(--subtitle-margin);
+            grid-area: var(--subtitle-grid-area);
+            font-family: var(--font-family);
+        }
+
+        /* ============================================ */
+        /* LAYER 3: DASHBOARD SCOPE                    */
+        /* ============================================ */
+        
+        [data-scope="dashboard"] {
+            /* Section Configuration - Main layout grid */
+            .section {
+                --section-grid-template-columns: 300px 1fr 300px;
+                --section-grid-template-rows: auto 1fr;
+                --section-grid-template-areas: 
+                    "panel-a panel-a panel-a"
+                    "panel-b panel-c panel-d";
+                --section-gap: 1rem;
+                --section-padding: 1rem;
+                --section-background: #f0f0f0;
+                --section-min-height: 100vh;
+            }
+            
+            /* Panel Grid Area Assignment via nth-child */
+            .section .panel:nth-child(1) { --panel-grid-area: panel-a; }
+            .section .panel:nth-child(2) { --panel-grid-area: panel-b; }
+            .section .panel:nth-child(3) { --panel-grid-area: panel-c; }
+            .section .panel:nth-child(4) { --panel-grid-area: panel-d; }
+            
+            /* Content Grid Area Assignment via nth-child */
+            .panel .content:nth-child(1) { --content-grid-area: a; }
+            .panel .content:nth-child(2) { --content-grid-area: b; }
+            .panel .content:nth-child(3) { --content-grid-area: c; }
+            
+            /* Panel Styling */
+            .panel {
+                --panel-background: var(--color4);
+                --panel-border: 1px solid #ddd;
+                --panel-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            /* Header Panel Special Layout (first panel) */
+            .panel:nth-child(1) {
+                --panel-grid-template-columns: auto 1fr auto;
+                --panel-grid-template-rows: 1fr;
+                --panel-grid-template-areas: "a b c";
+                --panel-background: var(--color1);
+            }
+            
+            /* Header Panel Content Styling */
+            .panel:nth-child(1) .title {
+                --title-color: var(--color4);
+            }
+            
+            .panel:nth-child(1) .subtitle {
+                --subtitle-color: rgba(255,255,255,0.8);
+            }
+        }
+
+        /* ============================================ */
+        /* BASE RESET & BODY STYLES                    */
+        /* ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Layout using Core Grid Concepts -->
+    <div data-scope="dashboard">
+        <div class="section">
+            
+            <!-- Header Panel (spans full width) -->
+            <div class="panel">
+                <div class="content">
+                    <div class="title">Dashboard Header</div>
+                    <div class="subtitle">Navigation & Controls</div>
+                </div>
+                <div class="content">
+                    <div class="title">Main Navigation</div>
+                    <div class="subtitle">Primary menu items</div>
+                </div>
+                <div class="content">
+                    <div class="title">User Actions</div>
+                    <div class="subtitle">Profile & settings</div>
+                </div>
+            </div>
+            
+            <!-- Left Sidebar Panel -->
+            <div class="panel">
+                <div class="content">
+                    <div class="title">Left Sidebar</div>
+                    <div class="subtitle">Secondary navigation</div>
+                </div>
+                <div class="content">
+                    <p>This is the main content area of the left sidebar. It demonstrates how content automatically flows into the grid areas defined by the CSS Grid system.</p>
+                    <p>The grid areas are assigned automatically using nth-child selectors, making the HTML semantic and clean.</p>
+                </div>
+                <div class="content">
+                    <div class="subtitle">Sidebar Footer</div>
+                </div>
+            </div>
+            
+            <!-- Main Content Panel -->
+            <div class="panel">
+                <div class="content">
+                    <div class="title">Main Content Area</div>
+                    <div class="subtitle">Primary workspace</div>
+                </div>
+                <div class="content">
+                    <h3 style="margin-bottom: 1rem; color: var(--color2);">Core Grid Concepts Demonstration</h3>
+                    
+                    <p style="margin-bottom: 1rem; line-height: 1.6;">This example demonstrates the <strong>Core Grid Concepts</strong> of the STUDIO 4-Layer Architecture:</p>
+                    
+                    <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>CSS Custom Properties:</strong> Every layout property is controlled by CSS variables</li>
+                        <li><strong>Component Hierarchy:</strong> Section → Panel → Content structure</li>
+                        <li><strong>Grid Template Areas:</strong> Named areas for semantic positioning</li>
+                        <li><strong>Automatic Assignment:</strong> nth-child selectors assign grid areas</li>
+                        <li><strong>Scope-Based Overrides:</strong> Dashboard scope customizes the layout</li>
+                    </ul>
+                    
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; border-left: 4px solid var(--color1);">
+                        <strong>Key Innovation:</strong> No hardcoded CSS values - everything is configurable through CSS variables, enabling flexible, maintainable layouts.
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="subtitle">Content Footer Area</div>
+                </div>
+            </div>
+            
+            <!-- Right Sidebar Panel -->
+            <div class="panel">
+                <div class="content">
+                    <div class="title">Right Sidebar</div>
+                    <div class="subtitle">Tools & utilities</div>
+                </div>
+                <div class="content">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--color2);">Grid Structure</h4>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem; line-height: 1.5;">The current layout uses:</p>
+                    
+                    <div style="background: #f0f0f0; padding: 0.75rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; margin-bottom: 1rem;">
+                        grid-template-areas:<br>
+                        &nbsp;&nbsp;"panel-a panel-a panel-a"<br>
+                        &nbsp;&nbsp;"panel-b panel-c panel-d";
+                    </div>
+                    
+                    <p style="font-size: 0.9rem; line-height: 1.5;">This creates a header that spans the full width, with three columns below for the sidebar and main content areas.</p>
+                </div>
+                <div class="content">
+                    <div class="subtitle">Right Sidebar Footer</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

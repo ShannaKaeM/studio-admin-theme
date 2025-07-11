@@ -13,6 +13,20 @@
 - [x] Custom S4 logo integration
 - [x] CSS property autocomplete system
 
+## 🔄 UI REFACTOR (PLANNED)
+- [x] Create s4-system branch
+- [ ] Rebuild JSON-based UI configuration (React Plugin Design System)
+- [ ] Full page editor interface with hotkey access
+- [ ] Refactor backend plugin React styles using S4 Design Framework
+- [x] Remove button from front end interfact
+- [x] Removed frontend UI Theme Editor button
+- [x] Added Ctrl+4/Cmd+4 shortcode access (dev-only)
+- [x] Converted ThemeEditor to full-page interface
+- [x] Updated header to "React Plugin Design System"
+- [x] **Fixed hotkey toggle behavior**: Cmd+4/Ctrl+4 now properly toggles open/close
+
+
+
 ## ✅ INTEGRATED DOCUMENT MANAGEMENT (UI COMPLETE)
 - [x] Top-level tab architecture (Theme, Docs, Files)
 - [x] Docs Tab UI with accordion organization
@@ -66,15 +80,5 @@
   - [ ] Multi-modal AI interaction (text + visual + spatial)
   - [ ] Advanced collaboration features
 
-## 🔄 UI REFACTOR (PLANNED)
-- [x] Create s4-system branch
-- [ ] Rebuild JSON-based UI configuration (React Plugin Design System)
-- [ ] Full page editor interface with hotkey access
-- [ ] Refactor backend plugin React styles using S4 Design Framework
-- [x] Remove button from front end interfact
-- [x] Removed frontend UI Theme Editor button
-- [x] Added Ctrl+4/Cmd+4 shortcode access (dev-only)
-- [x] Converted ThemeEditor to full-page interface
-- [x] Updated header to "React Plugin Design System"
-- [x] **Fixed hotkey toggle behavior**: Cmd+4/Ctrl+4 now properly toggles open/close
 ---
+

@@ -533,23 +533,64 @@ Planning API endpoints for:
 - Version control integration`;
             break;
           case 'backend-whiteboard':
-            content = `# 04-Plugin Backend Whiteboard
-
-## Backend Development Notes
-
-### Document API Design
-Need endpoints for:
-\`\`\`
-GET /wp-json/studio4/v1/docs/{folder}/{file}
-POST /wp-json/studio4/v1/docs/{folder}/{file}
-PUT /wp-json/studio4/v1/docs/{folder}/{file}
-\`\`\`
-
-### Security Considerations
-- Proper nonce verification
-- File path validation
-- User permission checks
-- Backup before saves\`;
+            content = '# 04-Plugin Backend Whiteboard\n\n' +
+                     '## 📊 STUDIO4 COMPONENT AUDIT RESULTS\n\n' +
+                     '### **DEFINED COMPONENTS**: ~50+ in ui-theme-config.json\n\n' +
+                     '#### **✅ ACTUALLY USED COMPONENTS** (28 components)\n' +
+                     '**Used in S4ThemeBuilder.jsx + StructuredSidebar.jsx:**\n' +
+                     '- main-header, header-brand, header-logo, header-title, header-subtitle\n' +
+                     '- sidebar, sidebar-header, sidebar-header-content, sidebar-logo, sidebar-header-text\n' +
+                     '- sidebar-title, sidebar-subtitle, sidebar-nav-grid, sidebar-nav-button, sidebar-nav-number, sidebar-nav-label\n' +
+                     '- sidebar-content, content-area, section, sidebar-footer\n' +
+                     '- preview-container, preview-header, preview-content, preview-canvas, preview-mode-toggle, preview-mode-button\n' +
+                     '- button-primary, button-secondary\n' +
+                     '- color-grid, color-card, color-swatch, color-scale\n\n' +
+                     '#### **❌ UNUSED/ORPHANED COMPONENTS** (~22+ components)\n' +
+                     '- accordion, accordion-item, accordion-trigger, accordion-content, accordion-icon\n' +
+                     '- input, label, card\n' +
+                     '- color-grid-xs, color-grid-sm, color-grid-md, color-grid-lg, color-grid-xl\n' +
+                     '- color-card-content, color-card-title, color-card-value\n' +
+                     '- color-swatch-number, color-swatch-label\n' +
+                     '- color-scale-swatch, color-preview-title\n' +
+                     '- preview-mode-button-active, preview-mode-button-hover\n' +
+                     '- sidebar-nav-button-active, sidebar-nav-button-hover\n' +
+                     '- sidebar-nav-number-active, sidebar-nav-label-active\n\n' +
+                     '### **🚨 CURRENT SYSTEM USAGE REALITY CHECK**\n\n' +
+                     '#### **Files Using Theme-Aware System**: 2 files\n' +
+                     '1. **S4ThemeBuilder.jsx** - 🔀 MIXED (imports 28 components but still has Tailwind classes)\n' +
+                     '2. **StructuredSidebar.jsx** - 🎯 PURE (fully theme-aware)\n\n' +
+                     '#### **Files Using Pure Tailwind**: 7 files\n' +
+                     '- ThemeEditor.jsx, CommandPalette.jsx, Panel.jsx, PanelHeader.jsx, SettingsDialog.jsx, TailwindDemo.jsx, ThemeEditor-old.jsx\n\n' +
+                     '### **🔄 DUPLICATES & ODDITIES**\n\n' +
+                     '#### **State Variants (Connected but separate)**:\n' +
+                     '- `sidebar-nav-button` + `sidebar-nav-button-active` + `sidebar-nav-button-hover`\n' +
+                     '- `preview-mode-button` + `preview-mode-button-active` + `preview-mode-button-hover`\n' +
+                     '- `sidebar-nav-number` + `sidebar-nav-number-active`\n' +
+                     '- `sidebar-nav-label` + `sidebar-nav-label-active`\n\n' +
+                     '#### **Responsive Grid Variants**:\n' +
+                     '- `color-grid` + `color-grid-xs` + `color-grid-sm` + `color-grid-md` + `color-grid-lg` + `color-grid-xl` (6 versions!)\n\n' +
+                     '### **💡 REFACTOR RECOMMENDATIONS**\n\n' +
+                     '#### **1. Remove Unused (22+ components)**\n' +
+                     'Safe to delete since they\'re not imported anywhere\n\n' +
+                     '#### **2. Consolidate State Variants**\n' +
+                     'Instead of separate `-active` components, use CSS `:hover` and `[data-state="active"]`\n\n' +
+                     '#### **3. Simplify Responsive Grids**\n' +
+                     'Replace 6 grid variants with CSS `@media` queries in one component\n\n' +
+                     '#### **4. Convert Tailwind Files**\n' +
+                     '7 files still using pure Tailwind - prime candidates for S4 conversion\n\n' +
+                     '## Backend Development Notes\n\n' +
+                     '### Document API Design\n' +
+                     'Need endpoints for:\n' +
+                     '```\n' +
+                     'GET /wp-json/studio4/v1/docs/{folder}/{file}\n' +
+                     'POST /wp-json/studio4/v1/docs/{folder}/{file}\n' +
+                     'PUT /wp-json/studio4/v1/docs/{folder}/{file}\n' +
+                     '```\n\n' +
+                     '### Security Considerations\n' +
+                     '- Proper nonce verification\n' +
+                     '- File path validation\n' +
+                     '- User permission checks\n' +
+                     '- Backup before saves';
             break;
           default:
             content = 'Document not found';
@@ -558,134 +599,179 @@ PUT /wp-json/studio4/v1/docs/{folder}/{file}
         // Reference files (existing functionality)
         switch (fileName) {
           case 'ui-theme-config':
-            content = JSON.stringify(config, null, 2);
+            if (config && Object.keys(config).length > 0) {
+              content = JSON.stringify(config, null, 2);
+            } else {
+              content = JSON.stringify({
+                "loading": "Theme configuration is loading...",
+                "note": "If this persists, the config state might not be initialized",
+                "debug": {
+                  "configExists": !!config,
+                  "configKeys": config ? Object.keys(config).length : 0
+                }
+              }, null, 2);
+            }
             break;
           case 'useThemeConfig':
-            content = '// useThemeConfig.js - Theme Configuration Hook loaded from API';
-// This hook manages the UI theme configuration and CSS generation
-
-import { useState, useEffect, useCallback } from 'react';
-
-// Main hook for theme configuration management
-export function useThemeConfig() {
-  // Theme configuration state
-  const [config, setConfig] = useState(/* loaded from localStorage */);
-  
-  // CSS generation and Shadow DOM injection
-  const generateCSS = () => {
-    // Converts JSON config to CSS rules
-    // Injects styles into Shadow DOM
-  };
-  
-  // Update functions for colors, components, etc.
-  const updateColorScale = (colorName, scale) => { /* ... */ };
-  const updateComponent = (componentName, styles) => { /* ... */ };
-  
-  return {
-    config,
-    updateColorScale,
-    updateComponent,
-    // ... other functions
-  };
-}`;
+            content = '// useThemeConfig.js - LIVE Theme Configuration Hook\n' +
+                     '// This is the actual hook that powers the Studio4 interface\n\n' +
+                     'import { useState, useEffect, useMemo } from \'react\';\n' +
+                     'import themeConfig from \'../config/ui-theme-config.json\';\n\n' +
+                     'export function useThemeConfig() {\n' +
+                     '  // Load from localStorage on initialization\n' +
+                     '  const [config, setConfig] = useState(() => {\n' +
+                     '    try {\n' +
+                     '      const saved = localStorage.getItem(\'studio4-ui-theme-config\');\n' +
+                     '      return saved ? JSON.parse(saved) : themeConfig;\n' +
+                     '    } catch {\n' +
+                     '      return themeConfig;\n' +
+                     '    }\n' +
+                     '  });\n\n' +
+                     '  // Generate CSS custom properties from JSON config\n' +
+                     '  const cssVariables = useMemo(() => {\n' +
+                     '    return generateCSSFromConfig(config);\n' +
+                     '  }, [config]);\n\n' +
+                     '  // Component style getter function\n' +
+                     '  const getComponentStyles = (componentName) => {\n' +
+                     '    return config.components[componentName] || {};\n' +
+                     '  };\n\n' +
+                     '  return {\n' +
+                     '    config,\n' +
+                     '    getComponentStyles,\n' +
+                     '    updateColorScale,\n' +
+                     '    updateComponent,\n' +
+                     '    exportConfig: () => JSON.stringify(config, null, 2)\n' +
+                     '  };\n' +
+                     '}\n\n' +
+                     '// This hook powers every component in the Studio4 interface!';
             break;
           case 'UIComponents':
-            content = `// UIComponents.jsx - Theme-Aware React Components
-// Every component automatically pulls styles from JSON config
-
-import React from 'react';
-import { useComponentStyles } from '../hooks/useThemeConfig.js';
-
-// Example theme-aware component
-export function Sidebar({ children, className = '', ...props }) {
-  const styles = useComponentStyles('sidebar');
-  
-  return (
-    <aside 
-      className={\`\${className}\`}
-      style={styles}
-      {...props}
-    >
-      {children}
-    </aside>
-  );
-}
-
-// 25+ components defined this way:
-// - Sidebar, SidebarHeader, SidebarTitle, etc.
-// - Buttons, Inputs, Cards, etc.
-// - All automatically styled from JSON config`;
+            content = '// UIComponents.jsx - Theme-Aware React Components\n' +
+                     '// Every component automatically pulls styles from JSON config\n\n' +
+                     '// 50+ components available:\n' +
+                     '// - Sidebar, SidebarHeader, SidebarTitle\n' +
+                     '// - ButtonPrimary, ButtonSecondary\n' +
+                     '// - ColorGrid, ColorCard, ColorSwatch\n' +
+                     '// - All automatically styled from JSON config\n\n' +
+                     '// See complete-component-list.md for full list';
             break;
           case 'main.css':
-            content = `/* main.css - Tailwind 4 with @theme directive */
-
-@import "tailwindcss";
-@source "../**/*.jsx";
-@source "../**/*.js";
-
-@theme {
-  /* S4 Brand Colors (not ShadCN) */
-  --color-primary-500: hsl(337, 35%, 52%);    /* S4 Pink brand */
-  --color-secondary-500: hsl(29, 44%, 53%);   /* S4 Tangerine */
-  --color-neutral-950: hsl(0, 0%, 0%);        /* S4 Dark bg */
-  --color-neutral-50: hsl(0, 0%, 100%);       /* S4 Light text */
-  --radius: 0.375rem;
-}
-
-/* Shadow DOM styles with :host selector */
-:host {
-  /* Component isolation styles */
-}`;
+            content = '/* main.css - Tailwind 4 with @theme directive */\n\n' +
+                     '@import "tailwindcss";\n' +
+                     '@source "../**/*.jsx";\n' +
+                     '@source "../**/*.js";\n\n' +
+                     '@theme {\n' +
+                     '  /* S4 Brand Colors (not ShadCN) */\n' +
+                     '  --color-primary-500: hsl(337, 35%, 52%);\n' +
+                     '  --color-secondary-500: hsl(29, 44%, 53%);\n' +
+                     '  --color-neutral-950: hsl(0, 0%, 0%);\n' +
+                     '  --color-neutral-50: hsl(0, 0%, 100%);\n' +
+                     '  --radius: 0.375rem;\n' +
+                     '}\n\n' +
+                     '/* Shadow DOM styles with :host selector */\n' +
+                     ':host {\n' +
+                     '  /* Component isolation styles */\n' +
+                     '}';
+            break;
+          case 'complete-component-list':
+            content = 'COMPLETE STUDIO4 UI COMPONENT SYSTEM - 50+ COMPONENTS\n\n' +
+                     'This is the COMPLETE list of theme-aware components from ui-theme-config.json\n\n' +
+                     'MAIN LAYOUT COMPONENTS (6)\n' +
+                     '- main-header - Top header spanning entire app width\n' +
+                     '- header-brand - Logo and branding area\n\n' +
+                     'SIDEBAR SYSTEM (15 components)\n' +
+                     '- sidebar - Main 400px sidebar container\n' +
+                     '- sidebar-header - Header section with dark background\n\n' +
+                     'And 30+ more components... \n\n' +
+                     'See REFERENCE/COMPLETE-COMPONENT-LIST.md for full details';
+            break;
+          case 'complete-current-state':
+            content = '# COMPLETE CURRENT STATE - STUDIO4 STYLING SYSTEMS\n\n' +
+                     '**This is EXACTLY what we have right now - no changes, just documentation**\n\n' +
+                     '## 🔍 REALITY CHECK\n\n' +
+                     '### **🎯 Theme-Aware System Usage: MINIMAL**\n' +
+                     '- **Only 1 file** (S4ThemeBuilder.jsx) actually uses our revolutionary 50+ component system\n' +
+                     '- **50+ components defined** in UIComponents.jsx but barely used\n' +
+                     '- **Most components still use pure Tailwind**\n\n' +
+                     '### **🔄 Actual File Breakdown:**\n\n' +
+                     '**PURE TAILWIND (5 files):**\n' +
+                     '- ThemeEditor.jsx - 100% Tailwind classes\n' +
+                     '- Panel.jsx - 100% Tailwind classes\n' +  
+                     '- CommandPalette.jsx - 100% Tailwind classes\n' +
+                     '- SettingsDialog.jsx - 100% Tailwind classes\n' +
+                     '- ShadowApp.jsx - 100% Tailwind classes\n\n' +
+                     '**MIXED APPROACH (1 file):**\n' +
+                     '- S4ThemeBuilder.jsx - 70% theme-aware / 30% Tailwind\n\n' +
+                     '**PURE THEME-AWARE (0 files):**\n' +
+                     '- None! Even our main interface mixes both systems\n\n' +
+                     '## 🚨 MAJOR DUPLICATIONS\n\n' +
+                     '### **Colors Defined in 3 Places:**\n' +
+                     '1. ui-theme-config.json → "primary": { "500": "hsl(337, 35%, 52%)" }\n' +
+                     '2. main.css → --color-primary-500: hsl(337, 35%, 52%);\n' +
+                     '3. Components → className="bg-primary-500"\n\n' +
+                     '### **Components Styled 2 Ways:**\n' +
+                     '1. **Theme-aware**: <Sidebar> uses useComponentStyles(\'sidebar\')\n' +
+                     '2. **Tailwind**: Still has className="w-80 bg-neutral-800"\n\n' +
+                     '## 📊 BUILD OUTPUT\n\n' +
+                     '**Current Build:**\n' +
+                     '- **JS**: 1.156MB (includes React + all dependencies)\n' +
+                     '- **CSS**: 38.18KB (Tailwind 4 full compilation)\n\n' +
+                     '## 🎯 THE IRONY\n\n' +
+                     'We built this **revolutionary 50+ component theme-aware system**, but we\'re only using it in **ONE file**!\n\n' +
+                     'We created a system to replace CSS frameworks but most of our own components still use Tailwind.\n\n' +
+                     '## 🔍 REFACTOR OPPORTUNITIES\n\n' +
+                     '**Option 1: Pure S4 System (Eliminate Tailwind)**\n' +
+                     '- Use only our JSON theme system\n' +
+                     '- Generate minimal CSS from JSON\n' +
+                     '- Every component uses useComponentStyles()\n\n' +
+                     '**Option 2: S4-Enhanced Tailwind**\n' +
+                     '- Generate Tailwind @theme from our JSON\n' +
+                     '- Keep utilities for layout/spacing\n' +
+                     '- Use theme-aware components for complex styling\n\n' +
+                     '**Option 3: Hybrid Approach**\n' +
+                     '- Theme-aware components for interface elements\n' +
+                     '- Tailwind utilities for layout and responsive design\n' +
+                     '- Single source of truth for colors/spacing\n\n' +
+                     '---\n\n' +
+                     '**This is the complete current state - 3 styling systems coexisting!**';
             break;
           case 'daniels-architecture':
-            content = `# DANIEL'S BOILERPLATE ARCHITECTURE - REFERENCE
-
-## 🏗️ THE REVOLUTIONARY STACK
-
-### 1. 🌐 WordPress → Web Component Bridge
-WHAT: Custom <studio4-builder> HTML element  
-PURPOSE: Isolates React app from WordPress completely  
-MAGIC: Shadow DOM = Zero style conflicts with themes  
-
-### 2. ⚛️ React Inside Shadow DOM
-WHAT: Full React 18 app in isolated bubble  
-PURPOSE: Modern UI without touching WordPress styles  
-RESULT: React works perfectly, WordPress themes can't interfere  
-
-### 3. 🎨 Our S4 Framework Integration
-WHAT: JSON config → CSS generation → Theme-aware components  
-PURPOSE: Complete theme control through Studio4 interface  
-NOTE: We replaced Daniel's original ShadCN with our S4 system  
-
-## 🔗 THE DATA FLOW
-
-WordPress PHP → Web Component Attributes → React Props → UI
-     ↓              ↓                      ↓           ↓
-"User data"    "user-role='admin'"    "userRole"   "Admin UI"
-"CSS file"     "tailwind-css='...'"   "CSS"        "Styled"
-"S4 config"    "settings='{...}'"     "settings"   "S4 Theme"
-
-## 🛡️ SHADOW DOM ISOLATION
-
-Problem: WordPress themes break everything  
-Solution: Shadow DOM = Completely separate style universe  
-Result: Your React app is untouchable  
-
-// Inside shadow DOM - completely isolated
-<div className="bg-primary-500 text-white">
-  // WordPress themes can't touch this!
-</div>
-
-## 🔥 THE BREAKTHROUGH POINTS
-
-1. Web Component: React runs in isolated shadow DOM
-2. Server Props: PHP data flows seamlessly to React
-3. CSS Injection: Tailwind CSS injected safely via base64
-4. S4 Integration: Our theme system replaces ShadCN tokens
-5. Zero Conflicts: WordPress themes can't break anything
-6. JSON Control: Our ui-theme-config.json controls everything
-
-🚀 BOTTOM LINE: Daniel's bulletproof architecture + Our S4 system = Perfect combo!`;
+            content = '# DANIEL\'S BOILERPLATE ARCHITECTURE - REFERENCE\n\n' +
+                     '## 🏗️ THE REVOLUTIONARY STACK\n\n' +
+                     '### 1. 🌐 WordPress → Web Component Bridge\n' +
+                     'WHAT: Custom <studio4-builder> HTML element\n' +  
+                     'PURPOSE: Isolates React app from WordPress completely\n' +  
+                     'MAGIC: Shadow DOM = Zero style conflicts with themes\n\n' +  
+                     '### 2. ⚛️ React Inside Shadow DOM\n' +
+                     'WHAT: Full React 18 app in isolated bubble\n' +  
+                     'PURPOSE: Modern UI without touching WordPress styles\n' +  
+                     'RESULT: React works perfectly, WordPress themes can\'t interfere\n\n' +  
+                     '### 3. 🎨 Our S4 Framework Integration\n' +
+                     'WHAT: JSON config → CSS generation → Theme-aware components\n' +  
+                     'PURPOSE: Complete theme control through Studio4 interface\n' +  
+                     'NOTE: We replaced Daniel\'s original ShadCN with our S4 system\n\n' +  
+                     '## 🔗 THE DATA FLOW\n\n' +
+                     'WordPress PHP → Web Component Attributes → React Props → UI\n' +
+                     '     ↓              ↓                      ↓           ↓\n' +
+                     '"User data"    "user-role=\'admin\'"    "userRole"   "Admin UI"\n' +
+                     '"CSS file"     "tailwind-css=\'...\'"   "CSS"        "Styled"\n' +
+                     '"S4 config"    "settings=\'{...}\'"     "settings"   "S4 Theme"\n\n' +
+                     '## 🛡️ SHADOW DOM ISOLATION\n\n' +
+                     'Problem: WordPress themes break everything\n' +  
+                     'Solution: Shadow DOM = Completely separate style universe\n' +  
+                     'Result: Your React app is untouchable\n\n' +  
+                     '// Inside shadow DOM - completely isolated\n' +
+                     '<div className="bg-primary-500 text-white">\n' +
+                     '  // WordPress themes can\'t touch this!\n' +
+                     '</div>\n\n' +
+                     '## 🔥 THE BREAKTHROUGH POINTS\n\n' +
+                     '1. Web Component: React runs in isolated shadow DOM\n' +
+                     '2. Server Props: PHP data flows seamlessly to React\n' +
+                     '3. CSS Injection: Tailwind CSS injected safely via base64\n' +
+                     '4. S4 Integration: Our theme system replaces ShadCN tokens\n' +
+                     '5. Zero Conflicts: WordPress themes can\'t break anything\n' +
+                     '6. JSON Control: Our ui-theme-config.json controls everything\n\n' +
+                     '🚀 BOTTOM LINE: Daniel\'s bulletproof architecture + Our S4 system = Perfect combo!';
             break;
           default:
             content = 'File not found';
@@ -1300,284 +1386,6 @@ Result: Your React app is untouchable
                   <div className="border-b border-neutral-700">
                     <button
                       onClick={() => {
-                        setExpandedSection(expandedSection === 'root-docs' ? null : 'root-docs');
-                      }}
-                      className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
-                        expandedSection === 'root-docs' ? 'border-l-4 border-secondary-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded bg-secondary-500 flex items-center justify-center text-xs font-bold text-white">
-                          📋
-                        </div>
-                        <span className="font-medium text-neutral-200">Root Docs</span>
-                      </div>
-                      <svg className={`w-4 h-4 transition-transform ${expandedSection === 'root-docs' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSection === 'root-docs' && (
-                      <div className="bg-neutral-900 px-4 py-2 space-y-1">
-                        {[
-                          { key: 'claude-memory', label: 'Claude.md' },
-                          { key: 'claude-always', label: 'ClaudeAlways.md' }
-                        ].map(file => (
-                          <button
-                            key={file.key}
-                            onClick={() => {
-                              setSelectedDoc(file.key);
-                              setSelectedDocSection('docs');
-                              setActiveTab('files');
-                              loadFileContent(file.key, 'docs');
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                              activeTab === 'files' && selectedDoc === file.key && selectedDocSection === 'docs' ? 'bg-secondary-500 text-white' : 'text-neutral-300 hover:bg-neutral-700'
-                            }`}
-                          >
-                            {file.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 00-Master */}
-                  <div className="border-b border-neutral-700">
-                    <button
-                      onClick={() => {
-                        setExpandedSection(expandedSection === 'master' ? null : 'master');
-                      }}
-                      className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
-                        expandedSection === 'master' ? 'border-l-4 border-secondary-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded bg-neutral-600 flex items-center justify-center text-xs font-bold text-white">
-                          📊
-                        </div>
-                        <span className="font-medium text-neutral-200">00-Master</span>
-                      </div>
-                      <svg className={`w-4 h-4 transition-transform ${expandedSection === 'master' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSection === 'master' && (
-                      <div className="bg-neutral-900 px-4 py-2 space-y-1">
-                        <button
-                          onClick={() => {
-                            setSelectedDoc('master-checklist');
-                            setSelectedDocSection('docs');
-                            setActiveTab('files');
-                            loadFileContent('master-checklist', 'docs');
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            activeTab === 'files' && selectedDoc === 'master-checklist' && selectedDocSection === 'docs' ? 'bg-secondary-500 text-white' : 'text-neutral-300 hover:bg-neutral-700'
-                          }`}
-                        >
-                          CHECKLIST.md
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 01-Design */}
-                  <div className="border-b border-neutral-700">
-                    <button
-                      onClick={() => {
-                        setExpandedSection(expandedSection === 'design' ? null : 'design');
-                      }}
-                      className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
-                        expandedSection === 'design' ? 'border-l-4 border-secondary-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded bg-pink-500 flex items-center justify-center text-xs font-bold text-white">
-                          🎨
-                        </div>
-                        <span className="font-medium text-neutral-200">01-Design</span>
-                      </div>
-                      <svg className={`w-4 h-4 transition-transform ${expandedSection === 'design' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSection === 'design' && (
-                      <div className="bg-neutral-900 px-4 py-2 space-y-1">
-                        {[
-                          { key: 'design-checklist', label: 'CHECKLIST.md' },
-                          { key: 'design-details', label: 'DETAILS.md' },
-                          { key: 'design-whiteboard', label: 'WHITEBOARD.md' }
-                        ].map(file => (
-                          <button
-                            key={file.key}
-                            onClick={() => {
-                              setSelectedDoc(file.key);
-                              setSelectedDocSection('docs');
-                              setActiveTab('files');
-                              loadFileContent(file.key, 'docs');
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                              activeTab === 'files' && selectedDoc === file.key && selectedDocSection === 'docs' ? 'bg-secondary-500 text-white' : 'text-neutral-300 hover:bg-neutral-700'
-                            }`}
-                          >
-                            {file.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 02-Tech */}
-                  <div className="border-b border-neutral-700">
-                    <button
-                      onClick={() => {
-                        setExpandedSection(expandedSection === 'tech' ? null : 'tech');
-                      }}
-                      className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
-                        expandedSection === 'tech' ? 'border-l-4 border-secondary-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-xs font-bold text-white">
-                          ⚙️
-                        </div>
-                        <span className="font-medium text-neutral-200">02-Tech</span>
-                      </div>
-                      <svg className={`w-4 h-4 transition-transform ${expandedSection === 'tech' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSection === 'tech' && (
-                      <div className="bg-neutral-900 px-4 py-2 space-y-1">
-                        {[
-                          { key: 'tech-checklist', label: 'CHECKLIST.md' },
-                          { key: 'tech-details', label: 'DETAILS.md' },
-                          { key: 'tech-whiteboard', label: 'WHITEBOARD.md' }
-                        ].map(file => (
-                          <button
-                            key={file.key}
-                            onClick={() => {
-                              setSelectedDoc(file.key);
-                              setSelectedDocSection('docs');
-                              setActiveTab('files');
-                              loadFileContent(file.key, 'docs');
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                              activeTab === 'files' && selectedDoc === file.key && selectedDocSection === 'docs' ? 'bg-secondary-500 text-white' : 'text-neutral-300 hover:bg-neutral-700'
-                            }`}
-                          >
-                            {file.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 03-Frontend */}
-                  <div className="border-b border-neutral-700">
-                    <button
-                      onClick={() => {
-                        setExpandedSection(expandedSection === 'frontend' ? null : 'frontend');
-                      }}
-                      className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
-                        expandedSection === 'frontend' ? 'border-l-4 border-secondary-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded bg-green-500 flex items-center justify-center text-xs font-bold text-white">
-                          🔌
-                        </div>
-                        <span className="font-medium text-neutral-200">03-Frontend</span>
-                      </div>
-                      <svg className={`w-4 h-4 transition-transform ${expandedSection === 'frontend' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSection === 'frontend' && (
-                      <div className="bg-neutral-900 px-4 py-2 space-y-1">
-                        {[
-                          { key: 'frontend-checklist', label: 'CHECKLIST.md' },
-                          { key: 'frontend-details', label: 'DETAILS.md' },
-                          { key: 'frontend-whiteboard', label: 'WHITEBOARD.md' }
-                        ].map(file => (
-                          <button
-                            key={file.key}
-                            onClick={() => {
-                              setSelectedDoc(file.key);
-                              setSelectedDocSection('docs');
-                              setActiveTab('files');
-                              loadFileContent(file.key, 'docs');
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                              activeTab === 'files' && selectedDoc === file.key && selectedDocSection === 'docs' ? 'bg-secondary-500 text-white' : 'text-neutral-300 hover:bg-neutral-700'
-                            }`}
-                          >
-                            {file.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 04-Backend */}
-                  <div className="border-b border-neutral-700">
-                    <button
-                      onClick={() => {
-                        setExpandedSection(expandedSection === 'backend' ? null : 'backend');
-                      }}
-                      className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
-                        expandedSection === 'backend' ? 'border-l-4 border-secondary-500' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded bg-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                          🔧
-                        </div>
-                        <span className="font-medium text-neutral-200">04-Backend</span>
-                      </div>
-                      <svg className={`w-4 h-4 transition-transform ${expandedSection === 'backend' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSection === 'backend' && (
-                      <div className="bg-neutral-900 px-4 py-2 space-y-1">
-                        {[
-                          { key: 'backend-checklist', label: 'CHECKLIST.md' },
-                          { key: 'backend-details', label: 'DETAILS.md' },
-                          { key: 'backend-whiteboard', label: 'WHITEBOARD.md' }
-                        ].map(file => (
-                          <button
-                            key={file.key}
-                            onClick={() => {
-                              setSelectedDoc(file.key);
-                              setSelectedDocSection('docs');
-                              setActiveTab('files');
-                              loadFileContent(file.key, 'docs');
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                              activeTab === 'files' && selectedDoc === file.key && selectedDocSection === 'docs' ? 'bg-secondary-500 text-white' : 'text-neutral-300 hover:bg-neutral-700'
-                            }`}
-                          >
-                            {file.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Files Tab Content */}
-              {activeTopTab === 'files' && (
-                <div className="space-y-0">
-                  <div className="border-b border-neutral-700">
-                    <button
-                      onClick={() => {
                         setExpandedSection(expandedSection === 'reference-files' ? null : 'reference-files');
                       }}
                       className={`w-full py-3 px-4 flex items-center justify-between transition-colors bg-neutral-800 hover:bg-neutral-700 ${
@@ -1602,6 +1410,8 @@ Result: Your React app is untouchable
                           { key: 'useThemeConfig', label: 'useThemeConfig.js' },
                           { key: 'UIComponents', label: 'UIComponents.jsx' },
                           { key: 'main.css', label: 'main.css' },
+                          { key: 'complete-component-list', label: 'complete-component-list.md' },
+                          { key: 'complete-current-state', label: 'complete-current-state.md' },
                           { key: 'daniels-architecture', label: 'daniels-architecture.md' }
                         ].map(file => (
                           <button
