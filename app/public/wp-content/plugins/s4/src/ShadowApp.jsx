@@ -1,39 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { useS4Store } from './hooks/useS4Store';
-import { S4ThemeBuilder } from './s4/components/S4ThemeBuilder';
+import { useStudio1Store } from './hooks/useStudio1Store';
+import { Studio1ThemeBuilder } from './components/Studio1ThemeBuilder';
 
 export function ShadowApp({ isAdmin = false, isFrontend = false }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const { initializeStore, config } = useS4Store();
+  const { initializeStore, config } = useStudio1Store();
   
   useEffect(() => {
     // Initialize the store with WordPress data
-    const wpConfig = window.s4Config || {};
+    const wpConfig = window.studio1Config || {};
     initializeStore(wpConfig);
     setIsLoaded(true);
   }, [initializeStore]);
   
   if (!isLoaded) {
     return (
-      <div className="box" data-scope="card" data-preset="center" style={{ minHeight: '200px' }}>
-        <div className="text" data-preset="body">
-          Loading S4 Design System...
+      <div className="one" style={{ 
+        '--one-min-height': '200px',
+        '--one-display': 'flex',
+        '--one-align-items': 'center',
+        '--one-justify-content': 'center'
+      }}>
+        <div className="one" style={{
+          '--one-color': 'var(--color4-300)',
+          '--one-font-size': '1rem'
+        }}>
+          Loading Studio1 Design System...
         </div>
       </div>
     );
   }
   
   return (
-    <div className="box" style={{
-      '--box-width': isFrontend ? '100vw' : 'auto',
-      '--box-height': isFrontend ? '100vh' : 'auto',
-      '--box-background': 'var(--color3-950)',
-      '--box-overflow': 'auto'
+    <div className="one" style={{
+      '--one-width': isFrontend ? '100vw' : 'auto',
+      '--one-height': isFrontend ? '100vh' : 'auto',
+      '--one-background': 'var(--color3-950)',
+      '--one-overflow': 'auto'
     }}>
       {/* Inject CSS variables into shadow DOM */}
       <style>{generateCSSVariables(config)}</style>
       
-      <S4ThemeBuilder isAdmin={isAdmin} isFrontend={isFrontend} />
+      <Studio1ThemeBuilder isAdmin={isAdmin} isFrontend={isFrontend} />
       
       {/* Keyboard shortcut listener */}
       <KeyboardShortcuts />
@@ -67,12 +75,12 @@ function generateCSSVariables(config) {
 function KeyboardShortcuts() {
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Cmd/Ctrl + 4 to toggle S4 interface
-      if ((e.metaKey || e.ctrlKey) && e.key === '4') {
+      // Cmd/Ctrl + 1 to toggle Studio1 interface
+      if ((e.metaKey || e.ctrlKey) && e.key === '1') {
         e.preventDefault();
-        const s4Element = document.querySelector('s4-element');
-        if (s4Element) {
-          s4Element.style.display = s4Element.style.display === 'none' ? 'block' : 'none';
+        const studio1Element = document.querySelector('studio1-element');
+        if (studio1Element) {
+          studio1Element.style.display = studio1Element.style.display === 'none' ? 'block' : 'none';
         }
       }
     };

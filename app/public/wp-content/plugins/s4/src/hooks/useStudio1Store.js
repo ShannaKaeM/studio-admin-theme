@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-// S4 Store - Clean V2.0 State Management
-export const useS4Store = create((set, get) => ({
+// Studio1 Store - Clean V2.0 State Management
+export const useStudio1Store = create((set, get) => ({
   // Configuration state
   config: {
     brand: {

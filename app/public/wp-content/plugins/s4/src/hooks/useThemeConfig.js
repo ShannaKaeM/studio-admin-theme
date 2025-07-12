@@ -173,61 +173,47 @@ export function useThemeConfig() {
     return variables;
   }, [config.colors]);
 
-  // Apply CSS variables to document and shadow DOM
+  // Apply CSS variables and component styles to document
   useEffect(() => {
-    // Apply to document root
+    // Apply CSS variables to document root
     Object.entries(cssVariables).forEach(([property, value]) => {
       document.documentElement.style.setProperty(property, value);
     });
 
-    // Apply to Studio1 shadow DOM
-    const studio1Element = document.querySelector('studio1-element');
-    let styleElement;
+    // Remove existing Studio1 component styles
+    const existingStyle = document.head.querySelector('#studio1-component-styles');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    // Create new style element for component styles
+    const styleElement = document.createElement('style');
+    styleElement.id = 'studio1-component-styles';
     
-    if (studio1Element && studio1Element.shadowRoot) {
-      // Remove existing style element if any
-      const existingStyle = studio1Element.shadowRoot.querySelector('#studio1-theme-vars');
-      if (existingStyle) {
-        existingStyle.remove();
-      }
-      
-      // Create new style element with CSS variables
-      styleElement = document.createElement('style');
-      styleElement.id = 'studio1-theme-vars';
-      
-      // Generate CSS for custom properties
-      const customPropertiesCSS = Object.entries(cssVariables)
-        .map(([property, value]) => `  ${property}: ${value};`)
-        .join('\n');
-      
-      // Generate component CSS rules using .one element system
-      const componentCSS = Object.entries(config.components)
-        .map(([componentName, styles]) => {
-          const cssRules = Object.entries(styles)
-            .filter(([property, value]) => typeof value === 'string')
-            .map(([property, value]) => `  ${property}: ${value};`)
-            .join('\n');
-          
-          return cssRules ? `.${componentName} {\n${cssRules}\n}` : '';
-        })
-        .filter(Boolean)
-        .join('\n\n');
-      
-      const cssText = `:host {\n${customPropertiesCSS}\n}\n\n${componentCSS}`;
-      
-      styleElement.textContent = cssText;
-      studio1Element.shadowRoot.appendChild(styleElement);
+    // Generate component CSS rules using .one element system with component class names
+    const componentCSS = Object.entries(config.components)
+      .map(([componentName, styles]) => {
+        const cssRules = Object.entries(styles)
+          .filter(([property, value]) => typeof value === 'string')
+          .map(([property, value]) => `  ${property}: ${value};`)
+          .join('\n');
+        
+        return cssRules ? `.${componentName} {\n${cssRules}\n}` : '';
+      })
+      .filter(Boolean)
+      .join('\n\n');
+    
+    // Only add the style element if we have component CSS
+    if (componentCSS) {
+      styleElement.textContent = componentCSS;
+      document.head.appendChild(styleElement);
     }
 
     return () => {
-      // Cleanup: remove custom properties from document
-      Object.keys(cssVariables).forEach(property => {
-        document.documentElement.style.removeProperty(property);
-      });
-      
-      // Remove style element from shadow root
-      if (styleElement && styleElement.parentNode) {
-        styleElement.remove();
+      // Cleanup: remove component styles from document head
+      const existingStyle = document.head.querySelector('#studio1-component-styles');
+      if (existingStyle) {
+        existingStyle.remove();
       }
     };
   }, [cssVariables, config.components]);
