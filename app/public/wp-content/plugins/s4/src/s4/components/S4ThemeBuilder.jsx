@@ -1,8 +1,12 @@
-import React from 'react';
-import { useS4Store } from '../../hooks/useS4Store';
+import React, { useState } from 'react';
+import { useS4Store } from '../../hooks/useS4Store.js';
+import { useThemeConfig } from '../../hooks/useThemeConfig.js';
+import { ComponentVariablesTable } from '../../components/ComponentVariablesTable.jsx';
 
-export function S4ThemeBuilder({ isAdmin = false }) {
-  const { config, activeTab, setActiveTab } = useS4Store();
+export function S4ThemeBuilder() {
+  const { config, updateConfig } = useS4Store();
+  const { config: themeConfig } = useThemeConfig();
+  const [activeTab, setActiveTab] = useState('dashboard');
   
   return (
     <div className="box" data-scope="card" data-preset="stack">
@@ -35,7 +39,11 @@ export function S4ThemeBuilder({ isAdmin = false }) {
       <div className="box" data-preset="stack">
         {activeTab === 'dashboard' && <DashboardView />}
         {activeTab === 'theme' && <ThemeView />}
-        {activeTab === 'components' && <ComponentsView />}
+        {activeTab === 'components' && (
+          <div className="box" style={{ '--box-padding': '1.5rem' }}>
+            <ComponentVariablesTable />
+          </div>
+        )}
         {activeTab === 'presets' && <PresetsView />}
       </div>
     </div>

@@ -5,11 +5,12 @@ export const useS4Store = create((set, get) => ({
   // Configuration state
   config: {
     brand: {
-      primary: 'hsla(330, 85%, 60%, 1)',
-      secondary: 'hsla(25, 95%, 65%, 1)', 
-      neutral: 'hsla(220, 15%, 25%, 1)',
-      accent: 'hsla(280, 75%, 70%, 1)'
+      color1: 'hsl(337, 35%, 52%)',
+      color2: 'hsl(29, 44%, 53%)',
+      color3: 'hsl(0, 0%, 50%)',
+      color4: 'hsl(0, 0%, 70%)'
     },
+    theme: 'dark',
     typography: {
       'font-family': 'system-ui, -apple-system, sans-serif'
     }
