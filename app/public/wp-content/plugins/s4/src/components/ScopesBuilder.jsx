@@ -18,7 +18,7 @@ const CSS_PROPERTIES = {
     '--one-padding', '--one-padding-top', '--one-padding-right', '--one-padding-bottom', '--one-padding-left'
   ],
   appearance: [
-    '--one-background', '--one-border', '--one-border-radius', '--one-box-shadow',
+    '--one-background', '--one-border', '--one-border-color', '--one-border-radius', '--one-box-shadow',
     '--one-opacity', '--one-transform', '--one-transition'
   ]
 };
@@ -32,7 +32,25 @@ const COMMON_VALUES = {
   '--one-flex-direction': ['row', 'column', 'row-reverse', 'column-reverse'],
   '--one-justify-content': ['flex-start', 'center', 'flex-end', 'space-between', 'space-around'],
   '--one-align-items': ['flex-start', 'center', 'flex-end', 'stretch'],
-  '--one-color': ['var(--color1-500)', 'var(--color2-500)', 'var(--color3-800)', 'var(--color3-600)', 'var(--color3-400)', 'var(--color4-100)']
+  '--one-color': [
+    { label: 'Primary', value: 'var(--color1-500)' },
+    { label: 'Secondary', value: 'var(--color2-500)' }, 
+    { label: 'Neutral', value: 'var(--color3-800)' },
+    { label: 'Base', value: 'var(--color4-100)' }
+  ],
+  '--one-background': [
+    { label: 'Primary', value: 'var(--color1-500)' },
+    { label: 'Secondary', value: 'var(--color2-500)' },
+    { label: 'Neutral', value: 'var(--color3-800)' },
+    { label: 'Base', value: 'var(--color4-100)' },
+    { label: 'Transparent', value: 'transparent' }
+  ],
+  '--one-border-color': [
+    { label: 'Primary', value: 'var(--color1-500)' },
+    { label: 'Secondary', value: 'var(--color2-500)' },
+    { label: 'Neutral', value: 'var(--color3-800)' },
+    { label: 'Base', value: 'var(--color4-100)' }
+  ]
 };
 
 export function ScopesBuilder() {
@@ -433,9 +451,14 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
             }}
           >
             <option value="">Choose Value</option>
-            {COMMON_VALUES[selectedProperty].map(value => (
-              <option key={value} value={value}>{value}</option>
-            ))}
+            {COMMON_VALUES[selectedProperty].map(item => {
+              // Handle both object format (colors) and string format (other values)
+              if (typeof item === 'object') {
+                return <option key={item.value} value={item.value}>{item.label}</option>;
+              } else {
+                return <option key={item} value={item}>{item}</option>;
+              }
+            })}
           </select>
         ) : (
           <input

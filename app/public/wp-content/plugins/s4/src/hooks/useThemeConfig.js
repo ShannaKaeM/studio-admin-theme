@@ -155,6 +155,12 @@ const defaultConfig = {
         "--one-margin-bottom": "1rem"
       }
     }
+  },
+  colorVariations: {
+    // Custom color variations will be saved here
+    // color1: { "Dark Primary": "hsl(337, 35%, 35%)", "Light Primary": "hsl(337, 35%, 70%)" }
+    // color2: { "Dark Secondary": "hsl(29, 44%, 35%)" }
+    // etc.
   }
 };
 
@@ -352,6 +358,42 @@ export function useThemeConfig() {
     });
   };
 
+  const createColorVariation = (coreColor, variationName, hslValue) => {
+    setConfig(prev => ({
+      ...prev,
+      colorVariations: {
+        ...prev.colorVariations,
+        [coreColor]: {
+          ...(prev.colorVariations?.[coreColor] || {}),
+          [variationName]: hslValue
+        }
+      }
+    }));
+  };
+
+  const updateColorVariations = (coreColor, variations) => {
+    setConfig(prev => ({
+      ...prev,
+      colorVariations: {
+        ...(prev.colorVariations || {}),
+        [coreColor]: variations
+      }
+    }));
+  };
+
+  const deleteColorVariation = (coreColor, variationName) => {
+    setConfig(prev => ({
+      ...prev,
+      colorVariations: {
+        ...(prev.colorVariations || {}),
+        [coreColor]: Object.fromEntries(
+          Object.entries(prev.colorVariations?.[coreColor] || {})
+            .filter(([name]) => name !== variationName)
+        )
+      }
+    }));
+  };
+
 
   const addCustomOverride = (selector, styles) => {
     setCustomOverrides(prev => ({
@@ -408,6 +450,9 @@ export function useThemeConfig() {
     updateScopeBaseProperties,
     createNewScope,
     deleteScope,
+    createColorVariation,
+    updateColorVariations,
+    deleteColorVariation,
     addCustomOverride,
     removeCustomOverride,
     exportConfig,

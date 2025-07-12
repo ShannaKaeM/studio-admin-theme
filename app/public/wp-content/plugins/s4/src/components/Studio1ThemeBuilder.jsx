@@ -3,6 +3,7 @@ import { useStudio1Store } from '../hooks/useStudio1Store.js';
 import { useThemeConfig } from '../hooks/useThemeConfig.js';
 import { ComponentVariablesTable } from '../components/ComponentVariablesTable.jsx';
 import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
+import { ColorCreator } from '../components/ColorCreator.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
   const { config, updateConfig } = useStudio1Store();
@@ -126,6 +127,13 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
             '--one-flex': '1'
           }}>
             <ScopesBuilder />
+          </div>
+        ) : activeTab === 'colors' ? (
+          /* Color Creator gets full area with its own layout */
+          <div className="one" style={{
+            '--one-flex': '1'
+          }}>
+            <ColorCreator />
           </div>
         ) : (
           /* Other tabs use the standard sidebar + content layout */
@@ -392,6 +400,86 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
                       </span>
                     </div>
                   </button>
+                </div>
+
+                {/* Colors Section */}
+                <div className="one" style={{
+                  '--one-border-bottom': '1px solid var(--color3-700)'
+                }}>
+                  <button
+                    onClick={() => {
+                      setExpandedSection(expandedSection === 'colors' ? null : 'colors');
+                      setActiveTab('colors');
+                    }}
+                    className="one"
+                    style={{
+                      '--one-width': '100%',
+                      '--one-padding': '0.75rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-justify-content': 'space-between',
+                      '--one-background': 'var(--color3-800)',
+                      '--one-border-left': expandedSection === 'colors' ? '4px solid var(--color2-500)' : '4px solid transparent',
+                      '--one-color': 'var(--color4-200)',
+                      '--one-cursor': 'pointer',
+                      '--one-transition': 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (expandedSection !== 'colors') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-700)');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (expandedSection !== 'colors') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-800)');
+                      }
+                    }}
+                  >
+                    <div className="one" style={{
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-gap': '0.75rem'
+                    }}>
+                      <div className="one" style={{
+                        '--one-width': '1.5rem',
+                        '--one-height': '1.5rem',
+                        '--one-border-radius': '0.25rem',
+                        '--one-background': 'var(--color2-500)',
+                        '--one-display': 'flex',
+                        '--one-align-items': 'center',
+                        '--one-justify-content': 'center',
+                        '--one-font-size': '0.75rem',
+                        '--one-font-weight': '700',
+                        '--one-color': 'var(--color4-50)'
+                      }}>
+                        🎨
+                      </div>
+                      <span className="one" style={{
+                        '--one-font-weight': '500',
+                        '--one-color': 'var(--color4-200)'
+                      }}>
+                        Colors
+                      </span>
+                    </div>
+                  </button>
+                  
+                  {expandedSection === 'colors' && (
+                    <div className="one" style={{
+                      '--one-background': 'var(--color3-900)',
+                      '--one-padding': '0.5rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-flex-direction': 'column',
+                      '--one-gap': '0.25rem'
+                    }}>
+                      <p className="one" style={{
+                        '--one-font-size': '0.75rem',
+                        '--one-color': 'var(--color4-400)',
+                        '--one-margin-bottom': '0.5rem'
+                      }}>
+                        Create custom color variations from your 4 core colors
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Scopes Section */}
