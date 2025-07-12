@@ -114,6 +114,47 @@ const defaultConfig = {
       "--one-color": "var(--color4-200)",
       "--one-font-weight": "500"
     }
+  },
+  scopes: {
+    // Individual scopes with styling baked in
+    "eyebrow": {
+      baseProperties: {
+        "--one-display": "block",
+        "--one-font-family": "var(--font-family)",
+        "--one-font-size": "0.875rem",
+        "--one-font-weight": "500",
+        "--one-line-height": "1.3",
+        "--one-color": "var(--color3-800)",
+        "--one-text-transform": "uppercase",
+        "--one-letter-spacing": "0.05em",
+        "--one-margin": "0",
+        "--one-margin-bottom": "0.5rem"
+      }
+    },
+    "title": {
+      baseProperties: {
+        "--one-display": "block",
+        "--one-font-family": "var(--font-family)",
+        "--one-font-size": "2.5rem",
+        "--one-font-weight": "700",
+        "--one-line-height": "1.1",
+        "--one-color": "var(--color3-800)",
+        "--one-margin": "0",
+        "--one-margin-bottom": "1rem"
+      }
+    },
+    "subtitle": {
+      baseProperties: {
+        "--one-display": "block",
+        "--one-font-family": "var(--font-family)",
+        "--one-font-size": "1.125rem",
+        "--one-font-weight": "400",
+        "--one-line-height": "1.5",
+        "--one-color": "var(--color3-800)",
+        "--one-margin": "0",
+        "--one-margin-bottom": "1rem"
+      }
+    }
   }
 };
 
@@ -200,12 +241,33 @@ export function useThemeConfig() {
         
         return cssRules ? `.${componentName} {\n${cssRules}\n}` : '';
       })
-      .filter(Boolean)
-      .join('\n\n');
+      .filter(Boolean);
+
+    // Generate scope CSS rules
+    const scopeCSS = Object.entries(config.scopes || {})
+      .map(([scopeName, scopeConfig]) => {
+        // Properties for the scope
+        if (scopeConfig.baseProperties) {
+          const scopeRules = Object.entries(scopeConfig.baseProperties)
+            .filter(([property, value]) => typeof value === 'string')
+            .map(([property, value]) => `  ${property}: ${value};`)
+            .join('\n');
+          
+          if (scopeRules) {
+            return `[data-scope="${scopeName}"] .one {\n${scopeRules}\n}`;
+          }
+        }
+        
+        return null;
+      })
+      .filter(Boolean);
+
+    // Combine component and scope CSS
+    const allCSS = [...componentCSS, ...scopeCSS].join('\n\n');
     
-    // Only add the style element if we have component CSS
-    if (componentCSS) {
-      styleElement.textContent = componentCSS;
+    // Only add the style element if we have CSS
+    if (allCSS) {
+      styleElement.textContent = allCSS;
       document.head.appendChild(styleElement);
     }
 
@@ -216,7 +278,7 @@ export function useThemeConfig() {
         existingStyle.remove();
       }
     };
-  }, [cssVariables, config.components]);
+  }, [cssVariables, config.components, config.scopes]);
 
   // Helper functions for component styling
   const getComponentStyles = (componentName, variant = 'default') => {
@@ -252,6 +314,44 @@ export function useThemeConfig() {
       }
     }));
   };
+
+
+  const updateScopeBaseProperties = (scopeName, newBaseProperties) => {
+    setConfig(prev => ({
+      ...prev,
+      scopes: {
+        ...prev.scopes,
+        [scopeName]: {
+          ...prev.scopes[scopeName],
+          baseProperties: newBaseProperties
+        }
+      }
+    }));
+  };
+
+  const createNewScope = (scopeName, baseProperties = {}) => {
+    setConfig(prev => ({
+      ...prev,
+      scopes: {
+        ...prev.scopes,
+        [scopeName]: {
+          baseProperties: baseProperties
+        }
+      }
+    }));
+  };
+
+  const deleteScope = (scopeName) => {
+    setConfig(prev => {
+      const newScopes = { ...prev.scopes };
+      delete newScopes[scopeName];
+      return {
+        ...prev,
+        scopes: newScopes
+      };
+    });
+  };
+
 
   const addCustomOverride = (selector, styles) => {
     setCustomOverrides(prev => ({
@@ -305,6 +405,9 @@ export function useThemeConfig() {
     getComponentStyles,
     updateColorScale,
     updateComponent,
+    updateScopeBaseProperties,
+    createNewScope,
+    deleteScope,
     addCustomOverride,
     removeCustomOverride,
     exportConfig,

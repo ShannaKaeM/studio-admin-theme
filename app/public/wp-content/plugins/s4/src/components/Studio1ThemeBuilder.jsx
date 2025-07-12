@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useStudio1Store } from '../hooks/useStudio1Store.js';
 import { useThemeConfig } from '../hooks/useThemeConfig.js';
 import { ComponentVariablesTable } from '../components/ComponentVariablesTable.jsx';
+import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
   const { config, updateConfig } = useStudio1Store();
@@ -118,403 +119,466 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
           </div>
         </div>
 
-        {/* Main Layout */}
-        <div className="one" style={{
-          '--one-display': 'flex',
-          '--one-flex': '1'
-        }}>
-          {/* Sidebar */}
+        {/* Main Layout - Different layouts for different tabs */}
+        {activeTab === 'scopes' ? (
+          /* Scopes Builder gets full area with its own layout */
           <div className="one" style={{
-            '--one-width': '20rem',
-            '--one-background': 'var(--color3-800)',
-            '--one-border-right': '1px solid var(--color3-700)',
-            '--one-display': 'flex',
-            '--one-flex-direction': 'column'
+            '--one-flex': '1'
           }}>
-            {/* Sidebar Content */}
+            <ScopesBuilder />
+          </div>
+        ) : (
+          /* Other tabs use the standard sidebar + content layout */
+          <div className="one" style={{
+            '--one-display': 'flex',
+            '--one-flex': '1'
+          }}>
+            {/* Sidebar */}
             <div className="one" style={{
-              '--one-flex': '1',
-              '--one-overflow-y': 'auto'
+              '--one-width': '20rem',
+              '--one-background': 'var(--color3-800)',
+              '--one-border-right': '1px solid var(--color3-700)',
+              '--one-display': 'flex',
+              '--one-flex-direction': 'column'
             }}>
-              {/* Components Section */}
+              {/* Sidebar Content */}
               <div className="one" style={{
-                '--one-border-bottom': '1px solid var(--color3-700)'
+                '--one-flex': '1',
+                '--one-overflow-y': 'auto'
               }}>
-                <button
-                  onClick={() => {
-                    setExpandedSection(expandedSection === 'components' ? null : 'components');
-                    setActiveTab('components');
-                  }}
-                  className="one nav-tab"
-                  style={{
-                    '--one-width': '100%',
-                    '--one-padding': '0.75rem 1rem',
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-justify-content': 'space-between',
-                    '--one-background': 'var(--color3-800)',
-                    '--one-border-left': expandedSection === 'components' ? '4px solid var(--color1-500)' : '4px solid transparent',
-                    '--one-color': 'var(--color4-200)',
-                    '--one-cursor': 'pointer',
-                    '--one-transition': 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (expandedSection !== 'components') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-700)');
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (expandedSection !== 'components') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-800)');
-                    }
-                  }}
-                >
-                  <div className="one" style={{
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-gap': '0.75rem'
-                  }}>
-                    <div className="one" style={{
-                      '--one-width': '1.5rem',
-                      '--one-height': '1.5rem',
-                      '--one-border-radius': '0.25rem',
-                      '--one-background': 'var(--color1-500)',
+                {/* Components Section */}
+                <div className="one" style={{
+                  '--one-border-bottom': '1px solid var(--color3-700)'
+                }}>
+                  <button
+                    onClick={() => {
+                      setExpandedSection(expandedSection === 'components' ? null : 'components');
+                      setActiveTab('components');
+                    }}
+                    className="one nav-tab"
+                    style={{
+                      '--one-width': '100%',
+                      '--one-padding': '0.75rem 1rem',
                       '--one-display': 'flex',
                       '--one-align-items': 'center',
-                      '--one-justify-content': 'center',
-                      '--one-font-size': '0.75rem',
-                      '--one-font-weight': '700',
-                      '--one-color': 'var(--color4-50)'
-                    }}>
-                      🧩
-                    </div>
-                    <span className="one" style={{
-                      '--one-font-weight': '500',
-                      '--one-color': 'var(--color4-200)'
-                    }}>
-                      Components
-                    </span>
-                  </div>
-                  <svg 
-                    className="one"
-                    style={{
-                      '--one-width': '1rem',
-                      '--one-height': '1rem',
-                      'transform': expandedSection === 'components' ? 'rotate(180deg)' : 'rotate(0deg)',
-                      'transition': 'transform 0.2s ease'
+                      '--one-justify-content': 'space-between',
+                      '--one-background': 'var(--color3-800)',
+                      '--one-border-left': expandedSection === 'components' ? '4px solid var(--color1-500)' : '4px solid transparent',
+                      '--one-color': 'var(--color4-200)',
+                      '--one-cursor': 'pointer',
+                      '--one-transition': 'all 0.2s ease'
                     }}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
+                    onMouseEnter={(e) => {
+                      if (expandedSection !== 'components') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-700)');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (expandedSection !== 'components') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-800)');
+                      }
+                    }}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {expandedSection === 'components' && (
-                  <div className="one" style={{
-                    '--one-background': 'var(--color3-900)',
-                    '--one-padding': '0.5rem 1rem',
-                    '--one-display': 'flex',
-                    '--one-flex-direction': 'column',
-                    '--one-gap': '0.25rem'
-                  }}>
-                    <p className="one" style={{
-                      '--one-font-size': '0.75rem',
-                      '--one-color': 'var(--color4-400)',
-                      '--one-margin-bottom': '0.5rem'
-                    }}>
-                      {Object.keys(themeConfig.components || {}).length} components loaded
-                    </p>
                     <div className="one" style={{
                       '--one-display': 'flex',
-                      '--one-flex-wrap': 'wrap',
+                      '--one-align-items': 'center',
+                      '--one-gap': '0.75rem'
+                    }}>
+                      <div className="one" style={{
+                        '--one-width': '1.5rem',
+                        '--one-height': '1.5rem',
+                        '--one-border-radius': '0.25rem',
+                        '--one-background': 'var(--color1-500)',
+                        '--one-display': 'flex',
+                        '--one-align-items': 'center',
+                        '--one-justify-content': 'center',
+                        '--one-font-size': '0.75rem',
+                        '--one-font-weight': '700',
+                        '--one-color': 'var(--color4-50)'
+                      }}>
+                        🧩
+                      </div>
+                      <span className="one" style={{
+                        '--one-font-weight': '500',
+                        '--one-color': 'var(--color4-200)'
+                      }}>
+                        Components
+                      </span>
+                    </div>
+                    <svg 
+                      className="one"
+                      style={{
+                        '--one-width': '1rem',
+                        '--one-height': '1rem',
+                        'transform': expandedSection === 'components' ? 'rotate(180deg)' : 'rotate(0deg)',
+                        'transition': 'transform 0.2s ease'
+                      }}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {expandedSection === 'components' && (
+                    <div className="one" style={{
+                      '--one-background': 'var(--color3-900)',
+                      '--one-padding': '0.5rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-flex-direction': 'column',
                       '--one-gap': '0.25rem'
                     }}>
-                      {Object.keys(themeConfig.components || {}).slice(0, 8).map((componentName) => (
-                        <span 
-                          key={componentName} 
-                          className="one" 
-                          style={{
+                      <p className="one" style={{
+                        '--one-font-size': '0.75rem',
+                        '--one-color': 'var(--color4-400)',
+                        '--one-margin-bottom': '0.5rem'
+                      }}>
+                        {Object.keys(themeConfig.components || {}).length} components loaded
+                      </p>
+                      <div className="one" style={{
+                        '--one-display': 'flex',
+                        '--one-flex-wrap': 'wrap',
+                        '--one-gap': '0.25rem'
+                      }}>
+                        {Object.keys(themeConfig.components || {}).slice(0, 8).map((componentName) => (
+                          <span 
+                            key={componentName} 
+                            className="one" 
+                            style={{
+                              '--one-font-size': '0.625rem',
+                              '--one-color': 'var(--color1-300)',
+                              '--one-background': 'var(--color1-900)',
+                              '--one-padding': '0.125rem 0.25rem',
+                              '--one-border-radius': '0.125rem',
+                              '--one-border': '1px solid var(--color1-700)'
+                            }}
+                          >
+                            {componentName}
+                          </span>
+                        ))}
+                        {Object.keys(themeConfig.components || {}).length > 8 && (
+                          <span className="one" style={{
                             '--one-font-size': '0.625rem',
-                            '--one-color': 'var(--color1-300)',
-                            '--one-background': 'var(--color1-900)',
-                            '--one-padding': '0.125rem 0.25rem',
-                            '--one-border-radius': '0.125rem',
-                            '--one-border': '1px solid var(--color1-700)'
-                          }}
-                        >
-                          {componentName}
-                        </span>
-                      ))}
-                      {Object.keys(themeConfig.components || {}).length > 8 && (
-                        <span className="one" style={{
-                          '--one-font-size': '0.625rem',
-                          '--one-color': 'var(--color4-500)'
-                        }}>
-                          +{Object.keys(themeConfig.components || {}).length - 8} more
-                        </span>
-                      )}
+                            '--one-color': 'var(--color4-500)'
+                          }}>
+                            +{Object.keys(themeConfig.components || {}).length - 8} more
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
+                {/* Dashboard Section */}
+                <div className="one" style={{
+                  '--one-border-bottom': '1px solid var(--color3-700)'
+                }}>
+                  <button
+                    onClick={() => {
+                      setExpandedSection(expandedSection === 'dashboard' ? null : 'dashboard');
+                      setActiveTab('dashboard');
+                    }}
+                    className="one"
+                    style={{
+                      '--one-width': '100%',
+                      '--one-padding': '0.75rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-justify-content': 'space-between',
+                      '--one-background': 'var(--color3-800)',
+                      '--one-border-left': expandedSection === 'dashboard' ? '4px solid var(--color2-500)' : '4px solid transparent',
+                      '--one-color': 'var(--color4-200)',
+                      '--one-cursor': 'pointer',
+                      '--one-transition': 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (expandedSection !== 'dashboard') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-700)');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (expandedSection !== 'dashboard') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-800)');
+                      }
+                    }}
+                  >
+                    <div className="one" style={{
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-gap': '0.75rem'
+                    }}>
+                      <div className="one" style={{
+                        '--one-width': '1.5rem',
+                        '--one-height': '1.5rem',
+                        '--one-border-radius': '0.25rem',
+                        '--one-background': 'var(--color2-500)',
+                        '--one-display': 'flex',
+                        '--one-align-items': 'center',
+                        '--one-justify-content': 'center',
+                        '--one-font-size': '0.75rem',
+                        '--one-font-weight': '700',
+                        '--one-color': 'var(--color4-50)'
+                      }}>
+                        📊
+                      </div>
+                      <span className="one" style={{
+                        '--one-font-weight': '500',
+                        '--one-color': 'var(--color4-200)'
+                      }}>
+                        Dashboard
+                      </span>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Theme Section */}
+                <div className="one" style={{
+                  '--one-border-bottom': '1px solid var(--color3-700)'
+                }}>
+                  <button
+                    onClick={() => {
+                      setExpandedSection(expandedSection === 'theme' ? null : 'theme');
+                      setActiveTab('theme');
+                    }}
+                    className="one"
+                    style={{
+                      '--one-width': '100%',
+                      '--one-padding': '0.75rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-justify-content': 'space-between',
+                      '--one-background': 'var(--color3-800)',
+                      '--one-border-left': expandedSection === 'theme' ? '4px solid var(--color1-500)' : '4px solid transparent',
+                      '--one-color': 'var(--color4-200)',
+                      '--one-cursor': 'pointer',
+                      '--one-transition': 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (expandedSection !== 'theme') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-700)');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (expandedSection !== 'theme') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-800)');
+                      }
+                    }}
+                  >
+                    <div className="one" style={{
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-gap': '0.75rem'
+                    }}>
+                      <div className="one" style={{
+                        '--one-width': '1.5rem',
+                        '--one-height': '1.5rem',
+                        '--one-border-radius': '0.25rem',
+                        '--one-background': 'var(--color1-500)',
+                        '--one-display': 'flex',
+                        '--one-align-items': 'center',
+                        '--one-justify-content': 'center',
+                        '--one-font-size': '0.75rem',
+                        '--one-font-weight': '700',
+                        '--one-color': 'var(--color4-50)'
+                      }}>
+                        🎨
+                      </div>
+                      <span className="one" style={{
+                        '--one-font-weight': '500',
+                        '--one-color': 'var(--color4-200)'
+                      }}>
+                        Theme
+                      </span>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Scopes Section */}
+                <div className="one" style={{
+                  '--one-border-bottom': '1px solid var(--color3-700)'
+                }}>
+                  <button
+                    onClick={() => {
+                      setExpandedSection(expandedSection === 'scopes' ? null : 'scopes');
+                      setActiveTab('scopes');
+                    }}
+                    className="one"
+                    style={{
+                      '--one-width': '100%',
+                      '--one-padding': '0.75rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-justify-content': 'space-between',
+                      '--one-background': 'var(--color3-800)',
+                      '--one-border-left': expandedSection === 'scopes' ? '4px solid var(--color3-500)' : '4px solid transparent',
+                      '--one-color': 'var(--color4-200)',
+                      '--one-cursor': 'pointer',
+                      '--one-transition': 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (expandedSection !== 'scopes') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-700)');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (expandedSection !== 'scopes') {
+                        e.target.style.setProperty('--one-background', 'var(--color3-800)');
+                      }
+                    }}
+                  >
+                    <div className="one" style={{
+                      '--one-display': 'flex',
+                      '--one-align-items': 'center',
+                      '--one-gap': '0.75rem'
+                    }}>
+                      <div className="one" style={{
+                        '--one-width': '1.5rem',
+                        '--one-height': '1.5rem',
+                        '--one-border-radius': '0.25rem',
+                        '--one-background': 'var(--color3-500)',
+                        '--one-display': 'flex',
+                        '--one-align-items': 'center',
+                        '--one-justify-content': 'center',
+                        '--one-font-size': '0.75rem',
+                        '--one-font-weight': '700',
+                        '--one-color': 'var(--color4-50)'
+                      }}>
+                        🎭
+                      </div>
+                      <span className="one" style={{
+                        '--one-font-weight': '500',
+                        '--one-color': 'var(--color4-200)'
+                      }}>
+                        Scopes
+                      </span>
+                    </div>
+                    <svg 
+                      className="one"
+                      style={{
+                        '--one-width': '1rem',
+                        '--one-height': '1rem',
+                        'transform': expandedSection === 'scopes' ? 'rotate(180deg)' : 'rotate(0deg)',
+                        'transition': 'transform 0.2s ease'
+                      }}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {expandedSection === 'scopes' && (
+                    <div className="one" style={{
+                      '--one-background': 'var(--color3-900)',
+                      '--one-padding': '0.5rem 1rem',
+                      '--one-display': 'flex',
+                      '--one-flex-direction': 'column',
+                      '--one-gap': '0.25rem'
+                    }}>
+                      <p className="one" style={{
+                        '--one-font-size': '0.75rem',
+                        '--one-color': 'var(--color4-400)',
+                        '--one-margin-bottom': '0.5rem'
+                      }}>
+                        {Object.keys(themeConfig.scopes || {}).length} scopes with presets
+                      </p>
+                      <div className="one" style={{
+                        '--one-display': 'flex',
+                        '--one-flex-wrap': 'wrap',
+                        '--one-gap': '0.25rem'
+                      }}>
+                        {Object.entries(themeConfig.scopes || {}).map(([scopeName, scopeConfig]) => (
+                          <span 
+                            key={scopeName} 
+                            className="one" 
+                            style={{
+                              '--one-font-size': '0.625rem',
+                              '--one-color': 'var(--color3-300)',
+                              '--one-background': 'var(--color3-800)',
+                              '--one-padding': '0.125rem 0.25rem',
+                              '--one-border-radius': '0.125rem',
+                              '--one-border': '1px solid var(--color3-600)'
+                            }}
+                          >
+                            {scopeName} ({Object.keys(scopeConfig.presets || {}).length})
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Dashboard Section */}
+              {/* Quick Actions */}
               <div className="one" style={{
-                '--one-border-bottom': '1px solid var(--color3-700)'
+                '--one-margin-top': 'auto',
+                '--one-padding': '1rem',
+                '--one-display': 'flex',
+                '--one-flex-direction': 'column',
+                '--one-gap': '0.5rem'
               }}>
                 <button
                   onClick={() => {
-                    setExpandedSection(expandedSection === 'dashboard' ? null : 'dashboard');
-                    setActiveTab('dashboard');
+                    syncNewComponents();
+                    alert('New components synced!');
                   }}
                   className="one"
                   style={{
                     '--one-width': '100%',
                     '--one-padding': '0.75rem 1rem',
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-justify-content': 'space-between',
-                    '--one-background': 'var(--color3-800)',
-                    '--one-border-left': expandedSection === 'dashboard' ? '4px solid var(--color2-500)' : '4px solid transparent',
-                    '--one-color': 'var(--color4-200)',
+                    '--one-background': 'var(--color1-500)',
+                    '--one-border': '1px solid var(--color1-400)',
+                    '--one-border-radius': '0.375rem',
+                    '--one-color': 'var(--color4-50)',
+                    '--one-font-size': '0.875rem',
+                    '--one-font-weight': '600',
                     '--one-cursor': 'pointer',
                     '--one-transition': 'all 0.2s ease'
                   }}
-                  onMouseEnter={(e) => {
-                    if (expandedSection !== 'dashboard') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-700)');
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (expandedSection !== 'dashboard') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-800)');
-                    }
-                  }}
                 >
-                  <div className="one" style={{
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-gap': '0.75rem'
-                  }}>
-                    <div className="one" style={{
-                      '--one-width': '1.5rem',
-                      '--one-height': '1.5rem',
-                      '--one-border-radius': '0.25rem',
-                      '--one-background': 'var(--color2-500)',
-                      '--one-display': 'flex',
-                      '--one-align-items': 'center',
-                      '--one-justify-content': 'center',
-                      '--one-font-size': '0.75rem',
-                      '--one-font-weight': '700',
-                      '--one-color': 'var(--color4-50)'
-                    }}>
-                      📊
-                    </div>
-                    <span className="one" style={{
-                      '--one-font-weight': '500',
-                      '--one-color': 'var(--color4-200)'
-                    }}>
-                      Dashboard
-                    </span>
-                  </div>
+                  Sync New
                 </button>
-              </div>
-
-              {/* Theme Section */}
-              <div className="one" style={{
-                '--one-border-bottom': '1px solid var(--color3-700)'
-              }}>
                 <button
                   onClick={() => {
-                    setExpandedSection(expandedSection === 'theme' ? null : 'theme');
-                    setActiveTab('theme');
+                    const confirmed = confirm('⚠️ Reset all custom styles?');
+                    if (confirmed) {
+                      resetToDefault();
+                      alert('Reset to defaults.');
+                    }
                   }}
                   className="one"
                   style={{
                     '--one-width': '100%',
                     '--one-padding': '0.75rem 1rem',
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-justify-content': 'space-between',
-                    '--one-background': 'var(--color3-800)',
-                    '--one-border-left': expandedSection === 'theme' ? '4px solid var(--color1-500)' : '4px solid transparent',
-                    '--one-color': 'var(--color4-200)',
+                    '--one-background': 'var(--color1-600)',
+                    '--one-border': '1px solid var(--color1-500)',
+                    '--one-border-radius': '0.375rem',
+                    '--one-color': 'var(--color4-50)',
+                    '--one-font-size': '0.875rem',
+                    '--one-font-weight': '600',
                     '--one-cursor': 'pointer',
                     '--one-transition': 'all 0.2s ease'
                   }}
-                  onMouseEnter={(e) => {
-                    if (expandedSection !== 'theme') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-700)');
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (expandedSection !== 'theme') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-800)');
-                    }
-                  }}
                 >
-                  <div className="one" style={{
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-gap': '0.75rem'
-                  }}>
-                    <div className="one" style={{
-                      '--one-width': '1.5rem',
-                      '--one-height': '1.5rem',
-                      '--one-border-radius': '0.25rem',
-                      '--one-background': 'var(--color1-500)',
-                      '--one-display': 'flex',
-                      '--one-align-items': 'center',
-                      '--one-justify-content': 'center',
-                      '--one-font-size': '0.75rem',
-                      '--one-font-weight': '700',
-                      '--one-color': 'var(--color4-50)'
-                    }}>
-                      🎨
-                    </div>
-                    <span className="one" style={{
-                      '--one-font-weight': '500',
-                      '--one-color': 'var(--color4-200)'
-                    }}>
-                      Theme
-                    </span>
-                  </div>
-                </button>
-              </div>
-
-              {/* Scopes Section */}
-              <div className="one" style={{
-                '--one-border-bottom': '1px solid var(--color3-700)'
-              }}>
-                <button
-                  onClick={() => {
-                    setExpandedSection(expandedSection === 'scopes' ? null : 'scopes');
-                    setActiveTab('scopes');
-                  }}
-                  className="one"
-                  style={{
-                    '--one-width': '100%',
-                    '--one-padding': '0.75rem 1rem',
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-justify-content': 'space-between',
-                    '--one-background': 'var(--color3-800)',
-                    '--one-border-left': expandedSection === 'scopes' ? '4px solid var(--color3-500)' : '4px solid transparent',
-                    '--one-color': 'var(--color4-200)',
-                    '--one-cursor': 'pointer',
-                    '--one-transition': 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (expandedSection !== 'scopes') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-700)');
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (expandedSection !== 'scopes') {
-                      e.target.style.setProperty('--one-background', 'var(--color3-800)');
-                    }
-                  }}
-                >
-                  <div className="one" style={{
-                    '--one-display': 'flex',
-                    '--one-align-items': 'center',
-                    '--one-gap': '0.75rem'
-                  }}>
-                    <div className="one" style={{
-                      '--one-width': '1.5rem',
-                      '--one-height': '1.5rem',
-                      '--one-border-radius': '0.25rem',
-                      '--one-background': 'var(--color3-500)',
-                      '--one-display': 'flex',
-                      '--one-align-items': 'center',
-                      '--one-justify-content': 'center',
-                      '--one-font-size': '0.75rem',
-                      '--one-font-weight': '700',
-                      '--one-color': 'var(--color4-50)'
-                    }}>
-                      🎭
-                    </div>
-                    <span className="one" style={{
-                      '--one-font-weight': '500',
-                      '--one-color': 'var(--color4-200)'
-                    }}>
-                      Scopes
-                    </span>
-                  </div>
+                  Reset All
                 </button>
               </div>
             </div>
 
-            {/* Quick Actions */}
+            {/* Main Content Area */}
             <div className="one" style={{
-              '--one-margin-top': 'auto',
-              '--one-padding': '1rem',
-              '--one-display': 'flex',
-              '--one-flex-direction': 'column',
-              '--one-gap': '0.5rem'
+              '--one-flex': '1',
+              '--one-padding': '1.5rem',
+              '--one-overflow-y': 'auto'
             }}>
-              <button
-                onClick={() => {
-                  syncNewComponents();
-                  alert('New components synced!');
-                }}
-                className="one"
-                style={{
-                  '--one-width': '100%',
-                  '--one-padding': '0.75rem 1rem',
-                  '--one-background': 'var(--color1-500)',
-                  '--one-border': '1px solid var(--color1-400)',
-                  '--one-border-radius': '0.375rem',
-                  '--one-color': 'var(--color4-50)',
-                  '--one-font-size': '0.875rem',
-                  '--one-font-weight': '600',
-                  '--one-cursor': 'pointer',
-                  '--one-transition': 'all 0.2s ease'
-                }}
-              >
-                Sync New
-              </button>
-              <button
-                onClick={() => {
-                  const confirmed = confirm('⚠️ Reset all custom styles?');
-                  if (confirmed) {
-                    resetToDefault();
-                    alert('Reset to defaults.');
-                  }
-                }}
-                className="one"
-                style={{
-                  '--one-width': '100%',
-                  '--one-padding': '0.75rem 1rem',
-                  '--one-background': 'var(--color1-600)',
-                  '--one-border': '1px solid var(--color1-500)',
-                  '--one-border-radius': '0.375rem',
-                  '--one-color': 'var(--color4-50)',
-                  '--one-font-size': '0.875rem',
-                  '--one-font-weight': '600',
-                  '--one-cursor': 'pointer',
-                  '--one-transition': 'all 0.2s ease'
-                }}
-              >
-                Reset All
-              </button>
+              {activeTab === 'dashboard' && <DashboardView />}
+              {activeTab === 'theme' && <ThemeView />}
+              {activeTab === 'components' && <ComponentVariablesTable />}
             </div>
           </div>
-
-          {/* Main Content Area */}
-          <div className="one" style={{
-            '--one-flex': '1',
-            '--one-padding': '1.5rem',
-            '--one-overflow-y': 'auto'
-          }}>
-            {activeTab === 'dashboard' && <DashboardView />}
-            {activeTab === 'theme' && <ThemeView />}
-            {activeTab === 'components' && <ComponentVariablesTable />}
-            {activeTab === 'scopes' && <ScopesView />}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -649,20 +713,3 @@ function ThemeView() {
   );
 }
 
-function ScopesView() {
-  return (
-    <div className="one" style={{ 
-      '--one-min-height': '200px',
-      '--one-display': 'flex',
-      '--one-align-items': 'center',
-      '--one-justify-content': 'center'
-    }}>
-      <div className="one" style={{
-        '--one-color': 'var(--color4-300)',
-        '--one-font-size': '1rem'
-      }}>
-        Scope Manager - Coming Soon
-      </div>
-    </div>
-  );
-}
