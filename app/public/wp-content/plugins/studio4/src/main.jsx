@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ShadowApp } from './ShadowApp';
 import './styles/main.css';
+import './styles/admin-ui.css';
 
 // Custom web component with proper shadow DOM
 class Studio4Element extends HTMLElement {

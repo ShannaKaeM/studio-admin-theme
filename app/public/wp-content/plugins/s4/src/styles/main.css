@@ -1,0 +1,317 @@
+/* ========================================
+   S4 V2.0 DESIGN SYSTEM - PURE ARCHITECTURE
+   ======================================== */
+
+/* ============================================ */
+/* STUDIO4 V2.0 - CORE S4 SYSTEM             */
+/* ============================================ */
+
+/* LAYER 1: BRAND VARIABLES */
+:root {
+    /* Main Colors - Change these to update everything */
+    --color1: hsl(337, 35%, 52%);  /* Primary pink #b25977 */
+    --color2: hsl(29, 44%, 53%);   /* Secondary tangerine #b8874d */
+    --color3: hsl(0, 0%, 46%); /* Neutral */
+    --color4: hsl(0, 0%, 46%); /* Base */
+    
+    /* Color1 Scale (50-950) - Generated from main color1 pink */
+    --color1-50: hsl(337, 70%, 97%);
+    --color1-100: hsl(337, 60%, 91%);
+    --color1-200: hsl(337, 55%, 83%);
+    --color1-300: hsl(337, 45%, 70%);
+    --color1-400: hsl(337, 40%, 61%);
+    --color1-500: hsl(337, 35%, 52%);  /* Base color1 #b25977 */
+    --color1-600: hsl(337, 38%, 42%);
+    --color1-700: hsl(337, 42%, 32%);
+    --color1-800: hsl(337, 45%, 26%);
+    --color1-900: hsl(337, 50%, 21%);
+    --color1-950: hsl(337, 60%, 11%);
+    
+    /* Color2 Scale (50-950) - Generated from main color2 tangerine */
+    --color2-50: hsl(29, 70%, 96%);
+    --color2-100: hsl(29, 60%, 89%);
+    --color2-200: hsl(29, 55%, 79%);
+    --color2-300: hsl(29, 50%, 69%);
+    --color2-400: hsl(29, 47%, 61%);
+    --color2-500: hsl(29, 44%, 53%);  /* Base color2 #b8874d */
+    --color2-600: hsl(29, 47%, 43%);
+    --color2-700: hsl(29, 50%, 33%);
+    --color2-800: hsl(29, 53%, 27%);
+    --color2-900: hsl(29, 58%, 22%);
+    --color2-950: hsl(29, 65%, 12%);
+    
+    /* Neutral Scale (50-950) - Generated from main neutral */
+    --color3-50: hsl(0, 0%, 97%);
+    --color3-100: hsl(0, 0%, 93%);
+    --color3-200: hsl(0, 0%, 85%);
+    --color3-300: hsl(0, 0%, 73%);
+    --color3-400: hsl(0, 0%, 58%);
+    --color3-500: hsl(0, 0%, 46%);  /* Base neutral */
+    --color3-600: hsl(0, 0%, 36%);
+    --color3-700: hsl(0, 0%, 28%);
+    --color3-800: hsl(0, 0%, 18%);
+    --color3-900: hsl(0, 0%, 11%);
+    --color3-950: hsl(0, 0%, 4%);
+    
+    /* Typography */
+    --font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================ */
+/* LAYER 2: GLOBAL ELEMENTS WITH APPLIED PROPERTIES */
+/* ============================================ */
+
+.text {  
+/* === TYPOGRAPHY === */
+/* Core text styling properties */
+--text-font-family: var(--font-family);
+--text-font-size: 1rem;
+--text-font-weight: 500;
+--text-font-style: normal;
+--text-font-variant: normal;
+--text-line-height: 1.4;
+--text-letter-spacing: 0;
+--text-color: var(--color3-500);
+
+/* === TEXT APPEARANCE === */
+/* Visual text effects and styling */
+--text-text-transform: none;
+--text-text-decoration: none;
+--text-text-shadow: none;
+--text-opacity: 1;
+--text-filter: none;
+--text-text-stroke: none;
+--text-text-fill-color: inherit;
+
+/* === TEXT BEHAVIOR === */
+/* Text flow and interaction properties */
+--text-white-space: normal;
+--text-text-overflow: ellipsis;
+--text-vertical-align: baseline;
+--text-cursor: default;
+--text-user-select: text;
+
+/* === LAYOUT & POSITIONING === */
+/* Display and positioning properties */
+--text-display: block;
+--text-margin: 0;
+--text-padding: 0;
+--text-grid-area: auto;
+
+/* === DIMENSIONS === */
+/* Size control for icons and elements */
+--text-width: auto;
+--text-height: auto;
+--text-min-width: 0;
+--text-max-width: none;
+--text-min-height: 0;
+--text-max-height: none;
+--text-aspect-ratio: auto;
+
+/* === BACKGROUND & BORDER === */
+/* Visual container properties */
+--text-background: transparent;
+--text-border: none;
+--text-border-radius: 0;
+
+/* === INTERACTIVE STATES === */
+/* Animation and state properties */
+--text-transition: color 0.2s ease;
+--text-transform: none;
+
+/* === APPLIED PROPERTIES === */
+/* Typography */
+font-family: var(--text-font-family);
+font-size: var(--text-font-size);
+font-weight: var(--text-font-weight);
+font-style: var(--text-font-style);
+font-variant: var(--text-font-variant);
+line-height: var(--text-line-height);
+letter-spacing: var(--text-letter-spacing);
+color: var(--text-color);
+
+/* Text Appearance */
+text-transform: var(--text-text-transform);
+text-decoration: var(--text-text-decoration);
+text-shadow: var(--text-text-shadow);
+opacity: var(--text-opacity);
+filter: var(--text-filter);
+-webkit-text-stroke: var(--text-text-stroke);
+-webkit-text-fill-color: var(--text-text-fill-color);
+
+/* Text Behavior */
+white-space: var(--text-white-space);
+text-overflow: var(--text-text-overflow);
+vertical-align: var(--text-vertical-align);
+cursor: var(--text-cursor);
+user-select: var(--text-user-select);
+
+/* Layout & Positioning */
+display: var(--text-display);
+margin: var(--text-margin);
+padding: var(--text-padding);
+grid-area: var(--text-grid-area);
+
+/* Dimensions */
+width: var(--text-width);
+height: var(--text-height);
+min-width: var(--text-min-width);
+max-width: var(--text-max-width);
+min-height: var(--text-min-height);
+max-height: var(--text-max-height);
+aspect-ratio: var(--text-aspect-ratio);
+
+/* Background & Border */
+background: var(--text-background);
+border: var(--text-border);
+border-radius: var(--text-border-radius);
+
+/* Interactive States */
+transition: var(--text-transition);
+transform: var(--text-transform);
+}
+    
+.box {
+    /* === CSS CUSTOM PROPERTIES === */
+    
+    /* Display & Layout */
+    --box-display: block;
+    --box-position: relative;
+    --box-z-index: 1;
+    --box-overflow: visible;
+
+    /* Dimensions */
+    --box-width: auto;
+    --box-height: auto;
+    --box-min-width: none;
+    --box-max-width: none;
+    --box-min-height: none;
+    --box-max-height: none;
+
+    /* Spacing */
+    --box-padding: 0;
+    --box-margin: 0;
+
+    /* Background */
+    --box-background: transparent;
+    --box-background-image: none;
+    --box-background-size: cover;
+    --box-background-position: center;
+    --box-background-repeat: no-repeat;
+
+    /* Border */
+    --box-border: none;
+    --box-border-width: 0;
+    --box-border-style: solid;
+    --box-border-color: transparent;
+    --box-border-radius: 0;
+    --box-border-bottom: none;
+
+    /* Shadow & Effects */
+    --box-box-shadow: none;
+    --box-opacity: 1;
+    --box-filter: none;
+    --box-backdrop-filter: none;
+    
+    /* Grid Positioning */
+    --box-grid-area: auto;
+
+    /* Layout Display Type */
+    --box-layout-display: block; /* grid | flex | inline-grid | inline-flex | block */
+
+    /* Shared Layout Variables (Grid & Flex) */
+    --box-layout-gap: 0;
+    --box-layout-row-gap: var(--box-layout-gap);
+    --box-layout-column-gap: var(--box-layout-gap);
+    --box-layout-align-items: stretch;
+    --box-layout-justify-content: start;
+    --box-layout-align-content: start;
+
+    /* CSS Grid Layout Variables */
+    --box-layout-grid-template-columns: none;
+    --box-layout-grid-template-rows: none;
+    --box-layout-grid-template-areas: none;
+    --box-layout-grid-auto-columns: auto;
+    --box-layout-grid-auto-rows: auto;
+    --box-layout-grid-auto-flow: row;
+    --box-layout-grid-justify-items: stretch;
+    --box-layout-grid-place-items: var(--box-layout-align-items) var(--box-layout-grid-justify-items);
+    --box-layout-grid-place-content: var(--box-layout-align-content) var(--box-layout-justify-content);
+
+    /* CSS Flexbox Layout Variables */
+    --box-layout-flex-direction: row;
+    --box-layout-flex-wrap: nowrap;
+    --box-layout-flex-flow: var(--box-layout-flex-direction) var(--box-layout-flex-wrap);
+
+    /* === APPLIED CSS PROPERTIES === */
+    
+    /* Core Display & Layout */
+    display: var(--box-layout-display, var(--box-display, block));
+    position: var(--box-position);
+    z-index: var(--box-z-index);
+    overflow: var(--box-overflow);
+    
+    /* Dimensions */
+    width: var(--box-width);
+    height: var(--box-height);
+    min-width: var(--box-min-width);
+    max-width: var(--box-max-width);
+    min-height: var(--box-min-height);
+    max-height: var(--box-max-height);
+    
+    /* Spacing */
+    padding: var(--box-padding);
+    margin: var(--box-margin);
+    
+    /* Background */
+    background: var(--box-background);
+    background-image: var(--box-background-image);
+    background-size: var(--box-background-size);
+    background-position: var(--box-background-position);
+    background-repeat: var(--box-background-repeat);
+    
+    /* Border */
+    border: var(--box-border);
+    border-width: var(--box-border-width);
+    border-style: var(--box-border-style);
+    border-color: var(--box-border-color);
+    border-radius: var(--box-border-radius);
+    border-bottom: var(--box-border-bottom);
+    
+    /* Shadow & Effects */
+    box-shadow: var(--box-box-shadow);
+    opacity: var(--box-opacity);
+    filter: var(--box-filter);
+    backdrop-filter: var(--box-backdrop-filter);
+    
+    /* Grid Positioning */
+    grid-area: var(--box-grid-area);
+    
+    /* Shared Layout Properties (Grid & Flex) */
+    gap: var(--box-layout-gap);
+    row-gap: var(--box-layout-row-gap);
+    column-gap: var(--box-layout-column-gap);
+    align-items: var(--box-layout-align-items);
+    justify-content: var(--box-layout-justify-content);
+    align-content: var(--box-layout-align-content);
+    
+    /* CSS Grid Layout Properties */
+    grid-template-columns: var(--box-layout-grid-template-columns);
+    grid-template-rows: var(--box-layout-grid-template-rows);
+    grid-template-areas: var(--box-layout-grid-template-areas);
+    grid-auto-columns: var(--box-layout-grid-auto-columns);
+    grid-auto-rows: var(--box-layout-grid-auto-rows);
+    grid-auto-flow: var(--box-layout-grid-auto-flow);
+    justify-items: var(--box-layout-grid-justify-items);
+    place-items: var(--box-layout-grid-place-items);
+    place-content: var(--box-layout-grid-place-content);
+    
+    /* CSS Flexbox Layout Properties */
+    flex-direction: var(--box-layout-flex-direction);
+    flex-wrap: var(--box-layout-flex-wrap);
+    flex-flow: var(--box-layout-flex-flow);
+}
+
+/* ========================================
+   LAYER 3: COMPONENT SCOPES
+   ======================================== */

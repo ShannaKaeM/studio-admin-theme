@@ -1,0 +1,89 @@
+# PLUGIN BACKEND REFACTOR - V2.0 IMPLEMENTATION WHITEBOARD
+
+*Date: July 11, 2025*
+*Status: Planning Phase*
+
+## 🎯 CURRENT SITUATION
+
+### What We Have (Working)
+- ✅ **Sophisticated Plugin System**: R2WC + React 18 + Zustand + Shadow DOM
+- ✅ **JSON-Driven UI**: Theme-aware components with `useComponentStyles()`
+- ✅ **Real-time Updates**: Edit JSON → Instant UI changes
+- ✅ **25+ Editable Components**: Complete interface coverage
+- ✅ **WordPress Integration**: Custom tables, REST API, frontend access
+- ✅ **Build System**: Vite + Tailwind 4 + ShadCN tokens
+
+### What We Paused
+- 🔄 **Frontend Development**: Sophisticated TW + CSS variables + JSON system
+- 🔄 **Typography Global Elements**: Waiting for V2.0 framework
+
+### What We Just Completed
+- ✅ **V2.0 Architecture**: Revolutionary preset-driven design system
+- ✅ **Documentation**: Complete STUDIO4-ARCHITECTURE-V2.md
+- ✅ **AI Prompt Guide**: Comprehensive development guide
+- ✅ **Git Workflow**: Clean branch structure ready
+
+## 🚀 OBJECTIVE: IMPLEMENT V2.0 IN WORKING PLUGIN
+
+### Core Challenge
+**Transform the working plugin from current system → V2.0 preset-driven architecture**
+
+### V2.0 Key Concepts to Implement
+1. **Locked Brand Variables**: Only 4 HSLA colors + font stack in :root
+2. **Global Elements (.box + .text)**: ALL variables centralized in molecules
+3. **Preset System**: Color/typography/layout/state presets for infinite variations
+4. **4-Level User Journey**: 90%/8%/1.9%/0.1% complexity levels
+5. **Dynamic Color System**: Presets modify base HSLA values
+
+## 📋 IMPLEMENTATION STRATEGY
+
+### Phase 1: Foundation Refactor
+- [ ] **Audit Current Plugin Structure**
+- [ ] **Map Current JSON System → V2.0 Architecture**
+- [ ] **Create Migration Plan**
+- [ ] **Backup Current Working State**
+
+### Phase 2: Global Elements Implementation
+- [ ] **Replace Current CSS Variables with .box/.text molecules**
+- [ ] **Centralize ALL variables in Global Elements**
+- [ ] **Update JSON configuration structure**
+- [ ] **Test existing functionality**
+
+### Phase 3: Preset System Integration
+- [ ] **Build preset categories (color/typography/layout/state)**
+- [ ] **Implement preset combination logic**
+- [ ] **Create dynamic HSLA modification system**
+- [ ] **Update UI for preset selection**
+
+### Phase 4: User Journey Implementation
+- [ ] **Level 1 (90%): Brand → Sections → Presets → Done**
+- [ ] **Level 2 (8%): Preset mixing interface**
+- [ ] **Level 3 (1.9%): Base preset customization**
+- [ ] **Level 4 (0.1%): Full customization mode**
+
+### Phase 5: Integration & Testing
+- [ ] **Connect with existing JSON system**
+- [ ] **Ensure real-time updates work**
+- [ ] **Test all 25+ components**
+- [ ] **Performance optimization**
+
+## 🤔 KEY QUESTIONS TO RESOLVE
+
+1. **JSON Structure**: How to map current JSON config to V2.0 preset system?
+2. **Component Migration**: Which existing components need refactoring?
+3. **State Management**: How to handle preset combinations in Zustand?
+4. **UI Updates**: What interface changes needed for preset selection?
+5. **Backward Compatibility**: Do we need to support current system during transition?
+
+## 📁 REFERENCE FILES
+- **Current Example**: `01-s4-example.html` (Latest MOC with V2.0 structure)
+- **Legacy Docs**: `04-01-Docs/04-LegacyDocs/` (Previous implementation details)
+- **V2.0 Spec**: `../01-Design-System/01-01-Docs/Active/STUDIO4-ARCHITECTURE-V2.md`
+- **AI Guide**: `../01-Design-System/01-01-Docs/Active/AI-PROMPT-GUIDE.md`
+
+---
+
+## 💭 WORKING NOTES
+
+*Use this space for real-time thinking and problem-solving...*
+

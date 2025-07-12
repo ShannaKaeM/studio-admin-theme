@@ -1,11 +1,79 @@
-# S4 DESIGN SYSTEM MEMORY
+# STUDIO4 DESIGN SYSTEM MEMORY
 
-**Session Date**: January 7, 2025
-**Current Focus**: Dashboard Mockup using S4 Framework
+**Latest Session**: July 11, 2025
+**Major Update**: STUDIO4 Architecture V2.0 - Preset-Driven System
+**Previous Session**: January 7, 2025 - Dashboard Mockup using S4 Framework
 
 ---
 
-## S4 FRAMEWORK OVERVIEW
+## 🚀 STUDIO4 V2.0 ARCHITECTURE (July 2025)
+
+### **Revolutionary Preset-Driven System**
+Evolved from the proven 4-layer foundation into a **preset-driven design system** using Atomic Design principles for infinite variations with architectural purity.
+
+### **The New 4-Layer Structure (Atomic Design)**
+```
+Layer 1: Brand Variables (Atoms) - 4 Base HSLA Colors + Font Stack ONLY
+    ↓
+Layer 2: Global Elements (Molecules) - .box + .text with ALL variables
+    ↓
+Layer 3: Global Components (Organisms) - Generic reusable components
+    ↓
+Layer 4: Project Sections (Templates) - Finished sections with presets
+```
+
+### **Key V2.0 Innovations**
+1. **Locked Brand Variables** - Only 4 HSLA colors + font stack, nothing else
+2. **Global Elements as Molecules** - ALL CSS variables defined here, prevents AI agents going rogue
+3. **Preset System** - Infinite variations through composable presets
+4. **4-Level User Journey** - 90% / 8% / 1.9% / 0.1% user complexity levels
+5. **Dynamic Color Modification** - Presets modify base HSLA values for themes
+
+### **Preset Categories**
+- **Color Presets**: primary, secondary, neutral + modifiers (muted, vibrant, dark)
+- **Typography Hierarchy**: title, subtitle, body, caption
+- **State Presets**: hover, active, disabled
+- **Layout Presets**: center, split, bento, etc.
+
+### **User Journey Levels**
+1. **Level 1 (90%)**: Brand colors → Section library → Preset combinations → Done
+2. **Level 2 (8%)**: Mix and match individual presets
+3. **Level 3 (1.9%)**: Customize base presets
+4. **Level 4 (0.1%)**: Full customization from scratch
+
+---
+
+## 📚 DOCUMENTATION STRUCTURE
+
+### **Created V2.0 Documentation**
+- **STUDIO4-ARCHITECTURE-V2.md** - Complete architecture specification
+- **AI-PROMPT-GUIDE.md** - Comprehensive guide for AI development
+- **01-03-Whiteboard.md** - Working notes and evolution thinking
+- **Restructured PROJECT-DOCS** - Organized into Docs/Examples/Whiteboards
+
+### **Git Workflow**
+- **Committed to main** - All V2.0 work merged and pushed
+- **New branch**: S4Plugin-Refactor-1 - Ready for plugin implementation
+
+---
+
+## 🔗 EVOLUTION FROM V1.0 TO V2.0
+
+### **What Stayed (Proven Concepts)**
+- 4-layer cascade system (validated in dashboard mockup)
+- CSS variables for complete themability
+- Data attribute scoping (data-scope, data-helper)
+- Component reusability and inheritance
+
+### **What Evolved (Major Improvements)**
+- **Helper Scopes → Preset System** - Much more powerful and organized
+- **Brand Colors → Locked HSLA System** - Prevents scope creep
+- **Global Elements → Molecule Concept** - ALL variables centralized
+- **Ad-hoc Components → Atomic Design** - Formal structure
+
+---
+
+## S4 FRAMEWORK OVERVIEW (V1.0 - January 2025)
 
 ### The 4-Layer Architecture
 1. **Brand Tokens** (Tier 1): Base colors (color1-4) that cascade through everything

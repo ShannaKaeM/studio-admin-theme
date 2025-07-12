@@ -592,15 +592,105 @@ Planning API endpoints for:
                      '- User permission checks\n' +
                      '- Backup before saves';
             break;
-          default:
-            content = 'Document not found';
         }
-      } else {
-        // Reference files (existing functionality)
-        switch (fileName) {
-          case 'ui-theme-config':
-            if (config && Object.keys(config).length > 0) {
-              content = JSON.stringify(config, null, 2);
+      }
+      
+      setFileContent(content);
+    } catch (error) {
+      setFileContent('Error loading file: ' + error.message);
+    }
+  }, [config, loadDocumentContent, documentStructure]);
+
+  // Load file content when selection changes
+  useEffect(() => {
+    if (selectedDocSection === 'docs') {
+      loadFileContent(selectedDoc, 'docs');
+    } else {
+      loadFileContent(selectedFile, 'reference');
+    }
+  }, [selectedDoc, selectedFile, selectedDocSection, loadFileContent]);
+
+  const StyleEditor = useMemo(() => {
+    if (!config || !config.components) {
+      return (
+        <div className="p-4 text-neutral-400">
+          Loading theme configuration...
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        <div className="text-sm text-neutral-400 mb-4">
+          Edit component styles in real-time. Changes are automatically applied to the interface.
+        </div>
+        <div className="space-y-2">
+          {Object.entries(config.components).map(([componentName, styles]) => {
+            return (
+              <details key={componentName} className="bg-neutral-800 rounded border border-neutral-700">
+                <summary className="p-3 cursor-pointer hover:bg-neutral-750 transition-colors">
+                  <span className="font-medium text-neutral-200">{componentName}</span>
+                  <span className="ml-2 text-xs text-neutral-400">({Object.keys(styles).length} properties)</span>
+                </summary>
+                <div className="p-3 border-t border-neutral-700 space-y-2">
+                  {renderStyleEditor(componentName, styles)}
+                  <div className="flex gap-2 mt-3">
+                    <input
+                      type="text"
+                      placeholder="Property name"
+                      value={newStyleProperty}
+                      onChange={(e) => setNewStyleProperty(e.target.value)}
+                      onFocus={() => setShowSuggestions(true)}
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                      className="flex-1 px-2 py-1 bg-neutral-700 border border-neutral-600 rounded text-sm text-neutral-200 placeholder-neutral-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Value"
+                      value={newStyleValue}
+                      onChange={(e) => setNewStyleValue(e.target.value)}
+                      className="flex-1 px-2 py-1 bg-neutral-700 border border-neutral-600 rounded text-sm text-neutral-200 placeholder-neutral-400"
+                    />
+                    <button
+                      onClick={() => handleStyleAdd(componentName)}
+                      className="px-3 py-1 bg-secondary-600 text-white rounded text-sm hover:bg-secondary-700 transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  {showSuggestions && filteredSuggestions.length > 0 && (
+                    <div className="absolute z-10 bg-neutral-800 border border-neutral-600 rounded mt-1 max-h-32 overflow-y-auto">
+                      {filteredSuggestions.map((prop) => (
+                        <div
+                          key={prop}
+                          className="px-3 py-1 hover:bg-neutral-700 cursor-pointer text-sm text-neutral-200"
+                          onMouseDown={() => {
+                            setNewStyleProperty(prop);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          {prop}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }, [config.components, renderStyleEditor, handleStyleAdd, cssProperties, newStyleProperty, newStyleValue, showSuggestions, filteredSuggestions]);
+
+  const FilesViewer = useMemo(() => {
+    const currentSection = selectedDocSection;
+    const currentFile = currentSection === 'docs' ? selectedDoc : selectedFile;
+    
+    // Get display title based on section and file
+    const getFileTitle = () => {
+      if (currentSection === 'docs') {
+        const titleMap = {
             } else {
               content = JSON.stringify({
                 "loading": "Theme configuration is loading...",

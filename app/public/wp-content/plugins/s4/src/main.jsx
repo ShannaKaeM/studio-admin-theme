@@ -1,0 +1,56 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { ShadowApp } from './ShadowApp';
+import './styles/main.css';
+
+// Custom web component with Shadow DOM isolation
+class S4Element extends HTMLElement {
+  constructor() {
+    super();
+    
+    // Create shadow DOM for complete isolation
+    this.attachShadow({ mode: 'open' });
+    
+    this.root = null;
+  }
+  
+  connectedCallback() {
+    this.render();
+  }
+  
+  disconnectedCallback() {
+    if (this.root) {
+      this.root.unmount();
+    }
+  }
+  
+  attributeChangedCallback() {
+    this.render();
+  }
+  
+  render() {
+    // Create container for React app
+    const container = document.createElement('div');
+    container.id = 's4-app-container';
+    
+    // Clear shadow root and append container
+    this.shadowRoot.innerHTML = '';
+    this.shadowRoot.appendChild(container);
+    
+    // Create React root and render app
+    this.root = ReactDOM.createRoot(container);
+    this.root.render(<ShadowApp />);
+  }
+}
+
+// Register the custom element
+if (!customElements.get('s4-element')) {
+  customElements.define('s4-element', S4Element);
+}
+
+// Also render in admin page if container exists
+const adminContainer = document.getElementById('s4-admin-root');
+if (adminContainer) {
+  const root = ReactDOM.createRoot(adminContainer);
+  root.render(<ShadowApp isAdmin={true} />);
+}

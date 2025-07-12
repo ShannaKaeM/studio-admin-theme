@@ -1,268 +1,319 @@
-@import "tailwindcss";
-@source "../**/*.jsx";
-@source "../**/*.js";
+/* ============================================
+   STUDIO4 V2.0 FRAMEWORK - CLEAN ARCHITECTURE
+   No Tailwind dependencies - Pure S4 system
+   ============================================ */
 
-@theme inline {
-  /* ========================================
-     S4 STUDIO4 BASE COLORS (4 BRAND COLORS)
-     ======================================== */
+/* ========================================
+   LAYER 1: BRAND VARIABLES (LOCKED)
+   Only 4 HSLA colors + font stack allowed
+   ======================================== */
+:root {
+  /* Brand Colors - LOCKED (Only these 4 allowed) */
+  --color1: hsl(337, 35%, 52%);  /* Primary pink */
+  --color2: hsl(29, 44%, 53%);   /* Secondary tangerine */
+  --color3: hsl(0, 0%, 50%);     /* Neutral */
+  --color4: hsl(0, 0%, 80%);     /* Base */
   
-  /* Color 1: Primary */
-  --color1: hsl(337, 35%, 52%);
-  
-  /* Color 2: Secondary */  
-  --color2: hsl(29, 44%, 53%);
-  
-  /* Color 3: Neutral */
-  --color3: hsl(0, 0%, 50%);
-  
-  /* Color 4: Base */
-  --color4: hsl(0, 0%, 80%);
-
-  /* ========================================
-     S4 PRESET SYSTEM - BASE COLOR PLACEHOLDERS
-     ======================================== */
-  
-  /* Base colors for S4 preset hydration system - broken up for clarity */
-  --color-base: hsl(0, 0%, 0%);  /* Black placeholder - will be hydrated by presets */
-  --color-base-bg: hsl(0, 0%, 0%);  /* Background color placeholder */
-  --color-base-border: hsla(0, 0%, 0%, 0);  /* Transparent border placeholder */
-
-  /* ========================================
-     GENERATED COLOR SCALES (keep existing TW scales for compatibility)
-     ======================================== */
-     
-  /* Brand Color Scales - All at 50% values */
-  --color-primary-50: hsl(0, 0%, 100%);           /* White */
-  --color-primary-100: hsl(337, 35%, 95%);
-  --color-primary-200: hsl(337, 35%, 85%);
-  --color-primary-300: hsl(337, 35%, 75%);
-  --color-primary-400: hsl(337, 35%, 65%);
-  --color-primary-500: hsl(337, 35%, 52%);        /* Primary at 50% */
-  --color-primary-600: hsl(337, 35%, 42%);
-  --color-primary-700: hsl(337, 35%, 32%);
-  --color-primary-800: hsl(337, 35%, 22%);
-  --color-primary-900: hsl(337, 35%, 12%);
-  --color-primary-950: hsl(0, 0%, 0%);            /* Black */
-
-  --color-secondary-50: hsl(0, 0%, 100%);         /* White */
-  --color-secondary-100: hsl(29, 44%, 95%);
-  --color-secondary-200: hsl(29, 44%, 85%);
-  --color-secondary-300: hsl(29, 44%, 75%);
-  --color-secondary-400: hsl(29, 44%, 65%);
-  --color-secondary-500: hsl(29, 44%, 53%);       /* Secondary at 50% */
-  --color-secondary-600: hsl(29, 44%, 43%);
-  --color-secondary-700: hsl(29, 44%, 33%);
-  --color-secondary-800: hsl(29, 44%, 23%);
-  --color-secondary-900: hsl(29, 44%, 13%);
-  --color-secondary-950: hsl(0, 0%, 0%);          /* Black */
-
-  --color-neutral-50: hsl(0, 0%, 100%);           /* White */
-  --color-neutral-100: hsl(0, 0%, 95%);
-  --color-neutral-200: hsl(0, 0%, 90%);
-  --color-neutral-300: hsl(0, 0%, 80%);
-  --color-neutral-400: hsl(0, 0%, 60%);
-  --color-neutral-500: hsl(0, 0%, 50%);           /* Neutral at 50% */
-  --color-neutral-600: hsl(0, 0%, 40%);
-  --color-neutral-700: hsl(0, 0%, 25%);
-  --color-neutral-800: hsl(0, 0%, 15%);
-  --color-neutral-900: hsl(0, 0%, 10%);
-  --color-neutral-950: hsl(0, 0%, 0%);            /* Black */
-
-  --color-base-50: hsl(0, 0%, 100%);              /* White */
-  --color-base-100: hsl(0, 0%, 98%);
-  --color-base-200: hsl(0, 0%, 95%);
-  --color-base-300: hsl(0, 0%, 90%);
-  --color-base-400: hsl(0, 0%, 85%);
-  --color-base-500: hsl(0, 0%, 80%);              /* Base at 50% */
-  --color-base-600: hsl(0, 0%, 70%);
-  --color-base-700: hsl(0, 0%, 60%);
-  --color-base-800: hsl(0, 0%, 50%);
-  --color-base-900: hsl(0, 0%, 40%);
-  --color-base-950: hsl(0, 0%, 0%);               /* Black */
-
-  /* Dark Theme System Colors */
-  --color-background: var(--color-neutral-950);   /* Very dark background */
-  --color-foreground: var(--color-neutral-50);    /* Light text */
-  --color-card: var(--color-neutral-900);         /* Card background */
-  --color-card-foreground: var(--color-neutral-50); /* Light text on cards */
-  --color-popover: var(--color-neutral-900);      /* Match card background */
-  --color-popover-foreground: var(--color-neutral-50);
-  
-  /* Primary colors */
-  --color-primary: var(--color-primary-500);      /* Brand pink */
-  --color-primary-foreground: var(--color-primary-50); /* White text on pink */
-  
-  /* Secondary colors */
-  --color-secondary: var(--color-secondary-500);  /* Brand tangerine */
-  --color-secondary-foreground: var(--color-secondary-50); /* White text on tangerine */
-  
-  /* Muted states for dark mode */
-  --color-muted: var(--color-neutral-800);        /* Subtle background */
-  --color-muted-foreground: var(--color-neutral-300); /* Dimmed text */
-  
-  /* Accent states */
-  --color-accent: var(--color-neutral-700);       /* Hover/selected state */
-  --color-accent-foreground: var(--color-neutral-50);
-  
-  /* System colors */
-  --color-destructive: oklch(62.8% 0.257 29.23);
-  --color-destructive-foreground: oklch(98% 0.004 285.82);
-  --color-border: var(--color-neutral-700);       /* Subtle borders */
-  --color-input: var(--color-neutral-800);        /* Input backgrounds */
-  --color-ring: var(--color-primary-500);         /* Focus ring matches primary */
-  
-  --radius: 0.375rem;
-
-
-  /* ========================================
-     S4 GLOBAL ELEMENTS - WRAPPER
-     ======================================== */
-  
-.wrapper {
-  --wrapper-width: 100%;
-  --wrapper-height: auto;
-  --wrapper-max-width: none;
-  --wrapper-background: var(--color-base-bg);
-  --wrapper-border: 0;
-  --wrapper-border-color: var(--color-base-border);
-  --wrapper-border-width: 0;
-  --wrapper-border-radius: 0;
-  --wrapper-padding: 1rem;
-  --wrapper-margin: 0;
-  --wrapper-overflow: hidden;
-  --wrapper-position: relative;
-  --wrapper-z-index: 1;
-  --wrapper-box-shadow: none;
-
-  width: var(--wrapper-width);
-  height: var(--wrapper-height);
-  max-width: var(--wrapper-max-width);
-  background: var(--wrapper-background);
-  border: var(--wrapper-border);
-  border-color: var(--wrapper-border-color);
-  border-width: var(--wrapper-border-width);
-  border-radius: var(--wrapper-border-radius);
-  padding: var(--wrapper-padding);
-  margin: var(--wrapper-margin);
-  overflow: var(--wrapper-overflow);
-  position: var(--wrapper-position);
-  z-index: var(--wrapper-z-index);
-  box-shadow: var(--wrapper-box-shadow);
-}
-   
-
-  /* ========================================
-     S4 GLOBAL ELEMENTS - LAYOUT
-     ======================================== */
-  
-.layout {
-  --layout-display: grid;
-  --layout-template-areas: "header header" "sidebar preview";
-  --layout-template-rows: auto 1fr;
-  --layout-template-columns: 400px 1fr;
-  --layout-gap: 0;
-  --layout-width: 100%;
-  --layout-height: 100%;
-  --layout-align-items: stretch;
-  --layout-justify-content: stretch;
-  --layout-auto-flow: row;
-  --layout-auto-rows: minmax(0, 1fr);
-  --layout-auto-columns: minmax(0, 1fr);
-  --layout-flex-direction: row;
-  --layout-flex-wrap: nowrap;
-  --layout-flex-basis: auto;
-  --layout-flex-grow: 0;
-  --layout-flex-shrink: 1;
-
-  display: var(--layout-display);
-  
-  /* Grid properties */
-  grid-template-areas: var(--layout-template-areas);
-  grid-template-rows: var(--layout-template-rows);
-  grid-template-columns: var(--layout-template-columns);
-  grid-auto-flow: var(--layout-auto-flow);
-  grid-auto-rows: var(--layout-auto-rows);
-  grid-auto-columns: var(--layout-auto-columns);
-  
-  /* Flex properties */
-  flex-direction: var(--layout-flex-direction);
-  flex-wrap: var(--layout-flex-wrap);
-  flex-basis: var(--layout-flex-basis);
-  flex-grow: var(--layout-flex-grow)
-  flex-shrink: var(--layout-flex-shrink);
-  
-  /* Universal properties */
-  gap: var(--layout-gap);
-  width: var(--layout-width);
-  height: var(--layout-height);
-  align-items: var(--layout-align-items);
-  justify-content: var(--layout-justify-content);
-}
-
-  /* ========================================
-     S4 GLOBAL ELEMENTS - TYPOGRAPHY
-     ======================================== */
-  
-.title {
-  --title-color: var(--color-base);
-  --title-font-size: 2rem;
-  --title-font-weight: 700;
-  --title-line-height: 1.2;
-  --title-margin: 0;
-  --title-text-transform: none;
-  --title-letter-spacing: 0;
-
-  color: var(--title-color);
-  font-size: var(--title-font-size);
-  font-weight: var(--title-font-weight);
-  line-height: var(--title-line-height);
-  margin: var(--title-margin);
-  text-transform: var(--title-text-transform);
-  letter-spacing: var(--title-letter-spacing);
-}
-
-.subtitle {
-  --subtitle-color: var(--color-base);
-  --subtitle-font-size: 1rem;
-  --subtitle-font-weight: 600;
-  --subtitle-line-height: 1.4;
-  --subtitle-margin: 0;ui
-  --subtitle-text-transform: none;
-  --subtitle-letter-spacing: 0;
-
-  color: var(--subtitle-color);
-  font-size: var(--subtitle-font-size);
-  font-weight: var(--subtitle-font-weight);
-  line-height: var(--subtitle-line-height);
-  margin: var(--subtitle-margin);
-  text-transform: var(--subtitle-text-transform);
-  letter-spacing: var(--subtitle-letter-spacing);
+  /* Font Stack - LOCKED */
+  --font-stack: 'Montserrat', system-ui, sans-serif;
 }
 
 /* ========================================
-     S4 GLOBAL ELEMENTS - BUTTONS
-     ======================================== */
-  
-.button {
-  --button-background: var(--color-base-bg);
-  --button-color: var(--color-base);
-  --button-border: 1px solid var(--color-base-border);
-  --button-border-radius: 0.375rem;
-  --button-padding: 0.5rem 1rem;
-  --button-font-size: 0.875rem;
-  --button-font-weight: 500;
-  --button-cursor: pointer;
-  --button-transition: all 0.2s ease;
+   LAYER 2: GLOBAL ELEMENTS (MOLECULES)
+   ALL CSS variables centralized here
+   ======================================== */
 
-  background: var(--button-background);
-  color: var(--button-color);
-  border: var(--button-border);
-  border-radius: var(--button-border-radius);
-  padding: var(--button-padding);
-  font-size: var(--button-font-size);
-  font-weight: var(--button-font-weight);
-  cursor: var(--button-cursor);
-  transition: var(--button-transition);
+/* .box - Universal container with ALL layout/visual variables */
+.box {
+  /* Display & Layout */
+  --box-display: block;
+  --box-position: relative;
+  --box-z-index: 1;
+  --box-overflow: visible;
+  
+  /* Dimensions */
+  --box-width: auto;
+  --box-height: auto;
+  --box-min-width: 0;
+  --box-min-height: 0;
+  --box-max-width: none;
+  --box-max-height: none;
+  
+  /* Spacing */
+  --box-padding: 0;
+  --box-margin: 0;
+  --box-gap: 0;
+  
+  /* Visual */
+  --box-background: transparent;
+  --box-border: none;
+  --box-border-radius: 0;
+  --box-box-shadow: none;
+  --box-opacity: 1;
+  --box-filter: none;
+  
+  /* CSS Grid Layout */
+  --box-grid-template-columns: none;
+  --box-grid-template-rows: none;
+  --box-grid-template-areas: none;
+  --box-grid-auto-columns: auto;
+  --box-grid-auto-rows: auto;
+  --box-grid-auto-flow: row;
+  --box-grid-area: auto;
+  
+  /* Flexbox Layout */
+  --box-flex-direction: row;
+  --box-flex-wrap: nowrap;
+  --box-flex-basis: auto;
+  --box-flex-grow: 0;
+  --box-flex-shrink: 1;
+  
+  /* Alignment (works for both Grid and Flex) */
+  --box-align-items: stretch;
+  --box-align-content: stretch;
+  --box-align-self: auto;
+  --box-justify-items: stretch;
+  --box-justify-content: flex-start;
+  --box-justify-self: auto;
+  --box-place-items: auto;
+  --box-place-content: auto;
+  --box-place-self: auto;
+  
+  /* Applied Properties */
+  display: var(--box-display);
+  position: var(--box-position);
+  z-index: var(--box-z-index);
+  overflow: var(--box-overflow);
+  
+  width: var(--box-width);
+  height: var(--box-height);
+  min-width: var(--box-min-width);
+  min-height: var(--box-min-height);
+  max-width: var(--box-max-width);
+  max-height: var(--box-max-height);
+  
+  padding: var(--box-padding);
+  margin: var(--box-margin);
+  gap: var(--box-gap);
+  
+  background: var(--box-background);
+  border: var(--box-border);
+  border-radius: var(--box-border-radius);
+  box-shadow: var(--box-box-shadow);
+  opacity: var(--box-opacity);
+  filter: var(--box-filter);
+  
+  /* Grid properties */
+  grid-template-columns: var(--box-grid-template-columns);
+  grid-template-rows: var(--box-grid-template-rows);
+  grid-template-areas: var(--box-grid-template-areas);
+  grid-auto-columns: var(--box-grid-auto-columns);
+  grid-auto-rows: var(--box-grid-auto-rows);
+  grid-auto-flow: var(--box-grid-auto-flow);
+  grid-area: var(--box-grid-area);
+  
+  /* Flex properties */
+  flex-direction: var(--box-flex-direction);
+  flex-wrap: var(--box-flex-wrap);
+  flex-basis: var(--box-flex-basis);
+  flex-grow: var(--box-flex-grow);
+  flex-shrink: var(--box-flex-shrink);
+  
+  /* Alignment properties */
+  align-items: var(--box-align-items);
+  align-content: var(--box-align-content);
+  align-self: var(--box-align-self);
+  justify-items: var(--box-justify-items);
+  justify-content: var(--box-justify-content);
+  justify-self: var(--box-justify-self);
+  place-items: var(--box-place-items);
+  place-content: var(--box-place-content);
+  place-self: var(--box-place-self);
+}
+
+/* .text - Universal typography with ALL text variables */
+.text {
+  /* Typography */
+  --text-font-family: var(--font-stack);
+  --text-font-size: 1rem;
+  --text-font-weight: 400;
+  --text-font-style: normal;
+  --text-font-variant: normal;
+  --text-line-height: 1.5;
+  --text-letter-spacing: normal;
+  --text-word-spacing: normal;
+  
+  /* Color & Visual */
+  --text-color: var(--color3);
+  --text-text-decoration: none;
+  --text-text-transform: none;
+  --text-text-align: left;
+  --text-text-indent: 0;
+  --text-white-space: normal;
+  --text-word-break: normal;
+  --text-overflow-wrap: normal;
+  
+  /* Spacing */
+  --text-margin: 0;
+  --text-padding: 0;
+  
+  /* Applied Properties */
+  font-family: var(--text-font-family);
+  font-size: var(--text-font-size);
+  font-weight: var(--text-font-weight);
+  font-style: var(--text-font-style);
+  font-variant: var(--text-font-variant);
+  line-height: var(--text-line-height);
+  letter-spacing: var(--text-letter-spacing);
+  word-spacing: var(--text-word-spacing);
+  
+  color: var(--text-color);
+  text-decoration: var(--text-text-decoration);
+  text-transform: var(--text-text-transform);
+  text-align: var(--text-text-align);
+  text-indent: var(--text-text-indent);
+  white-space: var(--text-white-space);
+  word-break: var(--text-word-break);
+  overflow-wrap: var(--text-overflow-wrap);
+  
+  margin: var(--text-margin);
+  padding: var(--text-padding);
+}
+
+/* ========================================
+   LAYER 3: COMPONENT SCOPES (ORGANISMS)
+   Generic reusable components
+   ======================================== */
+
+/* Example component scope - override variables only */
+[data-scope="hero"] {
+  --box-background: var(--color1);
+  --box-padding: 4rem 2rem;
+  --box-display: flex;
+  --box-flex-direction: column;
+  --box-align-items: center;
+  --box-justify-content: center;
+  --text-color: white;
+  --text-text-align: center;
+}
+
+[data-scope="card"] {
+  --box-background: white;
+  --box-border: 1px solid var(--color4);
+  --box-border-radius: 0.5rem;
+  --box-padding: 1.5rem;
+  --box-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+[data-scope="sidebar"] {
+  --box-background: var(--color3);
+  --box-width: 300px;
+  --box-height: 100vh;
+  --box-padding: 1rem;
+  --text-color: white;
+}
+
+/* ========================================
+   LAYER 4: PRESETS (TEMPLATES)
+   Dynamic modifications to base colors/styles
+   ======================================== */
+
+/* Color Presets - Modify base HSLA values */
+[data-preset="vibrant"] {
+  --color1: hsl(337, 85%, 52%);  /* Boost saturation */
+  --color2: hsl(29, 84%, 53%);
+}
+
+[data-preset="muted"] {
+  --color1: hsl(337, 15%, 52%);  /* Reduce saturation */
+  --color2: hsl(29, 14%, 53%);
+}
+
+[data-preset="dark"] {
+  --color1: hsl(337, 35%, 32%);  /* Darker values */
+  --color2: hsl(29, 44%, 33%);
+  --color3: hsl(0, 0%, 20%);
+  --color4: hsl(0, 0%, 40%);
+}
+
+/* Typography Presets */
+[data-preset="title"] {
+  --text-font-size: 2.5rem;
+  --text-font-weight: 700;
+  --text-line-height: 1.2;
+}
+
+[data-preset="subtitle"] {
+  --text-font-size: 1.25rem;
+  --text-font-weight: 500;
+  --text-line-height: 1.4;
+}
+
+[data-preset="body"] {
+  --text-font-size: 1rem;
+  --text-font-weight: 400;
+  --text-line-height: 1.6;
+}
+
+[data-preset="caption"] {
+  --text-font-size: 0.875rem;
+  --text-font-weight: 400;
+  --text-line-height: 1.4;
+  --text-color: var(--color3);
+}
+
+/* Layout Presets */
+[data-preset="center"] {
+  --box-display: flex;
+  --box-align-items: center;
+  --box-justify-content: center;
+}
+
+[data-preset="split"] {
+  --box-display: grid;
+  --box-grid-template-columns: 1fr 1fr;
+  --box-gap: 2rem;
+}
+
+[data-preset="stack"] {
+  --box-display: flex;
+  --box-flex-direction: column;
+  --box-gap: 1rem;
+}
+
+/* State Presets */
+[data-preset="hover"]:hover {
+  --box-transform: translateY(-2px);
+  --box-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+[data-preset="active"] {
+  --box-background: var(--color1);
+  --text-color: white;
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-stack);
+  background: var(--color4);
+  color: var(--color3);
+}
+
+/* Apply .text to common text elements */
+h1, h2, h3, h4, h5, h6, p, span, a, li, td, th {
+  @extend .text;
+}
+
+/* Apply .box to common container elements */
+div, section, article, aside, header, footer, main, nav {
+  @extend .box;
 }
 
