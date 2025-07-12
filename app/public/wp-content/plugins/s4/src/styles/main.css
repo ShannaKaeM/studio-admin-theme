@@ -8,11 +8,41 @@
 
 /* LAYER 1: BRAND VARIABLES */
 :root {
+    /* ============================================ */
+    /* BUILDER COLORS - FIXED (Never User-Editable) */
+    /* ============================================ */
+    /* These colors style the Studio1 interface itself and are immune to user edits */
+    
+    --builder-primary: hsl(337, 35%, 52%);    /* Builder buttons & highlights */
+    --builder-secondary: hsl(29, 44%, 53%);   /* Builder secondary elements */
+    --builder-neutral-50: hsl(0, 0%, 97%);
+    --builder-neutral-100: hsl(0, 0%, 93%);
+    --builder-neutral-200: hsl(0, 0%, 85%);
+    --builder-neutral-300: hsl(0, 0%, 73%);
+    --builder-neutral-400: hsl(0, 0%, 58%);
+    --builder-neutral-500: hsl(0, 0%, 46%);
+    --builder-neutral-600: hsl(0, 0%, 36%);
+    --builder-neutral-700: hsl(0, 0%, 28%);
+    --builder-neutral-800: hsl(0, 0%, 18%);
+    --builder-neutral-900: hsl(0, 0%, 11%);
+    --builder-neutral-950: hsl(0, 0%, 4%);
+    --builder-text-50: hsl(0, 0%, 100%);
+    --builder-text-100: hsl(0, 0%, 98%);
+    --builder-text-200: hsl(0, 0%, 95%);
+    --builder-text-300: hsl(0, 0%, 90%);
+    --builder-text-400: hsl(0, 0%, 80%);
+    --builder-text-500: hsl(0, 0%, 70%);
+
+    /* ============================================ */
+    /* USER COLORS - EDITABLE */
+    /* ============================================ */
+    /* These are the colors users can edit for their content */
+    
     /* Main Colors - Change these to update everything */
     --color1: hsl(337, 35%, 52%);  /* Primary pink #b25977 */
     --color2: hsl(29, 44%, 53%);   /* Secondary tangerine #b8874d */
     --color3: hsl(0, 0%, 46%); /* Neutral */
-    --color4: hsl(0, 0%, 100%); /* Base white */
+    --color4: hsl(0, 0%, 95%); /* Base white */
     
     /* Color1 Scale (50-950) - Generated from main color1 pink */
     --color1-50: hsl(337, 70%, 97%);

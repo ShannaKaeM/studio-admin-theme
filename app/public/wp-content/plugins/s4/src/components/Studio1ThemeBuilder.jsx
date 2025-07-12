@@ -4,12 +4,13 @@ import { useThemeConfig } from '../hooks/useThemeConfig.js';
 import { ComponentVariablesTable } from '../components/ComponentVariablesTable.jsx';
 import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
 import { ColorCreator } from '../components/ColorCreator.jsx';
+import { BaseColorEditor } from '../components/BaseColorEditor.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
   const { config, updateConfig } = useStudio1Store();
   const { config: themeConfig, exportConfig, importConfig, resetToDefault, syncNewComponents } = useThemeConfig();
-  const [activeTab, setActiveTab] = useState('components');
-  const [expandedSection, setExpandedSection] = useState('components');
+  const [activeTab, setActiveTab] = useState('colors');
+  const [expandedSection, setExpandedSection] = useState('colors');
   
   const handleExport = () => {
     const configJson = exportConfig();
@@ -38,11 +39,11 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
       '--one-bottom': isFrontend ? '0' : 'auto',
       '--one-width': isFrontend ? '100vw' : '100%',
       '--one-height': isFrontend ? '100vh' : 'auto',
-      '--one-background': 'var(--color3-950)',
+      '--one-background': 'var(--builder-neutral-950)',
       '--one-z-index': isFrontend ? '50' : 'auto'
     }}>
       <div className="one" style={{
-        '--one-background': 'var(--color3-900)',
+        '--one-background': 'var(--builder-neutral-900)',
         '--one-width': '100%',
         '--one-height': '100%',
         '--one-display': 'flex',
@@ -54,20 +55,20 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
           '--one-align-items': 'center',
           '--one-justify-content': 'space-between',
           '--one-padding': '1rem',
-          '--one-border-bottom': '1px solid var(--color3-700)',
-          '--one-background': 'var(--color3-800)'
+          '--one-border-bottom': '1px solid var(--builder-neutral-700)',
+          '--one-background': 'var(--builder-neutral-800)'
         }}>
           <div className="one">
             <h2 className="one" style={{
               '--one-font-size': '1.125rem',
               '--one-font-weight': '700',
-              '--one-color': 'var(--color4-100)'
+              '--one-color': 'var(--builder-text-100)'
             }}>
               Studio1 Design System
             </h2>
             <p className="one" style={{
               '--one-font-size': '0.75rem',
-              '--one-color': 'var(--color4-400)'
+              '--one-color': 'var(--builder-text-400)'
             }}>
               The One Element System • Real-time updates
             </p>
@@ -120,20 +121,79 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
           </div>
         </div>
 
-        {/* Main Layout - Different layouts for different tabs */}
-        {activeTab === 'scopes' ? (
-          /* Scopes Builder gets full area with its own layout */
+        {/* Main Layout - Unified with tabs for Base, Colors, and Scopes */}
+        {activeTab === 'base' || activeTab === 'colors' || activeTab === 'scopes' ? (
+          /* Unified interface with top tabs */
           <div className="one" style={{
+            '--one-display': 'flex',
+            '--one-flex-direction': 'column',
             '--one-flex': '1'
           }}>
-            <ScopesBuilder />
-          </div>
-        ) : activeTab === 'colors' ? (
-          /* Color Creator gets full area with its own layout */
-          <div className="one" style={{
-            '--one-flex': '1'
-          }}>
-            <ColorCreator />
+            {/* Top Tab Navigation */}
+            <div className="one" style={{
+              '--one-display': 'flex',
+              '--one-background': 'var(--color3-800)',
+              '--one-border-bottom': '1px solid var(--color3-700)',
+              '--one-padding': '0 1.5rem'
+            }}>
+              <button
+                onClick={() => setActiveTab('base')}
+                className="one"
+                style={{
+                  '--one-padding': '1rem 1.5rem',
+                  '--one-background': activeTab === 'base' ? 'var(--builder-primary)' : 'transparent',
+                  '--one-color': activeTab === 'base' ? 'var(--builder-text-50)' : 'var(--builder-text-300)',
+                  '--one-border': 'none',
+                  '--one-border-bottom': activeTab === 'base' ? '3px solid var(--builder-primary)' : '3px solid transparent',
+                  '--one-cursor': 'pointer',
+                  '--one-font-weight': '500',
+                  '--one-transition': 'all 0.2s ease'
+                }}
+              >
+                🎯 Base
+              </button>
+              <button
+                onClick={() => setActiveTab('colors')}
+                className="one"
+                style={{
+                  '--one-padding': '1rem 1.5rem',
+                  '--one-background': activeTab === 'colors' ? 'var(--color2-500)' : 'transparent',
+                  '--one-color': activeTab === 'colors' ? 'var(--color4-50)' : 'var(--color4-300)',
+                  '--one-border': 'none',
+                  '--one-border-bottom': activeTab === 'colors' ? '3px solid var(--color2-400)' : '3px solid transparent',
+                  '--one-cursor': 'pointer',
+                  '--one-font-weight': '500',
+                  '--one-transition': 'all 0.2s ease'
+                }}
+              >
+                🎨 Colors
+              </button>
+              <button
+                onClick={() => setActiveTab('scopes')}
+                className="one"
+                style={{
+                  '--one-padding': '1rem 1.5rem',
+                  '--one-background': activeTab === 'scopes' ? 'var(--color3-500)' : 'transparent',
+                  '--one-color': activeTab === 'scopes' ? 'var(--color4-50)' : 'var(--color4-300)',
+                  '--one-border': 'none',
+                  '--one-border-bottom': activeTab === 'scopes' ? '3px solid var(--color3-400)' : '3px solid transparent',
+                  '--one-cursor': 'pointer',
+                  '--one-font-weight': '500',
+                  '--one-transition': 'all 0.2s ease'
+                }}
+              >
+                🎭 Scopes
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="one" style={{
+              '--one-flex': '1'
+            }}>
+              {activeTab === 'base' && <BaseColorEditor />}
+              {activeTab === 'colors' && <ColorCreator />}
+              {activeTab === 'scopes' && <ScopesBuilder />}
+            </div>
           </div>
         ) : (
           /* Other tabs use the standard sidebar + content layout */
@@ -408,7 +468,7 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
                 }}>
                   <button
                     onClick={() => {
-                      setExpandedSection(expandedSection === 'colors' ? null : 'colors');
+                      setExpandedSection('colors');
                       setActiveTab('colors');
                     }}
                     className="one"
@@ -488,7 +548,7 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
                 }}>
                   <button
                     onClick={() => {
-                      setExpandedSection(expandedSection === 'scopes' ? null : 'scopes');
+                      setExpandedSection('scopes');
                       setActiveTab('scopes');
                     }}
                     className="one"
@@ -677,107 +737,63 @@ function DashboardView() {
   const { config: themeConfig } = useThemeConfig();
   
   return (
-    <div className="one" style={{ '--one-padding': '1.5rem', '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '1.5rem' }}>
-      <div className="one" style={{ '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '0.5rem' }}>
-        <h1 className="one" style={{ '--one-font-size': '1.5rem', '--one-font-weight': '600', '--one-color': 'var(--color4-100)' }}>
+    <div className="one" style={{ '--one-padding': '2rem', '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '2rem', '--one-align-items': 'center', '--one-justify-content': 'center', '--one-text-align': 'center', '--one-min-height': '400px' }}>
+      <div className="one" style={{ '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '1rem' }}>
+        <div className="one" style={{ '--one-font-size': '3rem', '--one-margin-bottom': '0.5rem' }}>
+          🚀
+        </div>
+        <h1 className="one" style={{ '--one-font-size': '2rem', '--one-font-weight': '700', '--one-color': 'var(--color4-100)', '--one-margin-bottom': '0.5rem' }}>
           Studio1 Design System
         </h1>
-        <p className="one" style={{ '--one-color': 'var(--color4-400)', '--one-font-size': '1rem' }}>
-          The One Element System - Revolutionary unified architecture
+        <p className="one" style={{ '--one-color': 'var(--color4-400)', '--one-font-size': '1.125rem', '--one-max-width': '600px' }}>
+          The One Element System - Revolutionary unified architecture with real-time visual editing
         </p>
-      </div>
-      
-      {/* Foundation Complete Status */}
-      <div className="one" style={{ 
-        '--one-background': 'var(--color3-900)', 
-        '--one-border': '1px solid var(--color3-700)', 
-        '--one-padding': '1rem', 
-        '--one-border-radius': '0.5rem' 
-      }}>
-        <h2 className="one" style={{ '--one-font-size': '1.125rem', '--one-font-weight': '600', '--one-color': 'var(--color1-400)', '--one-margin-bottom': '0.75rem' }}>
-          ✅ Revolutionary Foundation Complete
-        </h2>
-        <div className="one" style={{ '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '0.5rem' }}>
-          <p className="one" style={{ '--one-color': 'var(--color4-300)', '--one-font-size': '0.875rem' }}>
-            • The .one element with 80+ CSS properties unified
-          </p>
-          <p className="one" style={{ '--one-color': 'var(--color4-300)', '--one-font-size': '0.875rem' }}>
-            • Perfect --one- variable naming consistency
-          </p>
-          <p className="one" style={{ '--one-color': 'var(--color4-300)', '--one-font-size': '0.875rem' }}>
-            • JSON-driven component system with unified variables
-          </p>
-          <p className="one" style={{ '--one-color': 'var(--color4-300)', '--one-font-size': '0.875rem' }}>
-            • Studio1 plugin architecture complete
-          </p>
-        </div>
-        <div className="one" style={{ '--one-margin-top': '1rem' }}>
-          <p className="one" style={{ '--one-color': 'var(--color1-300)', '--one-font-weight': '500', '--one-font-size': '0.875rem' }}>
-            🎉 Every element can now be anything - Figma-like flexibility for web!
-          </p>
-        </div>
-      </div>
-      
-      {/* Brand Colors Preview */}
-      <div className="one" style={{ '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '1rem' }}>
-        <h2 className="one" style={{ '--one-font-size': '1.125rem', '--one-font-weight': '600', '--one-color': 'var(--color4-200)' }}>
-          Studio1 Brand Colors
-        </h2>
-        <div className="one" style={{ '--one-display': 'flex', '--one-gap': '1rem' }}>
-          {Object.entries(config.brand).map(([name, color]) => (
-            <div key={name} className="one" style={{ '--one-display': 'flex', '--one-flex-direction': 'column', '--one-gap': '0.5rem', '--one-align-items': 'center' }}>
-              <div 
-                className="one"
-                style={{ 
-                  '--one-background': color,
-                  '--one-width': '60px', 
-                  '--one-height': '60px',
-                  '--one-border-radius': '0.5rem',
-                  '--one-border': '2px solid var(--color3-700)'
-                }}
-              />
-              <div className="one" style={{ '--one-font-size': '0.75rem', '--one-color': 'var(--color4-400)', '--one-font-weight': '500' }}>
-                {name}
-              </div>
-              <div className="one" style={{ '--one-font-size': '0.625rem', '--one-color': 'var(--color4-500)', '--one-font-family': 'monospace' }}>
-                {color}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
-      {/* Component Count */}
-      <div className="one" style={{ 
-        '--one-background': 'var(--color3-800)', 
-        '--one-border': '1px solid var(--color3-600)', 
-        '--one-padding': '1rem', 
-        '--one-border-radius': '0.5rem' 
+      {/* Quick Actions */}
+      <div className="one" style={{
+        '--one-display': 'flex',
+        '--one-gap': '1rem',
+        '--one-margin-top': '1rem'
       }}>
-        <h2 className="one" style={{ '--one-font-size': '1rem', '--one-font-weight': '600', '--one-color': 'var(--color4-200)', '--one-margin-bottom': '0.5rem' }}>
-          Component Variables Loaded
-        </h2>
-        <p className="one" style={{ '--one-color': 'var(--color4-400)', '--one-font-size': '0.875rem' }}>
-          {Object.keys(themeConfig.components || {}).length} components using unified --one- variables
-        </p>
-        <div className="one" style={{ '--one-margin-top': '0.75rem', '--one-display': 'flex', '--one-flex-wrap': 'wrap', '--one-gap': '0.5rem' }}>
-          {Object.keys(themeConfig.components || {}).map((componentName) => (
-            <span 
-              key={componentName} 
-              className="one" 
-              style={{ 
-                '--one-font-size': '0.75rem', 
-                '--one-color': 'var(--color1-300)', 
-                '--one-background': 'var(--color1-900)', 
-                '--one-padding': '0.25rem 0.5rem', 
-                '--one-border-radius': '0.25rem',
-                '--one-border': '1px solid var(--color1-700)'
-              }}
-            >
-              {componentName}
-            </span>
-          ))}
-        </div>
+        <button
+          onClick={() => setActiveTab('colors')}
+          className="one"
+          style={{
+            '--one-padding': '1rem 2rem',
+            '--one-background': 'var(--color2-500)',
+            '--one-border': '1px solid var(--color2-400)',
+            '--one-border-radius': '0.5rem',
+            '--one-color': 'var(--color4-50)',
+            '--one-font-weight': '600',
+            '--one-cursor': 'pointer',
+            '--one-transition': 'all 0.2s ease',
+            '--one-display': 'flex',
+            '--one-align-items': 'center',
+            '--one-gap': '0.5rem'
+          }}
+        >
+          🎨 Create Colors
+        </button>
+        <button
+          onClick={() => setActiveTab('scopes')}
+          className="one"
+          style={{
+            '--one-padding': '1rem 2rem',
+            '--one-background': 'var(--color3-500)',
+            '--one-border': '1px solid var(--color3-400)',
+            '--one-border-radius': '0.5rem',
+            '--one-color': 'var(--color4-50)',
+            '--one-font-weight': '600',
+            '--one-cursor': 'pointer',
+            '--one-transition': 'all 0.2s ease',
+            '--one-display': 'flex',
+            '--one-align-items': 'center',
+            '--one-gap': '0.5rem'
+          }}
+        >
+          🎭 Design Scopes
+        </button>
       </div>
     </div>
   );

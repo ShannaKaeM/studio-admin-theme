@@ -23,34 +23,29 @@ const CSS_PROPERTIES = {
   ]
 };
 
-const COMMON_VALUES = {
-  '--one-font-size': ['0.75rem', '0.875rem', '1rem', '1.125rem', '1.25rem', '1.5rem', '2rem', '2.5rem', '3rem'],
-  '--one-font-weight': ['300', '400', '500', '600', '700', '800'],
-  '--one-line-height': ['1', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6'],
-  '--one-text-transform': ['none', 'uppercase', 'lowercase', 'capitalize'],
-  '--one-display': ['block', 'flex', 'grid', 'inline', 'inline-block', 'none'],
-  '--one-flex-direction': ['row', 'column', 'row-reverse', 'column-reverse'],
-  '--one-justify-content': ['flex-start', 'center', 'flex-end', 'space-between', 'space-around'],
-  '--one-align-items': ['flex-start', 'center', 'flex-end', 'stretch'],
-  '--one-color': [
-    { label: 'Primary', value: 'var(--color1-500)' },
-    { label: 'Secondary', value: 'var(--color2-500)' }, 
-    { label: 'Neutral', value: 'var(--color3-800)' },
-    { label: 'Base', value: 'var(--color4-100)' }
-  ],
-  '--one-background': [
-    { label: 'Primary', value: 'var(--color1-500)' },
-    { label: 'Secondary', value: 'var(--color2-500)' },
-    { label: 'Neutral', value: 'var(--color3-800)' },
-    { label: 'Base', value: 'var(--color4-100)' },
-    { label: 'Transparent', value: 'transparent' }
-  ],
-  '--one-border-color': [
-    { label: 'Primary', value: 'var(--color1-500)' },
-    { label: 'Secondary', value: 'var(--color2-500)' },
-    { label: 'Neutral', value: 'var(--color3-800)' },
-    { label: 'Base', value: 'var(--color4-100)' }
-  ]
+const getCommonValues = (property, buildColorOptions) => {
+  const staticValues = {
+    '--one-font-size': ['0.75rem', '0.875rem', '1rem', '1.125rem', '1.25rem', '1.5rem', '2rem', '2.5rem', '3rem'],
+    '--one-font-weight': ['300', '400', '500', '600', '700', '800'],
+    '--one-line-height': ['1', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6'],
+    '--one-text-transform': ['none', 'uppercase', 'lowercase', 'capitalize'],
+    '--one-display': ['block', 'flex', 'grid', 'inline', 'inline-block', 'none'],
+    '--one-flex-direction': ['row', 'column', 'row-reverse', 'column-reverse'],
+    '--one-justify-content': ['flex-start', 'center', 'flex-end', 'space-between', 'space-around'],
+    '--one-align-items': ['flex-start', 'center', 'flex-end', 'stretch']
+  };
+
+  // Return static values for non-color properties
+  if (staticValues[property]) {
+    return staticValues[property];
+  }
+
+  // Return dynamic color options for color properties
+  if (property === '--one-color' || property === '--one-background' || property === '--one-border-color') {
+    return buildColorOptions(property);
+  }
+
+  return null;
 };
 
 export function ScopesBuilder() {
@@ -58,8 +53,51 @@ export function ScopesBuilder() {
   const [selectedScope, setSelectedScope] = useState(null);
 
   const scopes = config.scopes || {};
+  const colorVariations = config.colorVariations || {};
   const currentScope = scopes[selectedScope];
   const currentBaseProperties = currentScope?.baseProperties || {};
+
+  // Build dynamic color options from Color Creator variations
+  const buildColorOptions = (propertyType) => {
+    const coreColors = [
+      { key: 'color1', label: 'Primary', default: 'var(--color1-500)' },
+      { key: 'color2', label: 'Secondary', default: 'var(--color2-500)' },
+      { key: 'color3', label: 'Neutral', default: 'var(--color3-800)' },
+      { key: 'color4', label: 'Base', default: 'var(--color4-100)' }
+    ];
+
+    const options = [];
+
+    coreColors.forEach(coreColor => {
+      // Add default core color
+      options.push({
+        label: `${coreColor.label} (Default)`,
+        value: coreColor.default,
+        group: coreColor.label
+      });
+
+      // Add custom variations if they exist
+      const variations = colorVariations[coreColor.key] || {};
+      Object.entries(variations).forEach(([varName, varColor]) => {
+        options.push({
+          label: `${coreColor.label}: ${varName}`,
+          value: varColor,
+          group: coreColor.label
+        });
+      });
+    });
+
+    // Add special options for certain properties
+    if (propertyType === '--one-background') {
+      options.push({
+        label: 'Transparent',
+        value: 'transparent',
+        group: 'Special'
+      });
+    }
+
+    return options;
+  };
 
   const handleCreateNewScope = () => {
     const scopeName = prompt('Enter scope name (e.g., "eyebrow", "title", "subtitle"):');
@@ -160,6 +198,7 @@ export function ScopesBuilder() {
               delete updatedProperties[property];
               updateScopeBaseProperties(selectedScope, updatedProperties);
             }}
+            buildColorOptions={buildColorOptions}
           />
         ) : (
           <EmptyState />
@@ -283,7 +322,7 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
 
 
 // Scope Editor Component
-function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove }) {
+function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove, buildColorOptions }) {
   return (
     <div className="one" style={{
       '--one-display': 'flex',
@@ -313,6 +352,7 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
         onPropertyChange={onBasePropertyChange}
         onPropertyRemove={onBasePropertyRemove}
         addButtonText="Add Property"
+        buildColorOptions={buildColorOptions}
       />
 
       {/* Live Preview */}
@@ -376,7 +416,7 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
 
 
 // Property Editor Component
-function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove, addButtonText }) {
+function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove, addButtonText, buildColorOptions }) {
   const [selectedCategory, setSelectedCategory] = useState('typography');
   const [selectedProperty, setSelectedProperty] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
@@ -441,37 +481,40 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
           ))}
         </select>
 
-        {COMMON_VALUES[selectedProperty] ? (
-          <select
-            value={selectedValue}
-            onChange={(e) => setSelectedValue(e.target.value)}
-            className="one input-field"
-            style={{
-              '--one-font-size': '0.875rem'
-            }}
-          >
-            <option value="">Choose Value</option>
-            {COMMON_VALUES[selectedProperty].map(item => {
-              // Handle both object format (colors) and string format (other values)
-              if (typeof item === 'object') {
-                return <option key={item.value} value={item.value}>{item.label}</option>;
-              } else {
-                return <option key={item} value={item}>{item}</option>;
-              }
-            })}
-          </select>
-        ) : (
-          <input
-            type="text"
-            value={selectedValue}
-            onChange={(e) => setSelectedValue(e.target.value)}
-            placeholder="Enter value..."
-            className="one input-field"
-            style={{
-              '--one-font-size': '0.875rem'
-            }}
-          />
-        )}
+        {(() => {
+          const availableValues = getCommonValues(selectedProperty, buildColorOptions);
+          return availableValues ? (
+            <select
+              value={selectedValue}
+              onChange={(e) => setSelectedValue(e.target.value)}
+              className="one input-field"
+              style={{
+                '--one-font-size': '0.875rem'
+              }}
+            >
+              <option value="">Choose Value</option>
+              {availableValues.map(item => {
+                // Handle both object format (colors) and string format (other values)
+                if (typeof item === 'object') {
+                  return <option key={item.value} value={item.value}>{item.label}</option>;
+                } else {
+                  return <option key={item} value={item}>{item}</option>;
+                }
+              })}
+            </select>
+          ) : (
+            <input
+              type="text"
+              value={selectedValue}
+              onChange={(e) => setSelectedValue(e.target.value)}
+              placeholder="Enter value..."
+              className="one input-field"
+              style={{
+                '--one-font-size': '0.875rem'
+              }}
+            />
+          );
+        })()}
 
         <button
           onClick={addNewProperty}

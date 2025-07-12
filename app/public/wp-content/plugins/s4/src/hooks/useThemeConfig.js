@@ -36,17 +36,17 @@ const defaultConfig = {
         950: "hsl(29, 44%, 8%)"
       },
       color3: {
-        50: "hsl(0, 0%, 95%)",
-        100: "hsl(0, 0%, 90%)",
-        200: "hsl(0, 0%, 80%)",
-        300: "hsl(0, 0%, 70%)",
-        400: "hsl(0, 0%, 60%)",
-        500: "hsl(0, 0%, 50%)",
-        600: "hsl(0, 0%, 40%)",
-        700: "hsl(0, 0%, 30%)",
-        800: "hsl(0, 0%, 20%)",
-        900: "hsl(0, 0%, 10%)",
-        950: "hsl(0, 0%, 5%)"
+        50: "hsl(0, 0%, 97%)",
+        100: "hsl(0, 0%, 93%)",
+        200: "hsl(0, 0%, 85%)",
+        300: "hsl(0, 0%, 73%)",
+        400: "hsl(0, 0%, 58%)",
+        500: "hsl(0, 0%, 46%)",
+        600: "hsl(0, 0%, 36%)",
+        700: "hsl(0, 0%, 28%)",
+        800: "hsl(0, 0%, 18%)",
+        900: "hsl(0, 0%, 11%)",
+        950: "hsl(0, 0%, 4%)"
       },
       color4: {
         50: "hsl(0, 0%, 100%)",
@@ -216,9 +216,19 @@ export function useThemeConfig() {
         variables[`--${colorName}-${weight}`] = value;
       });
     });
+
+    // Custom color variations - inject as CSS custom properties
+    Object.entries(config.colorVariations || {}).forEach(([coreColor, variations]) => {
+      Object.entries(variations).forEach(([variationName, variationValue]) => {
+        // Convert variation name to CSS-friendly format
+        // "Primary Dark" → "primary-dark"
+        const cssName = variationName.toLowerCase().replace(/\s+/g, '-');
+        variables[`--${coreColor}-${cssName}`] = variationValue;
+      });
+    });
     
     return variables;
-  }, [config.colors]);
+  }, [config.colors, config.colorVariations]);
 
   // Apply CSS variables and component styles to document
   useEffect(() => {
@@ -394,6 +404,14 @@ export function useThemeConfig() {
     }));
   };
 
+  const updateBaseColors = (newBaseColors) => {
+    // Only inject base colors directly into CSS - don't touch the existing scales
+    document.documentElement.style.setProperty('--color1', newBaseColors.color1);
+    document.documentElement.style.setProperty('--color2', newBaseColors.color2);
+    document.documentElement.style.setProperty('--color3', newBaseColors.color3);
+    document.documentElement.style.setProperty('--color4', newBaseColors.color4);
+  };
+
 
   const addCustomOverride = (selector, styles) => {
     setCustomOverrides(prev => ({
@@ -453,6 +471,7 @@ export function useThemeConfig() {
     createColorVariation,
     updateColorVariations,
     deleteColorVariation,
+    updateBaseColors,
     addCustomOverride,
     removeCustomOverride,
     exportConfig,

@@ -15,11 +15,40 @@ export function ColorCreator() {
   const [alpha, setAlpha] = useState(100);
   const [colorName, setColorName] = useState('');
 
+  // Extract base colors dynamically from config (500 level is the base)
+  const extractHSL = (hslString) => {
+    const match = hslString.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    if (match) {
+      return {
+        hue: parseInt(match[1]),
+        saturation: parseInt(match[2]),
+        lightness: parseInt(match[3])
+      };
+    }
+    return { hue: 0, saturation: 0, lightness: 50 };
+  };
+
   const coreColors = {
-    color1: { name: 'Color 1', default: 'hsl(337, 35%, 52%)' },
-    color2: { name: 'Color 2', default: 'hsl(29, 44%, 53%)' },
-    color3: { name: 'Color 3', default: 'hsl(0, 0%, 50%)' },
-    color4: { name: 'Color 4', default: 'hsl(0, 0%, 100%)' }
+    color1: { 
+      name: 'Color 1', 
+      default: config.colors.brand.color1['500'],
+      hsl: extractHSL(config.colors.brand.color1['500'])
+    },
+    color2: { 
+      name: 'Color 2', 
+      default: config.colors.brand.color2['500'],
+      hsl: extractHSL(config.colors.brand.color2['500'])
+    },
+    color3: { 
+      name: 'Color 3', 
+      default: config.colors.brand.color3['500'],
+      hsl: extractHSL(config.colors.brand.color3['500'])
+    },
+    color4: { 
+      name: 'Color 4', 
+      default: config.colors.brand.color4['500'],
+      hsl: extractHSL(config.colors.brand.color4['500'])
+    }
   };
 
   const currentHslColor = `hsl(${hue}, ${saturation}%, ${lightness}%, ${alpha / 100})`;
@@ -39,16 +68,10 @@ export function ColorCreator() {
 
   const loadCoreColorDefaults = (coreColorKey) => {
     const coreColor = coreColors[coreColorKey];
-    // Parse default HSL values
-    if (coreColorKey === 'color1') {
-      setHue(337); setSaturation(35); setLightness(52);
-    } else if (coreColorKey === 'color2') {
-      setHue(29); setSaturation(44); setLightness(53);
-    } else if (coreColorKey === 'color3') {
-      setHue(0); setSaturation(0); setLightness(50);
-    } else if (coreColorKey === 'color4') {
-      setHue(0); setSaturation(0); setLightness(100);
-    }
+    const hslValues = coreColor.hsl;
+    setHue(hslValues.hue);
+    setSaturation(hslValues.saturation);
+    setLightness(hslValues.lightness);
     setAlpha(100);
   };
 
