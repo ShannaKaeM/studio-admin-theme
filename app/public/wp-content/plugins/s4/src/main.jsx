@@ -54,3 +54,10 @@ if (adminContainer) {
   const root = ReactDOM.createRoot(adminContainer);
   root.render(<ShadowApp isAdmin={true} />);
 }
+
+// Render in frontend page if container exists
+const frontendContainer = document.getElementById('s4-frontend-root');
+if (frontendContainer) {
+  const root = ReactDOM.createRoot(frontendContainer);
+  root.render(<ShadowApp isFrontend={true} />);
+}

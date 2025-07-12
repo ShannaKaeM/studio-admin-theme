@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useS4Store } from './hooks/useS4Store';
 import { S4ThemeBuilder } from './s4/components/S4ThemeBuilder';
 
-export function ShadowApp({ isAdmin = false }) {
+export function ShadowApp({ isAdmin = false, isFrontend = false }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const { initializeStore, config } = useS4Store();
   
@@ -24,12 +24,16 @@ export function ShadowApp({ isAdmin = false }) {
   }
   
   return (
-    <div className="box" data-preset="stack">
+    <div className="box" style={{
+      '--box-width': isFrontend ? '100vw' : 'auto',
+      '--box-height': isFrontend ? '100vh' : 'auto',
+      '--box-background': 'var(--color3-950)',
+      '--box-overflow': 'auto'
+    }}>
       {/* Inject CSS variables into shadow DOM */}
       <style>{generateCSSVariables(config)}</style>
       
-      {/* Main application */}
-      <S4ThemeBuilder isAdmin={isAdmin} />
+      <S4ThemeBuilder isAdmin={isAdmin} isFrontend={isFrontend} />
       
       {/* Keyboard shortcut listener */}
       <KeyboardShortcuts />
