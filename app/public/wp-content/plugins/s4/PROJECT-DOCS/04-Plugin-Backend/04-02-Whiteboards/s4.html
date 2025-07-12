@@ -16,7 +16,7 @@
             --color1: hsl(337, 35%, 52%);  /* Primary pink #b25977 */
             --color2: hsl(29, 44%, 53%);   /* Secondary tangerine #b8874d */
             --color3: hsl(0, 0%, 46%); /* Neutral */
-            --color4: hsl(0, 0%, 46%); /* Base */
+            --color4: hsl(0, 0%, 100%); /* Base */
             
             /* Color1 Scale (50-950) - Generated from main color1 pink */
             --color1-50: hsl(337, 70%, 97%);
@@ -328,11 +328,15 @@
 
         [data-scope="container"]{
         --box-layout-display: grid;
-        --box-layout-grid-template-areas: "a b";
-        --box-layout-grid-template-columns: 300px 1fr;
         --box-max-width: none;
         --box-min-height: 100vh;
-        --box-layout-gap: 0;
+        --box-layout-grid-template-columns: auto 1fr;
+        --box-layout-grid-template-rows: auto 1fr auto;
+        --box-layout-grid-gap: 0;
+        --box-layout-grid-template-areas: 
+        "a a"
+        "b c"
+        "d d";
         }
             
         [data-scope="header"]{
@@ -348,6 +352,37 @@
         --box-layout-justify-items: center;
         }
         
+        [data-scope="brand-box"]{
+        --box-background: transparent;
+        --box-grid-area: b;
+        --box-width: auto;
+        --box-height: auto;
+        --box-layout-display: grid;
+        --box-layout-grid-template-columns: auto 1fr;
+        --box-layout-grid-template-rows: 1fr;
+        --box-layout-grid-template-areas: "a b";
+        --box-layout-column-gap: 1rem;
+        --box-layout-align-items: stretch;
+        --box-layout-justify-items: center;
+        }
+
+        [data-scope="logo-box"]{
+        --box-grid-area: a;
+        --box-width: auto;
+        --box-height: auto;
+        --box-layout-display: block;
+        --box-layout-align-items: center;
+        --box-layout-justify-items: center;
+        }
+
+        [data-scope="logo"]{
+        --box-background-image: url('/Users/shannamiddleton/Local Drive Mac/mi agency/miProjects/studio-admin-theme/app/public/wp-content/plugins/s4/PROJECT-DOCS/05-Assets/s4Logo.png');
+        --box-background-size: contain;
+        --box-background-repeat: no-repeat;
+        --box-background-position: center;
+        --box-width: 3rem;
+        --box-height: 3rem;
+        }
 
         [data-scope="text-box"]{
         --box-grid-area: b;
@@ -375,22 +410,29 @@
         [data-scope="nav-box"]{
         --box-background: transparent;
         --box-grid-area: b;
-        --box-layout-display: grid;
-        --box-layout-grid-template-columns: repeat(3, 1fr);
-        --box-layout-grid-gap: 1rem;
-        }
-
-        [data-scope="action-box"]{
-        --box-grid-area: c;
         --box-layout-display: flex;
         --box-layout-flex-direction: row;
-        --box-layout-justify-content: flex-end;
+        --box-layout-justify-content: space-between;
         --box-layout-gap: 1rem;
-        }    
+        --box-layout-align-items: center;
+        --box-layout-justify-items: center;
+    
+        }  
+        
+        [data-scope="button-box"]{
+        --box-background: transparent;
+        --box-grid-area: b;
+        --box-layout-display: flex;
+        --box-layout-flex-direction: row;
+        --box-layout-justify-content: space-between;
+        --box-layout-gap: 1rem;
+        --box-layout-align-items: center;
+        --box-layout-justify-items: center;
+    
+        } 
         
         [data-scope="sidebar"]{
         --box-background: var(--color3-800);
-        --box-min-height: 100vh;
         --box-padding: 1rem;
         --box-grid-area: a;
         --box-layout-display: grid;
@@ -401,33 +443,63 @@
         } 
 
         [data-scope="preview"]{
-        --box-grid-area: b;
+        --box-grid-area: c;
         --box-background: var(--color3-200);
         --box-padding: 1rem;
-        --box-layout-display: grid;
-        --box-layout-grid-template-columns: 1fr;
-        --box-layout-grid-template-rows: auto 1fr auto;
-        --box-layout-grid-template-areas: "a" "b" "c";
-        --box-layout-grid-gap: 1rem;
+        --box-layout-display: flex;
+        --box-layout-flex-direction: column;
+        --box-layout-justify-content: start;
+        --box-layout-align-items: start;
+    
         }
 
         /* ============================================ */
         /* LAYER 4: GLOBAL GROUPED SCOPES */
         /* ============================================ */
-
         
 
         /* ============================================ */
         /* LAYER 5: GLOBAL SECTION SCOPES */ 
         /* ============================================ */
 
-        [data-scope="dashboard"] {
-            
-        [data-scope="section"]{
+        [data-scope="dashboard"]{
         --box-width: 100%;
+        }
+
+        [data-scope="container"]{
+        --box-layout-display: grid;
+        --box-max-width: none;
         --box-min-height: 100vh;
+        --box-layout-grid-template-columns: auto 1fr;
+        --box-layout-grid-template-rows: auto 1fr auto;
+        --box-layout-grid-gap: 0;
+        --box-layout-grid-template-areas: 
+        "a a"
+        "b c"
+        "d d";
         }
+        [data-scope="header"]{
+        --box-padding: 1rem 2rem;
+        --box-grid-area: a;
+        --box-layout-display: grid;
+        --box-layout-grid-template-columns: auto 1fr auto;
+        --box-layout-grid-template-areas: "a b c";
+        --box-layout-grid-gap: 1rem;
+        --box-layout-align-items: center;
+        --box-layout-justify-items: center;
         }
+        [data-scope="sidebar"]{
+        --box-padding: 1rem 2rem;
+        --box-grid-area: b;
+        --box-layout-display: grid;
+        --box-layout-grid-template-columns: 1fr;
+        --box-layout-grid-template-rows: auto 1fr auto;
+        --box-layout-grid-template-areas: "a" "b" "c";
+        --box-layout-grid-gap: 1rem;
+        --box-layout-align-items: center;
+        --box-layout-justify-items: start;
+        }
+       
 
         /* ============================================ */
         /* LAYER 56: HELPER SCOPES (SCOPE VARIANTS) */
@@ -447,35 +519,51 @@
         body {
             margin: 0;
             font-family: var(--font-family);
-            background: #fafafa;
+            background: var(--color4);
         }
     </style>
 </head>
 <body>
-    <div class="box" data-scope="section">
+    <div data-scope="dashboard">
         <div class="box" data-scope="container">
-        <!-- Sidebar Area -->
-        <div class="box" data-scope="sidebar">
             <div class="box" data-scope="header">
-                <div class="text">sidebar header</div>
+                <div class="box" data-scope="brand-box">
+                    <div class="box" data-scope="logo-box">
+                        <div class="box" data-scope="logo"></div>
+                        </div>
+                    <div class="box" data-scope="text-box">
+                        <div class="text" data-scope="title">studio4</div>
+                        <div class="text" data-scope="subtitle">VISUAL THEME BUILDER</div>
+                    </div>
+                </div>
+                <div class="box" data-scope="nav-box">
+                    <div class="text" data-scope="nav-item">Preview</div>
+                    <div class="text" data-scope="nav-item">HTML</div>
+                    <div class="text" data-scope="nav-item">CSS</div>
+                </div>
+                <div class="box" data-scope="button-box">
+                    <div class="text" data-scope="button">Export</div>
+                    <div class="text" data-scope="button">Save</div>
+                </div>
             </div>
-            <div class="box" data-scope="content">
-                <div class="text">sidebar content</div>
+
+            <div class="box" data-scope="sidebar">
+                <div class="box" data-scope="header">
+                    <div class="text">Theme Builder</div>
+                </div>
+                <div class="box" data-scope="content">
+                    <div class="box" data-scope="button">button1</div>
+                    <div class="box" data-scope="button">button2</div>
+                    <div class="box" data-scope="button">button3</div>
+                </div>
+                <div class="box" data-scope="footer">   
+                    <div class="text">footer</div>
+                </div>
             </div>
-            <div class="box" data-scope="footer">
-                <div class="text">sidebar footer</div>
-            </div>
-        </div>
-        
-        <!-- Preview Area -->
-        <div class="box" data-scope="preview">
-            <div class="box" data-scope="header">
-                <div class="text">preview header</div>
-            </div>
-            <div class="box" data-scope="content">
-                <div class="text">preview content</div>
-            </div>
-        </div>
+            <div class="box" data-scope="preview">
+                <div class="box" data-scope="content">
+                </div>
+            </div>                
         </div>
     </div>
 </body>

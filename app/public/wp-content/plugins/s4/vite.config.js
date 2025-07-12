@@ -8,10 +8,10 @@ export default defineConfig({
     rollupOptions: {
       input: 'src/main.jsx',
       output: {
-        entryFileNames: 's4.js',
+        entryFileNames: 'studio1.js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.name.endsWith('.css')) {
-            return 's4.css';
+            return 'studio1.css';
           }
           return assetInfo.name;
         }

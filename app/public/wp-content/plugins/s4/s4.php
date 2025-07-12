@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: S4 - Studio4 Design System
- * Plugin URI: https://studio4.design
- * Description: Revolutionary preset-driven design system with V2.0 architecture. No Tailwind, pure CSS custom properties.
- * Version: 2.0.0
- * Author: Studio4 Team
+ * Plugin Name: Studio1 - The One Element System
+ * Plugin URI: https://studio1.design
+ * Description: Revolutionary unified element system with ultimate flexibility. One class, infinite possibilities.
+ * Version: 1.0.0
+ * Author: Studio1 Team
  * License: MIT
  */
 
@@ -14,11 +14,11 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('S4_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('S4_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('S4_VERSION', '2.0.0');
+define('STUDIO1_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('STUDIO1_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define('STUDIO1_VERSION', '1.0.0');
 
-class S4Plugin {
+class Studio1Plugin {
     
     public function __construct() {
         add_action('init', array($this, 'init'));
@@ -34,8 +34,8 @@ class S4Plugin {
         add_action('wp_footer', array($this, 'render_web_component'));
         add_action('admin_footer', array($this, 'render_web_component'));
         
-        // Add rewrite rules for /s4 page
-        add_rewrite_rule('^s4/?$', 'index.php?s4_page=1', 'top');
+        // Add rewrite rules for /studio1 page
+        add_rewrite_rule('^studio1/?$', 'index.php?studio1_page=1', 'top');
         add_filter('query_vars', array($this, 'add_query_vars'));
     }
     
@@ -43,18 +43,18 @@ class S4Plugin {
         // Only load on frontend if needed
         if (is_user_logged_in() && current_user_can('manage_options')) {
             wp_enqueue_script(
-                's4-app',
-                S4_PLUGIN_URL . 'dist/s4.js',
+                'studio1-app',
+                STUDIO1_PLUGIN_URL . 'dist/studio1.js',
                 array(),
-                S4_VERSION,
+                STUDIO1_VERSION,
                 true
             );
             
             wp_enqueue_style(
-                's4-styles',
-                S4_PLUGIN_URL . 'dist/s4.css',
+                'studio1-styles',
+                STUDIO1_PLUGIN_URL . 'dist/studio1.css',
                 array(),
-                S4_VERSION
+                STUDIO1_VERSION
             );
         }
     }
@@ -62,27 +62,27 @@ class S4Plugin {
     public function enqueue_admin_scripts($hook) {
         // Load on all admin pages for now
         wp_enqueue_script(
-            's4-admin-app',
-            S4_PLUGIN_URL . 'dist/s4.js',
+            'studio1-admin-app',
+            STUDIO1_PLUGIN_URL . 'dist/studio1.js',
             array(),
-            S4_VERSION,
+            STUDIO1_VERSION,
             true
         );
         
         wp_enqueue_style(
-            's4-admin-styles',
-            S4_PLUGIN_URL . 'dist/s4.css',
+            'studio1-admin-styles',
+            STUDIO1_PLUGIN_URL . 'dist/studio1.css',
             array(),
-            S4_VERSION
+            STUDIO1_VERSION
         );
         
         // Pass data to JavaScript
-        wp_localize_script('s4-admin-app', 's4Config', array(
-            'apiUrl' => rest_url('s4/v1/'),
+        wp_localize_script('studio1-admin-app', 'studio1Config', array(
+            'apiUrl' => rest_url('studio1/v1/'),
             'nonce' => wp_create_nonce('wp_rest'),
             'adminUrl' => admin_url(),
-            'pluginUrl' => S4_PLUGIN_URL,
-            'version' => S4_VERSION,
+            'pluginUrl' => STUDIO1_PLUGIN_URL,
+            'version' => STUDIO1_VERSION,
             'isAdmin' => is_admin(),
             'canManage' => current_user_can('manage_options')
         ));
@@ -90,10 +90,10 @@ class S4Plugin {
     
     public function add_admin_menu() {
         add_menu_page(
-            'S4 Design System',
-            'S4 Studio',
+            'Studio1 - The One Element System',
+            'Studio1',
             'manage_options',
-            's4-dashboard',
+            'studio1-dashboard',
             array($this, 'admin_page'),
             'dashicons-art',
             30
@@ -101,20 +101,20 @@ class S4Plugin {
     }
     
     public function admin_page() {
-        echo '<div id="s4-admin-root"></div>';
+        echo '<div id="studio1-admin-root"></div>';
     }
     
     public function add_query_vars($vars) {
-        $vars[] = 's4_page';
+        $vars[] = 'studio1_page';
         return $vars;
     }
     
     public function handle_frontend_page() {
-        // Check if we're on the /s4 page via query var or URI
-        $is_s4_page = get_query_var('s4_page');
+        // Check if we're on the /studio1 page via query var or URI
+        $is_studio1_page = get_query_var('studio1_page');
         $request_uri = $_SERVER['REQUEST_URI'];
         
-        if ($is_s4_page || strpos($request_uri, '/s4') === 0 || strpos($request_uri, '/s4/') === 0) {
+        if ($is_studio1_page || strpos($request_uri, '/studio1') === 0 || strpos($request_uri, '/studio1/') === 0) {
             // Only allow access for users who can manage options
             if (!current_user_can('manage_options')) {
                 wp_redirect(wp_login_url($request_uri));
@@ -127,30 +127,9 @@ class S4Plugin {
     }
     
     public function render_frontend_page() {
-        // Enqueue our scripts and styles
-        wp_enqueue_script(
-            's4-app',
-            S4_PLUGIN_URL . 'dist/s4.js',
-            array(),
-            S4_VERSION,
-            true
-        );
-        
-        wp_enqueue_style(
-            's4-styles',
-            S4_PLUGIN_URL . 'dist/s4.css',
-            array(),
-            S4_VERSION
-        );
-        
-        wp_localize_script('s4-app', 's4Config', array(
-            'apiUrl' => rest_url('s4/v1/'),
-            'nonce' => wp_create_nonce('wp_rest'),
-            'version' => S4_VERSION,
-            'isAdmin' => is_admin(),
-            'canManage' => current_user_can('manage_options'),
-            'isFrontend' => true
-        ));
+        // Remove admin bar and admin styles for standalone experience
+        show_admin_bar(false);
+        remove_action('wp_head', '_admin_bar_bump_cb');
         
         // Output the full-screen HTML page
         ?>
@@ -159,23 +138,44 @@ class S4Plugin {
         <head>
             <meta charset="<?php bloginfo('charset'); ?>">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>S4 Design System - <?php bloginfo('name'); ?></title>
-            <?php wp_head(); ?>
+            <title>Studio1 - The One Element System - <?php bloginfo('name'); ?></title>
+            
+            <!-- Studio1 Standalone Styles -->
+            <link rel="stylesheet" href="<?php echo STUDIO1_PLUGIN_URL; ?>dist/studio1.css?v=<?php echo STUDIO1_VERSION; ?>">
+            
+            <!-- Minimal WordPress head without admin interference -->
             <style>
+                /* Reset and remove WordPress admin interference */
+                * {
+                    box-sizing: border-box;
+                }
+                
                 body {
-                    margin: 0;
-                    padding: 0;
+                    margin: 0 !important;
+                    padding: 0 !important;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                    background: #0a0a0a;
+                    background: #0a0a0a !important;
                     color: #ffffff;
                     overflow-x: hidden;
+                    position: relative;
                 }
-                #s4-frontend-root {
+                
+                /* Remove any WordPress admin styling */
+                html {
+                    margin-top: 0 !important;
+                    padding-top: 0 !important;
+                }
+                
+                #studio1-frontend-root {
                     width: 100vw;
                     height: 100vh;
                     overflow: auto;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    z-index: 999999;
                 }
-                .s4-fullscreen-header {
+                .studio1-fullscreen-header {
                     position: fixed;
                     top: 0;
                     left: 0;
@@ -190,45 +190,59 @@ class S4Plugin {
                     padding: 0 1.5rem;
                     z-index: 1000;
                 }
-                .s4-fullscreen-content {
+                .studio1-fullscreen-content {
                     margin-top: 60px;
                     min-height: calc(100vh - 60px);
                 }
-                .s4-logo {
+                .studio1-logo {
                     font-size: 1.25rem;
                     font-weight: 600;
                     color: #d946ef;
                 }
-                .s4-nav {
+                .studio1-nav {
                     display: flex;
                     gap: 1rem;
                 }
-                .s4-nav a {
+                .studio1-nav a {
                     color: #9ca3af;
                     text-decoration: none;
                     padding: 0.5rem 1rem;
                     border-radius: 0.375rem;
                     transition: all 0.2s;
                 }
-                .s4-nav a:hover {
+                .studio1-nav a:hover {
                     color: #ffffff;
                     background: rgba(255, 255, 255, 0.1);
                 }
             </style>
         </head>
         <body>
-            <div class="s4-fullscreen-header">
-                <div class="s4-logo">S4 Design System</div>
-                <div class="s4-nav">
-                    <a href="<?php echo admin_url('admin.php?page=s4-dashboard'); ?>">Admin View</a>
+            <div class="studio1-fullscreen-header">
+                <div class="studio1-logo">Studio1 - The One Element System</div>
+                <div class="studio1-nav">
+                    <a href="<?php echo admin_url('admin.php?page=studio1-dashboard'); ?>">Admin View</a>
                     <a href="<?php echo home_url(); ?>">Back to Site</a>
                 </div>
             </div>
-            <div class="s4-fullscreen-content">
-                <div id="s4-frontend-root"></div>
+            <div class="studio1-fullscreen-content">
+                <div id="studio1-frontend-root"></div>
             </div>
-            <s4-element data-mode="frontend"></s4-element>
-            <?php wp_footer(); ?>
+            <studio1-element data-mode="frontend"></studio1-element>
+            
+            <!-- Studio1 Configuration -->
+            <script>
+                window.studio1Config = {
+                    apiUrl: '<?php echo rest_url('studio1/v1/'); ?>',
+                    nonce: '<?php echo wp_create_nonce('wp_rest'); ?>',
+                    version: '<?php echo STUDIO1_VERSION; ?>',
+                    isAdmin: false,
+                    canManage: <?php echo current_user_can('manage_options') ? 'true' : 'false'; ?>,
+                    isFrontend: true
+                };
+            </script>
+            
+            <!-- Studio1 Application -->
+            <script src="<?php echo STUDIO1_PLUGIN_URL; ?>dist/studio1.js?v=<?php echo STUDIO1_VERSION; ?>"></script>
         </body>
         </html>
         <?php
@@ -236,24 +250,24 @@ class S4Plugin {
     
     public function render_web_component() {
         if (is_user_logged_in() && current_user_can('manage_options')) {
-            echo '<s4-element></s4-element>';
+            echo '<studio1-element></studio1-element>';
         }
     }
     
     public function register_rest_routes() {
-        register_rest_route('s4/v1', '/config', array(
+        register_rest_route('studio1/v1', '/config', array(
             'methods' => 'GET',
             'callback' => array($this, 'get_config'),
             'permission_callback' => array($this, 'check_permissions')
         ));
         
-        register_rest_route('s4/v1', '/config', array(
+        register_rest_route('studio1/v1', '/config', array(
             'methods' => 'POST',
             'callback' => array($this, 'save_config'),
             'permission_callback' => array($this, 'check_permissions')
         ));
         
-        register_rest_route('s4/v1', '/docs/(?P<folder>[a-zA-Z0-9-_]+)/(?P<file>[a-zA-Z0-9-_.]+)', array(
+        register_rest_route('studio1/v1', '/docs/(?P<folder>[a-zA-Z0-9-_]+)/(?P<file>[a-zA-Z0-9-_.]+)', array(
             'methods' => 'GET',
             'callback' => array($this, 'get_document'),
             'permission_callback' => array($this, 'check_permissions')
@@ -265,13 +279,13 @@ class S4Plugin {
     }
     
     public function get_config() {
-        $config = get_option('s4_theme_config', array());
+        $config = get_option('studio1_theme_config', array());
         return rest_ensure_response($config);
     }
     
     public function save_config($request) {
         $config = $request->get_json_params();
-        update_option('s4_theme_config', $config);
+        update_option('studio1_theme_config', $config);
         return rest_ensure_response(array('success' => true));
     }
     
@@ -292,7 +306,7 @@ class S4Plugin {
             return new WP_Error('invalid_file', 'Invalid file type', array('status' => 400));
         }
         
-        $file_path = S4_PLUGIN_PATH . "PROJECT-DOCS/{$folder}/{$file}";
+        $file_path = STUDIO1_PLUGIN_PATH . "PROJECT-DOCS/{$folder}/{$file}";
         
         if (!file_exists($file_path)) {
             return new WP_Error('file_not_found', 'File not found', array('status' => 404));
@@ -309,12 +323,12 @@ class S4Plugin {
 }
 
 // Initialize the plugin
-new S4Plugin();
+new Studio1Plugin();
 
 // Activation hook to flush rewrite rules
 register_activation_hook(__FILE__, function() {
     // Add rewrite rules
-    add_rewrite_rule('^s4/?$', 'index.php?s4_page=1', 'top');
+    add_rewrite_rule('^studio1/?$', 'index.php?studio1_page=1', 'top');
     // Flush rewrite rules
     flush_rewrite_rules();
 });
@@ -328,20 +342,20 @@ register_deactivation_hook(__FILE__, function() {
 register_activation_hook(__FILE__, function() {
     // Set default configuration
     $default_config = array(
-        'version' => S4_VERSION,
+        'version' => STUDIO1_VERSION,
         'initialized' => true,
         'brand' => array(
-            'primary' => 'hsla(330, 85%, 60%, 1)',
-            'secondary' => 'hsla(25, 95%, 65%, 1)', 
-            'neutral' => 'hsla(220, 15%, 25%, 1)',
-            'accent' => 'hsla(280, 75%, 70%, 1)'
+            'color1' => 'hsl(337, 35%, 52%)',
+            'color2' => 'hsl(29, 44%, 53%)', 
+            'color3' => 'hsl(0, 0%, 46%)',
+            'color4' => 'hsl(0, 0%, 100%)'
         ),
         'typography' => array(
-            'font-family' => 'system-ui, -apple-system, sans-serif'
+            'font-family' => 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
         )
     );
     
-    add_option('s4_theme_config', $default_config);
+    add_option('studio1_theme_config', $default_config);
 });
 
 // Deactivation hook

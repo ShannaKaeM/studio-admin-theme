@@ -16,7 +16,7 @@
             --color1: hsl(337, 35%, 52%);  /* Primary pink #b25977 */
             --color2: hsl(29, 44%, 53%);   /* Secondary tangerine #b8874d */
             --color3: hsl(0, 0%, 46%); /* Neutral */
-            --color4: hsl(0, 0%, 46%); /* Base */
+            --color4: hsl(0, 0%, 100%); /* Base */
             
             /* Color1 Scale (50-950) - Generated from main color1 pink */
             --color1-50: hsl(337, 70%, 97%);
@@ -362,21 +362,21 @@
         --box-layout-grid-template-rows: 1fr;
         --box-layout-grid-template-areas: "a b";
         --box-layout-column-gap: 1rem;
-        --box-layout-align-items: center    ;
+        --box-layout-align-items: stretch;
         --box-layout-justify-items: center;
         }
 
         [data-scope="logo-box"]{
         --box-grid-area: a;
         --box-width: auto;
-        --box-height: 100%;
-        --box-layout-display: flex;
+        --box-height: auto;
+        --box-layout-display: block;
         --box-layout-align-items: center;
-        --box-layout-justify-content: center;
+        --box-layout-justify-items: center;
         }
 
         [data-scope="logo"]{
-        --box-background-image: url('/Users/shannamiddleton/Local Drive Mac/mi agency/miProjects/studio-admin-theme/app/public/wp-content/plugins/studio4/PROJECT-DOCS/05-Assets/s4Logo.png');
+        --box-background-image: url('/Users/shannamiddleton/Local Drive Mac/mi agency/miProjects/studio-admin-theme/app/public/wp-content/plugins/s4/PROJECT-DOCS/05-Assets/s4Logo.png');
         --box-background-size: contain;
         --box-background-repeat: no-repeat;
         --box-background-position: center;
@@ -410,18 +410,14 @@
         [data-scope="nav-box"]{
         --box-background: transparent;
         --box-grid-area: b;
-        --box-layout-display: grid;
-        --box-layout-grid-template-columns: repeat(3, 1fr);
-        --box-layout-grid-gap: 1rem;
-        }
-
-        [data-scope="action-box"]{
-        --box-grid-area: c;
         --box-layout-display: flex;
         --box-layout-flex-direction: row;
-        --box-layout-justify-content: flex-end;
+        --box-layout-justify-content: space-between;
         --box-layout-gap: 1rem;
-        }    
+        --box-layout-align-items: center;
+        --box-layout-justify-items: center;
+    
+        }   
         
         [data-scope="sidebar"]{
         --box-background: var(--color3-800);
@@ -480,7 +476,7 @@
         body {
             margin: 0;
             font-family: var(--font-family);
-            background: #fafafa;
+            background: var(--color4);
         }
     </style>
 </head>

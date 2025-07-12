@@ -1,9 +1,9 @@
 /* ========================================
-   S4 V2.0 DESIGN SYSTEM - PURE ARCHITECTURE
+   STUDIO1 DESIGN SYSTEM - UNIFIED ARCHITECTURE
    ======================================== */
 
 /* ============================================ */
-/* STUDIO4 V2.0 - CORE S4 SYSTEM             */
+/* STUDIO1 - THE ONE ELEMENT SYSTEM          */
 /* ============================================ */
 
 /* LAYER 1: BRAND VARIABLES */
@@ -12,7 +12,7 @@
     --color1: hsl(337, 35%, 52%);  /* Primary pink #b25977 */
     --color2: hsl(29, 44%, 53%);   /* Secondary tangerine #b8874d */
     --color3: hsl(0, 0%, 46%); /* Neutral */
-    --color4: hsl(0, 0%, 46%); /* Base */
+    --color4: hsl(0, 0%, 100%); /* Base white */
     
     /* Color1 Scale (50-950) - Generated from main color1 pink */
     --color1-50: hsl(337, 70%, 97%);
@@ -53,265 +53,284 @@
     --color3-900: hsl(0, 0%, 11%);
     --color3-950: hsl(0, 0%, 4%);
     
+    /* Base Scale (50-950) - Generated from main base white */
+    --color4-50: hsl(0, 0%, 100%);
+    --color4-100: hsl(0, 0%, 98%);
+    --color4-200: hsl(0, 0%, 95%);
+    --color4-300: hsl(0, 0%, 90%);
+    --color4-400: hsl(0, 0%, 80%);
+    --color4-500: hsl(0, 0%, 70%);
+    --color4-600: hsl(0, 0%, 60%);
+    --color4-700: hsl(0, 0%, 50%);
+    --color4-800: hsl(0, 0%, 40%);
+    --color4-900: hsl(0, 0%, 20%);
+    --color4-950: hsl(0, 0%, 10%);
+    
     /* Typography */
     --font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* ============================================ */
-/* LAYER 2: GLOBAL ELEMENTS WITH APPLIED PROPERTIES */
+/* LAYER 2: THE ONE ELEMENT - UNIFIED PROPERTIES */
 /* ============================================ */
 
-.text {  
-/* === TYPOGRAPHY === */
-/* Core text styling properties */
---text-font-family: var(--font-family);
---text-font-size: 1rem;
---text-font-weight: 500;
---text-font-style: normal;
---text-font-variant: normal;
---text-line-height: 1.4;
---text-letter-spacing: 0;
---text-color: var(--color3-500);
-
-/* === TEXT APPEARANCE === */
-/* Visual text effects and styling */
---text-text-transform: none;
---text-text-decoration: none;
---text-text-shadow: none;
---text-opacity: 1;
---text-filter: none;
---text-text-stroke: none;
---text-text-fill-color: inherit;
-
-/* === TEXT BEHAVIOR === */
-/* Text flow and interaction properties */
---text-white-space: normal;
---text-text-overflow: ellipsis;
---text-vertical-align: baseline;
---text-cursor: default;
---text-user-select: text;
-
-/* === LAYOUT & POSITIONING === */
-/* Display and positioning properties */
---text-display: block;
---text-margin: 0;
---text-padding: 0;
---text-grid-area: auto;
-
-/* === DIMENSIONS === */
-/* Size control for icons and elements */
---text-width: auto;
---text-height: auto;
---text-min-width: 0;
---text-max-width: none;
---text-min-height: 0;
---text-max-height: none;
---text-aspect-ratio: auto;
-
-/* === BACKGROUND & BORDER === */
-/* Visual container properties */
---text-background: transparent;
---text-border: none;
---text-border-radius: 0;
-
-/* === INTERACTIVE STATES === */
-/* Animation and state properties */
---text-transition: color 0.2s ease;
---text-transform: none;
-
-/* === APPLIED PROPERTIES === */
-/* Typography */
-font-family: var(--text-font-family);
-font-size: var(--text-font-size);
-font-weight: var(--text-font-weight);
-font-style: var(--text-font-style);
-font-variant: var(--text-font-variant);
-line-height: var(--text-line-height);
-letter-spacing: var(--text-letter-spacing);
-color: var(--text-color);
-
-/* Text Appearance */
-text-transform: var(--text-text-transform);
-text-decoration: var(--text-text-decoration);
-text-shadow: var(--text-text-shadow);
-opacity: var(--text-opacity);
-filter: var(--text-filter);
--webkit-text-stroke: var(--text-text-stroke);
--webkit-text-fill-color: var(--text-text-fill-color);
-
-/* Text Behavior */
-white-space: var(--text-white-space);
-text-overflow: var(--text-text-overflow);
-vertical-align: var(--text-vertical-align);
-cursor: var(--text-cursor);
-user-select: var(--text-user-select);
-
-/* Layout & Positioning */
-display: var(--text-display);
-margin: var(--text-margin);
-padding: var(--text-padding);
-grid-area: var(--text-grid-area);
-
-/* Dimensions */
-width: var(--text-width);
-height: var(--text-height);
-min-width: var(--text-min-width);
-max-width: var(--text-max-width);
-min-height: var(--text-min-height);
-max-height: var(--text-max-height);
-aspect-ratio: var(--text-aspect-ratio);
-
-/* Background & Border */
-background: var(--text-background);
-border: var(--text-border);
-border-radius: var(--text-border-radius);
-
-/* Interactive States */
-transition: var(--text-transition);
-transform: var(--text-transform);
-}
+.one {  
+    /* ============================================ */
+    /* CUSTOM PROPERTIES - ALL CSS CAPABILITIES   */
+    /* ============================================ */
     
-.box {
-    /* === CSS CUSTOM PROPERTIES === */
+    /* === DISPLAY & LAYOUT === */
+    --one-display: block;
+    --one-position: relative;
+    --one-z-index: 1;
+    --one-overflow: visible;
+    --one-visibility: visible;
+
+    /* === DIMENSIONS === */
+    --one-width: auto;
+    --one-height: auto;
+    --one-min-width: 0;
+    --one-max-width: none;
+    --one-min-height: 0;
+    --one-max-height: none;
+    --one-aspect-ratio: auto;
+
+    /* === SPACING === */
+    --one-padding: 0;
+    --one-margin: 0;
+
+    /* === TYPOGRAPHY === */
+    --one-font-family: var(--font-family);
+    --one-font-size: 1rem;
+    --one-font-weight: 500;
+    --one-font-style: normal;
+    --one-font-variant: normal;
+    --one-line-height: 1.4;
+    --one-letter-spacing: 0;
+    --one-color: var(--color3-500);
+    --one-text-align: left;
+    --one-text-transform: none;
+    --one-text-decoration: none;
+    --one-text-shadow: none;
+    --one-white-space: normal;
+    --one-text-overflow: ellipsis;
+    --one-vertical-align: baseline;
+
+    /* === BACKGROUND === */
+    --one-background: transparent;
+    --one-background-image: none;
+    --one-background-size: cover;
+    --one-background-position: center;
+    --one-background-repeat: no-repeat;
+    --one-background-attachment: scroll;
+
+    /* === BORDER === */
+    --one-border: none;
+    --one-border-width: 0;
+    --one-border-style: solid;
+    --one-border-color: transparent;
+    --one-border-radius: 0;
+    --one-border-top: none;
+    --one-border-right: none;
+    --one-border-bottom: none;
+    --one-border-left: none;
+
+    /* === SHADOW & EFFECTS === */
+    --one-box-shadow: none;
+    --one-opacity: 1;
+    --one-filter: none;
+    --one-backdrop-filter: none;
+    --one-transform: none;
+    --one-transform-origin: center;
+
+    /* === GRID LAYOUT === */
+    --one-grid-area: auto;
+    --one-grid-template-columns: none;
+    --one-grid-template-rows: none;
+    --one-grid-template-areas: none;
+    --one-grid-auto-columns: auto;
+    --one-grid-auto-rows: auto;
+    --one-grid-auto-flow: row;
+    --one-justify-items: stretch;
+    --one-align-items: stretch;
+    --one-justify-content: start;
+    --one-align-content: start;
+    --one-place-items: var(--one-align-items) var(--one-justify-items);
+    --one-place-content: var(--one-align-content) var(--one-justify-content);
+
+    /* === FLEXBOX LAYOUT === */
+    --one-flex-direction: row;
+    --one-flex-wrap: nowrap;
+    --one-flex-flow: var(--one-flex-direction) var(--one-flex-wrap);
+    --one-flex: none;
+    --one-flex-grow: 0;
+    --one-flex-shrink: 1;
+    --one-flex-basis: auto;
+
+    /* === LAYOUT GAPS === */
+    --one-gap: 0;
+    --one-row-gap: var(--one-gap);
+    --one-column-gap: var(--one-gap);
+
+    /* === INTERACTION === */
+    --one-cursor: default;
+    --one-user-select: auto;
+    --one-pointer-events: auto;
+    --one-touch-action: auto;
+
+    /* === ANIMATION === */
+    --one-transition: none;
+    --one-animation: none;
+
+    /* === MISCELLANEOUS === */
+    --one-content: normal;
+    --one-list-style: none;
+    --one-resize: none;
+    --one-outline: none;
+
+    /* ============================================ */
+    /* APPLIED PROPERTIES - AUTO CSS APPLICATION  */
+    /* ============================================ */
     
     /* Display & Layout */
-    --box-display: block;
-    --box-position: relative;
-    --box-z-index: 1;
-    --box-overflow: visible;
-
-    /* Dimensions */
-    --box-width: auto;
-    --box-height: auto;
-    --box-min-width: none;
-    --box-max-width: none;
-    --box-min-height: none;
-    --box-max-height: none;
-
-    /* Spacing */
-    --box-padding: 0;
-    --box-margin: 0;
-
-    /* Background */
-    --box-background: transparent;
-    --box-background-image: none;
-    --box-background-size: cover;
-    --box-background-position: center;
-    --box-background-repeat: no-repeat;
-
-    /* Border */
-    --box-border: none;
-    --box-border-width: 0;
-    --box-border-style: solid;
-    --box-border-color: transparent;
-    --box-border-radius: 0;
-    --box-border-bottom: none;
-
-    /* Shadow & Effects */
-    --box-box-shadow: none;
-    --box-opacity: 1;
-    --box-filter: none;
-    --box-backdrop-filter: none;
-    
-    /* Grid Positioning */
-    --box-grid-area: auto;
-
-    /* Layout Display Type */
-    --box-layout-display: block; /* grid | flex | inline-grid | inline-flex | block */
-
-    /* Shared Layout Variables (Grid & Flex) */
-    --box-layout-gap: 0;
-    --box-layout-row-gap: var(--box-layout-gap);
-    --box-layout-column-gap: var(--box-layout-gap);
-    --box-layout-align-items: stretch;
-    --box-layout-justify-content: start;
-    --box-layout-align-content: start;
-
-    /* CSS Grid Layout Variables */
-    --box-layout-grid-template-columns: none;
-    --box-layout-grid-template-rows: none;
-    --box-layout-grid-template-areas: none;
-    --box-layout-grid-auto-columns: auto;
-    --box-layout-grid-auto-rows: auto;
-    --box-layout-grid-auto-flow: row;
-    --box-layout-grid-justify-items: stretch;
-    --box-layout-grid-place-items: var(--box-layout-align-items) var(--box-layout-grid-justify-items);
-    --box-layout-grid-place-content: var(--box-layout-align-content) var(--box-layout-justify-content);
-
-    /* CSS Flexbox Layout Variables */
-    --box-layout-flex-direction: row;
-    --box-layout-flex-wrap: nowrap;
-    --box-layout-flex-flow: var(--box-layout-flex-direction) var(--box-layout-flex-wrap);
-
-    /* === APPLIED CSS PROPERTIES === */
-    
-    /* Core Display & Layout */
-    display: var(--box-layout-display, var(--box-display, block));
-    position: var(--box-position);
-    z-index: var(--box-z-index);
-    overflow: var(--box-overflow);
+    display: var(--one-display);
+    position: var(--one-position);
+    z-index: var(--one-z-index);
+    overflow: var(--one-overflow);
+    visibility: var(--one-visibility);
     
     /* Dimensions */
-    width: var(--box-width);
-    height: var(--box-height);
-    min-width: var(--box-min-width);
-    max-width: var(--box-max-width);
-    min-height: var(--box-min-height);
-    max-height: var(--box-max-height);
+    width: var(--one-width);
+    height: var(--one-height);
+    min-width: var(--one-min-width);
+    max-width: var(--one-max-width);
+    min-height: var(--one-min-height);
+    max-height: var(--one-max-height);
+    aspect-ratio: var(--one-aspect-ratio);
     
     /* Spacing */
-    padding: var(--box-padding);
-    margin: var(--box-margin);
+    padding: var(--one-padding);
+    margin: var(--one-margin);
+
+    /* Typography */
+    font-family: var(--one-font-family);
+    font-size: var(--one-font-size);
+    font-weight: var(--one-font-weight);
+    font-style: var(--one-font-style);
+    font-variant: var(--one-font-variant);
+    line-height: var(--one-line-height);
+    letter-spacing: var(--one-letter-spacing);
+    color: var(--one-color);
+    text-align: var(--one-text-align);
+    text-transform: var(--one-text-transform);
+    text-decoration: var(--one-text-decoration);
+    text-shadow: var(--one-text-shadow);
+    white-space: var(--one-white-space);
+    text-overflow: var(--one-text-overflow);
+    vertical-align: var(--one-vertical-align);
     
     /* Background */
-    background: var(--box-background);
-    background-image: var(--box-background-image);
-    background-size: var(--box-background-size);
-    background-position: var(--box-background-position);
-    background-repeat: var(--box-background-repeat);
+    background: var(--one-background);
+    background-image: var(--one-background-image);
+    background-size: var(--one-background-size);
+    background-position: var(--one-background-position);
+    background-repeat: var(--one-background-repeat);
+    background-attachment: var(--one-background-attachment);
     
     /* Border */
-    border: var(--box-border);
-    border-width: var(--box-border-width);
-    border-style: var(--box-border-style);
-    border-color: var(--box-border-color);
-    border-radius: var(--box-border-radius);
-    border-bottom: var(--box-border-bottom);
+    border: var(--one-border);
+    border-width: var(--one-border-width);
+    border-style: var(--one-border-style);
+    border-color: var(--one-border-color);
+    border-radius: var(--one-border-radius);
+    border-top: var(--one-border-top);
+    border-right: var(--one-border-right);
+    border-bottom: var(--one-border-bottom);
+    border-left: var(--one-border-left);
     
     /* Shadow & Effects */
-    box-shadow: var(--box-box-shadow);
-    opacity: var(--box-opacity);
-    filter: var(--box-filter);
-    backdrop-filter: var(--box-backdrop-filter);
+    box-shadow: var(--one-box-shadow);
+    opacity: var(--one-opacity);
+    filter: var(--one-filter);
+    backdrop-filter: var(--one-backdrop-filter);
+    transform: var(--one-transform);
+    transform-origin: var(--one-transform-origin);
     
-    /* Grid Positioning */
-    grid-area: var(--box-grid-area);
+    /* Grid Layout */
+    grid-area: var(--one-grid-area);
+    grid-template-columns: var(--one-grid-template-columns);
+    grid-template-rows: var(--one-grid-template-rows);
+    grid-template-areas: var(--one-grid-template-areas);
+    grid-auto-columns: var(--one-grid-auto-columns);
+    grid-auto-rows: var(--one-grid-auto-rows);
+    grid-auto-flow: var(--one-grid-auto-flow);
+    justify-items: var(--one-justify-items);
+    align-items: var(--one-align-items);
+    justify-content: var(--one-justify-content);
+    align-content: var(--one-align-content);
+    place-items: var(--one-place-items);
+    place-content: var(--one-place-content);
     
-    /* Shared Layout Properties (Grid & Flex) */
-    gap: var(--box-layout-gap);
-    row-gap: var(--box-layout-row-gap);
-    column-gap: var(--box-layout-column-gap);
-    align-items: var(--box-layout-align-items);
-    justify-content: var(--box-layout-justify-content);
-    align-content: var(--box-layout-align-content);
+    /* Flexbox Layout */
+    flex-direction: var(--one-flex-direction);
+    flex-wrap: var(--one-flex-wrap);
+    flex-flow: var(--one-flex-flow);
+    flex: var(--one-flex);
+    flex-grow: var(--one-flex-grow);
+    flex-shrink: var(--one-flex-shrink);
+    flex-basis: var(--one-flex-basis);
     
-    /* CSS Grid Layout Properties */
-    grid-template-columns: var(--box-layout-grid-template-columns);
-    grid-template-rows: var(--box-layout-grid-template-rows);
-    grid-template-areas: var(--box-layout-grid-template-areas);
-    grid-auto-columns: var(--box-layout-grid-auto-columns);
-    grid-auto-rows: var(--box-layout-grid-auto-rows);
-    grid-auto-flow: var(--box-layout-grid-auto-flow);
-    justify-items: var(--box-layout-grid-justify-items);
-    place-items: var(--box-layout-grid-place-items);
-    place-content: var(--box-layout-grid-place-content);
+    /* Layout Gaps */
+    gap: var(--one-gap);
+    row-gap: var(--one-row-gap);
+    column-gap: var(--one-column-gap);
     
-    /* CSS Flexbox Layout Properties */
-    flex-direction: var(--box-layout-flex-direction);
-    flex-wrap: var(--box-layout-flex-wrap);
-    flex-flow: var(--box-layout-flex-flow);
+    /* Interaction */
+    cursor: var(--one-cursor);
+    user-select: var(--one-user-select);
+    pointer-events: var(--one-pointer-events);
+    touch-action: var(--one-touch-action);
+    
+    /* Animation */
+    transition: var(--one-transition);
+    animation: var(--one-animation);
+    
+    /* Miscellaneous */
+    content: var(--one-content);
+    list-style: var(--one-list-style);
+    resize: var(--one-resize);
+    outline: var(--one-outline);
 }
 
 /* ========================================
    LAYER 3: COMPONENT SCOPES
    ======================================== */
+/* 
+   Scopes are generated dynamically in React through useThemeConfig.js
+   and injected into Shadow DOM for full control and live editing.
+   
+   Example scopes will include:
+   - header, sidebar, hero, card, etc.
+   - Managed through JSON → React → CSS injection
+*/
+
+/* ========================================
+   LAYER 4: HELPER SCOPES  
+   ======================================== */
+/* 
+   Helper scopes for modifications and variants
+   Also generated dynamically in React
+   
+   Example helpers will include:
+   - to be determined
+*/
+
+/* ========================================
+   LAYER 5: PRESETS
+   ======================================== */
+/* 
+   Presets system
+   
+   Example presets will include:
+   - to be determined
+*/

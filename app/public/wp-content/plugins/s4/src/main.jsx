@@ -4,7 +4,7 @@ import { ShadowApp } from './ShadowApp';
 import './styles/main.css';
 
 // Custom web component with Shadow DOM isolation
-class S4Element extends HTMLElement {
+class Studio1Element extends HTMLElement {
   constructor() {
     super();
     
@@ -31,7 +31,7 @@ class S4Element extends HTMLElement {
   render() {
     // Create container for React app
     const container = document.createElement('div');
-    container.id = 's4-app-container';
+    container.id = 'studio1-app-container';
     
     // Clear shadow root and append container
     this.shadowRoot.innerHTML = '';
@@ -44,19 +44,19 @@ class S4Element extends HTMLElement {
 }
 
 // Register the custom element
-if (!customElements.get('s4-element')) {
-  customElements.define('s4-element', S4Element);
+if (!customElements.get('studio1-element')) {
+  customElements.define('studio1-element', Studio1Element);
 }
 
 // Also render in admin page if container exists
-const adminContainer = document.getElementById('s4-admin-root');
+const adminContainer = document.getElementById('studio1-admin-root');
 if (adminContainer) {
   const root = ReactDOM.createRoot(adminContainer);
   root.render(<ShadowApp isAdmin={true} />);
 }
 
 // Render in frontend page if container exists
-const frontendContainer = document.getElementById('s4-frontend-root');
+const frontendContainer = document.getElementById('studio1-frontend-root');
 if (frontendContainer) {
   const root = ReactDOM.createRoot(frontendContainer);
   root.render(<ShadowApp isFrontend={true} />);

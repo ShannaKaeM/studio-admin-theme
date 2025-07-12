@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 
-// Default S4 theme configuration
+// Default Studio1 theme configuration
 const defaultConfig = {
   theme: {
-    name: "S4 Design System",
-    version: "2.0.0",
-    description: "Preset-driven design system with CSS custom properties"
+    name: "Studio1 - The One Element System",
+    version: "1.0.0",
+    description: "Revolutionary unified element system with ultimate flexibility"
   },
   colors: {
     brand: {
@@ -64,68 +64,68 @@ const defaultConfig = {
     }
   },
   components: {
-    // Example components using .box and .text system
+    // Studio1 components using .one element system with --one- variables
     "theme-builder": {
-      "--box-background": "var(--color3-950)",
-      "--box-border": "1px solid var(--color3-800)",
-      "--box-padding": "1.5rem",
-      "--text-color": "var(--color4-100)"
+      "--one-background": "var(--color3-950)",
+      "--one-border": "1px solid var(--color3-800)",
+      "--one-padding": "1.5rem",
+      "--one-color": "var(--color4-100)"
     },
     "nav-tab": {
-      "--box-background": "var(--color3-900)",
-      "--box-border": "1px solid var(--color3-700)",
-      "--box-padding": "0.75rem 1rem",
-      "--text-color": "var(--color4-300)",
-      "--text-font-weight": "500"
+      "--one-background": "var(--color3-900)",
+      "--one-border": "1px solid var(--color3-700)",
+      "--one-padding": "0.75rem 1rem",
+      "--one-color": "var(--color4-300)",
+      "--one-font-weight": "500"
     },
     "nav-tab-active": {
-      "--box-background": "var(--color1-500)",
-      "--text-color": "var(--color4-50)",
-      "--box-border": "1px solid var(--color1-400)"
+      "--one-background": "var(--color1-500)",
+      "--one-color": "var(--color4-50)",
+      "--one-border": "1px solid var(--color1-400)"
     },
     "color-card": {
-      "--box-background": "var(--color3-900)",
-      "--box-border": "1px solid var(--color3-700)",
-      "--box-padding": "1rem",
-      "--box-border-radius": "0.5rem",
-      "--text-color": "var(--color4-200)"
+      "--one-background": "var(--color3-900)",
+      "--one-border": "1px solid var(--color3-700)",
+      "--one-padding": "1rem",
+      "--one-border-radius": "0.5rem",
+      "--one-color": "var(--color4-200)"
     },
     "input-field": {
-      "--box-background": "var(--color3-800)",
-      "--box-border": "1px solid var(--color3-600)",
-      "--box-padding": "0.5rem 0.75rem",
-      "--box-border-radius": "0.25rem",
-      "--text-color": "var(--color4-100)",
-      "--text-font-size": "0.875rem"
+      "--one-background": "var(--color3-800)",
+      "--one-border": "1px solid var(--color3-600)",
+      "--one-padding": "0.5rem 0.75rem",
+      "--one-border-radius": "0.25rem",
+      "--one-color": "var(--color4-100)",
+      "--one-font-size": "0.875rem"
     },
     "button-primary": {
-      "--box-background": "var(--color1-500)",
-      "--box-border": "1px solid var(--color1-400)",
-      "--box-padding": "0.75rem 1.5rem",
-      "--box-border-radius": "0.375rem",
-      "--text-color": "var(--color4-50)",
-      "--text-font-weight": "600"
+      "--one-background": "var(--color1-500)",
+      "--one-border": "1px solid var(--color1-400)",
+      "--one-padding": "0.75rem 1.5rem",
+      "--one-border-radius": "0.375rem",
+      "--one-color": "var(--color4-50)",
+      "--one-font-weight": "600"
     },
     "button-secondary": {
-      "--box-background": "var(--color3-700)",
-      "--box-border": "1px solid var(--color3-600)",
-      "--box-padding": "0.75rem 1.5rem",
-      "--box-border-radius": "0.375rem",
-      "--text-color": "var(--color4-200)",
-      "--text-font-weight": "500"
+      "--one-background": "var(--color3-700)",
+      "--one-border": "1px solid var(--color3-600)",
+      "--one-padding": "0.75rem 1.5rem",
+      "--one-border-radius": "0.375rem",
+      "--one-color": "var(--color4-200)",
+      "--one-font-weight": "500"
     }
   }
 };
 
 /**
- * Custom hook for managing S4 theme configuration
- * Integrates with CSS custom properties and .box/.text system
+ * Custom hook for managing Studio1 theme configuration
+ * Integrates with CSS custom properties and .one element system
  */
 export function useThemeConfig() {
   // Load from localStorage on initialization
   const [config, setConfig] = useState(() => {
     try {
-      const saved = localStorage.getItem('s4-theme-config');
+      const saved = localStorage.getItem('studio1-theme-config');
       return saved ? JSON.parse(saved) : defaultConfig;
     } catch {
       return defaultConfig;
@@ -134,7 +134,7 @@ export function useThemeConfig() {
   
   const [customOverrides, setCustomOverrides] = useState(() => {
     try {
-      const saved = localStorage.getItem('s4-theme-overrides');
+      const saved = localStorage.getItem('studio1-theme-overrides');
       return saved ? JSON.parse(saved) : {};
     } catch {
       return {};
@@ -144,7 +144,7 @@ export function useThemeConfig() {
   // Persist config changes to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('s4-theme-config', JSON.stringify(config));
+      localStorage.setItem('studio1-theme-config', JSON.stringify(config));
     } catch (error) {
       console.warn('Failed to save theme config:', error);
     }
@@ -153,7 +153,7 @@ export function useThemeConfig() {
   // Persist override changes to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('s4-theme-overrides', JSON.stringify(customOverrides));
+      localStorage.setItem('studio1-theme-overrides', JSON.stringify(customOverrides));
     } catch (error) {
       console.warn('Failed to save theme overrides:', error);
     }
@@ -163,7 +163,7 @@ export function useThemeConfig() {
   const cssVariables = useMemo(() => {
     const variables = {};
     
-    // Color variables - convert to S4 naming convention
+    // Color variables - convert to Studio1 naming convention
     Object.entries(config.colors.brand).forEach(([colorName, scale]) => {
       Object.entries(scale).forEach(([weight, value]) => {
         variables[`--${colorName}-${weight}`] = value;
@@ -180,27 +180,27 @@ export function useThemeConfig() {
       document.documentElement.style.setProperty(property, value);
     });
 
-    // Apply to S4 shadow DOM
-    const s4Element = document.querySelector('s4-element');
+    // Apply to Studio1 shadow DOM
+    const studio1Element = document.querySelector('studio1-element');
     let styleElement;
     
-    if (s4Element && s4Element.shadowRoot) {
+    if (studio1Element && studio1Element.shadowRoot) {
       // Remove existing style element if any
-      const existingStyle = s4Element.shadowRoot.querySelector('#s4-theme-vars');
+      const existingStyle = studio1Element.shadowRoot.querySelector('#studio1-theme-vars');
       if (existingStyle) {
         existingStyle.remove();
       }
       
       // Create new style element with CSS variables
       styleElement = document.createElement('style');
-      styleElement.id = 's4-theme-vars';
+      styleElement.id = 'studio1-theme-vars';
       
       // Generate CSS for custom properties
       const customPropertiesCSS = Object.entries(cssVariables)
         .map(([property, value]) => `  ${property}: ${value};`)
         .join('\n');
       
-      // Generate component CSS rules using .box and .text system
+      // Generate component CSS rules using .one element system
       const componentCSS = Object.entries(config.components)
         .map(([componentName, styles]) => {
           const cssRules = Object.entries(styles)
@@ -216,7 +216,7 @@ export function useThemeConfig() {
       const cssText = `:host {\n${customPropertiesCSS}\n}\n\n${componentCSS}`;
       
       styleElement.textContent = cssText;
-      s4Element.shadowRoot.appendChild(styleElement);
+      studio1Element.shadowRoot.appendChild(styleElement);
     }
 
     return () => {
