@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ShadowApp } from './ShadowApp';
 import './styles/main.css';
+import './styles/ui-components.css';
 
 // Custom web component with Shadow DOM isolation
 class Studio1Element extends HTMLElement {
