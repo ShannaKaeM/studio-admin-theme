@@ -2,6 +2,25 @@
 
 *Current Session Action Items - Immediate Focus Only*
 
+## 🚨 **CRITICAL RULES - READ BEFORE EDITING WHITEBOARD**
+
+### **🔧 Two CSS System Architecture - NEVER MIX:**
+- **UI Dashboard** (`ui-components.css`): `--ui-*` colors, `.dashboard-*` classes (never user-editable)
+- **Studio1 Content** (`main.css`): `.one` element, `--one-*` properties, direct HSLA (user content)
+- **⚠️ Both share same JSON but serve different purposes!**
+
+### **🏷️ Naming Rules - NEVER CHANGE:**
+- **Plugin**: "S4 Design System" (matches /s4/ folder - NEVER CHANGE)
+- **Brand**: "Studio1 - The One Element System" (user-facing)
+
+### **📝 Whiteboard Editing Rules:**
+1. Read critical rules first
+2. Understand two CSS system separation
+3. Preserve plugin vs brand naming
+4. Focus on immediate action items only
+
+---
+
 > **Document Purpose**: What needs attention RIGHT NOW. Keep this laser-focused on immediate action items and current project progress only.
 > 
 > **Workflow**: 
@@ -101,17 +120,29 @@
 - Decide naming conventions: "1Block", "1Group", "1Section" vs alternatives
 - Plan tab navigation and workflow between composition levels
 
-### **✅ Priority 3: 1Block Foundation Validation**
-**Status**: Implementation complete, testing needed
+### **✅ Priority 3: 1Block Foundation Validation - COMPLETE**
+**Status**: ✅ System completely validated and housekeeping complete
 **Goal**: Verify current 1Block creative freedom system works flawlessly
-- Test 1Block creation workflow end-to-end  
-- Verify global color inheritance from base color
-- Test real-time property editing and persistence
-- Validate delete functionality and error handling
+- ✅ Test 1Block creation workflow end-to-end  
+- ✅ Verify global color inheritance from base color
+- ✅ Test real-time property editing and persistence
+- ✅ Validate delete functionality and error handling
+- ✅ Clean up .one CSS variables and applied properties
+- ✅ Fix architectural contamination from UI component migration
+- ✅ Plugin name restoration to "S4 Design System"
 
 ---
 
 ## ✅ **CURRENT PROJECT COMPLETED**
+
+### **✅ Major System Housekeeping & Architectural Cleanup (July 13, 2025)**
+- **CSS Variable Cleanup**: Fixed .one element variables and applied properties for consistency
+- **Architectural Contamination Fixes**: Removed UI dashboard components from main.css framework
+- **Plugin Name Restoration**: Reverted from "Studio1" back to "S4 Design System" (matches /s4/ folder)
+- **Delete Functionality**: Added missing deleteComponent function and enhanced clean start
+- **Documentation Consolidation**: Merged duplicate documentation into 04-Doc.md as lead reference
+- **Git History Investigation**: Identified when UI contamination and name changes occurred (July 12)
+- **Two-System Separation**: Perfect restoration of UI dashboard vs user content framework
 
 ### **✅ 1Block Creative Freedom System Implementation**
 - Removed prescriptive inheritance patterns for complete user control

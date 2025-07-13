@@ -1,5 +1,5 @@
 /* ============================================ */
-/* STUDIO1 - THE ONE ELEMENT SYSTEM          */
+/* STUDIO1 - THE 1BLOCK SYSTEM        */
 /* ============================================ */
 
 /* LAYER 1: STUDIO1 FOUNDATION */
@@ -7,9 +7,7 @@
     /* ============================================ */
     /* STUDIO1 BASE SYSTEM                       */
     /* ============================================ */
-    
-    --base-color: hsl(0, 0%, 50%); 
-    color: var(--base-color); 
+  
     
     /* Typography */
     --font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -45,7 +43,7 @@
     --one-font-variant: normal;
     --one-line-height: 1.4;
     --one-letter-spacing: 0;
-    --one-color: hsla(0, 0%, 20%, 1);
+    --one-color: hsla(0, 0%, 10%, 1);
     --one-text-align: left;
     --one-text-transform: none;
     --one-text-decoration: none;
@@ -55,7 +53,7 @@
     --one-vertical-align: baseline;
 
     /* === BACKGROUND === */
-    --one-background: hsla(0, 0%, 100%, 1);
+    --one-background: hsla(0, 0%, 90%, 1);
     --one-background-image: none;
     --one-background-size: cover;
     --one-background-position: center;
@@ -66,7 +64,7 @@
     --one-border: none;
     --one-border-width: 0;
     --one-border-style: solid;
-    --one-border-color: hsla(0, 0%, 80%, 1);
+    --one-border-color: hsla(0, 0%, 10%, 1);
     --one-border-radius: 0;
     --one-border-top: none;
     --one-border-right: none;
@@ -93,13 +91,13 @@
     --one-align-items: stretch;
     --one-justify-content: start;
     --one-align-content: start;
-    --one-place-items: var(--one-align-items) var(--one-justify-items);
-    --one-place-content: var(--one-align-content) var(--one-justify-content);
+    --one-place-items: stretch;
+    --one-place-content: start;
 
     /* === FLEXBOX LAYOUT === */
     --one-flex-direction: row;
     --one-flex-wrap: nowrap;
-    --one-flex-flow: var(--one-flex-direction) var(--one-flex-wrap);
+    --one-flex-flow: row nowrap;
     --one-flex: none;
     --one-flex-grow: 0;
     --one-flex-shrink: 1;
@@ -107,8 +105,8 @@
 
     /* === LAYOUT GAPS === */
     --one-gap: 0;
-    --one-row-gap: var(--one-gap);
-    --one-column-gap: var(--one-gap);
+    --one-row-gap: 0;
+    --one-column-gap: 0;
 
     /* === INTERACTION === */
     --one-cursor: default;

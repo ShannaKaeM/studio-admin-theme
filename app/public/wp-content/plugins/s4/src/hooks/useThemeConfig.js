@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 
-// Clean default Studio1 theme configuration - completely empty to start
+// Clean default S4 theme configuration - completely empty to start
 const defaultConfig = {
   theme: {
     name: "Studio1 - The One Element System",
@@ -288,6 +288,13 @@ export function useThemeConfig() {
   };
 
   const resetToDefault = () => {
+    // Clear all localStorage data to remove legacy components
+    localStorage.removeItem('studio1-theme-config');
+    localStorage.removeItem('studio1-theme-overrides');
+    localStorage.removeItem('studio1-color-variations');
+    localStorage.removeItem('studio1-collections');
+    
+    // Reset to clean default state
     setConfig(defaultConfig);
     setCustomOverrides({});
   };
