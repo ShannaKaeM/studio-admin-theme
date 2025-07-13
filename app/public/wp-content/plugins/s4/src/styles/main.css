@@ -1,7 +1,3 @@
-/* ========================================
-   STUDIO1 DESIGN SYSTEM - UNIFIED ARCHITECTURE
-   ======================================== */
-
 /* ============================================ */
 /* STUDIO1 - THE ONE ELEMENT SYSTEM          */
 /* ============================================ */
@@ -11,23 +7,15 @@
     /* ============================================ */
     /* COLOR BOOK SINGLE BASE SYSTEM              */
     /* ============================================ */
-    /* Single base color that Color Book will modify with HSLA adjustments */
-    /* All colors will be generated dynamically from this foundation */
     
-    --base-color: hsl(0, 0%, 50%);  /* Foundation for all color variations */
+    --base-color: hsl(0, 0%, 50%);  
+    color: var(--base-color);
     
     /* Typography */
     --font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* ============================================ */
-/* LAYER 2: THE ONE ELEMENT - UNIFIED PROPERTIES */
-/* ============================================ */
-
 .one {  
-    /* ============================================ */
-    /* CUSTOM PROPERTIES - ALL CSS CAPABILITIES   */
-    /* ============================================ */
     
     /* === DISPLAY & LAYOUT === */
     --one-display: block;

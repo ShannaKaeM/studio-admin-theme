@@ -175,58 +175,10 @@ class Studio1Plugin {
                     left: 0;
                     z-index: 999999;
                 }
-                .studio1-fullscreen-header {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    height: 60px;
-                    background: rgba(10, 10, 10, 0.95);
-                    backdrop-filter: blur(10px);
-                    border-bottom: 1px solid #333;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 0 1.5rem;
-                    z-index: 1000;
-                }
-                .studio1-fullscreen-content {
-                    margin-top: 60px;
-                    min-height: calc(100vh - 60px);
-                }
-                .studio1-logo {
-                    font-size: 1.25rem;
-                    font-weight: 600;
-                    color: #d946ef;
-                }
-                .studio1-nav {
-                    display: flex;
-                    gap: 1rem;
-                }
-                .studio1-nav a {
-                    color: #9ca3af;
-                    text-decoration: none;
-                    padding: 0.5rem 1rem;
-                    border-radius: 0.375rem;
-                    transition: all 0.2s;
-                }
-                .studio1-nav a:hover {
-                    color: #ffffff;
-                    background: rgba(255, 255, 255, 0.1);
-                }
             </style>
         </head>
         <body>
-            <div class="studio1-fullscreen-header">
-                <div class="studio1-logo">Studio1 - The One Element System</div>
-                <div class="studio1-nav">
-                    <a href="<?php echo admin_url('admin.php?page=studio1-dashboard'); ?>">Admin View</a>
-                    <a href="<?php echo home_url(); ?>">Back to Site</a>
-                </div>
-            </div>
-            <div class="studio1-fullscreen-content">
-                <div id="studio1-frontend-root"></div>
-            </div>
+            <div id="studio1-frontend-root"></div>
             <studio1-element data-mode="frontend"></studio1-element>
             
             <!-- Studio1 Configuration -->

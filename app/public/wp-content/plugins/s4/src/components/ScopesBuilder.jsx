@@ -57,33 +57,31 @@ export function ScopesBuilder() {
   const currentScope = scopes[selectedScope];
   const currentBaseProperties = currentScope?.baseProperties || {};
 
-  // Build dynamic color options from Color Creator variations
-  const buildColorOptions = (propertyType) => {
-    const coreColors = [
-      { key: 'color1', label: 'Primary', default: 'var(--color1-500)' },
-      { key: 'color2', label: 'Secondary', default: 'var(--color2-500)' },
-      { key: 'color3', label: 'Neutral', default: 'var(--color3-800)' },
-      { key: 'color4', label: 'Base', default: 'var(--color4-100)' }
-    ];
+  // For base editor inline mode
+  const textBaseScope = scopes.text;
+  const textBaseProperties = textBaseScope?.baseProperties || {};
 
+  // Build dynamic color options from Color Book and Color Creator variations
+  const buildColorOptions = (propertyType) => {
     console.log('Color variations available:', colorVariations);
     const options = [];
 
-    coreColors.forEach(coreColor => {
-      // Add default core color
+    // Add Color Book base color
+    if (config.colorBook?.baseColor) {
       options.push({
-        label: `${coreColor.label} (Default)`,
-        value: coreColor.default,
-        group: coreColor.label
+        label: 'Base Color',
+        value: 'var(--base-color)',
+        group: 'Color Book'
       });
+    }
 
-      // Add custom variations if they exist
-      const variations = colorVariations[coreColor.key] || {};
+    // Add any color variations from Color Creator (if they exist)
+    Object.entries(colorVariations).forEach(([colorKey, variations]) => {
       Object.entries(variations).forEach(([varName, varColor]) => {
         options.push({
-          label: `${coreColor.label}: ${varName}`,
+          label: `Custom: ${varName}`,
           value: varColor,
-          group: coreColor.label
+          group: 'Custom Colors'
         });
       });
     });
@@ -101,15 +99,26 @@ export function ScopesBuilder() {
   };
 
   const handleCreateNewScope = () => {
-    const scopeName = prompt('Enter scope name (e.g., "eyebrow", "title", "subtitle"):');
-    if (scopeName && scopeName.trim()) {
-      const cleanName = scopeName.trim().toLowerCase().replace(/\s+/g, '-');
-      createNewScope(cleanName, {
-        '--one-display': 'block',
-        '--one-font-family': 'var(--font-family)',
-        '--one-color': 'var(--color3-800)'
-      });
-      setSelectedScope(cleanName);
+    const elementType = prompt('Choose element type:\n1. Text (title, subtitle, body, etc.)\n\nEnter "text":');
+    
+    if (elementType && elementType.trim().toLowerCase() === 'text') {
+      const scopeName = prompt('Enter text element name (e.g., "title", "subtitle", "body"):');
+      if (scopeName && scopeName.trim()) {
+        const cleanName = scopeName.trim().toLowerCase().replace(/\s+/g, '-');
+        
+        // Auto-inherit from base text scope (excluding color to allow inheritance)
+        const textProperties = scopes.text?.baseProperties || {};
+        const { '--one-color': removedColor, ...inheritedProperties } = textProperties;
+        createNewScope(cleanName, {
+          ...inheritedProperties,  // Inherit foundation properties (except color)
+          '--one-font-size': '1rem',  // Default size, can be customized
+          '--one-font-weight': '400'  // Default weight, can be customized
+          // Color will inherit from base text scope naturally
+        });
+        setSelectedScope(cleanName);
+      }
+    } else if (elementType && elementType.trim()) {
+      alert('Only "text" element type is available for now. More types coming soon!');
     }
   };
 
@@ -119,8 +128,8 @@ export function ScopesBuilder() {
       <div className="scopes-builder-sidebar">
         {/* Sidebar Header */}
         <div className="scopes-builder-sidebar-header">
-          <h2>Scope Builder</h2>
-          <p>Create individual scopes with styling</p>
+          <h2>Element Builder</h2>
+          <p>Create design elements with styling</p>
         </div>
 
         {/* Scopes List */}
@@ -142,27 +151,31 @@ export function ScopesBuilder() {
           color: 'var(--ui-neutral-400)',
           textAlign: 'center'
         }}>
-          {selectedScope ? `Editing scope: ${selectedScope}` : 'Select a scope to edit'}
+          {selectedScope ? `Editing element: ${selectedScope}` : 'Select an element to edit'}
         </div>
       </div>
 
       {/* Right Content Area */}
       <div className="scope-editor-area">
         {selectedScope ? (
-          <ScopeEditor
-            scope={selectedScope}
-            baseProperties={currentBaseProperties}
-            onBasePropertyChange={(property, value) => {
-              const updatedProperties = { ...currentBaseProperties, [property]: value };
-              updateScopeBaseProperties(selectedScope, updatedProperties);
-            }}
-            onBasePropertyRemove={(property) => {
-              const updatedProperties = { ...currentBaseProperties };
-              delete updatedProperties[property];
-              updateScopeBaseProperties(selectedScope, updatedProperties);
-            }}
-            buildColorOptions={buildColorOptions}
-          />
+          currentScope?.isBaseScope ? (
+            <BaseElementMessage scope={selectedScope} />
+          ) : (
+            <ScopeEditor
+              scope={selectedScope}
+              baseProperties={currentBaseProperties}
+              onBasePropertyChange={(property, value) => {
+                const updatedProperties = { ...currentBaseProperties, [property]: value };
+                updateScopeBaseProperties(selectedScope, updatedProperties);
+              }}
+              onBasePropertyRemove={(property) => {
+                const updatedProperties = { ...currentBaseProperties };
+                delete updatedProperties[property];
+                updateScopeBaseProperties(selectedScope, updatedProperties);
+              }}
+              buildColorOptions={buildColorOptions}
+            />
+          )
         ) : (
           <EmptyState />
         )}
@@ -187,7 +200,7 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
           color: 'var(--ui-neutral-200)',
           margin: 0
         }}>
-          Available Scopes ({Object.keys(scopes).length})
+          All Elements ({Object.keys(scopes).length})
         </h3>
       </div>
 
@@ -204,31 +217,48 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
                   color: 'var(--ui-neutral-100)', 
                   marginBottom: '0.25rem' 
                 }}>
-                  🎭 {scopeName}
+                  {scopeConfig.isBaseScope ? '🏗️' : '🎭'} {scopeName}
+                  {scopeConfig.isBaseScope && (
+                    <span style={{ 
+                      fontSize: '0.625rem',
+                      background: 'var(--ui-neutral-600)',
+                      color: 'white',
+                      padding: '0.125rem 0.375rem',
+                      borderRadius: '0.25rem',
+                      marginLeft: '0.5rem'
+                    }}>
+                      GLOBAL
+                    </span>
+                  )}
                 </div>
                 <div style={{ 
                   fontSize: '0.75rem', 
                   color: 'var(--ui-neutral-400)' 
                 }}>
-                  {Object.keys(scopeConfig.baseProperties || {}).length} properties
+                  {scopeConfig.isBaseScope 
+                    ? `Global foundation - edit in Base Settings tab`
+                    : (scopeConfig.description || `${Object.keys(scopeConfig.baseProperties || {}).length} properties`)
+                  }
                 </div>
               </div>
             </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const confirmed = confirm(`Delete scope "${scopeName}"? This action cannot be undone.`);
-                if (confirmed) {
-                  onDeleteScope(scopeName);
-                  if (selectedScope === scopeName) {
-                    setSelectedScope(null);
+            {!scopeConfig.isBaseScope && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const confirmed = confirm(`Delete element "${scopeName}"? This action cannot be undone.`);
+                  if (confirmed) {
+                    onDeleteScope(scopeName);
+                    if (selectedScope === scopeName) {
+                      setSelectedScope(null);
+                    }
                   }
-                }
-              }}
-              className="scope-delete-button"
-            >
-              ✕
-            </button>
+                }}
+                className="scope-delete-button"
+              >
+                ✕
+              </button>
+            )}
           </li>
         ))}
       </ul>
@@ -238,7 +268,7 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
         className="ui-button ui-button--primary"
         style={{ width: '100%' }}
       >
-        + Add New Scope
+        + Add New Element
       </button>
     </div>
   );
@@ -246,76 +276,132 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
 
 // Scope Editor Component
 function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove, buildColorOptions }) {
+  const [editMode, setEditMode] = useState('element'); // 'element' or 'base'
+  
+  // Check if this scope has a corresponding base scope
+  const hasBaseScope = scope !== 'text'; // text elements have a base, text itself IS the base
+  
   return (
     <div>
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ 
-          fontSize: '1.5rem', 
-          fontWeight: '600', 
-          color: 'var(--ui-neutral-100)', 
-          margin: '0 0 0.5rem 0' 
-        }}>
-          🎭 {scope}
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+          <h1 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: '600', 
+            color: 'var(--ui-neutral-100)', 
+            margin: 0 
+          }}>
+            🎭 {scope}
+          </h1>
+          
+          {hasBaseScope && (
+            <div style={{ display: 'flex', gap: '0.25rem', background: 'var(--ui-neutral-50)', borderRadius: '0.25rem', padding: '0.25rem' }}>
+              <button
+                onClick={() => setEditMode('element')}
+                style={{
+                  padding: '0.375rem 0.75rem',
+                  border: 'none',
+                  borderRadius: '0.125rem',
+                  fontSize: '0.75rem',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  background: editMode === 'element' ? 'var(--ui-primary)' : 'transparent',
+                  color: editMode === 'element' ? 'white' : 'var(--ui-neutral-400)'
+                }}
+              >
+                🎭 Element
+              </button>
+              <button
+                onClick={() => setEditMode('base')}
+                style={{
+                  padding: '0.375rem 0.75rem',
+                  border: 'none',
+                  borderRadius: '0.125rem',
+                  fontSize: '0.75rem',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  background: editMode === 'base' ? 'var(--ui-primary)' : 'transparent',
+                  color: editMode === 'base' ? 'white' : 'var(--ui-neutral-400)'
+                }}
+              >
+                🏗️ Base
+              </button>
+            </div>
+          )}
+        </div>
+        
         <p style={{ 
           color: 'var(--ui-neutral-400)', 
           fontSize: '0.875rem',
           margin: 0
         }}>
-          Edit the styling properties for this scope
+          {hasBaseScope && editMode === 'base' 
+            ? `Edit the global foundation that all text elements inherit`
+            : `Edit the styling properties for this ${scope} element`
+          }
         </p>
       </div>
 
-      <PropertyEditor
-        title={`${scope} Properties`}
-        properties={baseProperties}
-        onPropertyChange={onBasePropertyChange}
-        onPropertyRemove={onBasePropertyRemove}
-        addButtonText="Add Property"
-        buildColorOptions={buildColorOptions}
-      />
+      {hasBaseScope && editMode === 'base' ? (
+        <BaseEditorInline 
+          textBaseProperties={textBaseProperties}
+          updateScopeBaseProperties={updateScopeBaseProperties}
+          buildColorOptions={buildColorOptions}
+        />
+      ) : (
+        <>
+          <PropertyEditor
+            title={`${scope} Properties`}
+            properties={baseProperties}
+            onPropertyChange={onBasePropertyChange}
+            onPropertyRemove={onBasePropertyRemove}
+            addButtonText="Add Property"
+            buildColorOptions={buildColorOptions}
+          />
 
-      {/* Live Preview */}
-      <div className="scope-preview">
-        <div className="scope-preview-title">Live Preview</div>
-        
-        <div style={{ 
-          background: 'var(--ui-neutral-50)', 
-          padding: '1.5rem', 
-          borderRadius: 'var(--ui-border-radius)', 
-          border: '1px solid var(--ui-base-600)' 
-        }}>
-          <div style={{ 
-            fontSize: '0.75rem', 
-            color: 'var(--ui-base-600)', 
-            marginBottom: '0.5rem', 
-            fontFamily: 'monospace' 
-          }}>
-            &lt;div data-scope="{scope}"&gt;
-          </div>
-          
-          <div 
-            data-scope={scope}
-            className="one"
-            style={{ margin: '1rem 0' }}
-          >
-            <div className="one">
-              {scope === 'eyebrow' && 'Sample Eyebrow Text'}
-              {scope === 'title' && 'Sample Title Text'}
-              {scope === 'description' && 'Sample description text content for testing the base scope styling.'}
-              {!['eyebrow', 'title', 'description'].includes(scope) && `Sample ${scope} content for testing`}
+          {/* Live Preview */}
+          <div className="scope-preview">
+            <div className="scope-preview-title">Live Preview</div>
+            
+            <div style={{ 
+              background: 'var(--ui-neutral-50)', 
+              padding: '1.5rem', 
+              borderRadius: 'var(--ui-border-radius)', 
+              border: '1px solid var(--ui-base-600)' 
+            }}>
+              <div style={{ 
+                fontSize: '0.75rem', 
+                color: 'var(--ui-base-600)', 
+                marginBottom: '0.5rem', 
+                fontFamily: 'monospace' 
+              }}>
+                &lt;div data-scope="{scope}"&gt;
+              </div>
+              
+              <div 
+                data-scope={scope}
+                className="one"
+                style={{ margin: '1rem 0' }}
+              >
+                <div className="one">
+                  {scope === 'eyebrow' && 'Sample Eyebrow Text'}
+                  {scope === 'title' && 'Sample Title Text'}
+                  {scope === 'description' && 'Sample description text content for testing the base scope styling.'}
+                  {!['eyebrow', 'title', 'description'].includes(scope) && `Sample ${scope} content for testing`}
+                </div>
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.75rem', 
+                color: 'var(--ui-base-600)', 
+                fontFamily: 'monospace' 
+              }}>
+                &lt;/div&gt;
+              </div>
             </div>
           </div>
-          
-          <div style={{ 
-            fontSize: '0.75rem', 
-            color: 'var(--ui-base-600)', 
-            fontFamily: 'monospace' 
-          }}>
-            &lt;/div&gt;
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
@@ -456,6 +542,103 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
   );
 }
 
+// Base Element Message Component
+function BaseElementMessage({ scope }) {
+  return (
+    <div className="select-scope-message">
+      <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏗️</div>
+      <h3 style={{ 
+        fontSize: '1.25rem', 
+        fontWeight: '600', 
+        color: 'var(--ui-neutral-200)', 
+        margin: '0 0 0.5rem 0' 
+      }}>
+        {scope} Global Foundation
+      </h3>
+      <p style={{ 
+        color: 'var(--ui-neutral-400)', 
+        fontSize: '0.875rem',
+        margin: '0 0 1rem 0'
+      }}>
+        This is the global foundation that all {scope} elements inherit from.
+      </p>
+      <div style={{
+        background: 'var(--ui-neutral-50)',
+        border: '1px solid var(--ui-primary)',
+        borderRadius: 'var(--ui-border-radius)',
+        padding: '1rem',
+        textAlign: 'left'
+      }}>
+        <div style={{
+          fontSize: '0.875rem',
+          fontWeight: '600',
+          color: 'var(--ui-primary)',
+          marginBottom: '0.5rem'
+        }}>
+          💡 How to Edit This Foundation
+        </div>
+        <div style={{
+          fontSize: '0.875rem',
+          color: 'var(--ui-neutral-400)',
+          lineHeight: '1.4'
+        }}>
+          To edit the global {scope} foundation, use the <strong>🏗️ Base Settings</strong> tab. 
+          Changes there will automatically apply to all {scope} elements you create.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Base Editor Inline Component
+function BaseEditorInline({ textBaseProperties = {}, updateScopeBaseProperties, buildColorOptions }) {
+  const safeTextBaseProperties = textBaseProperties || {};
+  
+  return (
+    <div>
+      <div style={{
+        background: 'var(--ui-neutral-50)',
+        border: '1px solid var(--ui-primary)',
+        borderRadius: 'var(--ui-border-radius)',
+        padding: '1rem',
+        marginBottom: '1.5rem'
+      }}>
+        <div style={{
+          fontSize: '0.875rem',
+          fontWeight: '600',
+          color: 'var(--ui-primary)',
+          marginBottom: '0.5rem'
+        }}>
+          ⚡ Global Foundation Mode
+        </div>
+        <div style={{
+          fontSize: '0.75rem',
+          color: 'var(--ui-neutral-400)',
+          lineHeight: '1.4'
+        }}>
+          You're editing the global text foundation. Changes here will automatically apply to all text elements (title, subtitle, body, etc.).
+        </div>
+      </div>
+      
+      <PropertyEditor
+        title="Text Base Properties"
+        properties={safeTextBaseProperties}
+        onPropertyChange={(property, value) => {
+          const updatedProperties = { ...safeTextBaseProperties, [property]: value };
+          updateScopeBaseProperties('text', updatedProperties);
+        }}
+        onPropertyRemove={(property) => {
+          const updatedProperties = { ...safeTextBaseProperties };
+          delete updatedProperties[property];
+          updateScopeBaseProperties('text', updatedProperties);
+        }}
+        addButtonText="Add Base Property"
+        buildColorOptions={buildColorOptions}
+      />
+    </div>
+  );
+}
+
 // Empty State Component
 function EmptyState() {
   return (
@@ -467,14 +650,14 @@ function EmptyState() {
         color: 'var(--ui-neutral-200)', 
         margin: '0 0 0.5rem 0' 
       }}>
-        Select a Scope
+        Select an Element
       </h3>
       <p style={{ 
         color: 'var(--ui-neutral-400)', 
         fontSize: '0.875rem',
         margin: 0
       }}>
-        Choose a scope from the sidebar to edit its styling properties
+        Choose an element from the sidebar to edit its styling properties
       </p>
     </div>
   );
