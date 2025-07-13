@@ -227,19 +227,10 @@ export function ScopesBuilder() {
     return allProps[category] || [];
   };
 
-  // Build dynamic color options from Color Book and Color Creator variations
+  // Build dynamic color options from color variations only
   const buildColorOptions = (propertyType) => {
     console.log('Color variations available:', colorVariations);
     const options = [];
-
-    // Add Color Book base color
-    if (config.colorBook?.baseColor) {
-      options.push({
-        label: 'Base Color',
-        value: 'var(--base-color)',
-        group: 'Color Book'
-      });
-    }
 
     // Add any color variations from Color Creator (if they exist)
     Object.entries(colorVariations).forEach(([colorKey, variations]) => {

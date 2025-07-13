@@ -10,12 +10,6 @@ const defaultConfig = {
   colors: {
     // Empty - no predefined colors
   },
-  colorBook: {
-    baseColor: "hsl(0, 0%, 50%)",  // Single foundation color
-    presets: {
-      // Empty - users create their own color presets
-    }
-  },
   components: {
     // Empty - no predefined components, users create their own
   },
@@ -33,7 +27,17 @@ export function useThemeConfig() {
   const [config, setConfig] = useState(() => {
     try {
       const saved = localStorage.getItem('studio1-theme-config');
-      return saved ? JSON.parse(saved) : defaultConfig;
+      if (saved) {
+        const parsedConfig = JSON.parse(saved);
+        // Remove any legacy colorBook references from existing config
+        if (parsedConfig.colorBook) {
+          delete parsedConfig.colorBook;
+          // Save cleaned config back to localStorage
+          localStorage.setItem('studio1-theme-config', JSON.stringify(parsedConfig));
+        }
+        return parsedConfig;
+      }
+      return defaultConfig;
     } catch {
       return defaultConfig;
     }
@@ -70,16 +74,10 @@ export function useThemeConfig() {
   const cssVariables = useMemo(() => {
     const variables = {};
     
-    // Color Book base color
-    if (config.colorBook?.baseColor) {
-      variables[`--base-color`] = config.colorBook.baseColor;
-    }
-
-    // Color Book presets - will be implemented here
-    // TODO: Add Color Book preset system
+    // No colorBook system - variables generated from scopes and components only
     
     return variables;
-  }, [config.colorBook]);
+  }, [config]);
 
   // Apply CSS variables and component styles to document
   useEffect(() => {
@@ -220,42 +218,7 @@ export function useThemeConfig() {
     });
   };
 
-  // Color Book functions
-  const updateBaseColor = (newBaseColor) => {
-    setConfig(prev => ({
-      ...prev,
-      colorBook: {
-        ...prev.colorBook,
-        baseColor: newBaseColor
-      }
-    }));
-  };
-
-  const createColorPreset = (presetName, hslaAdjustments) => {
-    setConfig(prev => ({
-      ...prev,
-      colorBook: {
-        ...prev.colorBook,
-        presets: {
-          ...prev.colorBook.presets,
-          [presetName]: hslaAdjustments
-        }
-      }
-    }));
-  };
-
-  const deleteColorPreset = (presetName) => {
-    setConfig(prev => ({
-      ...prev,
-      colorBook: {
-        ...prev.colorBook,
-        presets: Object.fromEntries(
-          Object.entries(prev.colorBook.presets || {})
-            .filter(([name]) => name !== presetName)
-        )
-      }
-    }));
-  };
+  // Color management - now handled directly in scopes and components
 
 
   const addCustomOverride = (selector, styles) => {
@@ -288,13 +251,14 @@ export function useThemeConfig() {
   };
 
   const resetToDefault = () => {
-    // Clear all localStorage data to remove legacy components
+    // Clear all localStorage data to remove legacy components and colorBook references
     localStorage.removeItem('studio1-theme-config');
     localStorage.removeItem('studio1-theme-overrides');
     localStorage.removeItem('studio1-color-variations');
     localStorage.removeItem('studio1-collections');
+    localStorage.removeItem('studio1-color-book'); // Clear any old colorBook data
     
-    // Reset to clean default state
+    // Reset to clean default state (no colorBook)
     setConfig(defaultConfig);
     setCustomOverrides({});
   };
@@ -330,10 +294,6 @@ export function useThemeConfig() {
     updateScopeBaseProperties,
     createNewScope,
     deleteScope,
-    // Color Book functions
-    updateBaseColor,
-    createColorPreset,
-    deleteColorPreset,
     clearOldColorVariations,
     addCustomOverride,
     removeCustomOverride,
