@@ -113,48 +113,17 @@ export function ScopesBuilder() {
   };
 
   return (
-    <div className="one" style={{
-      '--one-display': 'grid',
-      '--one-grid-template-columns': '400px 1fr',
-      '--one-height': '100%',
-      '--one-background': 'var(--color3-950)'
-    }}>
+    <div className="scopes-builder-grid">
       {/* Left Sidebar */}
-      <div className="one" style={{
-        '--one-background': 'var(--color3-900)',
-        '--one-border-right': '1px solid var(--color3-700)',
-        '--one-display': 'flex',
-        '--one-flex-direction': 'column',
-        '--one-height': '100%'
-      }}>
+      <div className="scopes-builder-sidebar">
         {/* Sidebar Header */}
-        <div className="one" style={{
-          '--one-padding': '1rem',
-          '--one-border-bottom': '1px solid var(--color3-700)',
-          '--one-background': 'var(--color3-800)'
-        }}>
-          <h2 className="one" style={{
-            '--one-font-size': '1.125rem',
-            '--one-font-weight': '600',
-            '--one-color': 'var(--color4-100)',
-            '--one-margin-bottom': '0.5rem'
-          }}>
-            Scope Builder
-          </h2>
-          <p className="one" style={{
-            '--one-font-size': '0.75rem',
-            '--one-color': 'var(--color4-400)'
-          }}>
-            Create individual scopes with styling
-          </p>
+        <div className="scopes-builder-sidebar-header">
+          <h2>Scope Builder</h2>
+          <p>Create individual scopes with styling</p>
         </div>
 
         {/* Scopes List */}
-        <div className="one" style={{
-          '--one-flex': '1',
-          '--one-overflow-y': 'auto',
-          '--one-padding': '1rem'
-        }}>
+        <div className="scopes-list-area">
           <ScopesTab
             scopes={scopes}
             selectedScope={selectedScope}
@@ -165,26 +134,19 @@ export function ScopesBuilder() {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="one" style={{
-          '--one-padding': '1rem',
-          '--one-border-top': '1px solid var(--color3-700)'
+        <div style={{ 
+          padding: '1rem', 
+          borderTop: '1px solid var(--ui-base-600)',
+          fontSize: '0.75rem',
+          color: 'var(--ui-neutral-400)',
+          textAlign: 'center'
         }}>
-          <div className="one" style={{
-            '--one-font-size': '0.75rem',
-            '--one-color': 'var(--color4-400)',
-            '--one-text-align': 'center'
-          }}>
-            {selectedScope ? `Editing scope: ${selectedScope}` : 'Select a scope to edit'}
-          </div>
+          {selectedScope ? `Editing scope: ${selectedScope}` : 'Select a scope to edit'}
         </div>
       </div>
 
       {/* Right Content Area */}
-      <div className="one" style={{
-        '--one-padding': '1.5rem',
-        '--one-overflow-y': 'auto',
-        '--one-background': 'var(--color3-950)'
-      }}>
+      <div className="scope-editor-area">
         {selectedScope ? (
           <ScopeEditor
             scope={selectedScope}
@@ -211,65 +173,46 @@ export function ScopesBuilder() {
 // Scopes Tab Component
 function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, onDeleteScope }) {
   return (
-    <div className="one" style={{
-      '--one-display': 'flex',
-      '--one-flex-direction': 'column',
-      '--one-gap': '0.75rem'
-    }}>
-      <div className="one" style={{
-        '--one-display': 'flex',
-        '--one-align-items': 'center',
-        '--one-justify-content': 'space-between',
-        '--one-margin-bottom': '0.5rem'
+    <div>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        marginBottom: '1rem' 
       }}>
-        <h3 className="one" style={{
-          '--one-font-size': '1rem',
-          '--one-font-weight': '600',
-          '--one-color': 'var(--color4-200)'
+        <h3 style={{ 
+          fontSize: '1rem', 
+          fontWeight: '600', 
+          color: 'var(--ui-neutral-200)',
+          margin: 0
         }}>
           Available Scopes ({Object.keys(scopes).length})
         </h3>
       </div>
 
-      {Object.entries(scopes).map(([scopeName, scopeConfig]) => (
-        <div key={scopeName} className="one" style={{
-          '--one-border': '1px solid var(--color3-600)',
-          '--one-border-radius': '0.375rem',
-          '--one-overflow': 'hidden'
-        }}>
-          <button
-            onClick={() => setSelectedScope(scopeName)}
-            className="one"
-            style={{
-              '--one-width': '100%',
-              '--one-padding': '1rem',
-              '--one-display': 'flex',
-              '--one-align-items': 'center',
-              '--one-justify-content': 'space-between',
-              '--one-background': selectedScope === scopeName ? 'var(--color1-600)' : 'var(--color3-800)',
-              '--one-color': 'var(--color4-200)',
-              '--one-cursor': 'pointer',
-              '--one-border': 'none',
-              '--one-text-align': 'left'
-            }}
-          >
-            <div className="one" style={{
-              '--one-flex': '1'
-            }}>
-              <div className="one" style={{
-                '--one-font-weight': '500',
-                '--one-color': 'var(--color4-100)',
-                '--one-margin-bottom': '0.25rem'
-              }}>
-                🎭 {scopeName}
+      <ul className="scopes-list">
+        {Object.entries(scopes).map(([scopeName, scopeConfig]) => (
+          <li key={scopeName} className={`scope-item ${selectedScope === scopeName ? 'selected' : ''}`}>
+            <button
+              onClick={() => setSelectedScope(scopeName)}
+              className="scope-item-button"
+            >
+              <div style={{ flex: 1 }}>
+                <div style={{ 
+                  fontWeight: '500', 
+                  color: 'var(--ui-neutral-100)', 
+                  marginBottom: '0.25rem' 
+                }}>
+                  🎭 {scopeName}
+                </div>
+                <div style={{ 
+                  fontSize: '0.75rem', 
+                  color: 'var(--ui-neutral-400)' 
+                }}>
+                  {Object.keys(scopeConfig.baseProperties || {}).length} properties
+                </div>
               </div>
-              <div className="one" style={{
-                '--one-font-size': '0.75rem',
-                '--one-color': 'var(--color4-400)'
-              }}>
-                {Object.keys(scopeConfig.baseProperties || {}).length} properties
-              </div>
-            </div>
+            </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -281,38 +224,18 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
                   }
                 }
               }}
-              className="one"
-              style={{
-                '--one-padding': '0.25rem',
-                '--one-background': 'var(--color1-600)',
-                '--one-border': '1px solid var(--color1-500)',
-                '--one-border-radius': '0.25rem',
-                '--one-color': 'var(--color4-50)',
-                '--one-cursor': 'pointer',
-                '--one-font-size': '0.75rem',
-                '--one-margin-left': '0.5rem'
-              }}
+              className="scope-delete-button"
             >
               ✕
             </button>
-          </button>
-        </div>
-      ))}
+          </li>
+        ))}
+      </ul>
 
       <button
         onClick={onCreateNewScope}
-        className="one"
-        style={{
-          '--one-width': '100%',
-          '--one-padding': '1rem',
-          '--one-background': 'var(--color1-600)',
-          '--one-border': '1px solid var(--color1-500)',
-          '--one-border-radius': '0.375rem',
-          '--one-color': 'var(--color4-50)',
-          '--one-font-weight': '500',
-          '--one-cursor': 'pointer',
-          '--one-text-align': 'center'
-        }}
+        className="ui-button ui-button--primary"
+        style={{ width: '100%' }}
       >
         + Add New Scope
       </button>
@@ -320,27 +243,23 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
   );
 }
 
-
 // Scope Editor Component
 function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove, buildColorOptions }) {
   return (
-    <div className="one" style={{
-      '--one-display': 'flex',
-      '--one-flex-direction': 'column',
-      '--one-gap': '1.5rem'
-    }}>
-      <div className="one">
-        <h1 className="one" style={{
-          '--one-font-size': '1.5rem',
-          '--one-font-weight': '600',
-          '--one-color': 'var(--color4-100)',
-          '--one-margin-bottom': '0.5rem'
+    <div>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ 
+          fontSize: '1.5rem', 
+          fontWeight: '600', 
+          color: 'var(--ui-neutral-100)', 
+          margin: '0 0 0.5rem 0' 
         }}>
           🎭 {scope}
         </h1>
-        <p className="one" style={{
-          '--one-color': 'var(--color4-400)',
-          '--one-font-size': '0.875rem'
+        <p style={{ 
+          color: 'var(--ui-neutral-400)', 
+          fontSize: '0.875rem',
+          margin: 0
         }}>
           Edit the styling properties for this scope
         </p>
@@ -356,32 +275,20 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
       />
 
       {/* Live Preview */}
-      <div className="one" style={{
-        '--one-background': 'var(--color3-900)',
-        '--one-border': '1px solid var(--color3-700)',
-        '--one-padding': '1rem',
-        '--one-border-radius': '0.5rem'
-      }}>
-        <h3 className="one" style={{
-          '--one-font-size': '1rem',
-          '--one-font-weight': '600',
-          '--one-color': 'var(--color4-200)',
-          '--one-margin-bottom': '1rem'
-        }}>
-          Live Preview
-        </h3>
+      <div className="scope-preview">
+        <div className="scope-preview-title">Live Preview</div>
         
-        <div className="one" style={{
-          '--one-background': 'var(--color4-50)',
-          '--one-padding': '1.5rem',
-          '--one-border-radius': '0.375rem',
-          '--one-border': '1px solid var(--color3-200)'
+        <div style={{ 
+          background: 'var(--ui-neutral-50)', 
+          padding: '1.5rem', 
+          borderRadius: 'var(--ui-border-radius)', 
+          border: '1px solid var(--ui-base-600)' 
         }}>
-          <div className="one" style={{
-            '--one-font-size': '0.75rem',
-            '--one-color': 'var(--color3-600)',
-            '--one-margin-bottom': '0.5rem',
-            '--one-font-family': 'monospace'
+          <div style={{ 
+            fontSize: '0.75rem', 
+            color: 'var(--ui-base-600)', 
+            marginBottom: '0.5rem', 
+            fontFamily: 'monospace' 
           }}>
             &lt;div data-scope="{scope}"&gt;
           </div>
@@ -389,9 +296,7 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
           <div 
             data-scope={scope}
             className="one"
-            style={{
-              '--one-margin': '1rem 0'
-            }}
+            style={{ margin: '1rem 0' }}
           >
             <div className="one">
               {scope === 'eyebrow' && 'Sample Eyebrow Text'}
@@ -401,10 +306,10 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
             </div>
           </div>
           
-          <div className="one" style={{
-            '--one-font-size': '0.75rem',
-            '--one-color': 'var(--color3-600)',
-            '--one-font-family': 'monospace'
+          <div style={{ 
+            fontSize: '0.75rem', 
+            color: 'var(--ui-base-600)', 
+            fontFamily: 'monospace' 
           }}>
             &lt;/div&gt;
           </div>
@@ -413,7 +318,6 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
     </div>
   );
 }
-
 
 // Property Editor Component
 function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove, addButtonText, buildColorOptions }) {
@@ -430,36 +334,15 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
   };
 
   return (
-    <div className="one" style={{
-      '--one-background': 'var(--color3-900)',
-      '--one-border': '1px solid var(--color3-700)',
-      '--one-padding': '1rem',
-      '--one-border-radius': '0.5rem'
-    }}>
-      <h3 className="one" style={{
-        '--one-font-size': '1rem',
-        '--one-font-weight': '600',
-        '--one-color': 'var(--color4-200)',
-        '--one-margin-bottom': '1rem'
-      }}>
-        {title}
-      </h3>
+    <div className="property-editor-section">
+      <h3>{title}</h3>
       
       {/* Add Property Section */}
-      <div className="one" style={{
-        '--one-display': 'grid',
-        '--one-grid-template-columns': '120px 1fr 1fr auto',
-        '--one-gap': '0.75rem',
-        '--one-align-items': 'center',
-        '--one-margin-bottom': '1.5rem'
-      }}>
+      <div className="property-row">
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="one input-field"
-          style={{
-            '--one-font-size': '0.875rem'
-          }}
+          className="property-select"
         >
           <option value="typography">Typography</option>
           <option value="layout">Layout</option>
@@ -470,10 +353,7 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
         <select
           value={selectedProperty}
           onChange={(e) => setSelectedProperty(e.target.value)}
-          className="one input-field"
-          style={{
-            '--one-font-size': '0.875rem'
-          }}
+          className="property-select"
         >
           <option value="">Choose Property</option>
           {CSS_PROPERTIES[selectedCategory].map(prop => (
@@ -487,10 +367,7 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
             <select
               value={selectedValue}
               onChange={(e) => setSelectedValue(e.target.value)}
-              className="one input-field"
-              style={{
-                '--one-font-size': '0.875rem'
-              }}
+              className="property-value-select"
             >
               <option value="">Choose Value</option>
               {availableValues.map(item => {
@@ -508,10 +385,7 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
               value={selectedValue}
               onChange={(e) => setSelectedValue(e.target.value)}
               placeholder="Enter value..."
-              className="one input-field"
-              style={{
-                '--one-font-size': '0.875rem'
-              }}
+              className="property-value-input"
             />
           );
         })()}
@@ -519,11 +393,10 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
         <button
           onClick={addNewProperty}
           disabled={!selectedProperty || !selectedValue}
-          className="one button-primary"
+          className="add-property-button"
           style={{
-            '--one-font-size': '0.875rem',
-            '--one-cursor': selectedProperty && selectedValue ? 'pointer' : 'not-allowed',
-            '--one-opacity': selectedProperty && selectedValue ? '1' : '0.5'
+            cursor: selectedProperty && selectedValue ? 'pointer' : 'not-allowed',
+            opacity: selectedProperty && selectedValue ? '1' : '0.5'
           }}
         >
           Add
@@ -532,34 +405,23 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
 
       {/* Current Properties */}
       {Object.keys(properties).length === 0 ? (
-        <div className="one" style={{
-          '--one-text-align': 'center',
-          '--one-padding': '2rem',
-          '--one-color': 'var(--color4-500)'
+        <div style={{
+          textAlign: 'center',
+          padding: '2rem',
+          color: 'var(--ui-neutral-400)',
+          fontStyle: 'italic'
         }}>
           No properties set. {addButtonText} above to start.
         </div>
       ) : (
-        <div className="one" style={{
-          '--one-display': 'flex',
-          '--one-flex-direction': 'column',
-          '--one-gap': '0.75rem'
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {Object.entries(properties).map(([property, value]) => (
-            <div key={property} className="one" style={{
-              '--one-display': 'flex',
-              '--one-align-items': 'center',
-              '--one-gap': '1rem',
-              '--one-padding': '0.75rem',
-              '--one-background': 'var(--color3-800)',
-              '--one-border': '1px solid var(--color3-600)',
-              '--one-border-radius': '0.375rem'
-            }}>
-              <div className="one" style={{
-                '--one-min-width': '200px',
-                '--one-font-family': 'monospace',
-                '--one-font-size': '0.875rem',
-                '--one-color': 'var(--color1-300)'
+            <div key={property} className="property-row">
+              <div style={{
+                minWidth: '200px',
+                fontFamily: 'monospace',
+                fontSize: '0.875rem',
+                color: 'var(--ui-primary)'
               }}>
                 {property}
               </div>
@@ -567,25 +429,16 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
                 type="text"
                 value={value}
                 onChange={(e) => onPropertyChange(property, e.target.value)}
-                className="one input-field"
+                className="property-value-input"
                 style={{
-                  '--one-flex': '1',
-                  '--one-font-family': 'monospace',
-                  '--one-font-size': '0.875rem'
+                  flex: 1,
+                  fontFamily: 'monospace',
+                  fontSize: '0.875rem'
                 }}
               />
               <button
                 onClick={() => onPropertyRemove(property)}
-                className="one"
-                style={{
-                  '--one-padding': '0.5rem',
-                  '--one-background': 'var(--color1-600)',
-                  '--one-border': '1px solid var(--color1-500)',
-                  '--one-border-radius': '0.25rem',
-                  '--one-color': 'var(--color4-50)',
-                  '--one-cursor': 'pointer',
-                  '--one-font-size': '0.75rem'
-                }}
+                className="remove-property-button"
               >
                 ✕
               </button>
@@ -600,35 +453,23 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
 // Empty State Component
 function EmptyState() {
   return (
-    <div className="one" style={{
-      '--one-display': 'flex',
-      '--one-align-items': 'center',
-      '--one-justify-content': 'center',
-      '--one-height': '400px',
-      '--one-text-align': 'center'
-    }}>
-      <div className="one">
-        <div className="one" style={{
-          '--one-font-size': '3rem',
-          '--one-margin-bottom': '1rem'
-        }}>
-          🎭
-        </div>
-        <h3 className="one" style={{
-          '--one-font-size': '1.25rem',
-          '--one-font-weight': '600',
-          '--one-color': 'var(--color4-200)',
-          '--one-margin-bottom': '0.5rem'
-        }}>
-          Select a Scope
-        </h3>
-        <p className="one" style={{
-          '--one-color': 'var(--color4-400)',
-          '--one-font-size': '0.875rem'
-        }}>
-          Choose a scope from the sidebar to edit its styling properties
-        </p>
-      </div>
+    <div className="select-scope-message">
+      <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎭</div>
+      <h3 style={{ 
+        fontSize: '1.25rem', 
+        fontWeight: '600', 
+        color: 'var(--ui-neutral-200)', 
+        margin: '0 0 0.5rem 0' 
+      }}>
+        Select a Scope
+      </h3>
+      <p style={{ 
+        color: 'var(--ui-neutral-400)', 
+        fontSize: '0.875rem',
+        margin: 0
+      }}>
+        Choose a scope from the sidebar to edit its styling properties
+      </p>
     </div>
   );
 }

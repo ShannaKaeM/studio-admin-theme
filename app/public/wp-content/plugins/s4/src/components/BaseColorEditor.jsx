@@ -98,96 +98,37 @@ export function BaseColorEditor() {
   };
 
   return (
-    <div className="one" style={{
-      '--one-display': 'grid',
-      '--one-grid-template-columns': '400px 1fr',
-      '--one-height': '100%',
-      '--one-background': 'var(--color3-950)'
-    }}>
+    <div className="base-color-editor-grid">
       {/* Left Sidebar */}
-      <div className="one" style={{
-        '--one-background': 'var(--color3-900)',
-        '--one-border-right': '1px solid var(--color3-700)',
-        '--one-display': 'flex',
-        '--one-flex-direction': 'column',
-        '--one-height': '100%'
-      }}>
+      <div className="base-color-editor-sidebar">
         {/* Sidebar Header */}
-        <div className="one" style={{
-          '--one-padding': '1rem',
-          '--one-border-bottom': '1px solid var(--color3-700)',
-          '--one-background': 'var(--color3-800)'
-        }}>
-          <h2 className="one" style={{
-            '--one-font-size': '1.125rem',
-            '--one-font-weight': '600',
-            '--one-color': 'var(--color4-100)',
-            '--one-margin-bottom': '0.5rem'
-          }}>
-            Base Color System
-          </h2>
-          <p className="one" style={{
-            '--one-font-size': '0.75rem',
-            '--one-color': 'var(--color4-400)'
-          }}>
-            Define your 4 core colors that drive everything
-          </p>
+        <div className="base-color-editor-sidebar-header">
+          <h2>Base Color System</h2>
+          <p>Define your 4 core colors that drive everything</p>
         </div>
 
         {/* Save Button */}
-        <div className="one" style={{
-          '--one-padding': '1rem',
-          '--one-border-bottom': '1px solid var(--color3-700)'
-        }}>
+        <div className="base-color-save-section">
           <button
             onClick={handleSaveColors}
-            className="one button-primary"
-            style={{
-              '--one-width': '100%',
-              '--one-cursor': 'pointer'
-            }}
+            className="ui-button ui-button--primary"
+            style={{ width: '100%' }}
           >
             Save Base Colors
           </button>
         </div>
 
         {/* Info Section */}
-        <div className="one" style={{
-          '--one-padding': '1rem',
-          '--one-flex': '1'
-        }}>
-          <h3 className="one" style={{
-            '--one-font-size': '0.875rem',
-            '--one-font-weight': '600',
-            '--one-color': 'var(--color4-200)',
-            '--one-margin-bottom': '0.75rem'
-          }}>
-            How Base Colors Work
-          </h3>
-          <div className="one" style={{
-            '--one-display': 'flex',
-            '--one-flex-direction': 'column',
-            '--one-gap': '0.75rem'
-          }}>
-            <div className="one" style={{
-              '--one-font-size': '0.75rem',
-              '--one-color': 'var(--color4-400)',
-              '--one-line-height': '1.4'
-            }}>
-              <strong className="one" style={{'--one-color': 'var(--color4-300)'}}>color1-4</strong> are your foundation colors that cascade to all components.
+        <div className="base-color-info-section">
+          <h3>How Base Colors Work</h3>
+          <div className="base-color-info-list">
+            <div className="base-color-info-item">
+              <strong>color1-4</strong> are your foundation colors that cascade to all components.
             </div>
-            <div className="one" style={{
-              '--one-font-size': '0.75rem',
-              '--one-color': 'var(--color4-400)',
-              '--one-line-height': '1.4'
-            }}>
+            <div className="base-color-info-item">
               Each generates a full scale (50-950) automatically for light/dark variations.
             </div>
-            <div className="one" style={{
-              '--one-font-size': '0.75rem',
-              '--one-color': 'var(--color4-400)',
-              '--one-line-height': '1.4'
-            }}>
+            <div className="base-color-info-item">
               When you use presets later, elements will map correctly to their intended purpose.
             </div>
           </div>
@@ -195,25 +136,17 @@ export function BaseColorEditor() {
       </div>
 
       {/* Right Content Area */}
-      <div className="one" style={{
-        '--one-padding': '1.5rem',
-        '--one-overflow-y': 'auto',
-        '--one-background': 'var(--color3-950)'
-      }}>
-        <h1 className="one" style={{
-          '--one-font-size': '1.5rem',
-          '--one-font-weight': '600',
-          '--one-color': 'var(--color4-100)',
-          '--one-margin-bottom': '1.5rem'
+      <div className="base-color-editor-area">
+        <h1 style={{ 
+          fontSize: '1.5rem', 
+          fontWeight: '600', 
+          color: 'var(--ui-neutral-100)', 
+          margin: '0 0 1.5rem 0' 
         }}>
           Foundation Color System
         </h1>
 
-        <div className="one" style={{
-          '--one-display': 'flex',
-          '--one-flex-direction': 'column',
-          '--one-gap': '2rem'
-        }}>
+        <div className="base-color-grid">
           {colorDefinitions.map((colorDef) => (
             <ColorEditor
               key={colorDef.number}
@@ -230,180 +163,81 @@ function ColorEditor({ number, label, description, hue, saturation, lightness, s
   const currentColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
   return (
-    <div className="one" style={{
-      '--one-background': 'var(--color3-900)',
-      '--one-border': '1px solid var(--color3-700)',
-      '--one-padding': '1.5rem',
-      '--one-border-radius': '0.5rem'
-    }}>
-      <div className="one" style={{
-        '--one-display': 'flex',
-        '--one-align-items': 'flex-start',
-        '--one-gap': '1.5rem'
-      }}>
+    <div className="color-editor-card">
+      <div className="color-editor-layout">
         {/* Color Preview */}
-        <div className="one" style={{
-          '--one-display': 'flex',
-          '--one-flex-direction': 'column',
-          '--one-align-items': 'center',
-          '--one-gap': '0.75rem'
-        }}>
-          <div className="one" style={{
-            '--one-width': '120px',
-            '--one-height': '120px',
-            '--one-background': currentColor,
-            '--one-border': '1px solid var(--color3-600)',
-            '--one-border-radius': '0.5rem'
-          }}></div>
-          <div className="one" style={{
-            '--one-font-family': 'monospace',
-            '--one-font-size': '0.875rem',
-            '--one-color': 'var(--color4-400)',
-            '--one-text-align': 'center',
-            '--one-padding': '0.5rem',
-            '--one-background': 'var(--color3-800)',
-            '--one-border-radius': '0.25rem',
-            '--one-border': '1px solid var(--color3-600)',
-            '--one-user-select': 'text'
-          }}>
+        <div className="color-editor-preview">
+          <div 
+            className="color-editor-swatch" 
+            style={{ background: currentColor }}
+          ></div>
+          <div className="color-editor-variable">
             --{number}
           </div>
         </div>
 
         {/* Controls & Info */}
-        <div className="one" style={{
-          '--one-flex': '1',
-          '--one-display': 'flex',
-          '--one-flex-direction': 'column',
-          '--one-gap': '1rem'
-        }}>
+        <div className="color-editor-controls">
           {/* Header */}
-          <div className="one">
-            <h3 className="one" style={{
-              '--one-font-size': '1.125rem',
-              '--one-font-weight': '600',
-              '--one-color': 'var(--color4-100)',
-              '--one-margin-bottom': '0.5rem'
-            }}>
-              {label}
-            </h3>
-            <p className="one" style={{
-              '--one-font-size': '0.875rem',
-              '--one-color': 'var(--color4-400)',
-              '--one-line-height': '1.4'
-            }}>
-              {description}
-            </p>
+          <div className="color-editor-header">
+            <h3>{label}</h3>
+            <p>{description}</p>
           </div>
 
           {/* HSL Controls */}
-          <div className="one" style={{
-            '--one-display': 'grid',
-            '--one-grid-template-columns': '1fr 1fr 1fr',
-            '--one-gap': '1rem'
-          }}>
+          <div className="color-editor-sliders">
             {/* Hue */}
-            <div className="one">
-              <label className="one" style={{
-                '--one-display': 'flex',
-                '--one-justify-content': 'space-between',
-                '--one-font-size': '0.75rem',
-                '--one-color': 'var(--color4-300)',
-                '--one-margin-bottom': '0.5rem'
-              }}>
+            <div className="color-slider-group">
+              <div className="color-slider-label">
                 <span>Hue</span>
                 <span>{hue}°</span>
-              </label>
+              </div>
               <input
                 type="range"
                 min="0"
                 max="360"
                 value={hue}
                 onChange={(e) => setHue(parseInt(e.target.value))}
-                className="one"
-                style={{
-                  '--one-width': '100%',
-                  '--one-height': '20px',
-                  '--one-background': 'var(--color3-700)',
-                  '--one-border-radius': '10px',
-                  '--one-cursor': 'pointer'
-                }}
+                className="color-slider"
               />
             </div>
 
             {/* Saturation */}
-            <div className="one">
-              <label className="one" style={{
-                '--one-display': 'flex',
-                '--one-justify-content': 'space-between',
-                '--one-font-size': '0.75rem',
-                '--one-color': 'var(--color4-300)',
-                '--one-margin-bottom': '0.5rem'
-              }}>
+            <div className="color-slider-group">
+              <div className="color-slider-label">
                 <span>Saturation</span>
                 <span>{saturation}%</span>
-              </label>
+              </div>
               <input
                 type="range"
                 min="0"
                 max="100"
                 value={saturation}
                 onChange={(e) => setSaturation(parseInt(e.target.value))}
-                className="one"
-                style={{
-                  '--one-width': '100%',
-                  '--one-height': '20px',
-                  '--one-background': 'var(--color3-700)',
-                  '--one-border-radius': '10px',
-                  '--one-cursor': 'pointer'
-                }}
+                className="color-slider"
               />
             </div>
 
             {/* Lightness */}
-            <div className="one">
-              <label className="one" style={{
-                '--one-display': 'flex',
-                '--one-justify-content': 'space-between',
-                '--one-font-size': '0.75rem',
-                '--one-color': 'var(--color4-300)',
-                '--one-margin-bottom': '0.5rem'
-              }}>
+            <div className="color-slider-group">
+              <div className="color-slider-label">
                 <span>Lightness</span>
                 <span>{lightness}%</span>
-              </label>
+              </div>
               <input
                 type="range"
                 min="0"
                 max="100"
                 value={lightness}
                 onChange={(e) => setLightness(parseInt(e.target.value))}
-                className="one"
-                style={{
-                  '--one-width': '100%',
-                  '--one-height': '20px',
-                  '--one-background': 'var(--color3-700)',
-                  '--one-border-radius': '10px',
-                  '--one-cursor': 'pointer'
-                }}
+                className="color-slider"
               />
             </div>
           </div>
 
           {/* Current Values */}
-          <div className="one" style={{
-            '--one-background': 'var(--color3-800)',
-            '--one-padding': '0.75rem',
-            '--one-border-radius': '0.25rem',
-            '--one-border': '1px solid var(--color3-600)'
-          }}>
-            <div className="one" style={{
-              '--one-font-family': 'monospace',
-              '--one-font-size': '0.875rem',
-              '--one-color': 'var(--color4-300)'
-            }}>
-              {currentColor}
-            </div>
+          <div className="color-editor-value">
+            {currentColor}
           </div>
         </div>
       </div>

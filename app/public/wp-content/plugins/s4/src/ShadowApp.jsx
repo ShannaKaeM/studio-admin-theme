@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStudio1Store } from './hooks/useStudio1Store';
 import { Studio1ThemeBuilder } from './components/Studio1ThemeBuilder';
+import uiComponentsCSS from './styles/ui-components.css?inline';
 
 export function ShadowApp({ isAdmin = false, isFrontend = false }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,10 +36,11 @@ export function ShadowApp({ isAdmin = false, isFrontend = false }) {
     <div className="one" style={{
       '--one-width': isFrontend ? '100vw' : 'auto',
       '--one-height': isFrontend ? '100vh' : 'auto',
-      '--one-background': 'var(--color3-950)',
+      '--one-background': 'var(--ui-base-900)',
       '--one-overflow': 'auto'
     }}>
-      {/* Inject CSS variables into shadow DOM */}
+      {/* Inject CSS variables and UI components into shadow DOM */}
+      <style>{uiComponentsCSS}</style>
       <style>{generateCSSVariables(config)}</style>
       
       <Studio1ThemeBuilder isAdmin={isAdmin} isFrontend={isFrontend} />
