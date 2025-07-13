@@ -7,6 +7,12 @@ require_once dirname(__FILE__) . '/helpers.php';
 class WishList {
 	private $wish_list_slug = null;
 
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_action(
 			'wp_enqueue_scripts',
@@ -14,8 +20,8 @@ class WishList {
 				if (is_admin()) {
 					return;
 				}
-				
-				$maybe_page_id = blocksy_get_theme_mod('woocommerce_wish_list_page');
+
+				$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_wish_list_page');
 
 				if (!empty($maybe_page_id)) {
 					$maybe_permalink = get_permalink($maybe_page_id);
@@ -25,13 +31,13 @@ class WishList {
 					(
 						is_user_logged_in()
 						&&
-						blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') !== 'all_users'
+						blc_theme_functions()->blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') !== 'all_users'
 						&&
 						strpos($_SERVER['REQUEST_URI'], $this->wish_list_slug) === false
 					)
 					||
 					(
-						blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
+						blc_theme_functions()->blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
 						&&
 						$maybe_page_id !== get_the_ID()
 						&&
@@ -39,7 +45,7 @@ class WishList {
 					)
 				) {
 					return;
-				}				
+				}
 
 				if (!function_exists('get_plugin_data')) {
 					require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -57,7 +63,7 @@ class WishList {
 			},
 			50
 		);
-		
+
 		add_action(
 			'wp_enqueue_scripts',
 			function () {
@@ -98,7 +104,7 @@ class WishList {
 					'[class*="ct-wishlist-button"]',
 					'.ct-wishlist-remove',
 					'.wishlist-product-remove > .remove',
-					'.product-mobile-actions > [href*="wishlist-remove"]',
+					'.wishlist-product-name .product-mobile-actions > .remove',
 				]),
 				'url' => blocksy_cdn_url(
 					BLOCKSY_URL .
@@ -111,7 +117,7 @@ class WishList {
 			];
 
 			if (
-				blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'yes'
 			) {
 				$chunks[] = [
 					'id' => 'blocksy_ext_woo_extra_variations_wish_list',
@@ -139,7 +145,7 @@ class WishList {
 						'[class*="ct-wishlist-button"]',
 						'.ct-wishlist-remove',
 						'.wishlist-product-remove > .remove',
-						'.product-mobile-actions > [href*="wishlist-remove"]',
+						'.wishlist-product-name .product-mobile-actions > .remove',
 					]),
 					'url' => blocksy_cdn_url(
 						BLOCKSY_URL .
@@ -210,23 +216,6 @@ class WishList {
 		);
 
 		$this->boot_wish_list();
-
-		add_action(
-			'blocksy:global-dynamic-css:enqueue',
-			function ($args) {
-				blocksy_theme_get_dynamic_styles(
-					array_merge(
-						[
-							'path' => dirname(__FILE__) . '/global.php',
-							'chunk' => 'global',
-						],
-						$args
-					)
-				);
-			},
-			10,
-			3
-		);
 	}
 
 	public function boot_wish_list() {
@@ -282,7 +271,7 @@ class WishList {
 
 		add_filter('the_content', function ($content) {
 			if (
-				blocksy_get_theme_mod(
+				blc_theme_functions()->blocksy_get_theme_mod(
 					'product_wishlist_display_for',
 					'logged_users'
 				) === 'logged_users'
@@ -290,7 +279,7 @@ class WishList {
 				return $content;
 			}
 
-			$maybe_page_id = blocksy_get_theme_mod(
+			$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod(
 				'woocommerce_wish_list_page'
 			);
 

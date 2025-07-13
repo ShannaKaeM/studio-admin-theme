@@ -3,6 +3,12 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class FloatingCart {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_action(
 			'wp_enqueue_scripts',
@@ -48,7 +54,7 @@ class FloatingCart {
 		add_filter(
 			'blocksy:footer:offcanvas-drawer',
 			function ($els, $payload) {
-				$position = blocksy_get_theme_mod(
+				$position = blc_theme_functions()->blocksy_get_theme_mod(
 					'floating_bar_position',
 					'top'
 				);
@@ -119,7 +125,7 @@ class FloatingCart {
 				],
 				'position' => 'bottom',
 				'target' => '.single-product #main-container .single_add_to_cart_button'
-				
+
 			];
 
 			return $chunks;
@@ -139,7 +145,11 @@ class FloatingCart {
 			$product = wc_get_product();
 		}
 
-		if (! blocksy_manager()->screen->is_product()) {
+		if (! blc_theme_functions()->blocksy_manager()) {
+			return false;
+		}
+
+		if (! blc_theme_functions()->blocksy_manager()->screen->is_product()) {
 			return false;
 		}
 

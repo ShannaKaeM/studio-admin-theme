@@ -5,6 +5,12 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 require_once dirname(__FILE__) . '/helpers.php';
 
 class CompareView {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_filter('blocksy:header:items-paths', function ($paths) {
 			$paths[] = dirname(__FILE__) . '/header-items';
@@ -90,7 +96,7 @@ class CompareView {
 
 			$data = get_plugin_data(BLOCKSY__FILE__);
 
-			if (blocksy_get_theme_mod('product_compare_bar', 'no') === 'no') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('product_compare_bar', 'no') === 'no') {
 				return;
 			}
 
@@ -106,7 +112,7 @@ class CompareView {
 			if (
 				$payload['location'] !== 'end'
 				||
-				blocksy_get_theme_mod('product_compare_bar', 'no') === 'no'
+				blc_theme_functions()->blocksy_get_theme_mod('product_compare_bar', 'no') === 'no'
 				||
 				(
 					defined('REST_REQUEST')
@@ -124,7 +130,7 @@ class CompareView {
 				]
 			];
 
-			$conditions = blocksy_get_theme_mod(
+			$conditions = blc_theme_functions()->blocksy_get_theme_mod(
 				'compare_bar_conditions',
 				$initial_conditions
 			);
@@ -269,7 +275,9 @@ class CompareView {
 			'id' => 'ct-compare-modal',
 			'class' => 'ct-panel',
 			'data-behaviour' => 'modal',
-			'aria-label' => __('Compare products modal', 'blocksy-companion')
+			'role' => 'dialog',
+			'aria-label' => __('Compare products modal', 'blocksy-companion'),
+			'inert' => ''
 		];
 
 		$panel_heading = blocksy_html_tag(
@@ -339,11 +347,11 @@ class CompareView {
 
 		add_filter('the_content', function ($content) {
 
-			if (blocksy_get_theme_mod('compare_table_placement', 'modal') !== 'page') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('compare_table_placement', 'modal') !== 'page') {
 				return $content;
 			}
 
-			$maybe_page_id = blocksy_get_theme_mod('woocommerce_compare_page');
+			$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_compare_page');
 
 			if (empty($maybe_page_id)) {
 				return $content;
@@ -372,7 +380,7 @@ class CompareView {
 		add_action(
 			'wp_enqueue_scripts',
 			function() {
-				$maybe_page_id = blocksy_get_theme_mod('woocommerce_compare_page');
+				$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_compare_page');
 
 				if (
 					! empty($maybe_page_id)

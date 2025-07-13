@@ -177,7 +177,7 @@ class BlocksyExtensionCodeSnippets {
 	}
 
 	private function output_scripts($id) {
-		$scripts = blocksy_get_theme_mod($id, '');
+		$scripts = blc_theme_functions()->blocksy_get_theme_mod($id, '');
 
 		if (! empty($scripts)) {
 			echo $scripts;

@@ -102,6 +102,12 @@ class FiltersTaxonomiesProductsLookupStore {
 				$term_ids = array_unique($full_term_ids);
 			}
 
+			$term_ids = $this->maybe_expand_term_ids_for_wpml_fallback_translations([
+				'product_id' => $product->get_id(),
+				'taxonomy' => $taxonomy,
+				'term_ids' => $term_ids
+			]);
+
 			foreach ($term_ids as $term_id) {
 				$this->insert_lookup_table_data(
 					$product->get_id(),
@@ -167,6 +173,89 @@ class FiltersTaxonomiesProductsLookupStore {
 		] = $hierarchy_children_first;
 
 		return $hierarchy_children_first;
+	}
+
+	private function maybe_expand_term_ids_for_wpml_fallback_translations($args = []) {
+		$args = wp_parse_args($args, [
+			'product_id' => 0,
+			'taxonomy' => '',
+			'term_ids' => []
+		]);
+
+		global $sitepress;
+
+		// Do nothing if WPML is not active
+		if (! $sitepress) {
+			return $args['term_ids'];
+		}
+
+		// We should not do anything if the fallback translation is not
+		// enabled for the product post type.
+		if (! $sitepress->is_display_as_translated_post_type('product')) {
+			return $args['term_ids'];
+		}
+
+		$default_language = $sitepress->get_default_language();
+
+		$product_language = $sitepress->get_language_for_element(
+			$args['product_id'],
+			'post_product'
+		);
+
+		// We are only interested in the product with the default language.
+		if ($product_language !== $default_language) {
+			return $args['term_ids'];
+		}
+
+		$product_trid = $sitepress->get_element_trid(
+			$args['product_id'],
+			'post_product'
+		);
+
+		$translations = $sitepress->get_element_translations(
+			$product_trid,
+			'post_product'
+		);
+
+		$languages = apply_filters(
+			'wpml_active_languages',
+			null,
+			"skip_missing=0&orderby=custom&order=asc"
+		);
+
+		$non_default_languages = array_filter(
+			array_keys($languages),
+			function ($language) use ($default_language) {
+				return $language !== $default_language;
+			}
+		);
+
+		$translated_term_ids = [];
+
+		foreach ($non_default_languages as $language) {
+			// If post is translated in that language, we should not do anything.
+			if (isset($translations[$language])) {
+				continue;
+			}
+
+			foreach ($args['term_ids'] as $term_id) {
+				$term_trid = $sitepress->get_element_trid(
+					$term_id,
+					'tax_' . $args['taxonomy']
+				);
+
+				$term_translations = $sitepress->get_element_translations(
+					$term_trid,
+					'tax_' . $args['taxonomy']
+				);
+
+				if (isset($term_translations[$language])) {
+					$translated_term_ids[] = $term_translations[$language]->element_id;
+				}
+			}
+		}
+
+		return array_merge($args['term_ids'], $translated_term_ids);
 	}
 }
 

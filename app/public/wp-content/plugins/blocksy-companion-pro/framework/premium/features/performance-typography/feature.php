@@ -13,7 +13,7 @@ class PerformanceTypography {
 
 		add_action('wp_head', [$this, 'preconnect_google_fonts']);
 
-		add_action( 'wp_ajax_blocksy_get_custom_fonts_list', function () {
+		add_action('wp_ajax_blocksy_get_custom_fonts_list', function () {
 			if (! current_user_can('edit_theme_options')) {
 				wp_send_json_error();
 			}
@@ -27,14 +27,26 @@ class PerformanceTypography {
 	}
 
 	public function get_settings() {
-		return get_option($this->option_name, [
+		$default_value = [
 			'custom' => [],
 			'local_google_fonts' => [],
-		]);
+		];
+
+		$result = get_option($this->option_name, $default_value);
+
+		if (! is_array($result)) {
+			$result = $default_value;
+		}
+
+		return $result;
 	}
 
 	public function set_settings($value) {
 		$settings = $this->get_settings();
+
+		if (! is_array($value)) {
+			$value = [];
+		}
 
 		$value = array_merge($settings, $value);
 
@@ -47,7 +59,7 @@ class PerformanceTypography {
 		$local_google_fonts_enabled = blc_get_ext('local-google-fonts');
 
 		if (
-			blocksy_get_theme_mod('preconnect_google_fonts', 'no') === 'yes'
+			blc_theme_functions()->blocksy_get_theme_mod('preconnect_google_fonts', 'no') === 'yes'
 			&&
 			!$local_google_fonts_enabled
 		) {
@@ -56,7 +68,7 @@ class PerformanceTypography {
 		}
 
 		if (
-			blocksy_get_theme_mod('preconnect_adobe_typekit', 'no') === 'yes'
+			blc_theme_functions()->blocksy_get_theme_mod('preconnect_adobe_typekit', 'no') === 'yes'
 			&&
 			$adobe_typekit_enabled
 		) {

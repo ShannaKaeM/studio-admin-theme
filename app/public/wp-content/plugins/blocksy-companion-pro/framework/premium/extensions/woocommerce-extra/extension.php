@@ -1,13 +1,13 @@
 <?php
 
-require_once dirname(__FILE__) . '/includes/woo-import-export.php';
-
 class BlocksyExtensionWoocommerceExtra {
 	public $utils = null;
 	public $filters = null;
 
 	private $wish_list = null;
 	private $compare = null;
+
+	private $booted_features = '__NOT_BOOTED__';
 
 	public function get_wish_list() {
 		return $this->wish_list;
@@ -52,10 +52,8 @@ class BlocksyExtensionWoocommerceExtra {
 		new \Blocksy\Extensions\WoocommerceExtra\CustomBadges();
 		new \Blocksy\Extensions\WoocommerceExtra\ProductSaleCountdown();
 
-		new \Blocksy\Extensions\WoocommerceExtra\ImportExport();
+		new \Blocksy\Extensions\WoocommerceExtra\WooTermsImportExport();
 		new \Blocksy\Extensions\WoocommerceExtra\WooHelpers();
-
-		new \Blocksy\Extensions\WoocommerceExtra\RelatedSlideshow();
 
 		$this->define_cart_options();
 
@@ -172,6 +170,8 @@ class BlocksyExtensionWoocommerceExtra {
 	}
 
 	public function boot_features() {
+		$this->booted_features = [];
+
 		$storage = new \Blocksy\Extensions\WoocommerceExtra\Storage();
 		$settings = $storage->get_settings();
 
@@ -179,22 +179,24 @@ class BlocksyExtensionWoocommerceExtra {
 			isset($settings['features']['floating-cart']) &&
 			$settings['features']['floating-cart']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\FloatingCart();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\FloatingCart();
 		}
 
 		if (
 			isset($settings['features']['quick-view']) &&
 			$settings['features']['quick-view']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\QuickView();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\QuickView();
 		}
 
 		if (
 			isset($settings['features']['filters']) &&
 			$settings['features']['filters']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\OffcanvasFilters();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\OffcanvasFilters();
+
 			$this->filters = new \Blocksy\Extensions\WoocommerceExtra\Filters();
+			$this->booted_features[] = $this->filters;
 		}
 
 		if (
@@ -202,6 +204,7 @@ class BlocksyExtensionWoocommerceExtra {
 			$settings['features']['wishlist']
 		) {
 			$this->wish_list = new \Blocksy\Extensions\WoocommerceExtra\WishList();
+			$this->booted_features[] = $this->wish_list;
 		}
 
 		if (
@@ -209,115 +212,118 @@ class BlocksyExtensionWoocommerceExtra {
 			$settings['features']['compareview']
 		) {
 			$this->compare = new \Blocksy\Extensions\WoocommerceExtra\CompareView();
+			$this->booted_features[] = $this->compare;
 		}
 
 		if (
 			isset($settings['features']['single-product-share-box']) &&
 			$settings['features']['single-product-share-box']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\ShareBoxLayer();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\ShareBoxLayer();
 		}
 
 		if (
 			isset($settings['features']['advanced-gallery']) &&
 			$settings['features']['advanced-gallery']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\ProductGallery();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\ProductGallery();
 		}
 
 		if (
 			isset($settings['features']['search-by-sku']) &&
 			$settings['features']['search-by-sku']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\SkuSearch();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\SkuSearch();
 		}
 
 		if (
 			isset($settings['features']['stock-scarcity']) &&
 			$settings['features']['stock-scarcity']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\StockScarcity();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\StockScarcity();
 		}
 
 		if (
 			isset($settings['features']['free-shipping']) &&
 			$settings['features']['free-shipping']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\ShippingProgress();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\ShippingProgress();
 		}
 
 		if (
 			isset($settings['features']['variation-swatches']) &&
 			$settings['features']['variation-swatches']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\Swatches();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\Swatches();
 		}
 
 		if (
 			isset($settings['features']['product-brands']) &&
 			$settings['features']['product-brands']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\Brands();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\Brands();
 		}
 
 		if (
 			isset($settings['features']['product-affiliates']) &&
 			$settings['features']['product-affiliates']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\AffiliateProduct();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\AffiliateProduct();
 		}
 
 		if (
 			isset($settings['features']['product-custom-tabs']) &&
 			$settings['features']['product-custom-tabs']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\CustomTabs();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\CustomTabs();
 		}
 
 		if (
 			isset($settings['features']['product-size-guide']) &&
 			$settings['features']['product-size-guide']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\SizeGuide();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\SizeGuide();
 		}
 
 		if (
 			isset($settings['features']['product-custom-thank-you-page']) &&
 			$settings['features']['product-custom-thank-you-page']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\CustomThankYouPage();
-			new \Blocksy\Extensions\WoocommerceExtra\OrderDetailsBlock();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\CustomThankYouPage();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\OrderDetailsBlock();
 		}
 
 		if (
 			isset($settings['features']['product-advanced-reviews']) &&
 			$settings['features']['product-advanced-reviews']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\AdvancedReviews();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\AdvancedReviews();
 		}
 
 		if (
 			isset($settings['features']['added-to-cart-popup']) &&
 			$settings['features']['added-to-cart-popup']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\AddedToCartPopup();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\AddedToCartPopup();
 		}
 
 		if (
 			isset($settings['features']['product-waitlist']) &&
 			$settings['features']['product-waitlist']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\ProductWaitlist();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\ProductWaitlist();
 		}
 
 		if (
 			isset($settings['features']['suggested-products']) &&
 			$settings['features']['suggested-products']
 		) {
-			new \Blocksy\Extensions\WoocommerceExtra\CartSuggestedProducts();
+			$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\CartSuggestedProducts();
 		}
 
-		new \Blocksy\Extensions\WoocommerceExtra\SKULayer();		
+		$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\SKULayer();
+		$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\AttributesLayer();
+		$this->booted_features[] = new \Blocksy\Extensions\WoocommerceExtra\RelatedSlideshow();
 	}
 
 	public static function add_global_styles($args) {
@@ -330,6 +336,24 @@ class BlocksyExtensionWoocommerceExtra {
 				$args
 			)
 		);
+
+		foreach (blc_get_ext('woocommerce-extra')->booted_features as $feature) {
+			if (! method_exists($feature, 'get_dynamic_styles_data')) {
+				continue;
+			}
+
+			$data = $feature->get_dynamic_styles_data($args);
+
+			blocksy_theme_get_dynamic_styles(
+				array_merge(
+					[
+						'path' => $data['path'],
+						'chunk' => 'global',
+					],
+					$args
+				)
+			);
+		}
 	}
 
 	public static function onDeactivation() {

@@ -28,9 +28,10 @@ export const computeFavorite = (
 				w.id === variation_id &&
 				Object.keys(w?.attributes || {}).every(
 					(aKey) =>
-						additional_attrs?.[aKey] &&
-						w.attributes[aKey] &&
-						w.attributes[aKey] === additional_attrs[aKey]
+						additional_attrs?.[`attribute_${aKey}`] &&
+						w.attributes[`${aKey}`] &&
+						w.attributes[`${aKey}`] ===
+							additional_attrs[`attribute_${aKey}`]
 				)
 		)
 

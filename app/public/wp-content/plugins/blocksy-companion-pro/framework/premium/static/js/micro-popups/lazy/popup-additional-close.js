@@ -15,16 +15,21 @@ export const mountAdditionalCloseForPopup = (popup, args = {}) => {
 
 		const selector = args.maybeCloseStrategies.button_click.selector
 
-		const maybeButton = popup.querySelector(selector)
+		const maybeButtons = popup.querySelectorAll(selector)
 
-		if (maybeButton && !maybeButton.hasAdditionalCloseEvent) {
-			maybeButton.hasAdditionalCloseEvent = true
-			maybeButton.addEventListener('click', (e) => {
-				e.preventDefault()
-				closeMicroPopup(popup, {
-					reason: 'button_click',
-					delay: maybeDelay,
-				})
+		if (maybeButtons.length) {
+			maybeButtons.forEach((button) => {
+				if (!button.hasAdditionalCloseEvent) {
+					button.hasAdditionalCloseEvent = true
+
+					button.addEventListener('click', (e) => {
+						e.preventDefault()
+						closeMicroPopup(popup, {
+							reason: 'button_click',
+							delay: maybeDelay,
+						})
+					})
+				}
 			})
 		}
 	}
@@ -83,6 +88,20 @@ export const mountAdditionalCloseForPopup = (popup, args = {}) => {
 							reason: 'form_submit:gravityforms',
 							delay: maybeDelay,
 						})
+					}
+				)
+			} else if (
+				maybeForm.querySelector('.ninja-forms-field[type="submit"]')
+			) {
+				jQuery(document).on(
+					'nfFormSubmitResponse',
+					(event, { response }) => {
+						if (!response.errors.length) {
+							closeMicroPopup(popup, {
+								reason: 'form_submit:ninjaforms',
+								delay: maybeDelay,
+							})
+						}
 					}
 				)
 			} else {

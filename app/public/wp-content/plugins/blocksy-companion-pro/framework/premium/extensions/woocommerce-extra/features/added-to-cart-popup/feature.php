@@ -3,33 +3,34 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class AddedToCartPopup {
-	private $cart_info = [];
+	private $cart_id = null;
+
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
 
 	public function __construct() {
 		add_action(
 			'woocommerce_add_to_cart',
 			function($cart_id, $product_id, $request_quantity, $variation_id, $variation, $cart_item_data ) {
-				$this->cart_info = [
-					'cart_id' => $cart_id,
-					'product_id' => $product_id,
-					'request_quantity' => $request_quantity,
-					'variation_id' => $variation_id,
-					'variation' => $variation,
-					'cart_item_data' => $cart_item_data,
-				];
+				$this->cart_id = $cart_id;
 			},
 			10, 6
 		);
 
 		add_filter('woocommerce_add_to_cart_fragments', function($fragments) {
-			if (empty($this->cart_info)) {
+			if (empty($this->cart_id)) {
 				return $fragments;
 			}
+
+			$cart = wc()->cart;
 
 			$content = blocksy_render_view(
 				dirname(__FILE__) . '/view.php',
 				[
-					'cart_info' => $this->cart_info
+					'cart_item' => $cart->cart_contents[$this->cart_id]
 				]
 			);
 
@@ -104,14 +105,14 @@ class AddedToCartPopup {
 				],
 				'selector' => 'body',
 				'settings' => [
-					'template' => blocksy_get_theme_mod(
+					'template' => blc_theme_functions()->blocksy_get_theme_mod(
 						'added_to_cart_popup_trigger',
 						[
 							'archive' => true,
 							'single' => true,
 						]
 					),
-					'visibility' => blocksy_get_theme_mod(
+					'visibility' => blc_theme_functions()->blocksy_get_theme_mod(
 						'added_to_cart_popup_visibility',
 						[
 							'desktop' => true,

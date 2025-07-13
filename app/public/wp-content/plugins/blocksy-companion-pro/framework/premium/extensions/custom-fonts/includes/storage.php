@@ -11,7 +11,7 @@ class Storage {
 			[]
 		);
 
-		$result = get_option($this->option_name, [
+		$default_value = [
 			'fonts' => [
                 /*
 				[
@@ -32,8 +32,14 @@ class Storage {
 					]
 				]
                  */
-			],
-		]);
+			]
+		];
+
+		$result = get_option($this->option_name, $default_value);
+
+		if (! is_array($result)) {
+			$result = $default_value;
+		}
 
 		foreach ($custom_fonts as $index => $custom_font) {
 			$custom_fonts[$index]['__custom'] = true;
@@ -42,6 +48,10 @@ class Storage {
 
 		if (! isset($result['stacks'])) {
 			$result['stacks'] = [];
+		}
+
+		if (! isset($result['fonts'])) {
+			$result['fonts'] = [];
 		}
 
 		return $result;

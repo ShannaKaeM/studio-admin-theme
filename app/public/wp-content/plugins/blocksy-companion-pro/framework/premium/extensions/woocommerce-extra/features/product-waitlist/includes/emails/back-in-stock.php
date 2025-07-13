@@ -86,37 +86,35 @@ class BackInStockEmail extends WaitlistEmail {
 	}
 
 	public function get_content_html() {
+		$object = WaitlistEmail::get_dummy_or_product_data($this->object);
+
 		ob_start();
 
-		wc_get_template(
-			$this->template_html,
-			[
-				'email'=> $this,
-				'email_heading' => $this->get_heading(),
-				'product' => $this->object,
-				'user_name' => $this->get_user_name($this->recipient),
-				'sent_to_admin' => false,
-				'plain_text' => false,
-			]
-		);
+		wc_get_template($this->template_html, [
+			'email'=> $this,
+			'email_heading' => $this->get_heading(),
+			'product' => $object,
+			'user_name' => $this->get_user_name($this->recipient),
+			'sent_to_admin' => false,
+			'plain_text' => false,
+		]);
 
 		return ob_get_clean();
 	}
 
 	public function get_content_plain() {
+		$object = WaitlistEmail::get_dummy_or_product_data($this->object);
+
 		ob_start();
 
-		wc_get_template(
-			$this->template_plain,
-			[
-				'email' => $this,
-				'email_heading' => $this->get_heading(),
-				'product' => $this->object,
-				'user_name' => $this->get_user_name($this->recipient),
-				'sent_to_admin' => false,
-				'plain_text' => false,
-			]
-		);
+		wc_get_template($this->template_plain, [
+			'email' => $this,
+			'email_heading' => $this->get_heading(),
+			'product' => $object,
+			'user_name' => $this->get_user_name($this->recipient),
+			'sent_to_admin' => false,
+			'plain_text' => false,
+		]);
 
 		return ob_get_clean();
 	}

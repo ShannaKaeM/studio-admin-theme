@@ -17,9 +17,9 @@ const openPhotoswipeFor = (el, container, index = null) => {
 		return {
 			mediaContainer,
 			img,
-			src: img.closest('[data-src]')
-				? img.closest('[data-src]').dataset.src ||
-				  img.closest('[data-src]').href ||
+			src: img.closest('.ct-media-container[data-src]')
+				? img.closest('.ct-media-container[data-src]').dataset.src ||
+				  img.closest('.ct-media-container[data-src]').href ||
 				  img.src
 				: img.src,
 			w:

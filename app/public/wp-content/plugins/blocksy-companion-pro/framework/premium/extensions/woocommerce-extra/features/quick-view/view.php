@@ -4,7 +4,10 @@
 add_filter(
 	'blocksy:woocommerce:default_product_ratio',
 	function () {
-		return blocksy_get_theme_mod('woocommerce_quickview_gallery_ratio', '3/4');
+		return blc_theme_functions()->blocksy_get_theme_mod(
+			'woocommerce_quickview_gallery_ratio',
+			'3/4'
+		);
 	},
 	50
 );
@@ -19,7 +22,7 @@ $panel_content_attr = [
 	'class' => 'ct-panel-content'
 ];
 
-$has_arrows = blocksy_get_theme_mod('woocommerce_quickview_navigation', 'no');
+$has_arrows = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_quickview_navigation', 'no');
 
 if (isset($is_customize_preview) && $is_customize_preview) {
 	$has_arrows = 'yes';

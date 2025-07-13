@@ -1,7 +1,7 @@
 <?php
 
-$image_size = blocksy_get_theme_mod('wishlist_image_size', 'woocommerce_thumbnail');
-$image_ratio = blocksy_get_theme_mod('wishlist_image_ratio', '1/1');
+$image_size = blc_theme_functions()->blocksy_get_theme_mod('wishlist_image_size', 'woocommerce_thumbnail');
+$image_ratio = blc_theme_functions()->blocksy_get_theme_mod('wishlist_image_ratio', '1/1');
 
 echo blocksy_media([
 	'no_image_type' => 'woo',

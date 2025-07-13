@@ -1,8 +1,12 @@
 <?php
 
+use Blocksy\Extensions\WoocommerceExtra\WaitlistEmail;
+
 if (! defined('ABSPATH')) {
 	exit;
 }
+
+$product = WaitlistEmail::get_dummy_or_product_data($product);
 
 $image_src = $product->get_image_id() ? wp_get_attachment_image_src($product->get_image_id(), 'thumbnail')[0] : wc_placeholder_img_src();
 $image_size = wc_get_image_size('thumbnail');

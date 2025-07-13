@@ -139,17 +139,25 @@ class RelatedSlideshow {
 		);
 
 		add_action('blocksy:global-dynamic-css:enqueue', function ($args) {
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return;
+			}
+
 			blocksy_theme_get_dynamic_styles(array_merge([
 				'path' => dirname(__FILE__) . '/global.php',
 				'chunk' => 'global',
-				'prefixes' => blocksy_manager()->screen->get_single_prefixes()
+				'prefixes' => blc_theme_functions()->blocksy_manager()->screen->get_single_prefixes()
 			], $args));
 		}, 10, 3);
 
 		add_filter('blocksy:related-posts:container-attributes', function($atts) {
-			$prefix = \blocksy_manager()->screen->get_prefix();
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return $atts;
+			}
 
-			if (blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') === 'slider') {
+			$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix();
+
+			if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') === 'slider') {
 				$atts['class'] .= ' flexy-items';
 				unset($atts['data-layout']);
 			}
@@ -158,9 +166,13 @@ class RelatedSlideshow {
 		});
 
 		add_filter('blocksy:related-posts:item-attributes', function($atts) {
-			$prefix = \blocksy_manager()->screen->get_prefix();
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return $atts;
+			}
 
-			if (blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') === 'slider') {
+			$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix();
+
+			if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') === 'slider') {
 				$atts['class'] = 'flexy-item';
 			}
 
@@ -168,9 +180,13 @@ class RelatedSlideshow {
 		});
 
 		add_action('blocksy:single:related_posts:before_loop', function() {
-			$prefix = \blocksy_manager()->screen->get_prefix();
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return;
+			}
 
-			if (blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') !== 'slider') {
+			$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix();
+
+			if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') !== 'slider') {
 				return;
 			}
 
@@ -179,8 +195,11 @@ class RelatedSlideshow {
 				'data-flexy' => 'no',
 			];
 
-			if (blocksy_get_theme_mod($prefix . '_related_posts_slideshow_autoplay', 'no') === 'yes') {
-				$attr['data-autoplay'] = blocksy_get_theme_mod($prefix . '_related_posts_slideshow_autoplay_speed', 3);
+			if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_related_posts_slideshow_autoplay', 'no') === 'yes') {
+				$attr['data-autoplay'] = blc_theme_functions()->blocksy_get_theme_mod(
+					$prefix . '_related_posts_slideshow_autoplay_speed',
+					3
+				);
 			}
 
 			echo '<div ' . blocksy_attr_to_html($attr) . '>';
@@ -189,24 +208,27 @@ class RelatedSlideshow {
 		});
 
 		add_action('blocksy:single:related_posts:after_loop', function() {
-			$prefix = \blocksy_manager()->screen->get_prefix();
-
-			if (blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') !== 'slider') {
+			if (! blc_theme_functions()->blocksy_manager()) {
 				return;
 			}
 
-			echo '</div>
-					<span class="' . trim('flexy-arrow-prev' . ' ' . '') . '">
-						<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10">
-							<path d="M15.3 4.3h-13l2.8-3c.3-.3.3-.7 0-1-.3-.3-.6-.3-.9 0l-4 4.2-.2.2v.6c0 .1.1.2.2.2l4 4.2c.3.4.6.4.9 0 .3-.3.3-.7 0-1l-2.8-3h13c.2 0 .4-.1.5-.2s.2-.3.2-.5-.1-.4-.2-.5c-.1-.1-.3-.2-.5-.2z"/>
-						</svg>
-					</span>
+			$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix();
 
-					<span class="' . trim('flexy-arrow-next' . ' ' . '') . '">
-						<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10">
-							<path d="M.2 4.5c-.1.1-.2.3-.2.5s.1.4.2.5c.1.1.3.2.5.2h13l-2.8 3c-.3.3-.3.7 0 1 .3.3.6.3.9 0l4-4.2.2-.2V5v-.3c0-.1-.1-.2-.2-.2l-4-4.2c-.3-.4-.6-.4-.9 0-.3.3-.3.7 0 1l2.8 3H.7c-.2 0-.4.1-.5.2z"/>
-						</svg>
-					</span>
+			if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') !== 'slider') {
+				return;
+			}
+
+			$arrow_icons = apply_filters(
+				'blocksy:flexy:arrows',
+				[
+					'prev' => '<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10"><path d="M15.3 4.3h-13l2.8-3c.3-.3.3-.7 0-1-.3-.3-.6-.3-.9 0l-4 4.2-.2.2v.6c0 .1.1.2.2.2l4 4.2c.3.4.6.4.9 0 .3-.3.3-.7 0-1l-2.8-3h13c.2 0 .4-.1.5-.2s.2-.3.2-.5-.1-.4-.2-.5c-.1-.1-.3-.2-.5-.2z"></path></svg>',
+					'next' => '<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10"><path d="M.2 4.5c-.1.1-.2.3-.2.5s.1.4.2.5c.1.1.3.2.5.2h13l-2.8 3c-.3.3-.3.7 0 1 .3.3.6.3.9 0l4-4.2.2-.2V5v-.3c0-.1-.1-.2-.2-.2l-4-4.2c-.3-.4-.6-.4-.9 0-.3.3-.3.7 0 1l2.8 3H.7c-.2 0-.4.1-.5.2z"></path></svg>'
+				]
+			);
+
+			echo '</div>
+					<span class="' . trim('flexy-arrow-prev' . ' ' . '') . '">' . $arrow_icons['prev'] . '</span>
+					<span class="' . trim('flexy-arrow-next' . ' ' . '') . '">' . $arrow_icons['next'] . '</span>
 				</div>
 			</div>';
 		});

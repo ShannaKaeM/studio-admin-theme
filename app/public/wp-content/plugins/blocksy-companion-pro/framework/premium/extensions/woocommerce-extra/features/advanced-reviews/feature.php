@@ -18,7 +18,11 @@ class AdvancedReviews {
 					return;
 				}
 
-				if (! blocksy_manager()->screen->is_product()) {
+				if (! blc_theme_functions()->blocksy_manager()) {
+					return;
+				}
+
+				if (! blc_theme_functions()->blocksy_manager()->screen->is_product()) {
 					return;
 				}
 
@@ -40,13 +44,13 @@ class AdvancedReviews {
 				$comment_id = $item->comment_ID;
 				$comment = get_comment($comment_id);
 
-				if (blocksy_get_theme_mod('woo_advanced_reviews_title', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_title', 'no') === 'yes') {
 					ob_start();
 					$this->display_comment_title($comment);
 					$output = ob_get_clean() . $output;
 				}
 
-				if (blocksy_get_theme_mod('woo_advanced_reviews_images', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_images', 'no') === 'yes') {
 					ob_start();
 					$this->display_attachments($comment);
 					$output .= ob_get_clean();
@@ -58,11 +62,11 @@ class AdvancedReviews {
 		);
 
 		add_filter('woocommerce_product_review_list_args', function($args) {
-			if (blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'new') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'new') {
 				$args['reverse_top_level'] = true;
 			}
 
-			if (blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating') {
 				$args['orderby'] = 'rating';
 				$args['order'] = 'ASC';
 			}
@@ -72,14 +76,18 @@ class AdvancedReviews {
 
 		add_filter('comments_array', function($comments_flat) {
 
-			if (! blocksy_manager()->screen->is_product()) {
+			if (
+				! blc_theme_functions()->blocksy_manager()
+				||
+				! blc_theme_functions()->blocksy_manager()->screen->is_product()
+			) {
 				return $comments_flat;
 			}
 
 			if (
-				blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating_low'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating_low'
 				||
-				blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating_high'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating_high'
 			) {
 				usort($comments_flat, function($a, $b) {
 					$a_rating = get_comment_meta($a->comment_ID, 'rating', true);
@@ -89,7 +97,7 @@ class AdvancedReviews {
 						return 0;
 					}
 
-					if (blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating_low') {
+					if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'rating_low') {
 						return ($a_rating < $b_rating) ? -1 : 1;
 					}
 
@@ -97,7 +105,7 @@ class AdvancedReviews {
 				});
 			}
 
-			if (blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'most_relevant') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_order', 'old') === 'most_relevant') {
 				usort($comments_flat, function($a, $b) {
 					$a_rating = get_comment_meta($a->comment_ID, 'rating', true);
 					$b_rating = get_comment_meta($b->comment_ID, 'rating', true);
@@ -156,7 +164,7 @@ class AdvancedReviews {
 
 		add_action('after_setup_theme', function () {
 			if (
-				blocksy_get_theme_mod('woo_advanced_reviews_lightbox', 'no') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_lightbox', 'no') === 'yes'
 				||
 				is_customize_preview()
 			) {
@@ -166,7 +174,7 @@ class AdvancedReviews {
 
 		add_action('wp', function() {
 
-			if (blocksy_get_theme_mod('woo_advanced_reviews_summary', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_summary', 'no') === 'yes') {
 				global $blocksy_summary_box_rendered;
 				$blocksy_summary_box_rendered = false;
 
@@ -194,12 +202,12 @@ class AdvancedReviews {
 
 			add_filter('woocommerce_product_review_comment_form_args', [$this, 'change_comment_form']);
 
-			if (blocksy_get_theme_mod('woo_advanced_reviews_title', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_title', 'no') === 'yes') {
 				add_action('woocommerce_review_before_comment_text', [$this, 'display_comment_title']);
 				add_action('comment_post', [$this, 'add_review_title_meta'], 1);
 			}
 
-			if (blocksy_get_theme_mod('woo_advanced_reviews_images', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_images', 'no') === 'yes') {
 				add_action('comment_post', [$this, 'save_attachments'], 1);
 				add_action('woocommerce_review_after_comment_text', [$this, 'display_attachments'], 10);
 
@@ -219,7 +227,7 @@ class AdvancedReviews {
 					return $chunks;
 				});
 
-				if (blocksy_get_theme_mod('woo_advanced_reviews_lightbox', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_lightbox', 'no') === 'yes') {
 					add_filter('blocksy:frontend:dynamic-js-chunks', function ($chunks) {
 						$chunks[] = [
 							'id' => 'blocksy_ext_woo_extra_advanced_reviews_lightbox',
@@ -238,7 +246,7 @@ class AdvancedReviews {
 				}
 			}
 
-			$allowed_roles = blocksy_get_theme_mod('woo_advanced_reviews_votes_allowed_roles', [
+			$allowed_roles = blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_votes_allowed_roles', [
 				'logged_in' => true,
 				'logged_out' => false,
 			]);
@@ -247,7 +255,7 @@ class AdvancedReviews {
 			$allow_logged_out = $allowed_roles['logged_out'] === true && ! is_user_logged_in();
 
 			if (
-				blocksy_get_theme_mod('woo_advanced_reviews_votes', 'no') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_votes', 'no') === 'yes'
 				&&
 				(
 					$allow_logged_in
@@ -367,7 +375,7 @@ class AdvancedReviews {
 			}
 
 			$percent = (isset($ratings[$i]) ? $ratings[$i] : 0) * 100 / $rating_count;
-			
+
 			$rating_html[] = blocksy_html_tag(
 				'span',
 				[
@@ -522,9 +530,8 @@ class AdvancedReviews {
 	}
 
 	public function display_votes($comment) {
-
 		if (
-			blocksy_get_theme_mod('woo_advanced_reviews_votes_only_logged_in', 'no') === 'yes') {
+			blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_votes_only_logged_in', 'no') === 'yes') {
 			if (! is_user_logged_in()) {
 				return '';
 			}
@@ -644,13 +651,16 @@ class AdvancedReviews {
 		}
 	}
 
-
 	public function change_comment_form($comment_form) {
-		if (! blocksy_manager()->screen->is_product()) {
+		if (
+			! blc_theme_functions()->blocksy_manager()
+			||
+			! blc_theme_functions()->blocksy_manager()->screen->is_product()
+		) {
 			return $comment_form;
 		}
 
-		if (blocksy_get_theme_mod('woo_advanced_reviews_title', 'no') === 'yes') {
+		if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_title', 'no') === 'yes') {
 			$comment_form['comment_field'] = str_replace(
 				'<p class="comment-form-field-textarea">',
 				blocksy_html_tag(
@@ -680,7 +690,7 @@ class AdvancedReviews {
 			);
 		}
 
-		if (blocksy_get_theme_mod('woo_advanced_reviews_images', 'no') === 'yes') {
+		if (blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_images', 'no') === 'yes') {
 			$image_form = blocksy_html_tag(
 				'p',
 				[
@@ -734,7 +744,7 @@ class AdvancedReviews {
 
 		$thumbnail_html = [];
 
-		$is_lightbox = blocksy_get_theme_mod('woo_advanced_reviews_lightbox', 'no') === 'yes';
+		$is_lightbox = blc_theme_functions()->blocksy_get_theme_mod('woo_advanced_reviews_lightbox', 'no') === 'yes';
 
 		if (! empty($thumbs)) {
 			foreach ($thumbs as $thumb_id) {

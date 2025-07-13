@@ -471,7 +471,8 @@ if (class_exists('WooCommerce')) {
 
 	if (
 		isset($settings['features']['filters']) &&
-		$settings['features']['filters']
+		$settings['features']['filters'] &&
+		\Blocksy\Plugin::instance()->extensions->get('woocommerce-extra')
 	) {
 		$layer_settings['filters_canvas'] = [
 			'label' => __('Filters Canvas', 'blocksy-companion'),
@@ -539,7 +540,8 @@ if (class_exists('WooCommerce')) {
 
 	if (
 		isset($settings['features']['wishlist']) &&
-		$settings['features']['wishlist']
+		$settings['features']['wishlist'] &&
+		\Blocksy\Plugin::instance()->extensions->get('woocommerce-extra')
 	) {
 		$layer_settings['wishlist'] = [
 			'label' => __('Wishlist', 'blocksy-companion'),
@@ -603,7 +605,8 @@ if (class_exists('WooCommerce')) {
 
 	if (
 		isset($settings['features']['product-waitlist']) &&
-		$settings['features']['product-waitlist']
+		$settings['features']['product-waitlist'] &&
+		\Blocksy\Plugin::instance()->extensions->get('woocommerce-extra')
 	) {
 		$layer_settings['waitlist'] = [
 			'label' => __('Waitlist', 'blocksy-companion'),
@@ -667,7 +670,8 @@ if (class_exists('WooCommerce')) {
 
 	if (
 		isset($settings['features']['compareview']) &&
-		$settings['features']['compareview']
+		$settings['features']['compareview'] &&
+		\Blocksy\Plugin::instance()->extensions->get('woocommerce-extra')
 	) {
 		$layer_settings['compare'] = [
 			'label' => __('Compare', 'blocksy-companion'),
@@ -1157,7 +1161,7 @@ $options = [
 							'condition' => [
 								'shortcuts_bar_items:array-ids:cart:enabled' => '!no'
 							],
-							'options' => [
+							'options' => class_exists('WooCommerce') ? [
 
 								'shortcuts_cart_badge_color' => [
 									'label' => __( 'Cart Badge Color', 'blocksy-companion' ),
@@ -1191,7 +1195,7 @@ $options = [
 									],
 								],
 
-							],
+							] : [],
 						],
 
 						blocksy_rand_md5() => [

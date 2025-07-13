@@ -97,7 +97,7 @@ class PremiumFooter {
 			$paths[] = get_template_directory() . '/inc/panel-builder/header/logo';
 			$paths[] = get_template_directory() . '/inc/panel-builder/header/button';
 			$paths[] = get_template_directory() . '/inc/panel-builder/header/text';
-			
+
 			$paths[] = dirname(__FILE__) . '/premium-header/items/content-block';
 			$paths[] = dirname(__FILE__) . '/premium-header/items/search-input';
 			$paths[] = dirname(__FILE__) . '/premium-header/items/language-switcher';
@@ -166,7 +166,7 @@ class PremiumFooter {
 	}
 
 	public function get_conditions() {
-		$option = blocksy_get_theme_mod('blocksy_premium_footer_conditions', [
+		$option = blc_theme_functions()->blocksy_get_theme_mod('blocksy_premium_footer_conditions', [
 			[
 				'id' => 'type-1',
 				'conditions' => [

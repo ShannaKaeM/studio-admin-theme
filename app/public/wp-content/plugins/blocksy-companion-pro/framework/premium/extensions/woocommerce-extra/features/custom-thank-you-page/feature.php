@@ -27,7 +27,7 @@ class CustomThankYouPage {
 
 			return blocksy_akg(
 				'options',
-				blocksy_get_variables_from_file(
+				blc_theme_functions()->blocksy_get_variables_from_file(
 					dirname(
 						__FILE__
 					) . '/options.php',
@@ -236,8 +236,19 @@ class CustomThankYouPage {
 			return $fallback;
 		}
 
+		$result = '';
+
 		$renderer = new \Blocksy\CustomPostTypeRenderer($matching_thank_you_pages[0]->ID);
-		return $renderer->get_content();
+
+		$result .= $renderer->get_content();
+
+		remove_action( 'woocommerce_thankyou', 'woocommerce_order_details_table', 10 );
+
+		ob_start();
+		do_action('woocommerce_thankyou', $order->get_id());
+		$result .= ob_get_clean();
+
+		return $result;
 	}
 
 	public function blc_save_ty_for_product($post_id) {
@@ -492,7 +503,7 @@ class CustomThankYouPage {
 			],
 
 			'show_in_admin_bar' => false,
-			'public' => false,
+			'public' => true,
 			'show_ui' => true,
 			'show_in_menu' => current_user_can('manage_options') ? 'woocommerce-marketing' : false,
 			'publicly_queryable' => true,

@@ -5,8 +5,41 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 class Swatches {
 	private $is_computing_label = false;
 
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		new SwatchesApi();
+
+		add_action(
+			'woocommerce_before_add_to_cart_form',
+			function () {
+				ob_start();
+			}
+		);
+
+		add_action(
+			'woocommerce_after_add_to_cart_form',
+			function () {
+				$content = ob_get_clean();
+
+				$out_of_stock_swatch_type = blc_theme_functions()->blocksy_get_theme_mod(
+					'out_of_stock_swatch_type',
+					'faded'
+				);
+
+				$content = str_replace(
+					'method="post"',
+					'method="post" data-out-of-stock-swatch-type="' . esc_attr($out_of_stock_swatch_type) . '"',
+					$content
+				);
+
+				echo $content;
+			}
+		);
 
 		add_filter('blocksy:general:ct-scripts-localizations', function ($data) {
 			if (!function_exists('get_plugin_data')) {
@@ -28,6 +61,7 @@ class Swatches {
 					'woocommerce_hide_out_of_stock_items',
 					'no'
 				) === 'yes',
+				'limit_number_of_swatches_message' => esc_html__('+{items} More', 'blocksy-companion'),
 			];
 
 			return $data;
@@ -58,6 +92,10 @@ class Swatches {
 					foreach ($cross_sells as $cross_sell) {
 						$product = wc_get_product($cross_sell);
 
+						if (! $product) {
+							continue;
+						}
+
 						if ($product->get_type() === 'variable') {
 							$has_variable = true;
 							break;
@@ -71,38 +109,44 @@ class Swatches {
 					}
 				}
 
-				blocksy_manager()->screen->on_product_shortcode_rendered(function ($tag) {
-					if (
-						$tag !== 'product_page'
-						&&
-						function_exists('blocksy_has_product_card_specific_layer')
-						&&
-						blocksy_has_product_card_specific_layer('product_swatches')
-					) {
-						wp_enqueue_style(
-							'blocksy-ext-woocommerce-extra-variation-swatches-styles'
-						);
-					}
+				if (blc_theme_functions()->blocksy_manager()) {
+					blc_theme_functions()->blocksy_manager()->screen->on_product_shortcode_rendered(function ($tag) {
+						if (
+							$tag !== 'product_page'
+							&&
+							function_exists('blocksy_has_product_card_specific_layer')
+							&&
+							blocksy_has_product_card_specific_layer('product_swatches')
+						) {
+							wp_enqueue_style(
+								'blocksy-ext-woocommerce-extra-variation-swatches-styles'
+							);
+						}
 
-					if (
-						$tag === 'product_page'
-						&&
-						function_exists('blocksy_has_product_specific_layer')
-						&&
-						blocksy_has_product_specific_layer('product_add_to_cart', [
-							'respect_post_type' => false
-						])
-					) {
-						wp_enqueue_style(
-							'blocksy-ext-woocommerce-extra-variation-swatches-styles'
-						);
-					}
-				});
+						if (
+							$tag === 'product_page'
+							&&
+							function_exists('blocksy_has_product_specific_layer')
+							&&
+							blocksy_has_product_specific_layer('product_add_to_cart', [
+								'respect_post_type' => false
+							])
+						) {
+							wp_enqueue_style(
+								'blocksy-ext-woocommerce-extra-variation-swatches-styles'
+							);
+						}
+					});
+				}
 
 				add_filter(
 					'render_block',
 					function ($block_content, $block) {
-						if ($block['blockName'] === 'blocksy/woocommerce-filters') {
+						if (
+							$block['blockName'] === 'blocksy/woocommerce-filters'
+							||
+							$block['blockName'] === 'woocommerce/add-to-cart-form'
+						) {
 							wp_enqueue_style(
 								'blocksy-ext-woocommerce-extra-variation-swatches-styles'
 							);
@@ -152,10 +196,10 @@ class Swatches {
 						! is_customize_preview()
 						&&
 						(
-							blocksy_get_theme_mod('woo_has_related_upsells', 'yes') === 'no'
+							blc_theme_functions()->blocksy_get_theme_mod('woo_has_related_upsells', 'yes') === 'no'
 							||
 							(
-								blocksy_get_theme_mod('woo_has_related_upsells', 'yes') === 'yes'
+								blc_theme_functions()->blocksy_get_theme_mod('woo_has_related_upsells', 'yes') === 'yes'
 								&&
 								function_exists('blocksy_has_product_card_specific_layer')
 								&&
@@ -173,7 +217,7 @@ class Swatches {
 						&&
 						! is_customize_preview()
 						&&
-						blocksy_get_theme_mod('woo_has_related_upsells', 'yes') === 'no'
+						blc_theme_functions()->blocksy_get_theme_mod('woo_has_related_upsells', 'yes') === 'no'
 					)
 					||
 					(
@@ -258,6 +302,11 @@ class Swatches {
 					[
 						'trigger' => 'click',
 						'selector' => '.variations_form .reset_variations',
+					],
+
+					[
+						'trigger' => 'click',
+						'selector' => '.ct-swatches-more',
 					]
 				],
 				'url' => blocksy_cdn_url(
@@ -348,23 +397,31 @@ class Swatches {
 				];
 
 				if ($type === 'color') {
-					$attr['data-swatches-shape'] = blocksy_get_theme_mod('color_swatch_shape', 'round');
+					$attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod('color_swatch_shape', 'round');
 				}
 
 				if ($type === 'image') {
-					$attr['data-swatches-shape'] = blocksy_get_theme_mod('image_swatch_shape', 'round');
+					$attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod('image_swatch_shape', 'round');
 				}
 
 				if ($type === 'button') {
-					$attr['data-swatches-shape'] = blocksy_get_theme_mod('button_swatch_shape', 'round');
+					$attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod('button_swatch_shape', 'round');
 				}
 
 				if ($type === 'mixed') {
-					$attr['data-swatches-shape'] = blocksy_get_theme_mod('mixed_swatch_shape', 'round');
+					$attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod('mixed_swatch_shape', 'round');
 				}
 
 				$custom_swatch_html = '';
 				$renderer = new SwatchesFrontend();
+
+				if (
+					blc_theme_functions()->blocksy_get_theme_mod('limit_number_of_swatches', 'no') === 'yes'
+					&&
+					! empty(blc_theme_functions()->blocksy_get_theme_mod('single_limit_number_of_swatches_number', ''))
+				) {
+					$args['limit'] = blc_theme_functions()->blocksy_get_theme_mod('single_limit_number_of_swatches_number', '');
+				}
 
 				if ($type !== 'select') {
 					$custom_swatch_html = $renderer->get_swatch_html($args);
@@ -378,7 +435,11 @@ class Swatches {
 		add_filter(
 			'blocksy:woocommerce:single-product:post-class',
 			function($classes) {
-				if (! blocksy_manager()->screen->is_product()) {
+				if (
+					! blc_theme_functions()->blocksy_manager()
+					||
+					! blc_theme_functions()->blocksy_manager()->screen->is_product()
+				) {
 					return $classes;
 				}
 
@@ -389,7 +450,7 @@ class Swatches {
 				)->utils->is_simple_product($product);
 
 				if (
-					blocksy_get_theme_mod('has_swatches_url', 'no') === 'yes'
+					blc_theme_functions()->blocksy_get_theme_mod('has_swatches_url', 'no') === 'yes'
 					&&
 					! $is_simple_product['value']
 				) {
@@ -459,15 +520,15 @@ class Swatches {
 					$attributes = $product->get_attributes();
 
 					foreach ($attributes as $attribute) {
-						if ($attribute->get_name() === $name) {
-							$maybe_custom_attribute = $attribute->get_name();
+						$maybe_custom_attribute = $attribute->get_name();
 
+						if ($maybe_custom_attribute === $name) {
 							if (
 								$maybe_custom_attribute
 								&&
-								isset($default_attributes[$maybe_custom_attribute])
+								isset($default_attributes[sanitize_title($name)])
 							) {
-								$maybe_value = $default_attributes[$maybe_custom_attribute];
+								$maybe_value = $default_attributes[sanitize_title($name)];
 							}
 
 							break;
@@ -476,7 +537,7 @@ class Swatches {
 				}
 
 				if (!empty($maybe_value)) {
-					return $label . ': ' . $maybe_value;
+					return $label . '<span>: ' . $maybe_value . '</span>';
 				}
 
 				return $label;
@@ -495,7 +556,7 @@ class Swatches {
 					return $classes;
 				}
 
-				$product_view_type = blocksy_get_theme_mod('product_view_type', 'default-gallery');
+				$product_view_type = blc_theme_functions()->blocksy_get_theme_mod('product_view_type', 'default-gallery');
 				if (
 					$product_view_type === 'default-gallery'
 					||
@@ -507,7 +568,7 @@ class Swatches {
 						$default_product_layout = blocksy_get_woo_single_layout_defaults();
 					}
 
-					$woo_single_layout = blocksy_get_theme_mod(
+					$woo_single_layout = blc_theme_functions()->blocksy_get_theme_mod(
 						'woo_single_layout',
 						$default_product_layout
 					);
@@ -523,7 +584,7 @@ class Swatches {
 							'right' => blocksy_get_woo_single_layout_defaults('right')
 						];
 					}
-					$woo_single_split_layout = blocksy_get_theme_mod(
+					$woo_single_split_layout = blc_theme_functions()->blocksy_get_theme_mod(
 						'woo_single_split_layout',
 						$woo_single_split_layout_defults
 					);
@@ -538,7 +599,7 @@ class Swatches {
 				}
 
 				$product_layer = array_search('product_add_to_cart', array_column($woo_single_layout, 'id'));
-				$variations_swatches_display_type = blocksy_get_theme_mod('variations_swatches_display_type', 'no');
+				$variations_swatches_display_type = blc_theme_functions()->blocksy_get_theme_mod('variations_swatches_display_type', 'no');
 
 				if (
 					! $product_layer
@@ -590,30 +651,30 @@ class Swatches {
 			'woocommerce_product_option_terms',
 			function($attribute_taxonomy, $i, $attribute) {
 				if ('select' !== $attribute_taxonomy->attribute_type && in_array($attribute_taxonomy->attribute_type, array_keys($this->get_attribute_types()))) {
-                    $name = sprintf('attribute_values[%s][]', esc_attr($i));
-                    ?>
-                    <select multiple="multiple" data-placeholder="<?php esc_attr_e('Select terms', 'woo-variation-swatches'); ?>" class="multiselect attribute_values wc-enhanced-select" name="<?php echo esc_attr($name) ?>">
-                        <?php
-                            $args = array(
-                                'orderby'    => ! empty($attribute_taxonomy->attribute_orderby) ? $attribute_taxonomy->attribute_orderby : 'name',
-                                'hide_empty' => 0,
-                        	);
+					$name = sprintf('attribute_values[%s][]', esc_attr($i));
+					?>
+					<select multiple="multiple" data-placeholder="<?php esc_attr_e('Select terms', 'woo-variation-swatches'); ?>" class="multiselect attribute_values wc-enhanced-select" name="<?php echo esc_attr($name) ?>">
+						<?php
+							$args = array(
+								'orderby'    => ! empty($attribute_taxonomy->attribute_orderby) ? $attribute_taxonomy->attribute_orderby : 'name',
+								'hide_empty' => 0,
+							);
 
-                            $all_terms = get_terms($attribute->get_taxonomy(), apply_filters('woocommerce_product_attribute_terms', $args));
-                            if ($all_terms) {
-                                foreach ($all_terms as $term) {
-                                    $options = $attribute->get_options();
-                                    $options = ! empty($options) ? $options : array();
-                                    echo '<option value="' . esc_attr($term->term_id) . '"' . wc_selected($term->term_id, $options) . '>' . esc_html(apply_filters('woocommerce_product_attribute_term_name', $term->name, $term)) . '</option>';
-                                }
-                            }
-                        ?>
-                    </select>
-                    <button class="button plus select_all_attributes"><?php esc_html_e('Select all', 'woo-variation-swatches'); ?></button>
-                    <button class="button minus select_no_attributes"><?php esc_html_e('Select none', 'woo-variation-swatches'); ?></button>
-                    <button class="button fr plus add_new_attribute"><?php esc_html_e('Add new', 'woo-variation-swatches'); ?></button>
+							$all_terms = get_terms($attribute->get_taxonomy(), apply_filters('woocommerce_product_attribute_terms', $args));
+							if ($all_terms) {
+								foreach ($all_terms as $term) {
+									$options = $attribute->get_options();
+									$options = ! empty($options) ? $options : array();
+									echo '<option value="' . esc_attr($term->term_id) . '"' . wc_selected($term->term_id, $options) . '>' . esc_html(apply_filters('woocommerce_product_attribute_term_name', $term->name, $term)) . '</option>';
+								}
+							}
+						?>
+					</select>
+					<button class="button plus select_all_attributes"><?php esc_html_e('Select all', 'woo-variation-swatches'); ?></button>
+					<button class="button minus select_no_attributes"><?php esc_html_e('Select none', 'woo-variation-swatches'); ?></button>
+					<button class="button fr plus add_new_attribute"><?php esc_html_e('Add new', 'woo-variation-swatches'); ?></button>
 
-                    <?php
+					<?php
 				}
 			},
 			10,
@@ -623,7 +684,7 @@ class Swatches {
 		add_action('woocommerce_product_data_tabs', [$this, 'blc_add_product_tab']);
 		add_action('woocommerce_process_product_meta', [$this, 'blc_save_swatches_for_product']);
 		add_action('woocommerce_product_data_panels', function() {
-			$options = blocksy_get_variables_from_file(
+			$options = blc_theme_functions()->blocksy_get_variables_from_file(
 				dirname(__FILE__) . '/woo-tab-options.php',
 				[
 					'tooltip_options' => [],
@@ -782,36 +843,6 @@ class Swatches {
 		$taxonomies_to_show = [
 			'ct_custom_attributes' => [
 				'label' => __('Custom Attributes', 'blocksy-companion'),
-				'options' => [
-					blocksy_rand_md5() => [
-						'type' => 'ct-group',
-						'options' => [
-							'limit_number_of_swatches' => [
-								'label' => __('Terms Limit', 'blocksy-companion'),
-								'type' => 'ct-switch',
-								'value' => 'no',
-								'desc' => __('Set how many terms you want to display in this attribute.', 'blocksy-companion'),
-							],
-
-							blocksy_rand_md5() => [
-								'type' => 'ct-condition',
-								'condition' => [
-									'limit_number_of_swatches' => 'yes'
-								],
-								'options' => [
-									'limit' => [
-										'label' => __('Limit', 'blocksy-companion'),
-										'type' => 'ct-number',
-										'min' => 0,
-										'max' => 100,
-										'value' => 10,
-										'design' => 'inline',
-									],
-								]
-							]
-						],
-					],
-				]
 			]
 		];
 
@@ -820,38 +851,6 @@ class Swatches {
 
 			$taxonomies_to_show[$tax->attribute_name] = [
 				'label' => $tax->attribute_label,
-				'options' => [
-					blocksy_rand_md5() => [
-						'type' => 'ct-group',
-						'options' => [
-
-							'limit_number_of_swatches' => [
-								'label' => __('Terms Limit', 'blocksy-companion'),
-								'type' => 'ct-switch',
-								'value' => 'no',
-								'desc' => __('Set how many terms you want to display in this attribute.', 'blocksy-companion'),
-							],
-
-							blocksy_rand_md5() => [
-								'type' => 'ct-condition',
-								'condition' => [
-									'limit_number_of_swatches' => 'yes'
-								],
-								'options' => [
-									'limit' => [
-										'label' => __('Limit', 'blocksy-companion'),
-										'type' => 'ct-number',
-										'min' => 0,
-										'max' => 100,
-										'value' => 10,
-										'design' => 'inline',
-									],
-								]
-							]
-
-						],
-					],
-				]
 			];
 		}
 
@@ -884,47 +883,6 @@ class Swatches {
 									'value' => [],
 									'settings' => $taxonomies_to_show
 								]
-							]
-						],
-
-						blocksy_rand_md5() => [
-							'type' => 'ct-condition',
-							'condition' => [
-								'product_attributes_source' => 'all',
-							],
-							'options' => [
-
-								blocksy_rand_md5() => [
-									'type' => 'ct-group',
-									'options' => [
-
-										'limit_number_of_swatches' => [
-											'label' => __('Terms Limit', 'blocksy-companion'),
-											'type' => 'ct-switch',
-											'value' => 'no',
-											'desc' => __('Set how many terms you want to display in each attribute.', 'blocksy-companion'),
-										],
-
-										blocksy_rand_md5() => [
-											'type' => 'ct-condition',
-											'condition' => [
-												'product_attributes_source' => 'all',
-												'limit_number_of_swatches' => 'yes'
-											],
-											'options' => [
-												'limit' => [
-													'label' => __('Limit', 'blocksy-companion'),
-													'type' => 'ct-number',
-													'min' => 0,
-													'max' => 100,
-													'value' => 10,
-													'design' => 'inline',
-												],
-											]
-										],
-
-									],
-								],
 							]
 						],
 

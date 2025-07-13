@@ -51,6 +51,12 @@ class FiltersTaxonomiesProductsLookupTable {
 					return;
 				}
 
+				// If the state is healthy, skip checking the existence of the
+				// lookup table to not perform an extra SQL query.
+				if ($state['state'] === 'idle' && $state['enabled']) {
+					return;
+				}
+
 				if (
 					! $this->check_lookup_table_exists()
 					||
@@ -342,18 +348,26 @@ class FiltersTaxonomiesProductsLookupTable {
 			$products_already_processed = $state['processed_count'];
 		}
 
-		$product_ids = WC()->call_function(
-			'wc_get_products',
-			[
-				'limit' => $products_per_generation_step,
-				'offset' => $products_already_processed,
-				'orderby' => [
-					'ID' => 'ASC',
-				],
-				'return' => 'ids',
-				'suppress_filters' => true,
-			]
-		);
+		// TODO: Maybe just use a plain $wpdb SQL query here, to avoid any other
+		// potential filterers that might interfere with the results.
+		$query = new \WP_Query([
+			'post_type' => 'product',
+			'posts_per_page' => $products_per_generation_step,
+			'offset' => $products_already_processed,
+			'orderby' => [
+				'ID' => 'ASC',
+			],
+			'fields' => 'ids',
+
+			// Avoid WPML filtering response
+			'suppress_filters' => true,
+
+			// Avoid Polylang filtering response
+			// https://polylang.pro/doc/developpers-how-to/#all
+			'lang' => ''
+		]);
+
+		$product_ids = $query->posts;
 
 		$last_product_id_to_process = PHP_INT_MAX;
 

@@ -61,9 +61,13 @@ class TaxonomiesFilter extends BaseFilter {
 			$this->attributes['type'] === 'brands'
 		) {
 			$render_descriptor['list_attr'] = [
-				'style' => $this->attributes['logoMaxW'] !== 40 ? "--product-taxonomy-logo-size: {$this->attributes['logoMaxW']}px;" : '',
+				'style' => '',
 				'data-frame' => $this->attributes['useFrame'] ? 'yes' : 'no',
 			];
+
+			if ($this->attributes['logoMaxW']) {
+				$render_descriptor['list_attr']['style'] = "--product-taxonomy-logo-size: {$this->attributes['logoMaxW']}px;";
+			}
 
 			if ($this->attributes['imageFit'] === 'contain') {
 				$render_descriptor['list_attr']['style'] .= '--theme-object-fit: contain;';
@@ -377,7 +381,11 @@ class TaxonomiesFilter extends BaseFilter {
 		$tax_image = '';
 		$maybe_image = '';
 
-		if ($this->attributes['taxonomy'] === 'product_cat') {
+		if (
+			$this->attributes['taxonomy'] === 'product_cat'
+			||
+			$this->attributes['taxonomy'] === 'product_brand'
+		) {
 			$maybe_image_id = get_term_meta($term->term_id, 'thumbnail_id', true);
 
 			if ($maybe_image_id) {
@@ -414,13 +422,13 @@ class TaxonomiesFilter extends BaseFilter {
 				(
 					$this->attributes['showItemsRendered']
 					&&
-					$this->attributes['taxonomy'] === 'product_brands'
+					$this->attributes['taxonomy'] === 'product_brand'
 				)
 				||
 				(
 					$this->attributes['showTaxonomyImages']
 					&&
-					! in_array($this->attributes['taxonomy'], ['product_brands', 'product_tag'])
+					! in_array($this->attributes['taxonomy'], ['product_brand', 'product_tag'])
 				)
 			)
 		) {
@@ -583,16 +591,10 @@ class TaxonomiesFilter extends BaseFilter {
 			'is_hierarchical' => true
 		]);
 
-		$all_term_ids = array_keys($terms_counts);
-
-		$all_terms = get_terms([
-			'taxonomy' => $this->attributes['taxonomy'],
-			'include' => $all_term_ids
-		]);
-
-		if (is_wp_error($all_terms)) {
-			return [];
-		}
+		$all_terms = $this->get_all_terms_objects(
+			$terms_counts,
+			$this->attributes['taxonomy']
+		);
 
 		$all_term_ids = [];
 
@@ -677,10 +679,6 @@ class TaxonomiesFilter extends BaseFilter {
 		$terms_by_id = [];
 
 		foreach ($all_terms as $term) {
-			if (! isset($terms_counts[$term->term_id])) {
-				continue;
-			}
-
 			$term->count = $terms_counts[$term->term_id]->term_count;
 			$terms_by_id[$term->term_id] = $term;
 		}
@@ -715,7 +713,11 @@ class TaxonomiesFilter extends BaseFilter {
 			if ($this->ignore_current_query) {
 				$maybe_image = '';
 
-				if ($this->attributes['taxonomy'] === 'product_cat') {
+				if (
+					$this->attributes['taxonomy'] === 'product_cat'
+					||
+					$this->attributes['taxonomy'] === 'product_brand'
+				) {
 					$maybe_image_id = get_term_meta($term['term_id'], 'thumbnail_id', true);
 
 					if ($maybe_image_id) {
@@ -753,6 +755,13 @@ class TaxonomiesFilter extends BaseFilter {
 	public function wp_query_arg($query_string, $query_args, $reason) {
 		$layered_nav_chosen = $this->get_layered_nav($query_string);
 
+		if (! empty($layered_nav_chosen)) {
+			add_filter(
+				'wpml_display_as_translated_tax_query_is_archive',
+				[$this, 'wpml_display_as_translated_tax_query_is_archive']
+			);
+		}
+
 		foreach ($layered_nav_chosen as $taxonomy => $data) {
 			$query_args['tax_query'][] = array(
 				'taxonomy' => $taxonomy,
@@ -764,6 +773,23 @@ class TaxonomiesFilter extends BaseFilter {
 		}
 
 		return $query_args;
+	}
+
+	public function wpml_display_as_translated_tax_query_is_archive($is_archive) {
+		// After this query is done, we need to remove the filter
+		add_filter('posts_request', [$this, 'posts_request'], 10, 2);
+		return true;
+	}
+
+	public function posts_request($request, $query) {
+		remove_filter(
+			'wpml_display_as_translated_tax_query_is_archive',
+			[$this, 'wpml_display_as_translated_tax_query_is_archive']
+		);
+
+		remove_filter('posts_request', [$this, 'posts_request']);
+
+		return $request;
 	}
 
 	private function get_layered_nav($query_string) {
@@ -849,32 +875,31 @@ class TaxonomiesFilter extends BaseFilter {
 
 	private function get_term_hierarchy($taxonomy) {
 		if (! is_taxonomy_hierarchical($taxonomy)) {
-			return array();
+			return [];
 		}
 
-		$children = get_option("blc_{$taxonomy}_children");
+		$children = get_option("{$taxonomy}_children");
 
 		if (is_array($children)) {
 			return $children;
 		}
 
 		$children = [];
-		$terms    = get_terms(
-			[
-				'taxonomy'               => $taxonomy,
-				'get'                    => 'all',
-				'fields'                 => 'id=>parent',
-				'update_term_meta_cache' => false,
-			]
-		);
+
+		$terms = get_terms([
+			'taxonomy'               => $taxonomy,
+			'get'                    => 'all',
+			'fields'                 => 'id=>parent',
+			'update_term_meta_cache' => false,
+		]);
 
 		foreach ($terms as $term_id => $parent) {
 			if ($parent > 0) {
-				$children[ $parent ][] = $term_id;
+				$children[$parent][] = $term_id;
 			}
 		}
 
-		update_option("blc_{$taxonomy}_children", $children);
+		update_option("{$taxonomy}_children", $children);
 
 		return $children;
 	}
@@ -908,5 +933,37 @@ class TaxonomiesFilter extends BaseFilter {
 		}
 
 		return $result;
+	}
+
+	// Just calling get_terms() on all the IDs is not an option because we need
+	// to specifically get only the term in the current language, for plugins
+	// like WPML to pick it up.
+	private function get_all_terms_objects($terms_counts, $taxonomy) {
+		$terms_ids = array_keys($terms_counts);
+
+		$terms_ids = [];
+
+		foreach ($terms_counts as $term_id => $term_count) {
+			$terms_ids[] = apply_filters(
+				'wpml_object_id',
+				$term_id,
+				$taxonomy,
+
+				// Make sure to return original if missing, in every case
+				true
+			);
+		}
+
+		$all_terms = get_terms([
+			'taxonomy' => $taxonomy,
+			'hide_empty' => false,
+			'include' => $terms_ids,
+		]);
+
+		if (is_wp_error($all_terms)) {
+			return [];
+		}
+
+		return $all_terms;
 	}
 }

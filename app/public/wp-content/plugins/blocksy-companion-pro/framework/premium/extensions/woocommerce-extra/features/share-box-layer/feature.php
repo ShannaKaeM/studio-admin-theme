@@ -3,6 +3,12 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class ShareBoxLayer {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_filter('blocksy_woo_single_options_layers:defaults', [
 			$this,
@@ -80,12 +86,12 @@ class ShareBoxLayer {
 
 		add_filter('blocksy:single:has-share-box', function ($value) {
 			if (function_exists('is_product') && is_product()) {
-				$layout = blocksy_get_theme_mod(
+				$layout = blc_theme_functions()->blocksy_get_theme_mod(
 					'woo_single_layout',
 					[]
 				);
 
-				$product_view_type = blocksy_get_theme_mod(
+				$product_view_type = blc_theme_functions()->blocksy_get_theme_mod(
 					'product_view_type',
 					'default-gallery'
 				);
@@ -107,7 +113,7 @@ class ShareBoxLayer {
 						];
 					}
 
-					$woo_single_split_layout = blocksy_get_theme_mod(
+					$woo_single_split_layout = blc_theme_functions()->blocksy_get_theme_mod(
 						'woo_single_split_layout',
 						$woo_single_split_layout_defults
 					);

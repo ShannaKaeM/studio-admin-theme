@@ -19,7 +19,7 @@ class SwatchesPersistAttributes {
 		add_action('admin_init', function () {
 			$this->attributes_value_meta_init();
 
-			$this->options = blocksy_get_variables_from_file(
+			$this->options = blc_theme_functions()->blocksy_get_variables_from_file(
 				dirname(dirname(__FILE__)) . '/woo-tab-options.php',
 				$this->options
 			);
@@ -69,10 +69,14 @@ class SwatchesPersistAttributes {
 				add_filter(
 					'manage_edit-pa_' . $tax->attribute_name . '_columns',
 					function ($columns) {
-						$new_columns = array();
-						$new_columns['cb'] = $columns['cb'];
+						$new_columns = [];
+
+						if (isset($columns['cb'])) {
+							$new_columns['cb'] = $columns['cb'];
+							unset($columns['cb']);
+						}
+
 						$new_columns['blc_swatch_preview'] = '';
-						unset($columns['cb']);
 						$columns = array_merge($new_columns, $columns);
 
 						return $columns;

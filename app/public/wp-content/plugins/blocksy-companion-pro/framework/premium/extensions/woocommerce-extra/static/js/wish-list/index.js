@@ -5,6 +5,7 @@ import { maybeHandleFavoriteArchiveProduct } from './archive'
 import { maybeHandleFavoriteTableProduct } from './table'
 import { prepareListWithSimpleProduct } from './common'
 import { getProductIdFromElement } from '../utils'
+import syncLikesClasses from './sync-likes-classes'
 
 let loadedLikes = false
 
@@ -154,29 +155,6 @@ const syncLikedProductsState = ({
 
 	syncCounter()
 }
-
-const syncLikesClasses = (likes) => {
-	let selector = [
-		'[class*="ct-wishlist-button"]',
-		'.ct-wishlist-remove',
-		'.wishlist-product-remove > .remove',
-		'.product-mobile-actions > [href*="wishlist-remove"]',
-	].join(', ')
-
-	const allLikes = likes.items.map((item) => item.id)
-
-	;[...document.querySelectorAll(selector)].map((el) => {
-		el.dataset.buttonState = ''
-
-		if (allLikes.indexOf(getProductIdFromElement(el)) > -1) {
-			el.dataset.buttonState = 'active'
-		}
-	})
-}
-
-ctEvents.on('blocksy:wishlist:sync', () =>
-	syncLikesClasses(window.ct_localizations.blc_ext_wish_list.list)
-)
 
 const handleCachedSync = () => {
 	if (loadedLikes) {

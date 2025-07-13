@@ -72,6 +72,8 @@ class TaxonomiesCustomization {
 					||
 					$maybe_taxonomy->name === 'product_brands'
 					||
+					$maybe_taxonomy->name === 'product_brand'
+					||
 					(strpos($maybe_taxonomy->name, 'pa_') === 0)
 				) {
 					return;
@@ -241,7 +243,11 @@ class TaxonomiesCustomization {
 		$tablet_css = new \Blocksy_Css_Injector();
 		$mobile_css = new \Blocksy_Css_Injector();
 
-		$custom_post_types = blocksy_manager()
+		if (! blc_theme_functions()->blocksy_manager()) {
+			return '';
+		}
+
+		$custom_post_types = blc_theme_functions()->blocksy_manager()
 			->post_types
 			->get_supported_post_types();
 
@@ -254,7 +260,7 @@ class TaxonomiesCustomization {
 			));
 
 			foreach ($taxonomies as $taxonomy) {
-				$all_terms = blc_get_terms(
+				$all_terms = blc_theme_functions()->blocksy_get_terms(
 					[
 						'taxonomy' => $taxonomy,
 						'update_term_meta_cache' => false,
@@ -270,6 +276,10 @@ class TaxonomiesCustomization {
 						'all_languages' => true
 					]
 				);
+
+				if ($all_terms === \Blocksy\ThemeFunctions::$NON_EXISTING_FUNCTION) {
+					$all_terms = [];
+				}
 
 				foreach ($all_terms as $term) {
 					$values = get_term_meta(
@@ -368,7 +378,7 @@ class TaxonomiesCustomization {
 	}
 
 	public function enqueue_dynamic_css() {
-		if (defined('IFRAME_REQUEST') && IFRAME_REQUEST) {
+		if (! blc_theme_functions()->blocksy_has_dynamic_css_in_frontend()) {
 			return;
 		}
 

@@ -2,12 +2,18 @@
 
 $product = wc_get_product($_GET['product_id']);
 
-$close_button_type = blocksy_get_theme_mod('size_guide_close_button_type', 'type-1');
+$close_button_type = blc_theme_functions()->blocksy_get_theme_mod(
+	'size_guide_close_button_type',
+	'type-1'
+);
 
 $panel_attr = [
 	'id' => 'ct-size-guide-modal',
 	'class' => 'ct-panel',
-	'data-behaviour' => 'modal'
+	'data-behaviour' => 'modal',
+	'role' => 'dialog',
+	'aria-label' => __('Size guide modal', 'blocksy-companion'),
+	'inert' => ''
 ];
 
 $panel_heading = blocksy_html_tag(

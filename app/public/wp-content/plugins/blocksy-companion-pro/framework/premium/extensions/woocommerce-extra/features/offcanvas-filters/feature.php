@@ -7,8 +7,13 @@ require_once dirname(__FILE__) . '/helpers.php';
 class OffcanvasFilters {
     private $is_ajax = false;
 
-	public function __construct() {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
 
+	public function __construct() {
 		add_action(
 			'wp_enqueue_scripts',
 			function () {
@@ -56,7 +61,7 @@ class OffcanvasFilters {
 					is_singular()
 					||
 					(
-						blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
+						blc_theme_functions()->blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
 						&&
 						! is_customize_preview()
 					)
@@ -80,13 +85,13 @@ class OffcanvasFilters {
 
 				$sidebars = get_option('sidebars_widgets', []);
 
-				$filter_source = blocksy_get_theme_mod('filter_source', 'sidebar-woocommerce-offcanvas-filters');
+				$filter_source = blc_theme_functions()->blocksy_get_theme_mod('filter_source', 'sidebar-woocommerce-offcanvas-filters');
 
 				if (class_exists('BlocksySidebarsManager')) {
 					$manager = new \BlocksySidebarsManager();
-				
+
 					$maybe_sidebar = $manager->maybe_get_sidebar_that_matches();
-					
+
 					if ($maybe_sidebar) {
 						$filter_source = $maybe_sidebar;
 					}
@@ -185,7 +190,7 @@ class OffcanvasFilters {
 				global $has_woo_offcanvas_filter;
 				$has_woo_offcanvas_filter = true;
 
-				if (blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no') {
 					return;
 				}
 
@@ -218,14 +223,14 @@ class OffcanvasFilters {
 					return $els;
 				}
 
-				if (blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') !== 'type-1') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') !== 'type-1') {
 					return $els;
 				}
 
 				global $has_woo_offcanvas_filter;
 
 				if (
-					blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
+					blc_theme_functions()->blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
 					&&
 					! is_customize_preview()
 				) {
@@ -246,7 +251,11 @@ class OffcanvasFilters {
 					return $els;
 				}
 
-				if (blocksy_manager()->screen->is_product()) {
+				if (
+					! blc_theme_functions()->blocksy_manager()
+					||
+					blc_theme_functions()->blocksy_manager()->screen->is_product()
+				) {
 					return $els;
 				}
 
@@ -276,9 +285,9 @@ class OffcanvasFilters {
 
 	public function render_filters_panel() {
 		if (
-			blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-1'
+			blc_theme_functions()->blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-1'
 			||
-			blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
+			blc_theme_functions()->blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
 		) {
 			return;
 		}
@@ -293,9 +302,12 @@ class OffcanvasFilters {
 	}
 
 	public function has_filter_ajax_reveal() {
-		$filter_ajax_reveal = blocksy_get_theme_mod('filter_ajax_reveal', 'no');
+		$filter_ajax_reveal = blc_theme_functions()->blocksy_get_theme_mod(
+			'filter_ajax_reveal',
+			'no'
+		);
 
-		if (blocksy_get_theme_mod(
+		if (blc_theme_functions()->blocksy_get_theme_mod(
 			'filter_panel_behaviour',
 			'no'
 		) === 'yes') {

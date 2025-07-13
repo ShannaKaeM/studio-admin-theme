@@ -7,6 +7,7 @@ import {
 	getRootSelectorFor,
 	assembleSelector,
 	mutateSelector,
+	getColumnSelectorFor,
 } from 'blocksy-customizer-sync'
 
 const getVariables = ({ itemId, fullItemId, panelType }) => ({
@@ -387,7 +388,7 @@ const getVariables = ({ itemId, fullItemId, panelType }) => ({
 					panelType: 'footer',
 				}),
 				operation: 'replace-last',
-				to_add: '[data-column="contacts"]',
+				to_add: getColumnSelectorFor({ itemId: fullItemId }),
 			})
 		),
 		variable: 'horizontal-alignment',
@@ -404,7 +405,7 @@ const getVariables = ({ itemId, fullItemId, panelType }) => ({
 					panelType: 'footer',
 				}),
 				operation: 'replace-last',
-				to_add: '[data-column="contacts"]',
+				to_add: getColumnSelectorFor({ itemId: fullItemId }),
 			})
 		),
 		variable: 'vertical-alignment',
@@ -454,7 +455,7 @@ ctEvents.on(
 									contactsContainer.querySelector(
 										'.contact-title'
 									)
-								console.log('contact_items', maybeLabel)
+
 								let maybeContent =
 									contactsContainer.querySelector(
 										'.contact-text a'

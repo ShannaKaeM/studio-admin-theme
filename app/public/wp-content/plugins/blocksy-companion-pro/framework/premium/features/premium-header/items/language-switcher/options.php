@@ -46,7 +46,7 @@ if ($current_plugin === 'wpml' || $current_plugin === 'polylang') {
 	];
 }
 
-$inline_options = blocksy_get_variables_from_file(
+$inline_options = blc_theme_functions()->blocksy_get_variables_from_file(
 	dirname(__FILE__) . '/options/inline.php',
 	[
 		'general_options' => [],
@@ -58,7 +58,7 @@ $inline_options = blocksy_get_variables_from_file(
 	]
 );
 
-$dropdown_options = blocksy_get_variables_from_file(
+$dropdown_options = blc_theme_functions()->blocksy_get_variables_from_file(
 	dirname(__FILE__) . '/options/dropdown.php',
 	[
 		'general_options' => [],

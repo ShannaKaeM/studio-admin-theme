@@ -64,13 +64,13 @@ if (empty($wish_list)) {
 
 <?php
 	if (
-		blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
+		blc_theme_functions()->blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
 		&&
-		blocksy_get_theme_mod('woocommerce_wish_list_page')
+		blc_theme_functions()->blocksy_get_theme_mod('woocommerce_wish_list_page')
 		&&
 		is_user_logged_in()
 		&&
-		blocksy_get_theme_mod('wish_list_has_share_box', 'no') === 'yes'
+		blc_theme_functions()->blocksy_get_theme_mod('wish_list_has_share_box', 'no') === 'yes'
 	) {
 		echo blocksy_get_social_share_box([
 			'html_atts' => [
@@ -82,7 +82,7 @@ if (empty($wish_list)) {
 			'custom_share_url' => add_query_arg(
 				'wish_list_id',
 				get_current_user_id(),
-				get_permalink(blocksy_get_theme_mod('woocommerce_wish_list_page'))
+				get_permalink(blc_theme_functions()->blocksy_get_theme_mod('woocommerce_wish_list_page'))
 			),
 			'strategy' => [
 				'strategy' => 'customizer',

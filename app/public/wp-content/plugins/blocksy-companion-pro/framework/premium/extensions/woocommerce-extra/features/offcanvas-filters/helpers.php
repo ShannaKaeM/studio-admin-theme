@@ -11,7 +11,10 @@ function blc_get_woo_offcanvas_trigger($has_filter_ajax_reveal) {
 		'type-4' => '<svg width="12" height="12" viewBox="0 0 10 10"><path d="M5.9 9.5h-.2l-1.8-.9c-.2-.1-.3-.2-.3-.4V5.4L.1 1.2C0 1.1 0 .9 0 .7.1.5.2.4.4.4h9.1c.2 0 .3.1.4.3s0 .3-.1.5L6.4 5.4v3.7c0 .2-.1.3-.2.4h-.3z"/></svg>'
 	];
 
-	$type = blocksy_get_theme_mod('woocommerce_filter_icon_type', 'type-1');
+	$type = blc_theme_functions()->blocksy_get_theme_mod(
+		'woocommerce_filter_icon_type',
+		'type-1'
+	);
 
 	$type_prop = '';
 
@@ -21,14 +24,14 @@ function blc_get_woo_offcanvas_trigger($has_filter_ajax_reveal) {
 
 	$class = '';
 
-	if (blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-2') {
+	if (blc_theme_functions()->blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-2') {
 		$type_prop = 'data-behaviour="drop-down"';
 		$class = 'ct-toggle-filter-panel';
 	} else {
 		$class = 'ct-toggle-filter-panel ct-offcanvas-trigger';
 	}
 
-	$class .= ' ' . blocksy_visibility_classes(blocksy_get_theme_mod(
+	$class .= ' ' . blocksy_visibility_classes(blc_theme_functions()->blocksy_get_theme_mod(
 		'woocommerce_filter_visibility',
 		[
 			'desktop' => true,
@@ -37,10 +40,13 @@ function blc_get_woo_offcanvas_trigger($has_filter_ajax_reveal) {
 		]
 	));
 
-	$woocommerce_filter_label = blocksy_get_theme_mod('woocommerce_filter_label', __('Filter', 'blocksy-companion'));
+	$woocommerce_filter_label = blc_theme_functions()->blocksy_get_theme_mod(
+		'woocommerce_filter_label',
+		__('Filter', 'blocksy-companion')
+		);
 
-	if (blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-2') {
-		$ariaExpanded = blocksy_get_theme_mod(
+	if (blc_theme_functions()->blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-2') {
+		$ariaExpanded = blc_theme_functions()->blocksy_get_theme_mod(
 			'filter_panel_behaviour',
 			'no'
 		) === 'no' ? 'false' : 'true';

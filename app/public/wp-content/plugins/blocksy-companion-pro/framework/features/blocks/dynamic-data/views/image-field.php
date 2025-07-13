@@ -3,6 +3,14 @@
 $view_type = blocksy_akg('viewType', $attributes, 'default');
 
 if ($view_type === 'cover') {
+	if (
+		! $attachment_id
+		&&
+		empty($content)
+	) {
+		return;
+	}
+
 	echo blocksy_render_view(
 		dirname(__FILE__) . '/cover-field.php',
 		[
@@ -47,8 +55,33 @@ $img_attr = [
 	'style' => ''
 ];
 
+$aria_label = get_the_title();
+
+if (
+	$attributes['field'] === 'wp:term_image'
+	||
+	$attributes['field'] === 'wp:archive_image'
+) {
+	global $blocksy_term_obj;
+
+	if (! empty($blocksy_term_obj)) {
+		$aria_label = $blocksy_term_obj->name;
+	}
+
+	$maybe_term_obj = get_queried_object();
+	
+	if (
+		! empty($maybe_term_obj)
+		&&
+		! empty($maybe_term_obj->name)
+	) {
+		$aria_label = $maybe_term_obj->name;
+	}
+}
+
 $wrapper_attr = [
-	'class' => 'ct-dynamic-media'
+	'class' => 'ct-dynamic-media',
+	'aria-label' => wp_strip_all_tags($aria_label),
 ];
 
 $link_attr = [];
@@ -162,7 +195,19 @@ if (
 		$classes[] = 'ct-simplified-player';
 	}
 
-	if (blocksy_akg('media_video_autoplay', $maybe_video, 'no') === 'yes') {
+	$new_default_based_on_old_value = blocksy_akg(
+		'media_video_autoplay',
+		$maybe_video,
+		'no'
+	) === 'yes' ? 'autoplay' : 'click';
+
+	if (
+		blocksy_akg(
+			'media_video_event',
+			$maybe_video,
+			$new_default_based_on_old_value
+		) === 'autoplay'
+	) {
 		$wrapper_attr['data-state'] = 'autoplay';
 	}
 }

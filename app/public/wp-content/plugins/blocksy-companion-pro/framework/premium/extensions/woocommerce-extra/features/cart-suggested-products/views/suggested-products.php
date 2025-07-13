@@ -4,15 +4,15 @@ if (! $prefix) {
 	return;
 }
 
-if (blocksy_get_theme_mod($prefix . 'products', 'yes') !== 'yes') {
+if (blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products', 'yes') !== 'yes') {
 	return;
 }
 
 $defaults = \Blocksy\Extensions\WoocommerceExtra\CartSuggestedProducts::get_option_defaults();
 
-$products_type = blocksy_get_theme_mod($prefix . 'products_type', 'inline');
-$products_source = blocksy_get_theme_mod($prefix . 'products_source', 'related');
-$number_of_items = blocksy_get_theme_mod($prefix . 'products_number_of_items', 6);
+$products_type = blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_type', 'inline');
+$products_source = blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_source', 'related');
+$number_of_items = blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_number_of_items', 6);
 
 $products_content = '';
 
@@ -51,13 +51,9 @@ $product_ids = array_slice($product_ids, 0, $number_of_items);
 
 $products_section_title = __('Suggested Products', 'blocksy-companion');
 
-$slideshow_columns = blocksy_get_theme_mod(
+$slideshow_columns = blc_theme_functions()->blocksy_get_theme_mod(
 	$prefix . 'products_columns',
-	[
-		'desktop' => 2,
-		'tablet' => 2,
-		'mobile' => 1,
-	]
+	$defaults[$prefix]['products_columns']
 );
 
 $slideshow_columns = blocksy_expand_responsive_value($slideshow_columns);
@@ -118,11 +114,11 @@ $products_loop = array_reduce(
 		];
 
 		if (
-			blocksy_get_theme_mod('woo_archive_affiliate_image_link', 'no') === 'yes'
+			blc_theme_functions()->blocksy_get_theme_mod('woo_archive_affiliate_image_link', 'no') === 'yes'
 			&&
 			$product->get_type() === 'external'
 		) {
-			$open_in_new_tab = blocksy_get_theme_mod(
+			$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_archive_affiliate_image_link_new_tab',
 				'no'
 			) === 'yes' ? '_blank' : '_self';
@@ -148,8 +144,8 @@ $products_loop = array_reduce(
 			}
 		}
 
-		$image_size = blocksy_get_theme_mod($prefix . 'products_image_size', 'thumbnail');
-		$image_ratio = blocksy_get_theme_mod($prefix . 'products_image_ratio', '1/1');
+		$image_size = blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_image_size', 'thumbnail');
+		$image_ratio = blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_image_ratio', '1/1');
 
 		$product_image = blocksy_media([
 			'no_image_type' => 'woo',
@@ -176,7 +172,7 @@ $products_loop = array_reduce(
 		$product_price = '';
 		$product_add_to_cart = '';
 
-		if (blocksy_get_theme_mod($prefix . 'products_show_price', 'yes') === 'yes') {
+		if (blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_show_price', 'yes') === 'yes') {
 			$product_price = blocksy_html_tag(
 				'span',
 				[
@@ -187,8 +183,8 @@ $products_loop = array_reduce(
 		}
 
 		if (
-			blocksy_get_theme_mod(
-				$prefix . 'products_show_add_to_cart', 
+			blc_theme_functions()->blocksy_get_theme_mod(
+				$prefix . 'products_show_add_to_cart',
 				$defaults[$prefix]['products_show_add_to_cart']
 			) === 'yes'
 		) {
@@ -245,13 +241,13 @@ $suffix = [
 	'mini_cart_suggested_' => '--mini-cart',
 	'checkout_suggested_' => '--checkout',
 	'cart_popup_suggested_' => '--cart-popup',
+	'cart_suggested_' => '--cart',
 ];
 
 $classes = [
 	'ct-suggested-products' . $suffix[$prefix],
-	'flexy-container',
 	blocksy_visibility_classes(
-		blocksy_get_theme_mod($prefix . 'products_visibility', [
+		blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_visibility', [
 			'desktop' => true,
 			'tablet' => true,
 			'mobile' => true,
@@ -260,21 +256,23 @@ $classes = [
 ];
 
 $content = '';
+$container_attr = [];
 
 if (! empty($product_ids)) {
 	$content = $products_section_title . $products_loop;
-}
+	$classes[] = 'flexy-container';
 
-$container_attr = [
-	'class' => trim(implode(' ', $classes)),
-	'data-flexy' => 'no'
-];
+	$container_attr = [
+		'class' => trim(implode(' ', $classes)),
+		'data-flexy' => 'no'
+	];
 
-if (blocksy_get_theme_mod($prefix . 'products_autoplay', 'yes') === 'yes') {
-	$container_attr['data-autoplay'] = blocksy_get_theme_mod(
-		$prefix . 'products_autoplay_speed',
-		3
-	);
+	if (blc_theme_functions()->blocksy_get_theme_mod($prefix . 'products_autoplay', 'yes') === 'yes') {
+		$container_attr['data-autoplay'] = blc_theme_functions()->blocksy_get_theme_mod(
+			$prefix . 'products_autoplay_speed',
+			3
+		);
+	}
 }
 
 echo blocksy_html_tag('div', $container_attr, $content);

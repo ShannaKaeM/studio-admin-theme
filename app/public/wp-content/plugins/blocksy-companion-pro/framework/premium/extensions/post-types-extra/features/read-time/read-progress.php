@@ -33,10 +33,14 @@ class ReadProgress {
 		);
 
 		add_action('blocksy:global-dynamic-css:enqueue', function ($args) {
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return;
+			}
+
 			blocksy_theme_get_dynamic_styles(array_merge([
 				'path' => dirname(__FILE__) . '/read-progress/global.php',
 				'chunk' => 'global',
-				'prefixes' => blocksy_manager()->screen->get_single_prefixes()
+				'prefixes' => blc_theme_functions()->blocksy_manager()->screen->get_single_prefixes()
 			], $args));
 		}, 10, 3);
 
@@ -47,23 +51,27 @@ class ReadProgress {
 					return $els;
 				}
 
-				$prefix = blocksy_manager()->screen->get_prefix();
+				if (! blc_theme_functions()->blocksy_manager()) {
+					return $els;
+				}
+
+				$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix();
 
 				$class = 'ct-read-progress-bar';
 
 				$class .= ' ' . blocksy_visibility_classes(
-					blocksy_get_theme_mod($prefix . '_read_progress_visibility', [
+					blc_theme_functions()->blocksy_get_theme_mod($prefix . '_read_progress_visibility', [
 						'desktop' => true,
 						'tablet' => true,
 						'mobile' => false,
 					])
 				);
 
-				if (blocksy_get_theme_mod($prefix . '_has_auto_hide', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_has_auto_hide', 'no') === 'yes') {
 					$class .= ' ct-auto-hide';
 				}
 
-				if (blocksy_get_theme_mod($prefix . '_has_read_progress', 'no') === 'no') {
+				if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_has_read_progress', 'no') === 'no') {
 					return $els;
 				}
 

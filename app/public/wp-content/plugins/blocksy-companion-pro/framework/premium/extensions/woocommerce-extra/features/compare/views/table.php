@@ -57,7 +57,7 @@ class CompareTable {
 		if (
 			blocksy_akg('compare_row_sticky', $layout, 'no') === 'yes'
 			&&
-			blocksy_get_theme_mod('compare_table_placement', 'modal') === 'modal'
+			blc_theme_functions()->blocksy_get_theme_mod('compare_table_placement', 'modal') === 'modal'
 		) {
 			$classes[] = 'ct-compare-row-is-sticky';
 		}
@@ -89,7 +89,7 @@ class CompareTable {
 			);
 		}
 
-		$render_layout_config = blocksy_get_theme_mod('product_compare_layout', [
+		$render_layout_config = blc_theme_functions()->blocksy_get_theme_mod('product_compare_layout', [
 			[
 				'id' => 'product_main',
 				'enabled' => true,
@@ -122,7 +122,9 @@ class CompareTable {
 		]);
 
 		if (empty($compare_list)) {
-			return '';
+			return blocksy_render_view(
+				dirname(__FILE__) . '/table-no-results.php'
+			);
 		}
 
 		$products = [];
@@ -603,7 +605,7 @@ class CompareTable {
 		foreach ($products as $product) {
 			$GLOBALS['product'] = $product;
 
-			$brands = get_the_terms($product->get_id(), 'product_brands');
+			$brands = get_the_terms($product->get_id(), 'product_brand');
 
 			if (!$brands || !is_array($brands) || empty($brands)) {
 				$products_html[] = self::blc_render_compare_column();
@@ -631,6 +633,15 @@ class CompareTable {
 				}
 
 				$term_atts = $term_atts[0];
+
+				$maybe_image_id = isset($brand->term_id) ? get_term_meta($brand->term_id, 'thumbnail_id', true) : '';
+
+				if (! empty($maybe_image_id)) {
+					$term_atts['icon_image'] = [
+						'attachment_id' => $maybe_image_id,
+						'url' => wp_get_attachment_image_url($maybe_image_id, 'full')
+					];
+				}
 
 				$maybe_image = blocksy_akg('icon_image', $term_atts, '');
 

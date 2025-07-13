@@ -19,8 +19,8 @@ if (! function_exists('blc_cpt_extra_filtering_output')) {
 			$args
 		);
 
-		if (! $args['prefix']) {
-			$args['prefix'] = blocksy_manager()->screen->get_prefix([
+		if (! $args['prefix'] && blc_theme_functions()->blocksy_manager()) {
+			$args['prefix'] = blc_theme_functions()->blocksy_manager()->screen->get_prefix([
 				'allowed_prefixes' => [
 					'blog'
 				],
@@ -30,7 +30,7 @@ if (! function_exists('blc_cpt_extra_filtering_output')) {
 
 		$prefix = $args['prefix'];
 
-		$maybe_tax = blocksy_get_theme_mod(
+		$maybe_tax = blc_theme_functions()->blocksy_get_theme_mod(
 			$prefix . '_filter_source',
 			blocksy_maybe_get_matching_taxonomy($args['post_type'])
 		);
@@ -57,7 +57,7 @@ if (! function_exists('blc_cpt_extra_filtering_output')) {
 			return;
 		}
 
-		$has_archive_filtering = blocksy_get_theme_mod(
+		$has_archive_filtering = blc_theme_functions()->blocksy_get_theme_mod(
 			$prefix . '_has_archive_filtering',
 			'no'
 		);
@@ -65,14 +65,14 @@ if (! function_exists('blc_cpt_extra_filtering_output')) {
 		$class = 'ct-dynamic-filter';
 
 		$class .= ' ' . blocksy_visibility_classes(
-			blocksy_get_theme_mod($prefix . '_filter_visibility', [
+			blc_theme_functions()->blocksy_get_theme_mod($prefix . '_filter_visibility', [
 				'desktop' => true,
 				'tablet' => true,
 				'mobile' => false,
 			])
 		);
 
-		$type = blocksy_get_theme_mod(
+		$type = blc_theme_functions()->blocksy_get_theme_mod(
 			$prefix . '_filter_type',
 			'simple'
 		);
@@ -183,7 +183,7 @@ if (! function_exists('blc_cpt_extra_filtering_output')) {
 			}
 		}
 
-		$has_counters = blocksy_get_theme_mod(
+		$has_counters = blc_theme_functions()->blocksy_get_theme_mod(
 			$prefix . '_has_counters',
 			'no'
 		) === 'yes';

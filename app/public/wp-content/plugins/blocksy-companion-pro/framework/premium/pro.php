@@ -10,7 +10,12 @@ class Premium {
 	public $recently_viewed_products = null;
 
 	public function __construct() {
-		$this->load_premium_translations();
+		add_action(
+			'init',
+			function () {
+				$this->load_premium_translations();
+			}
+		);
 
 		$this->code_editor = new CodeEditor();
 
@@ -30,7 +35,10 @@ class Premium {
 
 		new CloneCPT();
 		new CaptchaToolsIntegration();
+
 		new MediaVideo();
+		// attachment metadata: now only works in pro version
+		new VideoImportExport();
 
 		new TaxonomySearch();
 
@@ -39,6 +47,8 @@ class Premium {
 		new SocialsExtra();
 
 		new PerformanceTypography();
+
+		new ImportExport();
 
 		add_filter(
 			'plugin_row_meta',
@@ -60,6 +70,8 @@ class Premium {
 			$p[] = BLOCKSY_PATH . 'framework/premium/extensions';
 			return $p;
 		});
+
+		$this->mount_integrations();
 
 		add_action(
 			'customize_preview_init',
@@ -222,5 +234,13 @@ class Premium {
 			'blocksy-companion',
 			$locale
 		);
+	}
+
+	private function mount_integrations() {
+		add_action('plugins_loaded', function () {
+			if (class_exists('Elementor\Plugin')) {
+				new PluginIntegrations\Elementor();
+			}
+		});
 	}
 }

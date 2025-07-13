@@ -88,7 +88,7 @@ if (! empty($atts['className'])) {
 			add_action('woocommerce_after_template_part', 'blc_order_details_customer_after', 1, 4);
 		}
 
-		do_action( 'woocommerce_thankyou', $order->get_id() );
+		woocommerce_order_details_table($order->get_id());
 
 		if (!$atts['showCustomerDetails']) {
 			remove_action('woocommerce_before_template_part', 'blc_order_details_customer_before', 1, 4);

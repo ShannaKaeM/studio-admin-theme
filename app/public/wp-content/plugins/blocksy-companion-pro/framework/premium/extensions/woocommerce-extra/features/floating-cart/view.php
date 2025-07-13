@@ -15,7 +15,7 @@ if (! $product && $post) {
 $image_output = '';
 
 $image_visibility = blocksy_visibility_classes(
-	blocksy_get_theme_mod('floatingBarImageVisibility', [
+	blc_theme_functions()->blocksy_get_theme_mod('floatingBarImageVisibility', [
 		'desktop' => true,
 		'tablet' => true,
 		'mobile' => true,
@@ -35,7 +35,7 @@ if ($product && $product->get_image_id()) {
 
 $class = 'ct-floating-bar';
 
-$has_ajax_add_to_cart = blocksy_get_theme_mod(
+$has_ajax_add_to_cart = blc_theme_functions()->blocksy_get_theme_mod(
 	'has_ajax_add_to_cart',
 	'yes'
 );
@@ -57,7 +57,7 @@ if (
 }
 
 $class .= ' ' . blocksy_visibility_classes(
-	blocksy_get_theme_mod('floatingBarVisibility', [
+	blc_theme_functions()->blocksy_get_theme_mod('floatingBarVisibility', [
 		'desktop' => true,
 		'tablet' => true,
 		'mobile' => true,
@@ -65,7 +65,7 @@ $class .= ' ' . blocksy_visibility_classes(
 );
 
 $title_class = trim('product-title ' . blocksy_visibility_classes(
-	blocksy_get_theme_mod('floatingBarTitleVisibility', [
+	blc_theme_functions()->blocksy_get_theme_mod('floatingBarTitleVisibility', [
 		'desktop' => true,
 		'tablet' => true,
 		'mobile' => true,
@@ -73,7 +73,7 @@ $title_class = trim('product-title ' . blocksy_visibility_classes(
 ));
 
 $price_stock_class = trim('product-price ' . blocksy_visibility_classes(
-	blocksy_get_theme_mod('floatingBarPriceStockVisibility', [
+	blc_theme_functions()->blocksy_get_theme_mod('floatingBarPriceStockVisibility', [
 		'desktop' => true,
 		'tablet' => true,
 		'mobile' => true,

@@ -241,8 +241,12 @@ class ConditionsRulesResolver {
 			return is_singular('page');
 		}
 
-		if ($rule['rule'] === 'single_product') {
-			return blocksy_manager()->screen->is_product();
+		if (
+			$rule['rule'] === 'single_product'
+			&&
+			blc_theme_functions()->blocksy_manager()
+		) {
+			return blc_theme_functions()->blocksy_manager()->screen->is_product();
 		}
 
 		if ($rule['rule'] === 'all_product_archives') {
@@ -267,7 +271,7 @@ class ConditionsRulesResolver {
 
 		if ($rule['rule'] === 'all_product_brands') {
 			if (function_exists('is_shop')) {
-				return is_tax('product_brands');
+				return is_tax('product_brand');
 			}
 		}
 
@@ -361,11 +365,11 @@ class ConditionsRulesResolver {
 				return false;
 			}
 
-			if (! function_exists('blocksy_manager')) {
+			if (! blc_theme_functions()->blocksy_manager()) {
 				return false;
 			}
 
-			$manager = blocksy_manager();
+			$manager = blc_theme_functions()->blocksy_manager();
 
 			if (! isset($manager->archive) || ! $manager->archive) {
 				return false;

@@ -59,7 +59,7 @@ class TaxQuery {
 					$border_result = get_block_core_post_featured_image_border_attributes(
 						$attributes
 					);
-					
+
 					if (strpos($content, 'wp-block-blocksy-tax-query"></div>') !== false) {
 						return '';
 					}
@@ -244,27 +244,11 @@ class TaxQuery {
 					'columns' => $columns
 				]);
 
-				blc_call_gutenberg_function(
-					'wp_style_engine_get_stylesheet_from_css_rules',
-					[
-						array_merge(
-							$css->get_wp_style_engine_rules([
-								'device' => 'desktop'
-							]),
-							$tablet_css->get_wp_style_engine_rules([
-								'device' => 'tablet'
-							]),
-							$mobile_css->get_wp_style_engine_rules([
-								'device' => 'mobile'
-							])
-						),
-						[
-							'context'  => 'block-supports',
-							'prettify' => false,
-							'optimize' => true
-						]
-					]
-				);
+				$block_content .= \Blocksy\Plugin::instance()->inline_styles_collector->get_style_tag([
+					'css' => $css,
+					'tablet_css' => $tablet_css,
+					'mobile_css' => $mobile_css
+				]);
 
 				return $block_content;
 			},
@@ -372,17 +356,16 @@ class TaxQuery {
 						$arrows = '';
 
 						if ($context['has_slideshow_arrows'] === 'yes') {
-							$arrows = '<span class="flexy-arrow-prev" data-position="outside">
-								<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10">
-									<path d="M15.3 4.3h-13l2.8-3c.3-.3.3-.7 0-1-.3-.3-.6-.3-.9 0l-4 4.2-.2.2v.6c0 .1.1.2.2.2l4 4.2c.3.4.6.4.9 0 .3-.3.3-.7 0-1l-2.8-3h13c.2 0 .4-.1.5-.2s.2-.3.2-.5-.1-.4-.2-.5c-.1-.1-.3-.2-.5-.2z"></path>
-								</svg>
-							</span>
+							$arrow_icons = apply_filters(
+								'blocksy:flexy:arrows',
+								[
+									'prev' => '<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10"><path d="M15.3 4.3h-13l2.8-3c.3-.3.3-.7 0-1-.3-.3-.6-.3-.9 0l-4 4.2-.2.2v.6c0 .1.1.2.2.2l4 4.2c.3.4.6.4.9 0 .3-.3.3-.7 0-1l-2.8-3h13c.2 0 .4-.1.5-.2s.2-.3.2-.5-.1-.4-.2-.5c-.1-.1-.3-.2-.5-.2z"></path></svg>',
+									'next' => '<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10"><path d="M.2 4.5c-.1.1-.2.3-.2.5s.1.4.2.5c.1.1.3.2.5.2h13l-2.8 3c-.3.3-.3.7 0 1 .3.3.6.3.9 0l4-4.2.2-.2V5v-.3c0-.1-.1-.2-.2-.2l-4-4.2c-.3-.4-.6-.4-.9 0-.3.3-.3.7 0 1l2.8 3H.7c-.2 0-.4.1-.5.2z"></path></svg>'
+								]
+							);
 
-							<span class="flexy-arrow-next" data-position="outside">
-								<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10">
-									<path d="M.2 4.5c-.1.1-.2.3-.2.5s.1.4.2.5c.1.1.3.2.5.2h13l-2.8 3c-.3.3-.3.7 0 1 .3.3.6.3.9 0l4-4.2.2-.2V5v-.3c0-.1-.1-.2-.2-.2l-4-4.2c-.3-.4-.6-.4-.9 0-.3.3-.3.7 0 1l2.8 3H.7c-.2 0-.4.1-.5.2z"></path>
-								</svg>
-							</span>';
+							$arrows = '<span class="flexy-arrow-prev" data-position="outside">' . $arrow_icons['prev'] . '</span>
+								<span class="flexy-arrow-next" data-position="outside">' . $arrow_icons['next'] . '</span>';
 						}
 
 						$content = blocksy_html_tag(
@@ -443,7 +426,7 @@ class TaxQuery {
 				];
 
 				foreach ($tax_block_patterns as $tax_block_pattern) {
-					$pattern_data = blocksy_get_variables_from_file(
+					$pattern_data = blc_theme_functions()->blocksy_get_variables_from_file(
 						__DIR__ . '/block-patterns/' . $tax_block_pattern . '.php',
 						['pattern' => []]
 					);
@@ -499,6 +482,12 @@ class TaxQuery {
 	}
 
 	private static function get_attributes($attributes) {
+		// migrate to native brands
+		
+		if ($attributes['taxonomy'] === 'product_brands') {
+			$attributes['taxonomy'] = 'product_brand';
+		}
+
 		return wp_parse_args(
 			$attributes,
 			[
@@ -654,6 +643,15 @@ class TaxQuery {
 			}
 
 			$term_atts = $term_atts[0];
+
+			$maybe_image_id = isset($term->term_id) ? get_term_meta($term->term_id, 'thumbnail_id', true) : '';
+
+			if (! empty($maybe_image_id)) {
+				$term_atts['icon_image'] = [
+					'attachment_id' => $maybe_image_id,
+					'url' => wp_get_attachment_image_url($maybe_image_id, 'full')
+				];
+			}
 
 			$maybe_icon = blocksy_akg('icon_image', $term_atts, '');
 			$maybe_image = blocksy_akg('image', $term_atts, $attachment);

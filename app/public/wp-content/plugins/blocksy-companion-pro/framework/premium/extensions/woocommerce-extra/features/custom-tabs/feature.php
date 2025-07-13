@@ -67,7 +67,7 @@ class CustomTabs {
 
 			return blocksy_akg(
 				'options',
-				blocksy_get_variables_from_file(
+				blc_theme_functions()->blocksy_get_variables_from_file(
 					dirname(
 						__FILE__
 					) . '/options.php',
@@ -148,7 +148,7 @@ class CustomTabs {
 			],
 
 			'show_in_admin_bar' => false,
-			'public' => false,
+			'public' => true,
 			'show_ui' => true,
 			'show_in_menu' => 'edit.php?post_type=product',
 			'publicly_queryable' => true,
@@ -227,7 +227,7 @@ class CustomTabs {
 	public function custom_product_tab_render($tab_id) {
 		$output = '';
 
-		$tabs_type = blocksy_get_theme_mod('woo_tabs_type', 'type-1');
+		$tabs_type = blc_theme_functions()->blocksy_get_theme_mod('woo_tabs_type', 'type-1');
 
 		if ($tabs_type === 'type-4') {
 			$output .= blocksy_html_tag(

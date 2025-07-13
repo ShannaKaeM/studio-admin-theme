@@ -1,5 +1,7 @@
 <?php
 
+use Blocksy\Extensions\WoocommerceExtra\WaitlistEmail;
+
 if (! defined('ABSPATH')) {
 	exit;
 }
@@ -33,7 +35,7 @@ $button_link = $product->is_type('simple') ? add_query_arg('add-to-cart', $produ
 			),
 			true
 		);
-	?>		
+	?>
 </p>
 
 <p>
@@ -42,7 +44,7 @@ $button_link = $product->is_type('simple') ? add_query_arg('add-to-cart', $produ
 			__('Click the link below to secure your purchase before it is gone!', 'blocksy-companion'),
 			true
 		);
-	?>		
+	?>
 </p>
 
 <table class="td ct-product-table" cellspacing="0" cellpadding="6" border="1">
@@ -58,7 +60,7 @@ $button_link = $product->is_type('simple') ? add_query_arg('add-to-cart', $produ
 		<tr>
 			<td class="td ct-image-column">
 				<a href="<?php echo esc_url($product->get_permalink()) ?>">
-					<img 
+					<img
 						src="<?php echo $image_src; // phpcs:ignore. ?>"
 						alt="<?php echo esc_html($product->get_name()); ?>"
 						width="<?php echo esc_attr( $image_size['width'] ); ?>"

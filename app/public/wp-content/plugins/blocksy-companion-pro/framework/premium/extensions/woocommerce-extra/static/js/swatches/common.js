@@ -1,4 +1,5 @@
 import { handleOutofStock } from './out-of-stock'
+import { adjustVisibleItems } from './visibility-limit'
 
 export const computeSwatch = (el, args = {}) => {
 	args = {
@@ -25,9 +26,10 @@ export const computeSwatch = (el, args = {}) => {
 			)
 
 			if (labelContainer) {
-				labelContainer.textContent =
-					labelContainer.textContent.split(':')?.[0].trim() ||
-					labelContainer.textContent
+				const maybeValueContainer = labelContainer.querySelector('span')
+				if (maybeValueContainer) {
+					maybeValueContainer.remove()
+				}
 			}
 		}
 
@@ -37,7 +39,7 @@ export const computeSwatch = (el, args = {}) => {
 			selectValue &&
 			swatchesEl.querySelector(`[data-value=${selectValue}]`)
 		) {
-			const label = select.querySelector(
+			const value = select.querySelector(
 				`[value=${selectValue}]`
 			).textContent
 
@@ -49,10 +51,16 @@ export const computeSwatch = (el, args = {}) => {
 			)
 
 			if (labelContainer) {
-				labelContainer.textContent = `${
-					labelContainer.textContent.split(':')?.[0].trim() ||
-					labelContainer.textContent
-				}: ${label}`
+				const maybeValueContainer = labelContainer.querySelector('span')
+				const formattedValue = `: ${value}`
+
+				if (maybeValueContainer) {
+					maybeValueContainer.textContent = formattedValue
+				} else {
+					const valueContainer = document.createElement('span')
+					valueContainer.textContent = formattedValue
+					labelContainer.appendChild(valueContainer)
+				}
 			}
 
 			swatchesEl
@@ -62,6 +70,10 @@ export const computeSwatch = (el, args = {}) => {
 
 		handleOutofStock(el)
 		select.dispatchEvent(new Event('change'))
+
+		setTimeout(() => {
+			adjustVisibleItems(swatchesEl)
+		}, 0)
 
 		let urlForButton = null
 

@@ -13,7 +13,7 @@ $loggedin_account_label_visibility = blocksy_akg(
 		'mobile' => false,
 	]
 );
- 
+
 $loggedin_icon_visibility = blocksy_akg(
 	'loggedin_icon_visibility',
 	$atts,
@@ -28,9 +28,11 @@ $loggedin_icon_visibility = blocksy_akg(
 $loggedin_interaction_type = blocksy_akg('loggedin_interaction_type', $atts, 'dropdown');
 
 if (
-	isset($row_id) && $row_id === 'offcanvas'
-	||
-	$device !== 'desktop'
+	isset($row_id)
+	&&
+	$row_id === 'offcanvas'
+	// ||
+	// $device !== 'desktop'
 ) {
 	$loggedin_interaction_type = 'link';
 }
@@ -241,7 +243,11 @@ if ($loggedin_interaction_type === 'dropdown') {
 
 			$user_display_name =
 				!empty($user_firstname) || !empty($user_lastname)
-				? $user_firstname . ' ' . $user_lastname
+				? str_replace(
+					['{first_name}', '{last_name}', '{user_name}'],
+					[$user_firstname, $user_lastname, $user->display_name],
+					blocksy_akg('account_user_info_display_name', $dropdown_row, '{first_name} {last_name}')
+				)
 				: $user->display_name;
 
 			$image_html = '';
@@ -450,6 +456,9 @@ if ($loggedin_interaction_type === 'dropdown') {
 		if ($dropdown_row['id'] === 'menu') {
 			ob_start();
 
+			$menu_to_render = blocksy_expand_responsive_value($dropdown_row['menu']);
+			$menu_to_render = $menu_to_render[$device];
+
 			add_filter(
 				'nav_menu_item_title',
 				'blocksy_handle_nav_menu_item_title',
@@ -461,7 +470,7 @@ if ($loggedin_interaction_type === 'dropdown') {
 				'blocksy_advanced_item' => true,
 				'blocksy_mega_menu' => true,
 				'blocksy_always_inline' => true,
-				'menu' => $dropdown_row['menu'],
+				'menu' => $menu_to_render,
 				'items_wrap' => '%3$s',
 			]);
 
@@ -515,12 +524,12 @@ if ($loggedin_interaction_type === 'dropdown') {
 				get_permalink(get_option('woocommerce_myaccount_page_id'))
 			);
 
-			$maybe_page_id = blocksy_get_theme_mod('woocommerce_wish_list_page');
+			$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_wish_list_page');
 
 			if (
 				! empty($maybe_page_id)
 				&&
-				blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
+				blc_theme_functions()->blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
 			) {
 				$maybe_permalink = get_permalink($maybe_page_id);
 
@@ -854,7 +863,8 @@ if ($loggedin_interaction_type === 'dropdown') {
 				blocksy_html_tag(
 					'span',
 					[
-						'class' => trim('ct-label ' . blocksy_visibility_classes($loggedin_account_label_visibility))
+						'class' => trim('ct-label ' . blocksy_visibility_classes($loggedin_account_label_visibility)),
+						'aria-hidden' => 'true',
 					],
 					$loggedin_label
 				) : ''

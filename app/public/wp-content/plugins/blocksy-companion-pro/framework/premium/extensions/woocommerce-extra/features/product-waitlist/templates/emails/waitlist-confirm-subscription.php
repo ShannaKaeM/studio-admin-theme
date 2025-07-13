@@ -1,11 +1,14 @@
 <?php
 
+use Blocksy\Extensions\WoocommerceExtra\WaitlistEmail;
+
 if (! defined('ABSPATH')) {
 	exit;
 }
 
 $image_src = $product->get_image_id() ? wp_get_attachment_image_src($product->get_image_id(), 'thumbnail')[0] : wc_placeholder_img_src();
 $image_size = wc_get_image_size('thumbnail');
+
 ?>
 
 <?php do_action('woocommerce_email_header', $email_heading, $email); ?>
@@ -38,7 +41,7 @@ $image_size = wc_get_image_size('thumbnail');
 		<tr>
 			<td class="td ct-image-column">
 				<a href="<?php echo esc_url($product->get_permalink()) ?>">
-					<img 
+					<img
 						src="<?php echo $image_src; // phpcs:ignore. ?>"
 						alt="<?php echo esc_html($product->get_name()); ?>"
 						width="<?php echo esc_attr( $image_size['width'] ); ?>"
@@ -62,7 +65,7 @@ $image_size = wc_get_image_size('thumbnail');
 	<?php echo esc_html__('Click the button below to confirm your subscription. Once confirmed, we will notify you when the item is back in stock.', 'blocksy-companion'); ?>
 </p>
 
-<?php 
+<?php
 	echo '<p><a href="' . esc_url($confirm_url) . '" class="ct-add-to-cart">' . esc_html__('Confirm Subscription', 'blocksy-companion') . '</a></p>';
 ?>
 

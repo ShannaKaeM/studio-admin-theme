@@ -8,7 +8,7 @@ class ContentBlocksSeoTools {
 		add_filter(
 			'rank_math/sitemap/exclude_post_type',
 			function($exclude, $post_type) {
-				if (in_array($post_type, ['ct_content_block', 'ct_product_tab'], true)) {
+				if (in_array($post_type, ['ct_content_block', 'ct_product_tab', 'ct_thank_you_page'], true)) {
 					return true;
 				}
 
@@ -22,6 +22,8 @@ class ContentBlocksSeoTools {
 			function($post_types) {
 				unset($post_types['ct_content_block']);
 				unset($post_types['ct_product_tab']);
+				unset($post_types['ct_thank_you_page']);
+				
 				return $post_types;
 			}
 		);
@@ -31,7 +33,11 @@ class ContentBlocksSeoTools {
 			function($post_types) {
 				return array_diff(
 					$post_types,
-					['ct_content_block', 'ct_product_tab']
+					[
+						'ct_content_block',
+						'ct_product_tab',
+						'ct_thank_you_page'
+					]
 				);
 			}
 		);
@@ -39,7 +45,7 @@ class ContentBlocksSeoTools {
 		add_filter(
 			'wpseo_sitemap_exclude_post_type',
 			function ($excluded, $post_type) {
-				if (in_array($post_type, ['ct_content_block', 'ct_product_tab'], true)) {
+				if (in_array($post_type, ['ct_content_block', 'ct_product_tab', 'ct_thank_you_page'], true)) {
 					return true;
 				}
 

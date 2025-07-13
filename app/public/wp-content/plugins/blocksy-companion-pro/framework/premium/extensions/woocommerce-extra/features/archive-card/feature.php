@@ -27,7 +27,10 @@ class ArchiveCard {
 		add_filter(
 			'woocommerce_get_script_data',
 			function ($params, $handle) {
-				$shop_cards_type = blocksy_get_theme_mod('shop_cards_type', 'type-1');
+				$shop_cards_type = blc_theme_functions()->blocksy_get_theme_mod(
+					'shop_cards_type',
+					'type-1'
+				);
 
 				if ($shop_cards_type !== 'type-3') {
 					return $params;
@@ -70,12 +73,12 @@ class ArchiveCard {
 		add_filter(
 			'blocksy:options:woocommerce:archive:card-type:output_product_toolbar',
 			function ($components) {
-				$shop_cards_type = blocksy_get_theme_mod('shop_cards_type', 'type-1');
+				$shop_cards_type = blc_theme_functions()->blocksy_get_theme_mod('shop_cards_type', 'type-1');
 
 				if (
 					$shop_cards_type !== 'type-3'
 					||
-					blocksy_get_theme_mod('has_archive_add_to_cart', 'yes') === 'no'
+					blc_theme_functions()->blocksy_get_theme_mod('has_archive_add_to_cart', 'yes') === 'no'
 				) {
 					return $components;
 				}
@@ -112,7 +115,7 @@ class ArchiveCard {
 			return $link;
 		}
 
-		$shop_cards_type = blocksy_get_theme_mod('shop_cards_type', 'type-1');
+		$shop_cards_type = blc_theme_functions()->blocksy_get_theme_mod('shop_cards_type', 'type-1');
 
 		if ($shop_cards_type !== 'type-3') {
 			return $link;

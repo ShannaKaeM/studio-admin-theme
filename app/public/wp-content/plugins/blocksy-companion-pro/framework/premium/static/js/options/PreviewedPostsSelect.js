@@ -6,12 +6,12 @@ import { BlockContextProvider } from '@wordpress/block-editor'
 
 import { select } from '@wordpress/data'
 import { useSelect } from '@wordpress/data'
-import EntityIdPicker from '../../../../../static/js/options/ConditionsManager/EntityIdPicker'
+import { EntityIdPicker } from 'blocksy-options'
 
 if (wp.compose) {
 	addFilter(
 		'blockEditor.__unstableCanInsertBlockType',
-		'removePostContentFromInserter',
+		'blocksy.addPostContentFromInserter',
 		(
 			canInsert,
 			blockType,
@@ -114,9 +114,12 @@ const PreviewedPostsSelect = ({ value, onChange }) => {
 	return (
 		<div className="ct-previewed-post">
 			<EntityIdPicker
-				placeholder={__('Select post', 'blocksy-companion')}
-				entity="posts"
-				postType="ct_all_posts"
+				option={{
+					placeholder: __('Select post', 'blocksy-companion'),
+					entity: 'posts',
+					post_type: 'ct_all_posts',
+				}}
+				return_type="entity"
 				value={currentPostId}
 				onChange={({ id, post_type }) => {
 					onChange({

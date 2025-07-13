@@ -57,7 +57,7 @@ $form = blocksy_html_tag(
 	$custom_fields
 );
 
-$products_type = blocksy_get_theme_mod('waitlist_type', 'boxed');
+$products_type = blc_theme_functions()->blocksy_get_theme_mod('waitlist_type', 'boxed');
 
 $section_title = blocksy_html_tag(
 	'h5',
@@ -83,7 +83,7 @@ $section_success_message = blocksy_html_tag(
 	__('Great! You have been added to the waitlist for this product. Please check your inbox and confirm the subscription to this waitlist.', 'blocksy-companion')
 );
 
-$need_confirmation = blocksy_get_theme_mod('waitlist_user_confirmation', [
+$need_confirmation = blc_theme_functions()->blocksy_get_theme_mod('waitlist_user_confirmation', [
 	'logged_in' => true,
 	'logged_out' => true,
 ]);
@@ -118,7 +118,7 @@ if ($state === 'subscribed-confirmed') {
 
 $section_subscribed_users = '';
 
-if (blocksy_get_theme_mod('waitlist_show_users_number', 'no') === 'yes') {
+if (blc_theme_functions()->blocksy_get_theme_mod('waitlist_show_users_number', 'no') === 'yes') {
 	$count_data = ProductWaitlistLayer::get_users_count($product_id);
 
 	$section_subscribed_users = blocksy_html_tag(

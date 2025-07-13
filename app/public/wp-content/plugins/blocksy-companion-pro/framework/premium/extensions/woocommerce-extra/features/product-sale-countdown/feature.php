@@ -157,9 +157,13 @@ class ProductSaleCountdown {
 		$need_to_show = !!$date;
 
 		if ($product->is_type('variable')) {
-			$maybe_current_variation = blocksy_manager()
-				->woocommerce
-				->retrieve_product_default_variation($product);
+			$maybe_current_variation = null;
+
+			if (blc_theme_functions()->blocksy_manager()) {
+				$maybe_current_variation = blc_theme_functions()->blocksy_manager()
+					->woocommerce
+					->retrieve_product_default_variation($product);
+			}
 
 			if ($maybe_current_variation) {
 				if ($maybe_current_variation->is_on_sale()) {

@@ -28,9 +28,13 @@ if ($product->is_type('variation')) {
 	$withDefaultVariation = 'no';
 
 	if ($product->is_type('variable')) {
-		$maybeDefaultVariation = blocksy_manager()
-			->woocommerce
-			->retrieve_product_default_variation($product);
+		$maybeDefaultVariation = null;
+
+		if (blc_theme_functions()->blocksy_manager()) {
+			$maybeDefaultVariation = blc_theme_functions()->blocksy_manager()
+				->woocommerce
+				->retrieve_product_default_variation($product);
+		}
 
 		if ($maybeDefaultVariation) {
 			$withDefaultVariation = 'yes';

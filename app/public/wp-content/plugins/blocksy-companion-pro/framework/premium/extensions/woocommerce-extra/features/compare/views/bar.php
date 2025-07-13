@@ -7,7 +7,7 @@ $compare_list = blc_get_ext('woocommerce-extra')
 $content = '';
 
 $visiblity_class = blocksy_visibility_classes(
-	blocksy_get_theme_mod(
+	blc_theme_functions()->blocksy_get_theme_mod(
 		'product_compare_bar_visibility',
 		[
 			'desktop' => true,
@@ -27,7 +27,7 @@ if (count($compare_list) > 0) {
 	}
 
 	$icon = blc_get_icon([
-		'icon_descriptor' => blocksy_get_theme_mod(
+		'icon_descriptor' => blc_theme_functions()->blocksy_get_theme_mod(
 			'product_compare_bar_button_icon',
 			[
 				'icon' => 'blc blc-compare',
@@ -38,7 +38,7 @@ if (count($compare_list) > 0) {
 
 	$url = '#ct-compare-modal';
 
-	$maybe_page_id = blocksy_get_theme_mod('woocommerce_compare_page');
+	$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_compare_page');
 
 	if (!empty($maybe_page_id)) {
 		$maybe_permalink = get_permalink($maybe_page_id);
@@ -50,7 +50,11 @@ if (count($compare_list) > 0) {
 
 	$label_class = 'ct-label';
 
-	$compare_label = blocksy_get_theme_mod('product_compare_bar_button_label', __('Compare', 'blocksy-companion'));
+	$compare_label = blc_theme_functions()->blocksy_get_theme_mod(
+		'product_compare_bar_button_label',
+		__('Compare', 'blocksy-companion')
+	);
+
 	$button = '';
 
 	if (function_exists('blocksy_action_button')) {
@@ -60,7 +64,7 @@ if (count($compare_list) > 0) {
 					'href' => $url,
 					'class' => $class,
 					'aria-label' => $compare_label,
-					'data-behaviour' => blocksy_get_theme_mod('compare_table_placement', 'modal'),
+					'data-behaviour' => blc_theme_functions()->blocksy_get_theme_mod('compare_table_placement', 'modal'),
 				],
 				'icon' => $icon,
 				'content' => blocksy_html_tag(

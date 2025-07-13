@@ -1,12 +1,14 @@
 <?php
 
-$cart_item_key = $cart_info['cart_id'];
-$cart_item = WC()->cart->get_cart_item($cart_item_key);
+$product_id = $cart_item['product_id'];
 
-$product = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
-$product_id = apply_filters('woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key);
+if (isset($cart_item['variation_id']) && $cart_item['variation_id']) {
+	$product_id = $cart_item['variation_id'];
+}
 
-$close_button_type = blocksy_get_theme_mod(
+$product = wc_get_product($product_id);
+
+$close_button_type = blc_theme_functions()->blocksy_get_theme_mod(
 	'added_to_cart_popup_close_button_type',
 	'type-1'
 );
@@ -17,22 +19,31 @@ if (isset($_REQUEST['wp_customize'])) {
 	$is_cutomize_preview = true;
 }
 
-$popup_animation = blocksy_get_theme_mod('added_to_cart_popup_open_animation', 'slide-right');
-$popup_size = blocksy_get_theme_mod('added_to_cart_popup_size', 'medium');
-$popup_position = blocksy_get_theme_mod('added_to_cart_popup_position', 'bottom:right');
+$popup_animation = blc_theme_functions()->blocksy_get_theme_mod(
+	'added_to_cart_popup_open_animation',
+	'slide-right'
+);
+$popup_size = blc_theme_functions()->blocksy_get_theme_mod(
+	'added_to_cart_popup_size',
+	'medium'
+);
+$popup_position = blc_theme_functions()->blocksy_get_theme_mod(
+	'added_to_cart_popup_position',
+	'bottom:right'
+);
 
 $display_descriptor = [
-	'show_image' => blocksy_get_theme_mod('added_to_cart_popup_show_image', 'yes'),
-	'show_price' => blocksy_get_theme_mod('added_to_cart_popup_show_price', 'yes'),
-	'show_description' => blocksy_get_theme_mod('added_to_cart_popup_show_description', 'no'),
-	'show_shipping' => blocksy_get_theme_mod('added_to_cart_popup_show_shipping', 'yes'),
-	'show_tax' => blocksy_get_theme_mod('added_to_cart_popup_show_tax', 'no'),
-	'show_total' => blocksy_get_theme_mod('added_to_cart_popup_show_total', 'yes'),
-	'show_attributes' => blocksy_get_theme_mod('added_to_cart_popup_show_attributes', 'yes'),
-	'show_cart' => blocksy_get_theme_mod('added_to_cart_popup_show_cart', 'yes'),
-	'show_checkout' => blocksy_get_theme_mod('added_to_cart_popup_show_checkout', 'no'),
-	'show_continue' => blocksy_get_theme_mod('added_to_cart_popup_show_continue', 'yes'),
-	'suggested_products' => blocksy_get_theme_mod('cart_popup_suggested_products', 'yes'),
+	'show_image' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_image', 'yes'),
+	'show_price' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_price', 'yes'),
+	'show_description' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_description', 'no'),
+	'show_shipping' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_shipping', 'yes'),
+	'show_tax' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_tax', 'no'),
+	'show_total' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_total', 'yes'),
+	'show_attributes' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_attributes', 'yes'),
+	'show_cart' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_cart', 'yes'),
+	'show_checkout' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_checkout', 'no'),
+	'show_continue' => blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_show_continue', 'yes'),
+	'suggested_products' => blc_theme_functions()->blocksy_get_theme_mod('cart_popup_suggested_products', 'yes'),
 ];
 
 foreach ($display_descriptor as $key => $value) {

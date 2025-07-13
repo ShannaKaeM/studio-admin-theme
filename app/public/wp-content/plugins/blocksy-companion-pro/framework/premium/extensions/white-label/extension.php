@@ -173,16 +173,6 @@ class BlocksyExtensionWhiteLabel {
 			return $wp_theme;
 		});
 
-		add_action('wp_ajax_blocksy_get_white_label_settings', function () {
-			if (! current_user_can('manage_options')) {
-				wp_send_json_error();
-			}
-
-			wp_send_json_success([
-				'settings' => $this->get_settings()
-			]);
-		});
-
 		add_action('wp_ajax_blocksy_update_white_label_settings', function () {
 			if (! current_user_can('manage_options')) {
 				wp_send_json_error();

@@ -33,6 +33,10 @@
 
 	.entry-content {
 		color: var(--theme-text-color);
+
+		// deactivate some menu variables that apply on inner items
+		--theme-box-shadow: initial;
+		--theme-border-radius: initial;
 	}
 }
 

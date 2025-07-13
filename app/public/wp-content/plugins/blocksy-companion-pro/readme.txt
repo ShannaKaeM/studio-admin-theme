@@ -2,10 +2,10 @@
 Tags: widget, widgets
 Requires at least: 6.5
 Requires PHP: 7.0
-Tested up to: 6.7
+Tested up to: 6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Stable tag: 2.0.90
+Stable tag: 2.1.3
 
 == Description ==
 
@@ -52,6 +52,69 @@ Program. The Patchstack team help validate, triage and handle any security
 vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/blocksy-companion)
 
 == Changelog ==
+2.1.3: 2025-07-10
+- Improvement: Advanced Posts block - properly compute the spacing option
+- Improvement: Customizer import/export feature - safely unserialize data on import
+- Improvement: Dynamic Data block - small accessibility improvement when the block is used as a featured image
+- Improvement: Introduce PHP filter to disable SVG sanitization
+
+2.1.2: 2025-07-03
+- Improvement: Correctly respect Loco Translate custom translation locations
+
+2.1.1: 2025-06-26
+- Improvement: Sticky header - better calculations for sticky position of rows hidden on mobile devices
+- Improvement: Sticky header - proper offset when store notice is enabled
+
+2.1.0: 2025-06-05
+- Improvement: Breadcrumbs block - make sure the editor preview respects the context
+- Improvement: Newsletter subscribe - integration with Email Octopus
+- Improvement: Render HTML tags for the "Dynamic Data" block in the editor preview for before/after options
+- Improvement: SVG dimensions feature failsafe on attachments with broken meta
+- Improvement: Support for product attributes in the dynamic data block
+
+2.0.99: 2025-05-22
+- Improvement: Advanced Search block - make sure the additional CSS classes are outputted in frontend
+- Improvement: Sticky header - don't include hidden rows in the calculation
+- Improvement: Trending posts/products - make sure the "Product Status" option work properly when used with "Trending From" option
+
+2.0.98: 2025-05-01
+- Improvement: Advanced taxonomies block does not display anything if an image has not been assigned to a term
+
+2.0.97: 2025-04-24
+- Improvement: Correctly check for Blocksy theme presence in WP CLI context
+
+2.0.96: 2025-04-17
+- Improvement: Advanced Posts block - Better generation of unique ID to avoid clashes
+- Improvement: Correct handle skip-themes flag in WP CLI when detecting presence of Blocksy theme
+- Improvement: Correctly respect terms order from WooCommerce in the Shop Filter block
+- Fix: Cookies Consent popup does not render if header is disabled on a certain page
+
+2.0.95: 2025-04-04
+- Improvement: Minor accessibility improvements
+- Fix: Advanced posts block doesn't apply column CSS on front-end
+- Fix: Fix FOUC issues for Advanced Posts and Advanced Taxonomies blocks in some specific situations
+
+2.0.94: 2025-04-03
+- Improvement: Ensure permalinks are regenerated properly when WP Toolkit checks for updates
+- Fix: Conditions module - ensure stability of post searching
+
+2.0.93: 2025-03-27
+- Improvement: Functionality to import/export menus created with the Advanced Menu extension
+- Improvement: Make sure advanced search block respects the products taxonomy filter criteria option
+- Improvement: Optimize users search retrieval in conditions module on sites with a height amount of users
+
+2.0.92: 2025-03-13
+- Improvement: Account drop down custom link url string support
+- Improvement: Account header element - bring back the tablet/mobile dropdown functionality only for main header rows
+- Improvement: Mare sure Product Reviews archive star rating respect the horizontal alignment option
+- Improvement: Safer calling of theme functions in the companion plugin
+- Fix: Multiple Advanced Posts blocks on a single page, scoped by category, load incorrect posts when using pagination
+
+2.0.91: 2025-02-27
+- Improvement: Ability to change the order of first & last name in the account header element drop down
+- Improvement: Better integration with WPMobile app plugin
+- Improvement: Starter sites importer proper check for DOM PHP extension presence
+
 2.0.90: 2025-02-21
 - Improvement: General fixes and improvements
 

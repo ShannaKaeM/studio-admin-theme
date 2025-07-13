@@ -168,6 +168,57 @@ class BlocksyExtensionColorModeSwitch {
 				);
 			}
 		}, 50);
+
+		add_filter(
+			'rocket_cache_dynamic_cookies',
+			[__CLASS__, 'handle_wp_rocket_cookies']
+		);
+	}
+
+	static public function handle_wp_rocket_cookies($cookies) {
+		$cookies[] = 'blocksy_current_theme';
+
+		return $cookies;
+	}
+
+	static public function onActivation() {
+		if (! function_exists('flush_rocket_htaccess')) {
+			return;
+		}
+
+		add_filter(
+			'rocket_cache_dynamic_cookies',
+			[__CLASS__, 'handle_wp_rocket_cookies']
+		);
+
+		// Update the WP Rocket rules on the .htaccess file.
+		flush_rocket_htaccess();
+
+		// Regenerate the config file.
+		rocket_generate_config_file();
+
+		// Clear WP Rocket cache.
+		rocket_clean_domain();
+	}
+
+	static public function onDeactivation() {
+		if (! function_exists('flush_rocket_htaccess')) {
+			return;
+		}
+
+		remove_filter(
+			'rocket_cache_dynamic_cookies',
+			[__CLASS__, 'handle_wp_rocket_cookies']
+		);
+
+		// Update the WP Rocket rules on the .htaccess file.
+		flush_rocket_htaccess();
+
+		// Regenerate the config file.
+		rocket_generate_config_file();
+
+		// Clear WP Rocket cache.
+		rocket_clean_domain();
 	}
 }
 

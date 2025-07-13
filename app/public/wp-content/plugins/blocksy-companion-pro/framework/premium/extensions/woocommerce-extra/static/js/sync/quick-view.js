@@ -1,5 +1,7 @@
 import { addAction } from '@wordpress/hooks'
-import { setRatioFor } from 'blocksy-customizer-sync'
+
+import { handleBackgroundOptionFor, setRatioFor } from 'blocksy-customizer-sync'
+import ctEvents from 'ct-events'
 
 const quickViewData = {
 	navPrev: '',
@@ -84,3 +86,145 @@ export const mountQuickViewSync = () => {
 		})
 	)
 }
+
+export const collectVariablesForQuickView = () => ({
+	woocommerce_quick_view_width: {
+		selector: '.ct-quick-view-card',
+		variable: 'theme-normal-container-max-width',
+		responsive: true,
+		unit: 'px',
+	},
+
+	quick_view_title_color: {
+		selector: '.ct-quick-view-card .entry-summary .product_title',
+		variable: 'theme-heading-color',
+		type: 'color',
+	},
+
+	quick_view_price_color: {
+		selector: '.ct-quick-view-card .entry-summary .price',
+		variable: 'theme-text-color',
+		type: 'color',
+	},
+
+	quick_view_description_color: {
+		selector:
+			'.ct-quick-view-card .woocommerce-product-details__short-description',
+		variable: 'theme-text-color',
+		type: 'color',
+	},
+
+	quick_view_add_to_cart_text: [
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .single_add_to_cart_button',
+			variable: 'theme-button-text-initial-color',
+			type: 'color:default',
+		},
+
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .single_add_to_cart_button',
+			variable: 'theme-button-text-hover-color',
+			type: 'color:hover',
+		},
+	],
+
+	quick_view_add_to_cart_background: [
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .single_add_to_cart_button',
+			variable: 'theme-button-background-initial-color',
+			type: 'color:default',
+		},
+
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .single_add_to_cart_button',
+			variable: 'theme-button-background-hover-color',
+			type: 'color:hover',
+		},
+	],
+
+	quick_view_view_cart_button_text: [
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .ct-cart-actions .added_to_cart',
+			variable: 'theme-button-text-initial-color',
+			type: 'color:default',
+		},
+
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .ct-cart-actions .added_to_cart',
+			variable: 'theme-button-text-hover-color',
+			type: 'color:hover',
+		},
+	],
+
+	quick_view_view_cart_button_background: [
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .ct-cart-actions .added_to_cart',
+			variable: 'theme-button-background-initial-color',
+			type: 'color:default',
+		},
+
+		{
+			selector:
+				'.ct-quick-view-card .entry-summary .ct-cart-actions .added_to_cart',
+			variable: 'theme-button-background-hover-color',
+			type: 'color:hover',
+		},
+	],
+
+	quick_view_product_page_button_text: [
+		{
+			selector: '.ct-quick-view-card .entry-summary .ct-quick-more',
+			variable: 'theme-button-text-initial-color',
+			type: 'color:default',
+		},
+
+		{
+			selector: '.ct-quick-view-card .entry-summary .ct-quick-more',
+			variable: 'theme-button-text-hover-color',
+			type: 'color:hover',
+		},
+	],
+
+	quick_view_product_page_button_background: [
+		{
+			selector: '.ct-quick-view-card .entry-summary .ct-quick-more',
+			variable: 'theme-button-background-initial-color',
+			type: 'color:default',
+		},
+
+		{
+			selector: '.ct-quick-view-card .entry-summary .ct-quick-more',
+			variable: 'theme-button-background-hover-color',
+			type: 'color:hover',
+		},
+	],
+
+	quick_view_shadow: {
+		selector: '.ct-quick-view-card',
+		type: 'box-shadow',
+		variable: 'theme-box-shadow',
+	},
+
+	quick_view_radius: {
+		selector: '.ct-quick-view-card',
+		type: 'spacing',
+		variable: 'theme-border-radius',
+	},
+
+	...handleBackgroundOptionFor({
+		id: 'quick_view_background',
+		selector: '.ct-quick-view-card',
+	}),
+
+	...handleBackgroundOptionFor({
+		id: 'quick_view_backdrop',
+		selector: '.quick-view-modal',
+	}),
+})

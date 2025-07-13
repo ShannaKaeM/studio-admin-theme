@@ -2,6 +2,7 @@
 
 global $TRP_LANGUAGE;
 
+
 $settings = new TRP_Settings();
 
 $settings_array = $settings->get_settings();
@@ -15,8 +16,6 @@ $trp_lang_switcher = new TRP_Language_Switcher(
 
 $trp_languages = $trp->get_component('languages');
 
-$url_converter = $trp->get_component('url_converter');
-
 if (current_user_can(apply_filters(
 	'trp_translating_capability',
 	'manage_options'
@@ -26,116 +25,48 @@ if (current_user_can(apply_filters(
 	$languages_to_display = $settings_array['publish-languages'];
 }
 
-$published_languages = $trp_languages->get_language_names(
+$url_converter = $trp->get_component('url_converter');
+
+$languages = $trp_languages->get_language_names(
 	$languages_to_display
 );
 
-$current_language = array();
-
-foreach ($published_languages as $code => $name) {
-	if ($code == $TRP_LANGUAGE) {
-		$current_language['code'] = $code;
-		$current_language['name'] = $name;
-	}
+if (empty($languages)) {
+	return;
 }
 
-$current_language = apply_filters(
-	'trp_ls_shortcode_current_language',
-	$current_language,
-	$published_languages,
-	$TRP_LANGUAGE,
-	$settings_array
-);
+$descriptors = [];
 
-$list_class = 'class="ct-language trp-language-switcher-container"';
+foreach ($languages as $code => $lang) {
 
-if ($ls_type === 'dropdown') {
-	$list_class = 'class="trp-language-switcher-container"';
+	$flags_path = TRP_PLUGIN_URL .'assets/images/flags/';
+	$flags_path = apply_filters('trp_flags_path', $flags_path, $code);
 
-	echo '<div class="ct-language ct-active-language" tabindex="0">';
+	// File name for specific flag
+	$flag_file_name = $code .'.png';
+	$flag_file_name = apply_filters('trp_flag_file_name', $flag_file_name, $code);
 
-	if (
-		isset($top_level_language_type['custom_icon'])
-		&&
-		$top_level_language_type['custom_icon']
-	) {
-		echo $top_level_icon;
-	}
-
-	if ($top_level_language_type['icon']) {
-		echo $trp_lang_switcher->add_flag(
-			$current_language['code'],
-			$current_language['name']
-		);
-	}
-
-	if ($top_level_language_type['label']) {
-		echo '<span>';
-
-		if ($top_level_language_label === 'long') {
-			echo $current_language['name'];
-		} else {
-			echo strtoupper($url_converter->get_url_slug(
-				$current_language['code'],
-				false
-			));
-		}
-
-		echo '</span>';
-	}
-
-	if ($has_arrow) {
-		echo '<svg class="ct-icon ct-dropdown-icon" width="8" height="8" viewBox="0 0 15 15"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"></path></svg>';
-	}
-
-	echo '</div>';
-}
-
-echo '<ul ' . $list_class . '>';
-
-foreach ($published_languages as $code => $lang) {
-	if ($current_language['code'] === $code) {
-		if ($hide_current_language) {
-			continue;
-		}
-
-		echo '<li class="current-lang">';
-	} else {
-		echo '<li>';
-	}
-
-	$url = $url_converter->get_url_for_language($code, false);
-
-	$link_content = '';
-
-	if ($language_type['icon']) {
-		$link_content .= $trp_lang_switcher->add_flag($code, $lang);
-	}
-
-	if ($language_type['label']) {
-		$link_content .= '<span>';
-
-		if ($language_label === 'long') {
-			$link_content .= $lang;
-		} else {
-			$link_content .= strtoupper(
+	if ($code === $TRP_LANGUAGE) {
+		$descriptors['current'] = [
+			'url' => $url_converter->get_url_for_language($code, false),
+			'country_flag_url' => esc_url($flags_path . $flag_file_name),
+			'language_code' => $code,
+			'native_name' => $lang,
+			'short_name' => strtoupper(
 				$url_converter->get_url_slug($code, false)
-			);
-		}
+			),
+		];
 
-		$link_content .= '</span>';
+		continue;
 	}
 
-	echo blocksy_html_tag(
-		'a',
-		[
-			'href' => $url,
-			'aria-label' => $lang,
-		],
-		$link_content
-	);
-
-	echo '</li>';
+	$descriptors[] = [
+		'url' => $url_converter->get_url_for_language($code, false),
+		'country_flag_url' => esc_url($flags_path . $flag_file_name),
+		'language_code' => $code,
+		'native_name' => $lang,
+		'short_name' => strtoupper(
+			$url_converter->get_url_slug($code, false)
+		),
+	];
 }
-
-echo '</ul>';

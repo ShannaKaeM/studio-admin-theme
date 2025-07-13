@@ -23,10 +23,14 @@ class Filtering {
 		);
 
 		add_action('blocksy:global-dynamic-css:enqueue', function ($args) {
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return;
+			}
+
 			blocksy_theme_get_dynamic_styles(array_merge([
 				'path' => dirname(__FILE__) . '/global.php',
 				'chunk' => 'global',
-				'prefixes' => blocksy_manager()->screen->get_archive_prefixes([
+				'prefixes' => blc_theme_functions()->blocksy_manager()->screen->get_archive_prefixes([
 					'has_categories' => true,
 					'has_author' => false,
 					'has_search' => false
@@ -35,14 +39,18 @@ class Filtering {
 		}, 10, 3);
 
 		add_filter('blocksy:frontend:dynamic-js-chunks', function ($chunks) {
-			$prefix = blocksy_manager()->screen->get_prefix([
+			if (! blc_theme_functions()->blocksy_manager()) {
+				return $chunks;
+			}
+
+			$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix([
 				'allowed_prefixes' => [
 					'blog'
 				],
 				'default_prefix' => 'blog'
 			]);
 
-			if (blocksy_get_theme_mod($prefix . '_filter_behavior', 'ajax') !== 'ajax') {
+			if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_filter_behavior', 'ajax') !== 'ajax') {
 				return $chunks;
 			}
 
@@ -110,7 +118,7 @@ class Filtering {
 				return;
 			}
 
-			if (! function_exists('blocksy_manager')) {
+			if (! blc_theme_functions()->blocksy_manager()) {
 				return;
 			}
 
@@ -120,7 +128,7 @@ class Filtering {
 				$post_type = 'post';
 			}
 
-			$prefix = blocksy_manager()->screen->get_prefix([
+			$prefix = blc_theme_functions()->blocksy_manager()->screen->get_prefix([
 				'allowed_prefixes' => [
 					'blog'
 				],
@@ -137,7 +145,7 @@ class Filtering {
 				return;
 			}
 
-			$maybe_tax = blocksy_get_theme_mod(
+			$maybe_tax = blc_theme_functions()->blocksy_get_theme_mod(
 				$prefix . '_filter_source',
 				blocksy_maybe_get_matching_taxonomy($post_type)
 			);

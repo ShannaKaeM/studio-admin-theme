@@ -4,8 +4,6 @@ import ctEvents from 'ct-events'
 let store = {}
 
 export const afterRequest = (panel, e) => {
-	ctEvents.trigger('blocksy:frontend:init')
-
 	setTimeout(() => {
 		ctEvents.trigger('ct:overlay:handle-click', {
 			e,
@@ -166,13 +164,18 @@ registerDynamicChunk('blocksy_ext_woo_extra_filters_ajax_reveal', {
 		}
 	},
 
+	/*
 	maybeGetPanelContent: (el, { event }) => {
 		// we don't need to refetch content because content is handled by ajax filter logic
-
+		console.log(
+			'Blocksy WooCommerce Extra: Ajax filter reveal - maybeGetPanelContent is not needed.',
+			el
+		)
 		return new Promise((resolve) => {
 			// TODO: maybe implement actual content retrieval if will be
 			// needed in the future.
 			resolve('')
 		})
 	},
+    */
 })

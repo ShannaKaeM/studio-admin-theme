@@ -9,8 +9,7 @@ import ctEvents from 'ct-events'
 
 import classnames from 'classnames'
 import { __, sprintf } from 'ct-i18n'
-import { Switch } from 'blocksy-options'
-import Overlay from '../../../../../../static/js/helpers/Overlay'
+import { Switch, Overlay } from 'blocksy-options'
 
 let whiteLabelSettingsCache = {
 	locked: false,

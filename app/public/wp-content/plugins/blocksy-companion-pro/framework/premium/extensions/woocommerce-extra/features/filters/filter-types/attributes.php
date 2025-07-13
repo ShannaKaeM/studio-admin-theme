@@ -53,19 +53,19 @@ class AttributesFilter extends BaseFilter {
 			$swatch_shape = 'round';
 
 			if ($swatch_type === 'color') {
-				$swatch_shape = blocksy_get_theme_mod('color_swatch_shape', 'round');
+				$swatch_shape = blc_theme_functions()->blocksy_get_theme_mod('color_swatch_shape', 'round');
 			}
 
 			if ($swatch_type === 'image') {
-				$swatch_shape = blocksy_get_theme_mod('image_swatch_shape', 'round');
+				$swatch_shape = blc_theme_functions()->blocksy_get_theme_mod('image_swatch_shape', 'round');
 			}
 
 			if ($swatch_type === 'button') {
-				$swatch_shape = blocksy_get_theme_mod('button_swatch_shape', 'round');
+				$swatch_shape = blc_theme_functions()->blocksy_get_theme_mod('button_swatch_shape', 'round');
 			}
 
 			if ($swatch_type === 'mixed') {
-				$swatch_shape = blocksy_get_theme_mod('mixed_swatch_shape', 'round');
+				$swatch_shape = blc_theme_functions()->blocksy_get_theme_mod('mixed_swatch_shape', 'round');
 			}
 
 			$additional_attrs = [

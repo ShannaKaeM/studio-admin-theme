@@ -7,6 +7,12 @@ require_once dirname(__FILE__) . '/helpers.php';
 class SizeGuide {
 	private $post_type = 'ct_size_guide';
 
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_action('init', [$this, 'register_post_type']);
 
@@ -41,7 +47,7 @@ class SizeGuide {
 
 			return blocksy_akg(
 				'options',
-				blocksy_get_variables_from_file(
+				blc_theme_functions()->blocksy_get_variables_from_file(
 					dirname(
 						__FILE__
 					) . '/options.php',
@@ -186,7 +192,14 @@ class SizeGuide {
 
 		$table_html = $renderer->get_content();
 
-		$behaviour = isset($_GET['size_guide_placement']) ? $_GET['size_guide_placement'] : blocksy_get_theme_mod('size_guide_placement', 'modal');
+		$behaviour = blc_theme_functions()->blocksy_get_theme_mod(
+			'size_guide_placement',
+			'modal'
+		);
+
+		if (isset($_GET['size_guide_placement'])) {
+			$behaviour = $_GET['size_guide_placement'];
+		}
 
 		$content = '';
 
@@ -205,7 +218,7 @@ class SizeGuide {
 				]
 			);
 		}
-	
+
 		wp_reset_postdata();
 		$product = $old_product;
 
@@ -295,7 +308,7 @@ class SizeGuide {
 			],
 
 			'show_in_admin_bar' => false,
-			'public' => false,
+			'public' => true,
 			'show_ui' => true,
 			'show_in_menu' => 'edit.php?post_type=product',
 			'publicly_queryable' => true,

@@ -37,6 +37,7 @@
 
 		.woocommerce-product-details__short-description {
 			color: var(--theme-text-color);
+			margin-bottom: var(--product-element-spacing, 25px);
 		}
 
 		:where(form.cart, .product_meta, .ct-product-additional-actions) {

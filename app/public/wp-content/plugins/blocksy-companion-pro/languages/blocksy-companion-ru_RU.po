@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Blocksy Companion Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-01-12 17:55:19+0000\n"
+"PO-Revision-Date: 2025-05-15 19:06:22+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -263,7 +263,7 @@ msgstr "Товар, который вы ждёте, снова в наличии
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/back-in-stock.php:11
 msgid "Good news! The product you have been waiting for is now back in stock!"
-msgstr "Хорошие новости! Товар, который вы так долго ждали, снова в наличии!"
+msgstr "Хорошие новости! Товар, который вы та�� долго ждали, снова в наличии!"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/confirm-subscription.php:8
 msgid "Waitlist - Confirm Subscription"
@@ -345,7 +345,7 @@ msgstr "В вашем списке ожидания пока нет ни одн�
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/views/table.php:42
 msgid "Confirmed"
-msgstr "Подтверждено"
+msgstr "Подтв��рждено"
 
 #. translators: %s User name.
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-back-in-stock.php:19,
@@ -782,7 +782,7 @@ msgstr "Отображение поля поиска"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Edit.js:496
 msgid "Container Maximum Height"
-msgstr "Максимальная высота контейнера"
+msgstr "Макс. высота контейнера"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/TaxonomySelector.js:55
 msgid "Exclude Speciffic Items"
@@ -795,7 +795,7 @@ msgstr "Обновить тему сейчас"
 
 #: static/js/dashboard/screens/DemoInstall.js:183
 msgid "Your site is misconfigured and AJAX requests are not reaching your backend. Please click %shere%s to find the common causes and possible solutions to this.<br> Error code - %s"
-msgstr "Ваш сайт неправильно настроен, и AJAX-запросы не доходят до вашего сервера. Нажмит�� %sсюда%s, чтобы узнать о наиболее распространенных причинах и возможных решениях этой проблемы. <br>Код ошибки - %s"
+msgstr "Ваш сайт неправильно настроен, и AJAX-запросы не доходят до вашего сервера. Нажмите %sсюда%s, чтобы узнать о наиболее распространенных причинах и возможных решениях этой проблемы. <br>Код ошибки - %s"
 
 #: static/js/dashboard/screens/DemoInstall.js:201
 msgid "Failed to retrieve starter sites list.<br> Error code - %s"
@@ -951,7 +951,7 @@ msgstr "Отъезд"
 
 #: static/js/editor/blocks/dynamic-data/components/InspectorControls.js:202
 msgid "Alternative Text"
-msgstr "Альтернативный текст"
+msgstr "Альтернатив��ый текст"
 
 #: static/js/editor/blocks/dynamic-data/components/InspectorControls.js:215
 msgid "Describe the purpose of the image."
@@ -1255,7 +1255,7 @@ msgstr "Параметры"
 #: static/js/editor/blocks/query/edit/PostsPlaceholder.js:105
 #: static/js/editor/blocks/tax-query/edit/TermsPlaceholder.js:91
 msgid "Create Custom Layout"
-msgstr "Создание произвольного ма��ета"
+msgstr "Создание произвольного макета"
 
 #: static/js/editor/blocks/query/edit/PostsPlaceholder.js:37
 #: static/js/editor/blocks/query/index.js:12
@@ -1998,7 +1998,7 @@ msgstr "Видимость стрелок"
 
 #: framework/premium/extensions/woocommerce-extra/features/related-slideshow/design-options.php:11
 msgid "Prev/Next Arrow"
-msgstr "Стрелки вп��рёд/назад"
+msgstr "Стрелки вперёд/назад"
 
 #: framework/premium/extensions/woocommerce-extra/features/related-slideshow/design-options.php:41
 msgid "Prev/Next Background"
@@ -2341,7 +2341,7 @@ msgstr "Вставьте определённый блок контента в �
 
 #: framework/premium/static/js/hooks/CreateHook.js:156
 msgid "Nothing Found Template"
-msgstr "Шаблон отсутствия результатов"
+msgstr "Шаблон о��сутствия результатов"
 
 #: framework/premium/static/js/hooks/CreateHook.js:164
 msgid "Maintenance Template"
@@ -3144,7 +3144,7 @@ msgstr "Способы доставки"
 
 #: framework/premium/extensions/woocommerce-extra/features/custom-thank-you-page/feature.php:265
 msgid "Thank you Page"
-msgstr "Страница благодарност��"
+msgstr "Страница благодарности"
 
 #: framework/premium/extensions/woocommerce-extra/features/custom-thank-you-page/feature.php:480,
 #: framework/premium/extensions/woocommerce-extra/features/custom-thank-you-page/feature.php:486
@@ -4040,7 +4040,7 @@ msgstr "Ничего не найдено"
 
 #: framework/premium/features/content-blocks/admin-ui.php:270
 msgid "Maintenance"
-msgstr "Техобслуживание"
+msgstr "Техобслуживан��е"
 
 #: framework/premium/features/content-blocks/admin-ui.php:374
 msgid "On click to element"
@@ -4354,7 +4354,7 @@ msgstr "Блок публикации в соцсетях"
 
 #: framework/helpers/exts-configs.php:347
 msgid "Enable social sharing abilities for products available on the site, letting even more users discover your great shop selection."
-msgstr "Возможность публикации информации о товарах, доступных на сайте, в соцсетях, что позволит еще большему количеству пользователей ознакомиться с ассортиментом магазина."
+msgstr "Возможность публикации информации о товарах, доступных на сайте, в соцсетях, что позволит еще большему количеству поль��ователей ознакомиться с ассортиментом магазина."
 
 #: framework/helpers/exts-configs.php:338
 msgid "Advanced Gallery"
@@ -4419,7 +4419,7 @@ msgstr "Динамические данные"
 
 #: framework/helpers/exts-configs.php:150
 msgid "Integrates custom fields solutions in the meta layers of a post and presents additional information."
-msgstr "Интеграция пользовательских полей в мета-слои записи и предоставление дополнительной информации."
+msgstr "Интеграция пользовательских полей в мета-слои записи и предоставление дополнитель��ой информации."
 
 #. translators: This is a brand name. Preferably to not be translated
 #: framework/helpers/exts-configs.php:83
@@ -5156,7 +5156,7 @@ msgstr "Текст кнопки отказа"
 #: framework/extensions/cookies-consent/customizer.php:88,
 #: framework/extensions/cookies-consent/helpers.php:11
 msgid "Decline"
-msgstr "Отказ"
+msgstr "Отклоняю"
 
 #. translators: This is a brand name. Preferably to not be translated
 #: framework/extensions/newsletter-subscribe/config.php:5
@@ -5415,7 +5415,7 @@ msgstr "Включая"
 #: static/js/editor/blocks/query/edit/PostsInspectorControls.js:291
 #: static/js/options/ConditionsManager/SingleCondition.js:98
 msgid "Exclude"
-msgstr "Исключая"
+msgstr "Исключить"
 
 #: framework/premium/static/js/options/PreviewedPostsSelect.js:170
 #: static/js/options/ConditionsManager/PostIdPicker.js:68
@@ -5642,7 +5642,7 @@ msgstr "термины"
 
 #: static/js/dashboard/screens/DemoInstall/Installer/messages.js:91
 msgid "images"
-msgstr "изобр��жения"
+msgstr "изображения"
 
 #: static/js/dashboard/screens/DemoInstall/Installer/messages.js:92
 msgid "posts"
@@ -6651,7 +6651,7 @@ msgstr "Начало модальной формы восстановления"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:548
 msgid "Lost password form modal end"
-msgstr "Конец модальной формы вос��тановления"
+msgstr "Конец модальной формы восстановления"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:556
 msgid "Before main content"
@@ -6985,11 +6985,11 @@ msgstr "До номера заголовка"
 
 #: static/js/editor/blocks/about-me/index.js:45
 msgid "About Me"
-msgstr "Обо мне"
+msgstr "О себе"
 
 #: framework/features/blocks/about-me/options.php:16
 msgid "About me"
-msgstr "Обо мне"
+msgstr "О себе"
 
 #: framework/features/blocks/about-me/options.php:49,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:31,
@@ -7402,7 +7402,7 @@ msgstr "Стандартный режим"
 #: framework/premium/extensions/woocommerce-extra/features/wish-list/header-items/wish-list/options.php:318,
 #: framework/premium/extensions/woocommerce-extra/features/wish-list/header-items/wish-list/options.php:442
 msgid "Transparent State"
-msgstr "Режим прозрачности"
+msgstr "Режим про��рачности"
 
 #: framework/features/header/header-options.php:227,
 #: framework/features/header/items/account/options.php:1161,
@@ -8905,7 +8905,7 @@ msgstr "Содержимое"
 #: framework/extensions/cookies-consent/customizer.php:64,
 #: framework/extensions/cookies-consent/helpers.php:7
 msgid "We use cookies to ensure that we give you the best experience on our website."
-msgstr "Мы используем файлы cookie, чтобы обеспечить максимальное удобство использования нашего веб-сайта."
+msgstr "Мы используем cookie, чтобы обеспечить максимальное удобство использования нашего веб-сайта."
 
 #: framework/features/blocks/search/options.php:58
 msgid "Button Text"
@@ -8914,7 +8914,7 @@ msgstr "Текст кнопки"
 #: framework/extensions/cookies-consent/customizer.php:80,
 #: framework/extensions/cookies-consent/helpers.php:10
 msgid "Accept"
-msgstr "Согласен"
+msgstr "Принимаю"
 
 #: framework/extensions/cookies-consent/customizer.php:142,
 #: framework/extensions/newsletter-subscribe/customizer.php:170,

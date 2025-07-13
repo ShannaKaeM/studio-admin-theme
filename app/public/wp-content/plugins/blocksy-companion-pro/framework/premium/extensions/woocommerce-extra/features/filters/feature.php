@@ -16,7 +16,7 @@ class Filters {
 		$this->register_filter_type(new StatusFilter());
 
 		new ActiveFilters();
-		
+
 		new FiltersBlock();
 		new PriceBlock();
 		new StatusBlock();
@@ -80,19 +80,19 @@ class Filters {
 					);
 				}
 
-				if (blocksy_get_theme_mod('woo_filters_ajax', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_filters_ajax', 'no') === 'yes') {
 					wp_enqueue_style(
 						'blocksy-ext-woocommerce-extra-ajax-filtering-styles'
 					);
 				}
 
-				if (blocksy_get_theme_mod('filter_ajax_reveal', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('filter_ajax_reveal', 'no') === 'yes') {
 					wp_enqueue_style(
 						'blocksy-ext-woocommerce-extra-filters-styles'
 					);
 				}
 
-				if (blocksy_get_theme_mod('woo_has_active_filters', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_has_active_filters', 'no') === 'yes') {
 					wp_enqueue_style(
 						'blocksy-ext-woocommerce-extra-active-filters-styles'
 					);
@@ -154,10 +154,10 @@ class Filters {
 		);
 
 		add_filter('blocksy:general:body-attr', function ($attr) {
-			if (blocksy_get_theme_mod('woo_filters_ajax', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_filters_ajax', 'no') === 'yes') {
 				$attr['data-ajax-filters'] = 'yes';
 
-				if (blocksy_get_theme_mod('woo_filters_scroll_to_top', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_filters_scroll_to_top', 'no') === 'yes') {
 					$attr['data-ajax-filters'] = 'yes:scroll';
 				}
 			}
@@ -171,7 +171,7 @@ class Filters {
 			}
 
 			if (
-				blocksy_get_theme_mod('woo_filters_ajax', 'no') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_filters_ajax', 'no') === 'yes'
 				&&
 				(
 					is_shop()
@@ -199,21 +199,24 @@ class Filters {
 
 						[
 							'trigger' => 'submit',
-							'selector' =>
-							'[data-ajax-filters*="yes"] .woocommerce-ordering',
+							'selector' => '[data-ajax-filters*="yes"] .woocommerce-ordering'
 						],
 
 						[
 							'trigger' => 'change',
-							'selector' =>
-							'[data-ajax-filters*="yes"] .woocommerce-ordering select',
+							'selector' => '[data-ajax-filters*="yes"] .woocommerce-ordering select',
 						],
 
 						[
 							'trigger' => 'change',
-							'selector' =>
-							'[data-ajax-filters*="yes"] .ct-filter-item [type="checkbox"]',
+							'selector' => '[data-ajax-filters*="yes"] .ct-filter-item [type="checkbox"]',
 						],
+
+						[
+							'trigger' => 'window-event',
+							'eventName' => 'popstate',
+							'selector' => '[data-ajax-filters*="yes"]',
+						]
 					],
 					'url' => blocksy_cdn_url(
 						BLOCKSY_URL .
@@ -296,7 +299,7 @@ class Filters {
 
 	public function products_loop_container_start() {
 		if (
-			blocksy_get_theme_mod('woo_filters_ajax', 'no') !== 'yes'
+			blc_theme_functions()->blocksy_get_theme_mod('woo_filters_ajax', 'no') !== 'yes'
 			||
 			(
 				! is_shop()
@@ -330,7 +333,7 @@ class Filters {
 
 	public function products_loop_container_end() {
 		if (
-			blocksy_get_theme_mod('woo_filters_ajax', 'no') !== 'yes'
+			blc_theme_functions()->blocksy_get_theme_mod('woo_filters_ajax', 'no') !== 'yes'
 			||
 			(
 				! is_shop()

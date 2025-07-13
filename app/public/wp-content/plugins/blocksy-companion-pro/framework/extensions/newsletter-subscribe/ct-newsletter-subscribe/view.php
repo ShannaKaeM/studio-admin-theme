@@ -254,6 +254,7 @@ foreach ($button_colors as $key => $value) {
 					name="FNAME"
 					placeholder="<?php echo esc_attr($name_label, 'blocksy-companion') . ($newsletter_subscribe_name_required ? ' *' : ''); ?>"
 					title="<?php echo __('Name', 'blocksy-companion'); ?>"
+					aria-label="<?php echo __('Name', 'blocksy-companion'); ?>"
 					<?php echo ($newsletter_subscribe_name_required ? 'required' : ''); ?>
 				>
 			<?php } ?>
@@ -262,7 +263,8 @@ foreach ($button_colors as $key => $value) {
 				type="email"
 				name="EMAIL"
 				placeholder="<?php esc_attr_e($email_label, 'blocksy-companion'); ?>"
-				title="<?php echo __('Email', 'blocksy-companion'); ?>"
+				title="<?php echo __('Email address', 'blocksy-companion'); ?>"
+				aria-label="<?php echo __('Email address', 'blocksy-companion'); ?>"
 				required>
 
 			<button class="wp-element-button" <?php echo ! empty($button_colors_css) ? 'style="' . esc_attr($button_colors_css) . '"' : '' ?>>

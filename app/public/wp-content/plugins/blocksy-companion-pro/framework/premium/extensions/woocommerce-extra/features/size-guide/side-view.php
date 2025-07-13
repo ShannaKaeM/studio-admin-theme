@@ -2,11 +2,19 @@
 
 $product = wc_get_product($_GET['product_id']);
 
-$behaviour = isset($_GET['size_guide_side_panel_position']) ?
-	$_GET['size_guide_side_panel_position'] . '-side' :
-	blocksy_get_theme_mod('size_guide_side_panel_position', 'right') . '-side';
+$behaviour = blc_theme_functions()->blocksy_get_theme_mod(
+	'size_guide_side_panel_position',
+	'right'
+) . '-side';
 
-$close_button_type = blocksy_get_theme_mod('size_guide_close_button_type', 'type-1');
+if (isset($_GET['size_guide_side_panel_position'])) {
+	$behaviour = $_GET['size_guide_side_panel_position'] . '-side';
+}
+
+$close_button_type = blc_theme_functions()->blocksy_get_theme_mod(
+	'size_guide_close_button_type',
+	'type-1'
+);
 
 $panel_attr = [
 	'id' => 'ct-size-guide-modal',

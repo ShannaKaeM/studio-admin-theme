@@ -127,7 +127,11 @@ class PremiumHeader {
 				'loader_selector' => '[data-id="contacts"]',
 				'settings' => ['header_placements'],
 				'render_callback' => function () {
-					echo blocksy_manager()->header_builder->render();
+					if (! blc_theme_functions()->blocksy_manager()) {
+						return;
+					}
+
+					echo blc_theme_functions()->blocksy_manager()->header_builder->render();
 				}
 			];
 
@@ -155,7 +159,11 @@ class PremiumHeader {
 				'loader_selector' => '[data-id="menu-tertiary"]',
 				'settings' => ['header_placements'],
 				'render_callback' => function () {
-					echo blocksy_manager()->header_builder->render();
+					if (! blc_theme_functions()->blocksy_manager()) {
+						return;
+					}
+
+					echo blc_theme_functions()->blocksy_manager()->header_builder->render();
 				}
 			];
 
@@ -481,7 +489,7 @@ class PremiumHeader {
 	}
 
 	public function get_conditions() {
-		$option = blocksy_get_theme_mod('blocksy_premium_header_conditions', []);
+		$option = blc_theme_functions()->blocksy_get_theme_mod('blocksy_premium_header_conditions', []);
 
 		if (empty($option)) {
 			return [];

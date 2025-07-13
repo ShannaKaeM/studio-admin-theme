@@ -15,7 +15,7 @@ class Local_Gravatars_Init {
 				function ($url) {
 					global $pagenow;
 
-					if (blocksy_get_theme_mod('store_gravatars_locally', 'no') === 'yes') {
+					if (blc_theme_functions()->blocksy_get_theme_mod('store_gravatars_locally', 'no') === 'yes') {
 						if (str_contains($url, 'gravatar.com')) {
 							$local_gravatars = new Local_Gravatars($url);
 							$avatar_url = $local_gravatars->get_gravatar();

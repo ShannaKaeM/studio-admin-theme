@@ -3,12 +3,23 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class ShippingProgress {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_action(
 			'wp_enqueue_scripts',
 			function () {
 				if (!function_exists('get_plugin_data')) {
 					require_once ABSPATH . 'wp-admin/includes/plugin.php';
+				}
+
+				// Better and more explicit check of class existence
+				if (! class_exists('\Blocksy_Header_Builder_Render')) {
+					return;
 				}
 
 				$data = get_plugin_data(BLOCKSY__FILE__);
@@ -22,13 +33,13 @@ class ShippingProgress {
 					(
 						is_cart()
 						&&
-						blocksy_get_theme_mod('woo_shipping_progress_in_cart', 'no') === 'no'
+						blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_cart', 'no') === 'no'
 					)
 					||
 					(
 						is_checkout()
 						&&
-						blocksy_get_theme_mod('woo_shipping_progress_in_checkout', 'no') === 'no'
+						blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_checkout', 'no') === 'no'
 					)
 					||
 					(
@@ -38,7 +49,7 @@ class ShippingProgress {
 							(
 								$has_mini_cart
 								&&
-								blocksy_get_theme_mod('woo_shipping_progress_in_mini_cart', 'no') === 'no'
+								blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_mini_cart', 'no') === 'no'
 							)
 						)
 						&&
@@ -58,7 +69,7 @@ class ShippingProgress {
 						&&
 						$has_mini_cart
 						&&
-						blocksy_get_theme_mod('woo_shipping_progress_in_mini_cart', 'no') === 'no'
+						blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_mini_cart', 'no') === 'no'
 					)
 					||
 					(
@@ -86,21 +97,21 @@ class ShippingProgress {
 		);
 
 		add_action('wp', function () {
-			if (blocksy_get_theme_mod('woo_shipping_progress_in_cart', 'no') === 'yes') {
-				add_action('woocommerce_proceed_to_checkout', [
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_cart', 'no') === 'yes') {
+				add_action('blocksy:woo:cart:cart-totals', [
 					$this,
 					'cart_page_render',
 				]);
 			}
 
-			if (blocksy_get_theme_mod('woo_shipping_progress_in_checkout', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_checkout', 'no') === 'yes') {
 				add_action('blocksy:woo:checkout:order-review', [
 					$this,
 					'checkout_page_render',
 				], 25);
 			}
 
-			if (blocksy_get_theme_mod('woo_shipping_progress_in_mini_cart', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('woo_shipping_progress_in_mini_cart', 'no') === 'yes') {
 				add_action('woocommerce_widget_shopping_cart_before_buttons', [
 					$this,
 					'minicart_render',
@@ -271,7 +282,7 @@ class ShippingProgress {
 	}
 
 	public function render_shipping_progress_bar($return_html = '') {
-		$calculation = blocksy_get_theme_mod('woo_count_method', 'custom');
+		$calculation = blc_theme_functions()->blocksy_get_theme_mod('woo_count_method', 'custom');
 		$wrapper_classes = '';
 		$percent = 100;
 		$limit = 0;
@@ -296,7 +307,7 @@ class ShippingProgress {
 			}
 		}
 
-		$isCustomByItems = $calculation === 'custom' && blocksy_get_theme_mod('woo_custom_count_criteria', 'price') === 'items';
+		$isCustomByItems = $calculation === 'custom' && blc_theme_functions()->blocksy_get_theme_mod('woo_custom_count_criteria', 'price') === 'items';
 
 		if ('woo' === $calculation) {
 			$packages = WC()->cart->get_shipping_packages();
@@ -304,12 +315,16 @@ class ShippingProgress {
 			$zone = wc_get_shipping_zone($package);
 
 			foreach ($zone->get_shipping_methods(true) as $method) {
-				if ('free_shipping' === $method->id) {
+				if (
+					'free_shipping' === $method->id
+					&&
+					$method->get_option('min_amount')
+				) {
 					$limit = (float)$method->get_option('min_amount');
 				}
 			}
 		} elseif ('custom' === $calculation) {
-			$limit = (float)blocksy_get_theme_mod('woo_count_progress_amount', 100);
+			$limit = (float)blc_theme_functions()->blocksy_get_theme_mod('woo_count_progress_amount', 100);
 		}
 
 		if (defined('WOOCS_VERSION')) {
@@ -336,7 +351,7 @@ class ShippingProgress {
 
 		if ($isCustomByItems) {
 			$total = WC()->cart->get_cart_contents_count();
-			$limit = (float)blocksy_get_theme_mod('woo_count_progress_items', 2);
+			$limit = (float)blc_theme_functions()->blocksy_get_theme_mod('woo_count_progress_items', 2);
 		}
 
 		if (
@@ -344,7 +359,7 @@ class ShippingProgress {
 			&&
 			WC()->cart->get_coupons()
 			&&
-			blocksy_get_theme_mod('woo_count_with_discount', 'include') === 'include'
+			blc_theme_functions()->blocksy_get_theme_mod('woo_count_with_discount', 'include') === 'include'
 		) {
 			foreach (WC()->cart->get_coupons() as $coupon) {
 				$total -= WC()->cart->get_coupon_discount_amount(
@@ -368,7 +383,7 @@ class ShippingProgress {
 			$message = str_replace(
 				'{price}',
 				wc_price($limit - $total),
-				blocksy_get_theme_mod(
+				blc_theme_functions()->blocksy_get_theme_mod(
 					'free_not_enought_message',
 					__(
 						'Add {price} more to get free shipping!',
@@ -381,7 +396,7 @@ class ShippingProgress {
 				$message = str_replace(
 					'{items}',
 					$limit - $total,
-					blocksy_get_theme_mod(
+					blc_theme_functions()->blocksy_get_theme_mod(
 						'free_not_enought_items_message',
 						__(
 							'Add {items} more items to get free shipping!',
@@ -391,7 +406,7 @@ class ShippingProgress {
 				);
 			}
 		} else {
-			$message = blocksy_get_theme_mod(
+			$message = blc_theme_functions()->blocksy_get_theme_mod(
 				'free_enought_message',
 				__(
 					'Congratulations! You got free shipping 🎉',

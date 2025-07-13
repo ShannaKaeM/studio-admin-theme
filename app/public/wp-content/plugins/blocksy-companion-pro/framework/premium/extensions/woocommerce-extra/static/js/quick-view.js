@@ -136,7 +136,6 @@ export const afterRequest = (panel, e) => {
 				mountYithNameYourPrice(panel)
 			}
 		})
-		setTimeout(() => ctEvents.trigger('ct:flexy:update'))
 	})
 }
 
@@ -200,6 +199,12 @@ const openQuickViewFor = ({ event, panel, el, completeAction }) => {
 
 		if (ct_localizations.dynamic_styles.waitlist) {
 			promises.push(loadStyle(ct_localizations.dynamic_styles.waitlist))
+		}
+
+		if (ct_localizations.dynamic_styles.additional_actions) {
+			promises.push(
+				loadStyle(ct_localizations.dynamic_styles.additional_actions)
+			)
 		}
 
 		if (promises.length > 0) {

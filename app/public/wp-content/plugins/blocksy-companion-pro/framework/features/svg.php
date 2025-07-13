@@ -13,6 +13,10 @@ class SvgHandling {
 					return $file;
 				}
 
+				if (! apply_filters('blocksy:svg:should_sanitize', true)) {
+					return $file;
+				}
+
 				$svg_content = file_get_contents($file['tmp_name']);
 
 				// Sanitize the SVG content
@@ -87,6 +91,8 @@ class SvgHandling {
 
 		if (
 			'image/svg+xml' === $mime
+			&&
+			is_array($data)
 			&&
 			(
 				! isset($data['width'])

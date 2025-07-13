@@ -1,6 +1,6 @@
 <?php
 
-$forms_type = blocksy_get_theme_mod('forms_type', 'classic-forms');
+$forms_type = blc_theme_functions()->blocksy_get_theme_mod('forms_type', 'classic-forms');
 
 $headerSearchBoxMaxWidth = blocksy_akg( 'searchBoxMaxWidth', $atts, 25 );
 

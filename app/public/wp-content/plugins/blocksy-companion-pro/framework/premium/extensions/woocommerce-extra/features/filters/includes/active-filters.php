@@ -54,7 +54,7 @@ class ActiveFilters {
 		add_action(
 			'woocommerce_before_shop_loop',
 			function () {
-				if (blocksy_get_theme_mod('woo_has_active_filters', 'no') === 'no') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_has_active_filters', 'no') === 'no') {
 					return;
 				}
 
@@ -70,7 +70,7 @@ class ActiveFilters {
 		add_action(
 			'woocommerce_no_products_found',
 			function () {
-				if (blocksy_get_theme_mod('woo_has_active_filters', 'no') === 'no') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('woo_has_active_filters', 'no') === 'no') {
 					return;
 				}
 

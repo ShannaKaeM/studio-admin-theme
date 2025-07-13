@@ -34,9 +34,11 @@ class Plugin {
 	public $header = null;
 	public $account_auth = null;
 
+	public $inline_styles_collector = null;
+
 	private $is_blocksy = '__NOT_SET__';
 	public $is_blocksy_data = null;
-	private $desired_blocksy_version = '2.0.87-beta1';
+	private $desired_blocksy_version = '2.0.96-beta1';
 
 	private $request_uri = '';
 
@@ -155,6 +157,7 @@ class Plugin {
 		}
 
 		$this->dynamic_css = new DynamicCss();
+		$this->inline_styles_collector = new InlineStylesCollector();
 	}
 
 	/**
@@ -179,6 +182,7 @@ class Plugin {
 	 */
 	private function __construct() {
 		require_once BLOCKSY_PATH . '/framework/helpers/request.php';
+		require_once BLOCKSY_PATH . '/framework/helpers/theme-functions.php';
 		require_once BLOCKSY_PATH . '/framework/helpers/helpers.php';
 		require_once BLOCKSY_PATH . '/framework/helpers/exts.php';
 
@@ -211,6 +215,11 @@ class Plugin {
 	}
 
 	public function check_if_blocksy_is_activated() {
+		add_filter(
+			'doing_it_wrong_trigger_error',
+			[$this, 'doing_it_wrong_trigger_error']
+		);
+
 		$is_cli = defined('WP_CLI') && WP_CLI;
 
 		if ($this->is_blocksy === '__NOT_SET__') {
@@ -280,6 +289,29 @@ class Plugin {
 					$maybe_foreign_theme = $_REQUEST['theme'];
 				}
 
+				$is_wpappninja = isset($_REQUEST['wpappninja']);
+
+				if (
+					isset($_SERVER['HTTP_REFERER'])
+					&&
+					preg_match('#wpappninja_simul4#', $_SERVER['HTTP_REFERER'])
+				) {
+					$is_wpappninja = true;
+				}
+
+				// if WPMobile.App plugin is active and we're in the preview
+				if ($is_wpappninja && $is_correct_theme) {
+					$options = get_option('wpappninja');
+
+					if (! isset($options['wpappninja_main_theme'])) {
+						$options['wpappninja_main_theme'] = 'WPMobile.App';
+					}
+
+					if ($options['wpappninja_main_theme'] !== 'No theme') {
+						$is_correct_theme = false;
+					}
+				}
+
 				if ($is_correct_theme && $maybe_foreign_theme) {
 					$foreign_theme_obj = wp_get_theme($maybe_foreign_theme);
 
@@ -300,6 +332,26 @@ class Plugin {
 			if ($is_cli) {
 				$cli_config = \WP_CLI::get_config();
 
+				$should_skip_themes_wp_cli = false;
+
+				// Proper way to handle skip-themes
+				// https://github.com/wp-cli/wp-cli/blob/a9fabc07adf274274ba6bcc0f0e081f1fab1220b/php/utils-wp.php#L276
+				if (isset($cli_config['skip-themes'])) {
+					if ($cli_config['skip-themes'] === true) {
+						$should_skip_themes_wp_cli = true;
+					}
+
+					$skipped_themes_array = $cli_config['skip-themes'];
+
+					if (! is_array($skipped_themes_array)) {
+						$skipped_themes_array = explode(',', $skipped_themes_array);
+					}
+
+					if (in_array('blocksy', array_filter($skipped_themes_array), true)) {
+						$should_skip_themes_wp_cli = true;
+					}
+				}
+
 				// Companion plugin can't run if themes are skipped in WP CLI
 				// config.
 				//
@@ -309,11 +361,7 @@ class Plugin {
 				// --skip-plugins=false and keep themes disabled.
 				// This causes the theme to be skipped and the companion plugin
 				// to run, which causes lots of issues in various environments.
-				if (
-					isset($cli_config['skip-themes'])
-					&&
-					$cli_config['skip-themes']
-				) {
+				if ($should_skip_themes_wp_cli) {
 					$is_correct_theme = false;
 					$is_correct_version = false;
 				}
@@ -339,7 +387,16 @@ class Plugin {
 			);
 		}
 
+		remove_filter(
+			'doing_it_wrong_trigger_error',
+			[$this, 'doing_it_wrong_trigger_error']
+		);
+
 		return !!$this->is_blocksy;
+	}
+
+	public function doing_it_wrong_trigger_error() {
+		return false;
 	}
 
 	public function enqueue_static() {

@@ -111,6 +111,7 @@ const Preview = ({ attributes, blockData }) => {
 			{attributes.showSearch && (
 				<div className="ct-filter-search">
 					<input type="search" placeholder={placeholder} />
+
 					<span className="ct-filter-search-icon">
 						<svg
 							className="ct-filter-search-zoom-icon"

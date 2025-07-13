@@ -4,7 +4,7 @@ if (! isset($root_selector)) {
 	$root_selector = ['.ct-header-account'];
 }
 
-$forms_type = blocksy_get_theme_mod('forms_type', 'classic-forms');
+$forms_type = blc_theme_functions()->blocksy_get_theme_mod('forms_type', 'classic-forms');
 
 // Icon size
 $accountHeaderIconSize = blocksy_akg( 'accountHeaderIconSize', $atts, 15 );
@@ -659,6 +659,39 @@ if (is_customize_preview() || $close_button_type === 'type-3') {
 $loggedin_interaction_type = blocksy_akg( 'loggedin_interaction_type', $atts, 'dropdown' );
 
 if ($loggedin_interaction_type === 'dropdown') {
+
+	$account_dropdown_top_offset = blocksy_akg( 'account_dropdown_top_offset', $atts, 15 );
+
+	$css->put(
+		blocksy_assemble_selector(
+			blocksy_mutate_selector([
+				'selector' => $root_selector,
+				'operation' => 'suffix',
+				'to_add' => '.ct-header-account-dropdown'
+			])
+		),
+		'--dropdown-top-offset: ' . $account_dropdown_top_offset . 'px'
+	);
+
+	if (isset($has_sticky_header) && $has_sticky_header) {
+
+		$sticky_state_account_dropdown_top_offset = blocksy_akg( 'sticky_state_account_dropdown_top_offset', $atts, 15 );
+
+		$css->put(
+			blocksy_assemble_selector(
+				blocksy_mutate_selector([
+					'selector' => blocksy_mutate_selector([
+						'selector' => $root_selector,
+						'operation' => 'suffix',
+						'to_add' => '.ct-header-account-dropdown'
+					]),
+					'operation' => 'between',
+					'to_add' => '[data-sticky*="yes"]'
+				])
+			),
+			'--sticky-state-dropdown-top-offset: ' . $sticky_state_account_dropdown_top_offset . 'px'
+		);
+	}
 
 	blocksy_output_font_css([
 		'font_value' => blocksy_akg( 'header_account_dropdown_font', $atts,

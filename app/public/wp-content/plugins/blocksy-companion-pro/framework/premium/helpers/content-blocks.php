@@ -78,7 +78,8 @@ function blc_get_content_blocks($args = []) {
 		$all_items = get_posts([
 			'post_type' => 'ct_content_block',
 			'numberposts' => -1,
-			'suppress_filters' => false
+			'suppress_filters' => false,
+			'fields' => 'ids'
 		]);
 	}
 
@@ -88,14 +89,14 @@ function blc_get_content_blocks($args = []) {
 
 	$blocks = [];
 
-	foreach($all_items as $row) {
-		$template_type = get_post_meta($row->ID, 'template_type', true);
+	foreach($all_items as $hook_id) {
+		$template_type = get_post_meta($hook_id, 'template_type', true);
 
 		if ($template_type !== $args['template_type']) {
 			continue;
 		}
 
-		$blocks[$row->ID] = html_entity_decode(get_the_title($row->ID));
+		$blocks[$hook_id] = html_entity_decode(get_the_title($hook_id));
 	}
 
 	return $blocks;

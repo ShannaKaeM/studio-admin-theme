@@ -1,6 +1,6 @@
 <?php
 
-$ariaHidden = blocksy_get_theme_mod(
+$ariaHidden = blc_theme_functions()->blocksy_get_theme_mod(
 	'filter_panel_behaviour',
 	'no'
 ) === 'no' ? 'true' : 'false';
@@ -11,16 +11,13 @@ if (! woocommerce_products_will_display()) {
 
 $content = '';
 
-$filter_source = isset($_GET['filter_source']) ? $_GET['filter_source'] : blocksy_get_theme_mod('filter_source', 'sidebar-woocommerce-offcanvas-filters');
+$filter_source = blc_theme_functions()->blocksy_get_theme_mod(
+	'filter_source',
+	'sidebar-woocommerce-offcanvas-filters'
+);
 
-if (class_exists('BlocksySidebarsManager')) {
-	$manager = new \BlocksySidebarsManager();
-
-	$maybe_sidebar = $manager->maybe_get_sidebar_that_matches();
-	
-	if ($maybe_sidebar) {
-		$filter_source = $maybe_sidebar;
-	}
+if (isset($_GET['filter_source'])) {
+	$filter_source = $_GET['filter_source'];
 }
 
 if (
@@ -60,7 +57,7 @@ echo blocksy_html_tag(
 	[
 		'id' => 'woo-filters-panel',
 		'data-behaviour' => 'drop-down',
-		'data-height' => blocksy_get_theme_mod(
+		'data-height' => blc_theme_functions()->blocksy_get_theme_mod(
 			'filter_panel_height_type',
 			'auto'
 		),

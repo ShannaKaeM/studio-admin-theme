@@ -41,7 +41,7 @@ const RenderOptions = ({ attributes, setAttributes, blockData }) => {
 	}, [type, taxonomyLabel])
 
 	const isChecked = useMemo(() => {
-		if (type === 'categories' && taxonomy === 'product_brands') {
+		if (type === 'categories' && taxonomy === 'product_brand') {
 			return showItemsRendered
 		}
 
@@ -53,7 +53,7 @@ const RenderOptions = ({ attributes, setAttributes, blockData }) => {
 	}, [type, taxonomy, showItemsRendered, showTaxonomyImages])
 
 	const handleSwitch = useCallback(() => {
-		if (type === 'categories' && taxonomy !== 'product_brands') {
+		if (type === 'categories' && taxonomy !== 'product_brand') {
 			setAttributes({
 				showTaxonomyImages: !showTaxonomyImages,
 			})
@@ -71,7 +71,7 @@ const RenderOptions = ({ attributes, setAttributes, blockData }) => {
 			return false
 		}
 
-		if (type === 'categories' && taxonomy === 'product_brands') {
+		if (type === 'categories' && taxonomy === 'product_brand') {
 			return showItemsRendered
 		}
 

@@ -226,6 +226,23 @@ class Utils {
 	public function get_attributes_terms_stock($product, $attribute) {
 		$cache_key = $product->get_id() . '_' . $attribute;
 
+		$children = $product->get_children();
+
+		// In case of bundled products, the received product will receive a
+		// mutated list of children, in case the user choosed to display only
+		// a specific sub-set of variations.
+		$cache_key = [
+			$product->get_id(),
+			$attribute,
+			count($children),
+		];
+
+		if (count($children) > 0) {
+			$cache_key[] = $children[0];
+		}
+
+		$cache_key = implode('_', $cache_key);
+
 		if (isset($this->attributes_terms_stock_cache[$cache_key])) {
 			return $this->attributes_terms_stock_cache[$cache_key];
 		}
@@ -246,8 +263,6 @@ class Utils {
 
 			return $this->attributes_terms_stock_cache[$cache_key];
 		}
-
-		$children = $product->get_children();
 
 		$attributes = $product->get_attributes();
 		$default_attributes = $product->get_default_attributes();
@@ -294,7 +309,9 @@ class Utils {
 				->format_attribute_slug($key);
 
 			if (
-				blocksy_manager()->screen->is_product()
+				blc_theme_functions()->blocksy_manager()
+				&&
+				blc_theme_functions()->blocksy_manager()->screen->is_product()
 				&&
 				isset($_GET[$name])
 			) {

@@ -170,6 +170,13 @@ const SettingsManager = () => {
 		)
 	}, [])
 
+	const dismissModal = () => {
+		setRemoteItemData((remoteItemData) => ({
+			...remoteItemData,
+			itemId: null,
+		}))
+	}
+
 	return (
 		<div>
 			<Overlay
@@ -177,10 +184,14 @@ const SettingsManager = () => {
 				className="ct-admin-modal ct-mega-menu-modal"
 				initialFocusRef={containerRef}
 				onDismiss={() => {
-					setRemoteItemData((remoteItemData) => ({
-						...remoteItemData,
-						itemId: null,
-					}))
+					if (localItemSettings) {
+						return
+					}
+
+					dismissModal()
+				}}
+				onCloseButtonClick={() => {
+					dismissModal()
 				}}
 				render={() => (
 					<div className="ct-modal-content" ref={containerRef}>
@@ -228,7 +239,7 @@ const SettingsManager = () => {
 								className={classnames(
 									'button-primary ct-large-button'
 								)}
-								disabled={isLoading}
+								disabled={isLoading || !localItemSettings}
 								onClick={() => {
 									persistItemSettings(
 										remoteItemData.itemId,

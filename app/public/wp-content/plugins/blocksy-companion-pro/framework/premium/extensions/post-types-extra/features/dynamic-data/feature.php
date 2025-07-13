@@ -270,7 +270,11 @@ class DynamicData {
 				$post_type = 'page';
 			}
 
-			$post_types = blocksy_manager()->post_types->get_supported_post_types();
+			$post_types = [];
+
+			if (blc_theme_functions()->blocksy_manager()) {
+				$post_types = blc_theme_functions()->blocksy_manager()->post_types->get_supported_post_types();
+			}
 
 			foreach ($post_types as $single_post_type) {
 				if (
@@ -299,7 +303,7 @@ class DynamicData {
 			$post_type_acf_groups = acf_get_field_groups([
 				'post_type' => $post_type
 			]);
-			
+
 			if (! empty($args['post_id'])) {
 				$post_type_acf_groups = array_merge(
 					acf_get_field_groups([
@@ -308,7 +312,7 @@ class DynamicData {
 					$post_type_acf_groups
 				);
 			}
-			
+
 			foreach ($post_type_acf_groups as $acf_group) {
 				$fields = acf_get_fields($acf_group['key']);
 

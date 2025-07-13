@@ -391,7 +391,7 @@ blocksy_output_responsive([
 	'selector' => blocksy_assemble_selector(blocksy_mutate_selector([
 		'selector' => $root_selector,
 		'operation' => 'replace-last',
-		'to_add' => '[data-column="contacts"]'
+		'to_add' => $column_selector
 	])),
 	'variableName' => 'horizontal-alignment',
 	'value' => blocksy_akg( 'footer_contacts_horizontal_alignment', $atts, 'CT_CSS_SKIP_RULE' ),
@@ -407,7 +407,7 @@ blocksy_output_responsive([
 	'selector' => blocksy_assemble_selector(blocksy_mutate_selector([
 		'selector' => $root_selector,
 		'operation' => 'replace-last',
-		'to_add' => '[data-column="contacts"]'
+		'to_add' => $column_selector
 	])),
 	'variableName' => 'vertical-alignment',
 	'value' => blocksy_akg( 'footer_contacts_vertical_alignment', $atts, 'CT_CSS_SKIP_RULE' ),

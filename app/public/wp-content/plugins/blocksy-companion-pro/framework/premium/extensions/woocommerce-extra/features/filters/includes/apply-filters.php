@@ -136,10 +136,6 @@ class ApplyFilters {
 	}
 
 	public function posts_clauses_for_fresh_query($clauses, $query) {
-		if (! $this->is_main_query($query)) {
-			return $clauses;
-		}
-		
 		$filters = Filters::get_filter_instance();
 
 		foreach ($filters as $filter) {

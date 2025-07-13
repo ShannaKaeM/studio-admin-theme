@@ -19,7 +19,11 @@ class Query {
 				'post' => __('Posts', 'blocksy-companion')
 			];
 
-			$post_types = blocksy_manager()->post_types->get_supported_post_types();
+			$post_types = [];
+
+			if (blc_theme_functions()->blocksy_manager()) {
+				$post_types = blc_theme_functions()->blocksy_manager()->post_types->get_supported_post_types();
+			}
 
 			foreach ($post_types as $single_post_type) {
 				$post_type_object = get_post_type_object($single_post_type);
@@ -255,27 +259,11 @@ class Query {
 					'columns' => $columns
 				]);
 
-				blc_call_gutenberg_function(
-					'wp_style_engine_get_stylesheet_from_css_rules',
-					[
-						array_merge(
-							$css->get_wp_style_engine_rules([
-								'device' => 'desktop'
-							]),
-							$tablet_css->get_wp_style_engine_rules([
-								'device' => 'tablet'
-							]),
-							$mobile_css->get_wp_style_engine_rules([
-								'device' => 'mobile'
-							])
-						),
-						[
-							'context'  => 'block-supports',
-							'prettify' => false,
-							'optimize' => true
-						]
-					]
-				);
+				$block_content .= \Blocksy\Plugin::instance()->inline_styles_collector->get_style_tag([
+					'css' => $css,
+					'tablet_css' => $tablet_css,
+					'mobile_css' => $mobile_css
+				]);
 
 				return $block_content;
 			},
@@ -449,17 +437,16 @@ class Query {
 						$arrows = '';
 
 						if ($context['has_slideshow_arrows'] === 'yes') {
-							$arrows = '<span class="flexy-arrow-prev" data-position="outside">
-								<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10">
-									<path d="M15.3 4.3h-13l2.8-3c.3-.3.3-.7 0-1-.3-.3-.6-.3-.9 0l-4 4.2-.2.2v.6c0 .1.1.2.2.2l4 4.2c.3.4.6.4.9 0 .3-.3.3-.7 0-1l-2.8-3h13c.2 0 .4-.1.5-.2s.2-.3.2-.5-.1-.4-.2-.5c-.1-.1-.3-.2-.5-.2z"></path>
-								</svg>
-							</span>
+							$arrow_icons = apply_filters(
+								'blocksy:flexy:arrows',
+								[
+									'prev' => '<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10"><path d="M15.3 4.3h-13l2.8-3c.3-.3.3-.7 0-1-.3-.3-.6-.3-.9 0l-4 4.2-.2.2v.6c0 .1.1.2.2.2l4 4.2c.3.4.6.4.9 0 .3-.3.3-.7 0-1l-2.8-3h13c.2 0 .4-.1.5-.2s.2-.3.2-.5-.1-.4-.2-.5c-.1-.1-.3-.2-.5-.2z"></path></svg>',
+									'next' => '<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10"><path d="M.2 4.5c-.1.1-.2.3-.2.5s.1.4.2.5c.1.1.3.2.5.2h13l-2.8 3c-.3.3-.3.7 0 1 .3.3.6.3.9 0l4-4.2.2-.2V5v-.3c0-.1-.1-.2-.2-.2l-4-4.2c-.3-.4-.6-.4-.9 0-.3.3-.3.7 0 1l2.8 3H.7c-.2 0-.4.1-.5.2z"></path></svg>'
+								]
+							);
 
-							<span class="flexy-arrow-next" data-position="outside">
-								<svg width="16" height="10" fill="currentColor" viewBox="0 0 16 10">
-									<path d="M.2 4.5c-.1.1-.2.3-.2.5s.1.4.2.5c.1.1.3.2.5.2h13l-2.8 3c-.3.3-.3.7 0 1 .3.3.6.3.9 0l4-4.2.2-.2V5v-.3c0-.1-.1-.2-.2-.2l-4-4.2c-.3-.4-.6-.4-.9 0-.3.3-.3.7 0 1l2.8 3H.7c-.2 0-.4.1-.5.2z"></path>
-								</svg>
-							</span>';
+							$arrows = '<span class="flexy-arrow-prev" data-position="outside">' . $arrow_icons['prev'] . '</span>
+								<span class="flexy-arrow-next" data-position="outside">' . $arrow_icons['next'] . '</span>';
 						}
 
 						$content = blocksy_html_tag(
@@ -542,7 +529,7 @@ class Query {
 				];
 
 				foreach ($posts_block_patterns as $posts_block_pattern) {
-					$pattern_data = blocksy_get_variables_from_file(
+					$pattern_data = blc_theme_functions()->blocksy_get_variables_from_file(
 						__DIR__ . '/block-patterns/' . $posts_block_pattern . '.php',
 						['pattern' => []]
 					);
@@ -709,10 +696,10 @@ class Query {
 		$mobile_css = new \Blocksy_Css_Injector();
 
 		if ($attributes['has_slideshow'] === 'yes') {
-			$structure = blocksy_get_theme_mod($prefix . '_structure', 'grid');
+			$structure = blc_theme_functions()->blocksy_get_theme_mod($prefix . '_structure', 'grid');
 
 			$grid_columns = blocksy_expand_responsive_value(
-				blocksy_get_theme_mod(
+				blc_theme_functions()->blocksy_get_theme_mod(
 					$prefix . '_columns',
 					[
 						'desktop' => 3,
@@ -736,66 +723,19 @@ class Query {
 			]);
 		}
 
-		$final_css = '';
-
 		if ($context['purpose'] === 'editor') {
 			$this->get_customizer_styles_for($attributes, [
 				'css' => $css,
 				'tablet_css' => $tablet_css,
 				'mobile_css' => $mobile_css
 			]);
-
-			$styles = [
-				'desktop' => '',
-				'tablet' => '',
-				'mobile' => ''
-			];
-
-			$styles['desktop'] .= $css->build_css_structure();
-			$styles['tablet'] .= $tablet_css->build_css_structure();
-			$styles['mobile'] .= $mobile_css->build_css_structure();
-
-			if (! empty($styles['desktop'])) {
-				$final_css .= $styles['desktop'];
-			}
-
-			if (! empty(trim($styles['tablet']))) {
-				$final_css .= '@media (max-width: 999.98px) {' . $styles['tablet'] . '}';
-			}
-
-			if (! empty(trim($styles['mobile']))) {
-				$final_css .= '@media (max-width: 689.98px) {' . $styles['mobile'] . '}';
-			}
 		}
 
-		if ($context['purpose'] === 'frontend') {
-			blc_call_gutenberg_function('wp_style_engine_get_stylesheet_from_css_rules', [
-				array_merge(
-					$css->get_wp_style_engine_rules([
-						'device' => 'desktop'
-					]),
-					$tablet_css->get_wp_style_engine_rules([
-						'device' => 'tablet'
-					]),
-					$mobile_css->get_wp_style_engine_rules([
-						'device' => 'mobile'
-					])
-				),
-				[
-					'context'  => 'block-supports',
-					'prettify' => false,
-					'optimize' => true
-				]
-			]);
-		}
-
-		if (! empty($final_css)) {
-			$final_css = blocksy_html_tag(
-				'style',
-				[],
-				$final_css
-			);
-		}
+		$final_css = \Blocksy\Plugin::instance()->inline_styles_collector->get_style_tag([
+			'css' => $css,
+			'tablet_css' => $tablet_css,
+			'mobile_css' => $mobile_css
+		]);
 
 		if (empty($result)) {
 			return '';
@@ -911,55 +851,47 @@ class Query {
 				];
 			}
 
-			if (
-				$term_descriptor['strategy'] === 'related'
-				&&
-				$context['post_id']
-			) {
-				$post = get_post($context['post_id']);
-
-				$current_post_type = get_post_type($post);
-
-				if ($current_post_type !== $attributes['post_type']) {
-					continue;
-				}
-
-				$all_taxonomies = get_the_terms($post->ID, $term_slug);
-
-				if (! $all_taxonomies || is_wp_error($all_taxonomies)) {
-					continue;
-				}
-
+			if ($term_descriptor['strategy'] === 'related') {
 				$all_taxonomy_ids = [];
 
-				foreach ($all_taxonomies as $current_taxonomy) {
-					if (! isset($current_taxonomy->term_id)) {
-						continue;
+				if ($context['post_id']) {
+					$post = get_post($context['post_id']);
+
+					$current_post_type = get_post_type($post);
+
+					if ($current_post_type === $attributes['post_type']) {
+						$all_taxonomies = get_the_terms($post->ID, $term_slug);
+
+						if ($all_taxonomies && ! is_wp_error($all_taxonomies)) {
+							foreach ($all_taxonomies as $current_taxonomy) {
+								if (! isset($current_taxonomy->term_id)) {
+									continue;
+								}
+
+								$current_term_id = $current_taxonomy->term_id;
+
+								if (function_exists('pll_get_term')) {
+									$current_lang = blocksy_get_current_language();
+									$current_term_id = pll_get_term($current_term_id, $current_lang);
+								}
+
+								if (! $current_term_id) {
+									continue;
+								}
+
+								$all_taxonomy_ids[] = $current_term_id;
+							}
+						}
 					}
-
-					$current_term_id = $current_taxonomy->term_id;
-
-					if (function_exists('pll_get_term')) {
-						$current_lang = blocksy_get_current_language();
-						$current_term_id = pll_get_term($current_term_id, $current_lang);
-					}
-
-					if (! $current_term_id) {
-						continue;
-					}
-
-					$all_taxonomy_ids[] = $current_term_id;
 				}
 
 				$query_args['post__not_in'] = [$post->ID];
 
-				if (! empty($all_taxonomy_ids)) {
-					$to_include[] = [
-						'field' => 'term_id',
-						'taxonomy' => $term_slug,
-						'terms' => $all_taxonomy_ids
-					];
-				}
+				$to_include[] = [
+					'field' => 'term_id',
+					'taxonomy' => $term_slug,
+					'terms' => $all_taxonomy_ids
+				];
 			}
 		}
 
@@ -1029,7 +961,6 @@ class Query {
 
 		$query_args['tax_query'] = $tax_query;
 
-
 		if ($attributes['sticky_posts'] === 'include') {
 			add_action('pre_get_posts', [$this, 'pre_get_posts']);
 		}
@@ -1097,7 +1028,11 @@ class Query {
 
 		$prefix = 'blog';
 
-		$custom_post_types = blocksy_manager()->post_types->get_supported_post_types();
+		$custom_post_types = [];
+
+		if (blc_theme_functions()->blocksy_manager()) {
+			$custom_post_types = blc_theme_functions()->blocksy_manager()->post_types->get_supported_post_types();
+		}
 
 		$preferred_post_type = explode(',', $attributes['post_type'])[0];
 

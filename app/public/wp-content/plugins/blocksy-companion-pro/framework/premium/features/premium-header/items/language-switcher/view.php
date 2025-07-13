@@ -2,6 +2,10 @@
 
 $class = 'ct-language-switcher';
 
+if (!isset($device)) {
+	$device = 'desktop';
+}
+
 if ($panel_type === 'header') {
 	$visibility = blocksy_default_akg('visibility', $atts, [
 		'tablet' => true,
@@ -26,8 +30,8 @@ $language_type = blocksy_default_akg(
 	]
 );
 
-$top_level_language_type = blocksy_default_akg(
-	'top_level_language_type',
+$dropdown_language_type = blocksy_default_akg(
+	'dropdown_language_type',
 	$atts,
 	[
 		'custom_icon' => false,
@@ -36,8 +40,8 @@ $top_level_language_type = blocksy_default_akg(
 	]
 );
 
-$top_level_icon = blc_get_icon([
-	'icon_descriptor' => blocksy_default_akg('top_level_custom_icon', $atts, [
+$dropdown_icon = blc_get_icon([
+	'icon_descriptor' => blocksy_default_akg('dropdown_custom_icon', $atts, [
 		'icon' => 'blc blc-globe',
 	]),
 	'icon_container' => false,
@@ -47,7 +51,15 @@ $top_level_icon = blc_get_icon([
 ]);
 
 $language_label = blocksy_default_akg('language_label', $atts, 'long');
-$top_level_language_label = blocksy_default_akg('top_level_language_label', $atts, 'long');
+$dropdown_language_label = blocksy_default_akg('dropdown_language_label', $atts, 'long');
+
+$language_label_position = blocksy_expand_responsive_value(
+	blocksy_default_akg('language_label_position', $atts, 'right')
+);
+
+$dropdown_language_label_position = blocksy_expand_responsive_value(
+	blocksy_default_akg('dropdown_language_label_position', $atts, 'right')
+);
 
 $ls_type = 'inline';
 
@@ -57,6 +69,16 @@ if ($panel_type === 'header') {
 	if (isset($row_id) && $row_id === 'offcanvas') {
 		$ls_type = 'inline';
 	}
+}
+
+$items_language_type = $language_type;
+$items_language_label = $language_label;
+$items_language_label_position = $language_label_position[$device];
+
+if ($ls_type === 'dropdown') {
+	$items_language_type = $dropdown_language_type;
+	$items_language_label_position = $dropdown_language_label_position[$device];
+	$items_language_label = $dropdown_language_label;
 }
 
 $hide_current_language = blocksy_default_akg('hide_current_language', $atts, 'no') === 'yes';
@@ -84,29 +106,172 @@ if (function_exists('weglot_get_current_language')) {
 
 $output = '';
 
+$icon = '<svg class="ct-icon ct-dropdown-icon" width="8" height="8" viewBox="0 0 15 15" aria-hidden="true"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"></path></svg>';
+
 if ($current_plugin) {
-	$output = blocksy_render_view(
+	$descriptors = blc_theme_functions()->blocksy_get_variables_from_file(
 		dirname(__FILE__) . '/plugins/' . $current_plugin . '.php',
+		['descriptors' => []],
 		[
-			'language_type' => $language_type,
-			'language_label' => $language_label,
-			'ls_type' => $ls_type,
-			'hide_current_language' => $hide_current_language,
-			'has_arrow' => $has_arrow,
-
-			'top_level_icon' => $top_level_icon,
-			'top_level_language_label' => $top_level_language_label,
-			'top_level_language_type' => $top_level_language_type,
-
-			'hide_missing_language' => $hide_missing_language
+			'hide_missing_language' => $hide_missing_language,
 		]
+	);
+	
+	$items_html = [];
+
+	foreach ($descriptors['descriptors'] as $key => $descriptor) {
+		$content = '';
+		$flag_image = '';
+
+		if (
+			$ls_type === 'dropdown'
+			&&
+			$key === 'current'
+		) {
+			if (
+				isset($language_type['custom_icon'])
+				&&
+				$language_type['custom_icon']
+			) {
+				$content .= $icon;
+			}
+
+			if (
+				$descriptor['country_flag_url']
+				&&
+				$language_type['icon']
+			) {
+				$flag_image = blocksy_html_tag(
+					'img',
+					[
+						'src' => $descriptor['country_flag_url'],
+						'width' => '18',
+						'height' => '12',
+						// 'alt' => $descriptor['language_code'],
+						'alt' => '',
+						'aria-hidden' => 'true',
+						'title' => $descriptor['native_name'],
+					]
+				);
+			}
+
+			if ($language_type['label']) {
+				$content .= blocksy_html_tag(
+					'span',
+					[
+						'class' => 'ct-label',
+						'aria-hidden' => 'true',
+					],
+					$language_label === 'long'
+						? $descriptor['native_name']
+						: $descriptor['short_name']
+				);
+			}
+
+			$content .= $flag_image;
+
+			if ($has_arrow) {
+				$content .= $icon;
+			}
+
+			$output .= blocksy_html_tag(
+				'div',
+				[
+					'class' => 'ct-language ct-active-language',
+					'data-label' => $language_label_position[$device],
+					'aria-label' => $descriptor['native_name'],
+					'lang' => $descriptor['language_code'],
+					'tabindex' => '0',
+				],
+				$content
+			);
+
+			continue;
+		}
+
+		if (
+			$hide_current_language
+			&&
+			$key === 'current'
+		) {
+			continue;
+		}
+
+		if (
+			$descriptor['country_flag_url']
+			&&
+			$items_language_type['icon']
+		) {
+			$flag_image = blocksy_html_tag(
+				'img',
+				[
+					'src' => $descriptor['country_flag_url'],
+					'width' => '18',
+					'height' => '12',
+					// 'alt' => $descriptor['language_code'],
+					'alt' => '',
+					'aria-hidden' => 'true',
+					'title' => $descriptor['native_name'],
+				]
+			);
+		}
+
+		if ($items_language_type['label']) {
+			$content .= blocksy_html_tag(
+				'span',
+				[
+					'class' => 'ct-label',
+					'aria-hidden' => 'true',
+				],
+				$items_language_label === 'long'
+					? $descriptor['native_name']
+					: $descriptor['short_name']
+			);
+		}
+
+		$content .= $flag_image;
+
+		$items_html[] = blocksy_html_tag(
+			'li',
+			$key === 'current' ? [
+				'class' => 'current-lang',
+			] : [],
+			blocksy_html_tag(
+				'a',
+				array_merge(
+					[
+						'href' => $descriptor['url'],
+						'data-label' => $items_language_label_position,
+						'aria-label' => $descriptor['native_name'],
+						'lang' => $descriptor['language_code'],
+					],
+					($ls_type === 'dropdown' ? [] : [					
+						'data-label' => $items_language_label_position,
+					]),
+					($current_plugin === 'weglot' ? [
+						'data-wg-notranslate' => "",
+					] : [])
+				),
+				$content
+			)
+		);
+	}
+
+	$output .= blocksy_html_tag(
+		'ul',
+		(
+			$ls_type !== "dropdown" ? [
+				'class' => 'ct-language',
+			] : []
+		),
+		implode('', $items_html)
 	);
 }
 
 ?>
 
 <div
-	class="<?php echo esc_attr($class) ?>"
+	class="<?php echo esc_attr(trim($class)) ?>"
 	data-type="<?php echo $ls_type ?>"
 	<?php echo blocksy_attr_to_html($attr) ?>>
 

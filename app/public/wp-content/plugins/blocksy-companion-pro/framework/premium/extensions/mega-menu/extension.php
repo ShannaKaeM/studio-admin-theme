@@ -4,6 +4,7 @@ class BlocksyExtensionMegaMenu {
 	public function __construct() {
 		new \Blocksy\Extensions\MegaMenu\Api();
 		new \Blocksy\Extensions\MegaMenu\CustomContent();
+		new \Blocksy\Extensions\MegaMenu\ImportExport();
 
 		add_action('wp_update_nav_menu_item', function () {
 			delete_transient('blocksy-mega-menu-ext-timestamp');
@@ -19,28 +20,27 @@ class BlocksyExtensionMegaMenu {
 
 			$theme = blocksy_get_wp_parent_theme();
 
-			$current_language = '';
-
 			$maybe_current_language = blocksy_get_current_language();
 
+			$mega_menu_persistence_key_components = [
+				get_current_blog_id(),
+				get_site_url(get_current_blog_id(), '/'),
+				get_template(),
+				$timestamp,
+				$theme->get('Version')
+			];
+
 			if ($maybe_current_language !== '__NOT_KNOWN__') {
-				$current_language = $maybe_current_language;
+				$mega_menu_persistence_key_components[] = $maybe_current_language;
 			}
 
+			$mega_menu_persistence_key_components = apply_filters(
+				'blocksy:mega-menu:persistence-key-components',
+				$mega_menu_persistence_key_components
+			);
+
 			$persistence_key = 'blocksy:mega-menu:' . substr(md5(
-				get_current_blog_id()
-				.
-				'_'
-				.
-				get_site_url(get_current_blog_id(), '/')
-				.
-				get_template()
-				.
-				$timestamp
-				.
-				$theme->get('Version')
-				.
-				$current_language
+				implode('_', $mega_menu_persistence_key_components)
 			), 0, 6);
 
 			$chunks[] = [

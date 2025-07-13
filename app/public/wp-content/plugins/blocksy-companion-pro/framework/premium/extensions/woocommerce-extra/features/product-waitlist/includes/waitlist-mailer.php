@@ -3,14 +3,14 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class ProductWaitlistMailer {
-	private $backInStockScheduler = null; 
+	private $backInStockScheduler = null;
 
     public function __construct() {
 		$this->backInStockScheduler = new BackInStockEmailScheduler();
 
 		add_action('init', [$this, 'confirm_subscription']);
 		add_action('init', [$this, 'cancel_subscription']);
-		
+
 		add_filter('woocommerce_email_classes', [$this, 'add_expedited_order_woocommerce_email']);
 
 		add_action('woocommerce_product_set_stock_status', [$this, 'send_instock_email_emails'], 10, 3);
@@ -40,7 +40,7 @@ class ProductWaitlistMailer {
 		}, 10, 5);
     }
 
-	function blocksy_emails_styles($css, $email) {
+	public function blocksy_emails_styles($css, $email) {
 		$emails_list = [
 			'Blocksy\Extensions\WoocommerceExtra\BackInStockEmail',
 			'Blocksy\Extensions\WoocommerceExtra\ConfirmSubscriptionEmail',

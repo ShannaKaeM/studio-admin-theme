@@ -22,6 +22,19 @@ class BlocksyExtensionWhiteLabelPreBoot {
 			);
 		});
 
+		add_action('wp_ajax_blocksy_get_white_label_settings', function () {
+			if (! current_user_can('manage_options')) {
+				var_dump('not_allowed');
+				wp_send_json_error([
+					'error' => 'not_allowed'
+				]);
+			}
+
+			wp_send_json_success([
+				'settings' => $this->get_settings()
+			]);
+		});
+
 		add_action('wp_ajax_blocksy_white_label_maybe_unlock', function () {
 			if (! current_user_can('manage_options')) {
 				wp_send_json_error();

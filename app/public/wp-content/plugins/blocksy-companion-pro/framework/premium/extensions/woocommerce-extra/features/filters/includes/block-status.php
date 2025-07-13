@@ -4,23 +4,26 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 
 class StatusBlock {
 	public function __construct() {
-        add_action('init', [$this, 'blocksy_status_filter_block']);
+		add_action('init', [$this, 'blocksy_status_filter_block']);
 
-		add_filter('blocksy:gutenberg-blocks-data', function ($data) {
-			$options = blocksy_akg(
-				'options',
-				blocksy_get_variables_from_file(
-					dirname(__FILE__) . '/options/status.php',
-					['options' => []]
-				)
-			);
+		add_filter(
+			'blocksy:block-editor:localized_data',
+			function ($data) {
+				$options = blocksy_akg(
+					'options',
+					blc_theme_functions()->blocksy_get_variables_from_file(
+						dirname(__FILE__) . '/options/status.php',
+						['options' => []]
+					)
+				);
 
-			$options_name = 'status_filter';
+				$options_name = 'status_filter';
 
-			$data[$options_name] = $options;
+				$data[$options_name] = $options;
 
-			return $data;
-		});
+				return $data;
+			}
+		);
     }
 
 	public function blocksy_status_filter_block() {

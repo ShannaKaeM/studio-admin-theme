@@ -58,16 +58,16 @@ export const isPopupExpired = (popup) => {
 			const popupRelaunchDescriptor =
 				popup.dataset.popupRelaunch.split(':')
 
-			let daysAfterCancel = 0
-			let daysAfterSuccess = 0
+			let minutesAfterCancel = 0
+			let minutesAfterSuccess = 0
 
 			if (popupRelaunchDescriptor.length > 1) {
-				daysAfterCancel = parseInt(popupRelaunchDescriptor[1])
-				daysAfterSuccess = daysAfterCancel
+				minutesAfterCancel = parseInt(popupRelaunchDescriptor[1])
+				minutesAfterSuccess = minutesAfterCancel
 			}
 
 			if (popupRelaunchDescriptor.length > 2) {
-				daysAfterSuccess = parseInt(popupRelaunchDescriptor[2])
+				minutesAfterSuccess = parseInt(popupRelaunchDescriptor[2])
 			}
 
 			const { closed } = maybePastPopupDescriptor
@@ -76,8 +76,11 @@ export const isPopupExpired = (popup) => {
 				return false
 			}
 
-			const days =
-				closed.reason === 'cancel' ? daysAfterCancel : daysAfterSuccess
+			const minutes =
+				closed.reason === 'cancel'
+					? minutesAfterCancel
+					: minutesAfterSuccess
+			const days = minutes / 60 / 24
 
 			const diffInMs = new Date() - new Date(closed.timestamp)
 			const diffInDays = diffInMs / (1000 * 60 * 60 * 24)

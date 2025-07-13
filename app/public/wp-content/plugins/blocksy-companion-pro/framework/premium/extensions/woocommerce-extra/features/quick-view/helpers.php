@@ -1,12 +1,12 @@
 <?php
 
 function blocksy_quick_view_attr() {
-	if (blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button') === 'button') {
+	if (blc_theme_functions()->blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button') === 'button') {
 		return [];
 	}
 
 	return [
-		'data-quick-view' => blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button')
+		'data-quick-view' => blc_theme_functions()->blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button')
 	];
 }
 
@@ -16,16 +16,16 @@ function blocksy_output_quick_view_link() {
 	if (
 		! $product
 		||
-		blocksy_get_theme_mod('has_archive_quick_view', 'yes') === 'no'
+		blc_theme_functions()->blocksy_get_theme_mod('has_archive_quick_view', 'yes') === 'no'
 		||
-		blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button') !== 'button'
+		blc_theme_functions()->blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button') !== 'button'
 	) {
 		return '';
 	}
 
 	$id = $product->get_id();
 
-	$shop_cards_type = blocksy_get_theme_mod('shop_cards_type', 'type-1');
+	$shop_cards_type = blc_theme_functions()->blocksy_get_theme_mod('shop_cards_type', 'type-1');
 
 	$icon = apply_filters(
 		'blocksy:ext:woocommerce-extra:quick-view:trigger:icon',

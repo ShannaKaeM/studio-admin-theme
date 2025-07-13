@@ -3,12 +3,14 @@
 if (
 	! function_exists('blocksy_assemble_selector')
 	||
-	! isset(blocksy_manager()->colors)
+	! blc_theme_functions()->blocksy_manager()
+	||
+	! isset(blc_theme_functions()->blocksy_manager()->colors)
 ) {
 	return;
 }
 
-$palette = blocksy_manager()->colors->get_color_palette([
+$palette = blc_theme_functions()->blocksy_manager()->colors->get_color_palette([
 	'id' => 'darkColorPalette',
 	'default' => [
 		'color1' => [

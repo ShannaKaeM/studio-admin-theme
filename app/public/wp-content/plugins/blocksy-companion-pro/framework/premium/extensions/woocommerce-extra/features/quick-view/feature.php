@@ -5,6 +5,12 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 require_once dirname(__FILE__) . '/helpers.php';
 
 class QuickView {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_filter('blocksy_woo_card_options:additional_actions', function (
 			$actions
@@ -61,7 +67,7 @@ class QuickView {
 					]
 				),
 				'has_loader' => [
-					'type' => blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button') === 'button' ? 'button' : 'modal',
+					'type' => blc_theme_functions()->blocksy_get_theme_mod('woocommerce_quick_view_trigger', 'button') === 'button' ? 'button' : 'modal',
 					'class' => 'quick-view-modal'
 				]
 			];
@@ -110,12 +116,12 @@ class QuickView {
 		add_action(
 			'blocksy:woocommerce:quick-view:add-to-cart:after',
 			function () {
-				$layout = blocksy_get_theme_mod(
+				$layout = blc_theme_functions()->blocksy_get_theme_mod(
 					'woo_single_layout',
 					blocksy_get_woo_single_layout_defaults()
 				);
 
-				$product_view_type = blocksy_get_theme_mod(
+				$product_view_type = blc_theme_functions()->blocksy_get_theme_mod(
 					'product_view_type',
 					'default-gallery'
 				);
@@ -125,7 +131,7 @@ class QuickView {
 					||
 					$product_view_type === 'columns-top-gallery'
 				) {
-					$woo_single_split_layout = blocksy_get_theme_mod(
+					$woo_single_split_layout = blc_theme_functions()->blocksy_get_theme_mod(
 						'woo_single_split_layout',
 						[
 							'left' => blocksy_get_woo_single_layout_defaults('left'),
@@ -143,8 +149,8 @@ class QuickView {
 					return $k['id'] === 'product_actions';
 				}));
 
-				if ($actions_layer) {
-					blocksy_manager()
+				if ($actions_layer && blc_theme_functions()->blocksy_manager()) {
+					blc_theme_functions()->blocksy_manager()
 						->woocommerce
 						->single
 						->additional_actions

@@ -19,8 +19,7 @@ $config = [
 		'language_label',
 		'hide_current_language',
 
-		'top_level_language_label',
-		'top_level_language_label',
-		'top_level_custom_icon',
+		// 'top_level_language_label',
+		// 'top_level_custom_icon',
 	],
 ];

@@ -348,22 +348,60 @@ class ContentBlocksPopupsLogic {
 			}
 
 			if ($popup_relaunch_strategy === 'custom') {
-				$attr['data-popup-relaunch'] .= ':' . blocksy_akg(
+				$time_after_close_value = blocksy_akg(
 					'days_after_close_value',
 					$values,
-					14
+					[
+						'days' => 14,
+						'hours' => 0,
+						'minutes' => 0,
+					]
 				);
+
+				if (! is_array($time_after_close_value)) {
+					$time_after_close_value = [
+						'days' => $time_after_close_value,
+						'hours' => 0,
+						'minutes' => 0,
+					];
+				}
+
+				$time_after_close_value['days'] = $time_after_close_value['days'] * 24 * 60;
+				$time_after_close_value['hours'] = $time_after_close_value['hours'] * 60;
+				$time_after_close_value['minutes'] = $time_after_close_value['minutes'];
+				$time_after_close_value = array_sum($time_after_close_value);
+
+				$attr['data-popup-relaunch'] .= ':' . $time_after_close_value;
 
 				if (
 					isset($close_strategies['form_submit'])
 					||
 					isset($close_strategies['button_click'])
 				) {
-					$attr['data-popup-relaunch'] .= ':' . blocksy_akg(
+					$time_after_success_value = blocksy_akg(
 						'days_after_success_value',
 						$values,
-						30
+						[
+							'days' => 30,
+							'hours' => 0,
+							'minutes' => 0,
+						]
 					);
+
+					if (! is_array($time_after_success_value)) {
+						$time_after_success_value = [
+							'days' => $time_after_success_value,
+							'hours' => 0,
+							'minutes' => 0,
+						];
+					}
+
+					$time_after_success_value['days'] = $time_after_success_value['days'] * 24 * 60;
+					$time_after_success_value['hours'] = $time_after_success_value['hours'] * 60;
+					$time_after_success_value['minutes'] = $time_after_success_value['minutes'];
+					$time_after_success_value = array_sum($time_after_success_value);
+
+					$attr['data-popup-relaunch'] .= ':' . $time_after_success_value;
 				}
 			}
 		}

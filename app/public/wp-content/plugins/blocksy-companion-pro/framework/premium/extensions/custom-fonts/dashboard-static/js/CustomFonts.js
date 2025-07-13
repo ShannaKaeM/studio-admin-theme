@@ -9,8 +9,7 @@ import ctEvents from 'ct-events'
 
 import classnames from 'classnames'
 import { __, sprintf } from 'ct-i18n'
-import { Switch } from 'blocksy-options'
-import Overlay from '../../../../../../static/js/helpers/Overlay'
+import { Switch, Overlay } from 'blocksy-options'
 
 import AllFonts from './AllFonts'
 import Uploader, { getDefaultFutureFont } from './Uploader'
@@ -27,22 +26,23 @@ const CustomFonts = ({ extension, onExtsSync, setExtsStatus }) => {
 	const customFontsSettings = extension.data.settings
 
 	const saveCustomFontsSettings = (s = null) => {
-		const preloadUrls = Object.values(s.fonts).reduce(
-			(acc, { variations, preloads }) => {
+		const preloadUrls = Object.values(s.fonts)
+			.reduce((acc, { variations, preloads }) => {
 				if (!preloads) {
 					return acc
 				}
 
 				return [
 					...acc,
-					...variations.map(
-						({ variation, url }) =>
-							preloads.variations.includes(variation) && url
-					),
+					...variations
+						.filter(({ url }) => !!url)
+						.map(
+							({ variation, url }) =>
+								preloads.variations.includes(variation) && url
+						),
 				]
-			},
-			[]
-		)
+			}, [])
+			.filter((url) => !!url)
 
 		onExtsSync({
 			extAction: {

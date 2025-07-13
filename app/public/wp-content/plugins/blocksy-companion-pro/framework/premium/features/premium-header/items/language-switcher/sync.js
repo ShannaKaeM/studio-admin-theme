@@ -426,3 +426,61 @@ ctEvents.on(
 		}
 	}
 )
+
+ctEvents.on(
+	'ct:header:sync:item:language-switcher',
+	({ optionId, optionValue }) => {
+		if (
+			optionId === 'language_label_position' ||
+			optionId === 'dropdown_language_label_position'
+		) {
+			let currentType = 'inline'
+			const languageSwitcher = document.querySelector(
+				'.ct-language-switcher'
+			)
+
+			if (languageSwitcher) {
+				currentType = languageSwitcher.dataset.type
+			}
+
+			let selector = '.ct-language-switcher li a'
+
+			if (
+				optionId === 'language_label_position' &&
+				currentType === 'dropdown'
+			) {
+				selector = '.ct-language-switcher .ct-active-language'
+			}
+
+			updateAndSaveEl(
+				selector,
+				(el) => {
+					if (!optionValue.desktop) {
+						optionValue = {
+							desktop: optionValue,
+							mobile: optionValue,
+						}
+					}
+
+					el.dataset.label = optionValue.desktop
+				},
+				{ onlyView: 'desktop' }
+			)
+
+			updateAndSaveEl(
+				selector,
+				(el) => {
+					if (!optionValue.desktop) {
+						optionValue = {
+							desktop: optionValue,
+							mobile: optionValue,
+						}
+					}
+
+					el.dataset.label = optionValue.mobile
+				},
+				{ onlyView: 'mobile' }
+			)
+		}
+	}
+)

@@ -19,7 +19,7 @@ class CartPage {
 		);
 
 		add_filter('blocksy:woocommerce:cart:wrapper-class', function ($class) {
-			if (blocksy_get_theme_mod('has_cart_auto_update', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('has_cart_auto_update', 'no') === 'yes') {
 				$class .= ' ct-cart-auto-update';
 			}
 
@@ -27,15 +27,11 @@ class CartPage {
 		});
 
 		add_filter('woocommerce_coupons_enabled', function ($enabled) {
-			if (! function_exists('blocksy_get_theme_mod')) {
-				return $enabled;
-			}
-
 			if (! is_cart()) {
 				return $enabled;
 			}
 
-			$has_cart_coupons = blocksy_get_theme_mod(
+			$has_cart_coupons = blc_theme_functions()->blocksy_get_theme_mod(
 				'has_cart_coupons',
 				'yes'
 			);

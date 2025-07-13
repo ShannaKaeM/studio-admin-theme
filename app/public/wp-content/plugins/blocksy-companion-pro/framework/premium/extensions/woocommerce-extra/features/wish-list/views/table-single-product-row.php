@@ -42,7 +42,9 @@ if (
 	(
 		$product->is_type('variable')
 		&&
-		blocksy_manager()
+		blc_theme_functions()->blocksy_manager()
+		&&
+		blc_theme_functions()->blocksy_manager()
 			->woocommerce
 			->retrieve_product_default_variation($product)
 	)

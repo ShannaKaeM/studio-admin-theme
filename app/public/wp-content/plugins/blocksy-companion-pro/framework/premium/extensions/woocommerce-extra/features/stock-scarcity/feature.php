@@ -3,8 +3,13 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class StockScarcity {
-	public function __construct() {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
 
+	public function __construct() {
 		add_filter('blocksy_woo_single_options_layers:defaults', [
 			$this,
 			'register_layer_defaults',
@@ -84,7 +89,7 @@ class StockScarcity {
 		add_filter(
 			'woocommerce_available_variation',
 			function ($result, $product, $variation) {
-				$stock_quantity_min = blocksy_get_theme_mod(
+				$stock_quantity_min = blc_theme_functions()->blocksy_get_theme_mod(
 					'product_stock_scarcity_min',
 					50
 				);
@@ -109,7 +114,7 @@ class StockScarcity {
 			$stock_quantity = 0;
 			$need_to_show = false;
 
-			$stock_quantity_min = blocksy_get_theme_mod(
+			$stock_quantity_min = blc_theme_functions()->blocksy_get_theme_mod(
 				'product_stock_scarcity_min',
 				50
 			);
@@ -125,9 +130,13 @@ class StockScarcity {
 			}
 
 			if ($product->is_type('variable')) {
-				$maybe_current_variation = blocksy_manager()
-					->woocommerce
-					->retrieve_product_default_variation($product);
+				$maybe_current_variation = null;
+
+				if (blc_theme_functions()->blocksy_manager()) {
+					$maybe_current_variation = blocksy_manager()
+						->woocommerce
+						->retrieve_product_default_variation($product);
+				}
 
 				if ($maybe_current_variation) {
 					if ($maybe_current_variation->get_manage_stock()) {
@@ -182,7 +191,7 @@ class StockScarcity {
 			$message = str_replace(
 				'{items}',
 				'<span class="ct-stock-quantity">' . $stock_quantity . '</span>',
-				blocksy_get_theme_mod(
+				blc_theme_functions()->blocksy_get_theme_mod(
 					'product_stock_scarcity_title',
 					__(
 						'🚨 Hurry up! Only {items} units left in stock!',

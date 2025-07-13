@@ -13,6 +13,8 @@ $autoload = [
 
 	'MaintenanceMode' => 'framework/premium/features/maintenance-mode.php',
 
+	'ImportExport' => 'framework/premium/features/import-export/feature.php',
+
 	'RecentlyViewedProducts' => 'framework/premium/features/recently-viewed-products.php',
 
 	'ContentBlocksAdminUi' => 'framework/premium/features/content-blocks/admin-ui.php',
@@ -34,6 +36,7 @@ $autoload = [
 	'CaptchaToolsIntegration' => 'framework/premium/features/captcha-tools.php',
 
 	'MediaVideo' => 'framework/premium/features/media-video/feature.php',
+	'VideoImportExport' => 'framework/premium/features/media-video/video-import-export.php',
 
 	'CustomPostType\Integrations\Elementor' => 'framework/premium/features/custom-post-type-integrations/elementor.php',
 	'CustomPostType\Integrations\PiotnetForms' => 'framework/premium/features/custom-post-type-integrations/piotnet-forms.php',
@@ -59,5 +62,7 @@ $autoload = [
 	'CustomPostType\Integrations\Stackable' => 'framework/premium/features/custom-post-type-integrations/stackable.php',
 	'CustomPostType\Integrations\MaxiBlocks' => 'framework/premium/features/custom-post-type-integrations/maxi-blocks.php',
 	'CustomPostType\Integrations\NectarBlocks' => 'framework/premium/features/custom-post-type-integrations/nectar-blocks.php',
+
+	'PluginIntegrations\\Elementor' => 'framework/premium/features/integrations/elementor.php'
 ];
 

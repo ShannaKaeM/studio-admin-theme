@@ -26,7 +26,9 @@ class ProductGallery {
 					||
 					! function_exists('is_product')
 					||
-					! blocksy_manager()->screen->is_product()
+					! blc_theme_functions()->blocksy_manager()
+					||
+					! blc_theme_functions()->blocksy_manager()->screen->is_product()
 				) {
 					return;
 				}
@@ -45,7 +47,11 @@ class ProductGallery {
 		add_filter(
 			'blocksy:woocommerce:single-product:post-class',
 			function($classes) {
-				if (! blocksy_manager()->screen->is_product()) {
+				if (
+					! blc_theme_functions()->blocksy_manager()
+					||
+					! blc_theme_functions()->blocksy_manager()->screen->is_product()
+				) {
 					return $classes;
 				}
 
@@ -68,7 +74,7 @@ class ProductGallery {
 				]);
 
 				if (! $blocksy_is_quick_view) {
-					$product_view_type = blocksy_get_theme_mod(
+					$product_view_type = blc_theme_functions()->blocksy_get_theme_mod(
 						'product_view_type',
 						'default-gallery'
 					);
@@ -92,13 +98,13 @@ class ProductGallery {
 		add_filter(
 			'blocksy:woocommerce:single-product:gallery:columns',
 			function ($columns) {
-				$product_view_type = blocksy_get_theme_mod(
+				$product_view_type = blc_theme_functions()->blocksy_get_theme_mod(
 					'product_view_type',
 					'default-gallery'
 				);
 
 				if ($product_view_type === 'columns-top-gallery') {
-					return blocksy_get_theme_mod('product_view_columns_top', 3);
+					return blc_theme_functions()->blocksy_get_theme_mod('product_view_columns_top', 3);
 				}
 
 				return $columns;
@@ -315,7 +321,7 @@ class ProductGallery {
 			global $blocksy_is_quick_view;
 
 			$args['arrows_class'] = blocksy_visibility_classes(
-				blocksy_get_theme_mod('has_product_slider_arrows', [
+				blc_theme_functions()->blocksy_get_theme_mod('has_product_slider_arrows', [
 					'desktop' => true,
 					'tablet' => true,
 					'mobile' => false
@@ -323,22 +329,22 @@ class ProductGallery {
 			);
 
 			$args['pills_arrows_class'] = blocksy_visibility_classes(
-				blocksy_get_theme_mod('has_product_pills_arrows', [
+				blc_theme_functions()->blocksy_get_theme_mod('has_product_pills_arrows', [
 					'desktop' => true,
 					'tablet' => true,
 					'mobile' => false
 				])
 			);
 
-			$product_view_type = blocksy_get_theme_mod(
+			$product_view_type = blc_theme_functions()->blocksy_get_theme_mod(
 				'product_view_type',
 				'default-gallery'
 			);
 
 			$has_product_autoplay_gallery = 0;
 
-			if (blocksy_get_theme_mod('has_product_autoplay_gallery','no') === 'yes') {
-				$has_product_autoplay_gallery = blocksy_get_theme_mod(
+			if (blc_theme_functions()->blocksy_get_theme_mod('has_product_autoplay_gallery','no') === 'yes') {
+				$has_product_autoplay_gallery = blc_theme_functions()->blocksy_get_theme_mod(
 					'has_product_autoplay_gallery_delay',
 					5
 				);
@@ -396,14 +402,14 @@ class ProductGallery {
 
 				$maybe_zoom_icon = '';
 
-				if (blocksy_get_theme_mod('has_product_single_lightbox', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('has_product_single_lightbox', 'no') === 'yes') {
 					$maybe_zoom_icon = '<span class="woocommerce-product-gallery__trigger">🔍</span>';
 				}
 
 				$args['slide_inner_content'] = $maybe_zoom_icon;
 
 				$columns = blocksy_expand_responsive_value(
-					blocksy_get_theme_mod('product_view_columns_top', 3)
+					blc_theme_functions()->blocksy_get_theme_mod('product_view_columns_top', 3)
 				);
 
 				$args['pills_class'] = blocksy_visibility_classes([
@@ -423,7 +429,7 @@ class ProductGallery {
 		});
 
 		add_filter('blocksy:woocommerce:product-review:has-gallery-zoom-trigger', function ($value) {
-			$product_view_type = blocksy_get_theme_mod(
+			$product_view_type = blc_theme_functions()->blocksy_get_theme_mod(
 				'product_view_type',
 				'default-gallery'
 			);
@@ -438,7 +444,7 @@ class ProductGallery {
 		add_filter(
 			'blocksy:woocommerce:product-view:content',
 			function ($content, $product, $gallery_images, $is_single) {
-				$product_view_type = blocksy_get_theme_mod('product_view_type', 'default-gallery');
+				$product_view_type = blc_theme_functions()->blocksy_get_theme_mod('product_view_type', 'default-gallery');
 
 				if (
 					$product_view_type === 'default-gallery'
@@ -456,7 +462,7 @@ class ProductGallery {
 
 				$content = '';
 
-				$single_ratio = blocksy_get_theme_mod('product_gallery_ratio', '3/4');
+				$single_ratio = blc_theme_functions()->blocksy_get_theme_mod('product_gallery_ratio', '3/4');
 				$default_ratio = apply_filters(
 					'blocksy:woocommerce:default_product_ratio',
 					'3/4'
@@ -464,7 +470,7 @@ class ProductGallery {
 
 				$maybe_zoom_icon = '';
 
-				if (blocksy_get_theme_mod('has_product_single_lightbox', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('has_product_single_lightbox', 'no') === 'yes') {
 					$maybe_zoom_icon = '<span class="woocommerce-product-gallery__trigger">🔍</span>';
 				}
 
@@ -502,7 +508,7 @@ class ProductGallery {
 								'data-height' => $height
 							] : []),
 							'inner_content' => $maybe_zoom_icon,
-							'lazyload' => blocksy_get_theme_mod(
+							'lazyload' => blc_theme_functions()->blocksy_get_theme_mod(
 								'has_lazy_load_single_product_image',
 								'yes'
 							) === 'yes'
@@ -522,7 +528,7 @@ class ProductGallery {
 		);
 
 		add_action('woocommerce_single_product_summary', function () {
-			$product_view_type = blocksy_get_theme_mod('product_view_type', 'default-gallery');
+			$product_view_type = blc_theme_functions()->blocksy_get_theme_mod('product_view_type', 'default-gallery');
 
 			if (
 				$product_view_type !== 'top-gallery'
@@ -536,7 +542,7 @@ class ProductGallery {
 		}, 1);
 
 		add_action('woocommerce_single_product_summary', function () {
-			$product_view_type = blocksy_get_theme_mod('product_view_type', 'default-gallery');
+			$product_view_type = blc_theme_functions()->blocksy_get_theme_mod('product_view_type', 'default-gallery');
 
 			if (
 				$product_view_type !== 'top-gallery'
@@ -558,7 +564,7 @@ class ProductGallery {
 				];
 			}
 
-			$woo_single_split_layout = blocksy_get_theme_mod(
+			$woo_single_split_layout = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_single_split_layout',
 				$woo_single_split_layout_defults
 			);
@@ -574,8 +580,8 @@ class ProductGallery {
 				}
 			}
 
-			if (function_exists('blocksy_normalize_layout')) {
-				\blocksy_manager()->woocommerce->single->render_layout([
+			if (blc_theme_functions()->blocksy_manager()) {
+				blc_theme_functions()->blocksy_manager()->woocommerce->single->render_layout([
 					'layout' => $woo_single_split_layout['left']
 				]);
 			}
@@ -585,7 +591,7 @@ class ProductGallery {
 		}, 1);
 
 		add_action('woocommerce_single_product_summary', function () {
-			$product_view_type = blocksy_get_theme_mod('product_view_type', 'default-gallery');
+			$product_view_type = blc_theme_functions()->blocksy_get_theme_mod('product_view_type', 'default-gallery');
 
 			if (
 				$product_view_type !== 'top-gallery'
@@ -607,7 +613,7 @@ class ProductGallery {
 				];
 			}
 
-			$woo_single_split_layout = blocksy_get_theme_mod(
+			$woo_single_split_layout = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_single_split_layout',
 				$woo_single_split_layout_defults
 			);
@@ -623,8 +629,8 @@ class ProductGallery {
 				}
 			}
 
-			if (function_exists('blocksy_manager')) {
-				\blocksy_manager()->woocommerce->single->render_layout([
+			if (blc_theme_functions()->blocksy_manager()) {
+				blc_theme_functions()->blocksy_manager()->woocommerce->single->render_layout([
 					'layout' => $woo_single_split_layout['right']
 				]);
 			}
@@ -635,7 +641,7 @@ class ProductGallery {
 		add_filter(
 			'blocksy:woocommerce:product-single:view-type',
 			function ($view_type) {
-				return blocksy_get_theme_mod(
+				return blc_theme_functions()->blocksy_get_theme_mod(
 					'product_view_type',
 					'default-gallery'
 				);

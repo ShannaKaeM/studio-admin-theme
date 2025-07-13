@@ -1,4 +1,10 @@
-import { Fragment, createElement, useMemo } from '@wordpress/element'
+import {
+	Fragment,
+	createElement,
+	useEffect,
+	useState,
+	useRef,
+} from '@wordpress/element'
 
 import {
 	useBlockProps,
@@ -6,7 +12,6 @@ import {
 } from '@wordpress/block-editor'
 
 import classnames from 'classnames'
-import { useSettings } from '@wordpress/block-editor'
 
 import { __ } from 'ct-i18n'
 
@@ -24,6 +29,8 @@ import FeaturedImagePreview from './wp/FeaturedImagePreview'
 
 import { useBlockSupportsCustom } from '../hooks/use-block-supports-custom'
 
+import ContentWithBeforeAndAfter from '../components/ContentWithBeforeAndAfter'
+
 const TextField = ({
 	fieldDescriptor,
 	fieldsDescriptor,
@@ -36,10 +43,16 @@ const TextField = ({
 	termId,
 	taxonomy,
 }) => {
+	const [isLoading, setIsLoading] = useState(false)
+
+	const ref = useRef(null)
+	const shadowMutationRef = useRef(null)
+
 	const blockProps = useBlockProps({
 		className: classnames('ct-dynamic-data', {
 			[`has-text-align-${align}`]: align,
 		}),
+		ref,
 	})
 
 	const uniqueClass = blockProps.className
@@ -125,19 +138,17 @@ const TextField = ({
 					)}>
 					{css && <style>{css}</style>}
 
-					{before}
-
-					<Component
-						attributes={attributes}
-						postId={postId}
-						postType={postType}
-						termId={termId}
-						taxonomy={taxonomy}
-						fallback={fallback}
-						fieldsDescriptor={fieldsDescriptor}
-					/>
-
-					{after}
+					<ContentWithBeforeAndAfter before={before} after={after}>
+						<Component
+							attributes={attributes}
+							postId={postId}
+							postType={postType}
+							termId={termId}
+							taxonomy={taxonomy}
+							fallback={fallback}
+							fieldsDescriptor={fieldsDescriptor}
+						/>
+					</ContentWithBeforeAndAfter>
 				</TagName>
 			</Fragment>
 		)

@@ -5,23 +5,22 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 class SwatchesFrontend {
 	public function render_variation_swatches($args) {
 		$product = $args['product'];
+		$layer = $args['layer'];
 
-		$taxonomies_to_show = blocksy_akg(
-			'taxonomies_to_show',
-			$args['layer'],
-			[]
-		);
-
-		$product_attributes_source = blocksy_akg(
-			'product_attributes_source',
-			$args['layer'],
-			'all'
-		);
+		$taxonomies_to_show = blocksy_akg('taxonomies_to_show', $layer, []);
+		$product_attributes_source = blocksy_akg('product_attributes_source', $layer, 'all');
 
 		$swatches_html = [];
 		$attributes = $product->get_variation_attributes();
-
 		$displayed_attributes = [];
+
+		if (
+			blc_theme_functions()->blocksy_get_theme_mod('limit_number_of_swatches', 'no') === 'yes'
+			&&
+			! empty(blc_theme_functions()->blocksy_get_theme_mod('archive_limit_number_of_swatches_number', ''))
+		) {
+			$args['limit'] = blc_theme_functions()->blocksy_get_theme_mod('archive_limit_number_of_swatches_number', '');
+		}
 
 		if ($product_attributes_source === 'custom') {
 			$sorted = [
@@ -30,82 +29,38 @@ class SwatchesFrontend {
 			];
 
 			foreach ($attributes as $attribute_name => $options) {
-				if (taxonomy_exists($attribute_name)) {
-					$sorted['global'][$attribute_name] = $options;
-				} else {
-					$sorted['custom'][$attribute_name] = $options;
-				}
+				$target = taxonomy_exists($attribute_name) ? 'global' : 'custom';
+				$sorted[$target][$attribute_name] = $options;
 			}
 
-			foreach ($taxonomies_to_show as $layer => $values) {
-				if (! $values['enabled']) {
+			foreach ($taxonomies_to_show as $layer_settings) {
+				if (empty($layer_settings['enabled'])) {
 					continue;
 				}
 
-				$woo_layer_name = wc_attribute_taxonomy_name($values['id']);
-				$is_custom_attribute = $values['id'] === 'ct_custom_attributes';
+				$id = $layer_settings['id'];
+				$is_custom = $id === 'ct_custom_attributes';
+				$woo_name = wc_attribute_taxonomy_name($id);
 
-				if (
-					! in_array($woo_layer_name, array_keys($attributes))
-					&&
-					! in_array($values['id'], array_keys($attributes))
-					&&
-					! $is_custom_attribute
-				) {
+				$has_attribute = isset($attributes[$woo_name]) || isset($attributes[$id]);
+				if (!$is_custom && !$has_attribute) {
 					continue;
 				}
 
-				$limits = [
-					'limit_number_of_swatches' => blocksy_akg('limit_number_of_swatches', $values, 'no'),
-					'limit_number' => blocksy_akg('limit', $values, 10)
-				];
-
-				if ($is_custom_attribute) {
-					foreach ($sorted['custom'] as $attribute_name => $options) {
-						$swatches_html[] = $this->render_single_attribute(
-							$attribute_name,
-							$options,
-							array_merge($args, [
-								'limits' => $limits
-							])
-						);
-
-						$displayed_attributes[] = $attribute_name;
+				if ($is_custom) {
+					foreach ($sorted['custom'] as $attr_name => $options) {
+						$swatches_html[] = $this->render_single_attribute($attr_name, $options, $args);
+						$displayed_attributes[] = $attr_name;
 					}
-				} else {
-					$swatches_html[] = $this->render_single_attribute(
-						$woo_layer_name,
-						$sorted['global'][$woo_layer_name],
-						array_merge($args, [
-							'limits' => $limits
-						])
-					);
-
-					$displayed_attributes[] = $woo_layer_name;
+				} elseif (isset($sorted['global'][$woo_name])) {
+					$swatches_html[] = $this->render_single_attribute($woo_name, $sorted['global'][$woo_name], $args);
+					$displayed_attributes[] = $woo_name;
 				}
 			}
 		} else {
-			foreach ($attributes as $attribute_name => $options) {
-				$swatches_html[] = $this->render_single_attribute(
-					$attribute_name,
-					$options,
-					array_merge($args, [
-						'limits' => [
-							'limit_number_of_swatches' => blocksy_akg(
-								'limit_number_of_swatches',
-								$args['layer'],
-								'no'
-							),
-							'limit_number' => blocksy_akg(
-								'limit',
-								$args['layer'],
-								10
-							)
-						]
-					])
-				);
-
-				$displayed_attributes[] = $attribute_name;
+			foreach ($attributes as $attr_name => $options) {
+				$swatches_html[] = $this->render_single_attribute($attr_name, $options, $args);
+				$displayed_attributes[] = $attr_name;
 			}
 		}
 
@@ -130,7 +85,11 @@ class SwatchesFrontend {
 
 		$swatches_html = implode('', $swatches_html);
 		$attr = [
-			'class' => 'ct-card-variation-swatches variations_form'
+			'class' => 'ct-card-variation-swatches variations_form',
+			'data-out-of-stock-swatch-type' => blc_theme_functions()->blocksy_get_theme_mod(
+				'out_of_stock_swatch_type',
+				'faded'
+			),
 		];
 
 		$json = blc_get_ext('woocommerce-extra')
@@ -236,12 +195,38 @@ class SwatchesFrontend {
 		}
 
 		$result = '';
-
 		$elements = $this->get_attribute_elements($args);
 
 		foreach ($elements as $single_element) {
 			$swatch_element = new SwatchElementRender($single_element);
 			$result .= $swatch_element->get_output();
+		}
+
+		if (
+			isset($args['limit'])
+			&&
+			$args['limit'] > 0
+			&&
+			count($elements) > $args['limit']
+			&&
+			blc_theme_functions()->blocksy_get_theme_mod('limit_number_of_swatches_more_button', 'no') === 'yes'
+		) {
+			$result .= blocksy_html_tag(
+				'a',
+				[
+					'class' => 'ct-swatches-more',
+					'href' => '#',
+					'aria-label' => esc_html__('Show more swatches', 'blocksy-companion'),
+					'data-swatches-limit' => $args['limit'],
+					'data-state' => 'collapsed',
+				],
+				esc_html__(
+					blc_safe_sprintf(
+						'+%s More',
+						count($elements) - $args['limit']
+					)
+				)
+			);
 		}
 
 		return $result;
@@ -250,9 +235,11 @@ class SwatchesFrontend {
 	private function is_selected($term_slug, $term_attribute, $product) {
 		$maybe_current_variation = null;
 
-		$maybe_current_variation = blocksy_manager()
-			->woocommerce
-			->retrieve_product_default_variation($product);
+		if (blc_theme_functions()->blocksy_manager()) {
+			$maybe_current_variation = blc_theme_functions()->blocksy_manager()
+				->woocommerce
+				->retrieve_product_default_variation($product);
+		}
 
 		$attributes = $product->get_attributes();
 
@@ -272,7 +259,11 @@ class SwatchesFrontend {
 
 		$selected_key = 'attribute_' . sanitize_title($term_attribute);
 
-		if (isset($_REQUEST[$selected_key])) {
+		if (
+			isset($_REQUEST[$selected_key])
+			&&
+			get_queried_object_id() === $product->get_id()
+		) {
 			$is_selected = wc_clean(
 				wp_unslash(
 					strtolower(
@@ -292,6 +283,7 @@ class SwatchesFrontend {
 	//
 	// element_atts
 	// is_selected
+	// is_limited
 	//
 	//
 	// is_out_of_stock - we need to track out of stock status specifically
@@ -300,6 +292,13 @@ class SwatchesFrontend {
 	//                   - out of stock
 	//                   - no existing variation at all (disable click in this case)
 	private function get_attribute_elements($args = []) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'limit' => 0
+			]
+		);
+
 		$result = [];
 
 		$is_custom_attribute = ! taxonomy_exists($args['attribute']);
@@ -316,18 +315,20 @@ class SwatchesFrontend {
 				]
 			);
 
-			if (
-				isset($args['limits']['limit_number_of_swatches'])
-				&&
-				$args['limits']['limit_number_of_swatches'] === 'yes'
-			) {
-				$terms = array_slice($terms, 0, $args['limits']['limit_number']);
-			}
+			$limited_index = 0;
 
-			foreach ($terms as $single_term) {
+			foreach ($terms as $key => $single_term) {
 				if (! in_array($single_term->slug, $args['options'])) {
 					continue;
 				}
+
+				$is_limited = false;
+				
+				if ($args['limit'] > 0 && $limited_index >= $args['limit']) {
+					$is_limited = true;
+				}
+				
+				$limited_index++;
 
 				$is_selected = $this->is_selected(
 					$single_term->slug,
@@ -353,6 +354,7 @@ class SwatchesFrontend {
 				$base_element['is_selected'] = $is_selected;
 				$base_element['is_out_of_stock'] = $term_status === 'out_of_stock';
 				$base_element['is_invalid'] = $term_status === 'invalid';
+				$base_element['is_limited'] = $is_limited;
 
 				if ($swatch_type !== 'inherit') {
 					$base_element['element_type'] = blocksy_akg(
@@ -378,14 +380,6 @@ class SwatchesFrontend {
 		if ($is_custom_attribute) {
 			$options = $args['options'];
 
-			if (
-				isset($args['limits']['limit_number_of_swatches'])
-				&&
-				$args['limits']['limit_number_of_swatches'] === 'yes'
-			) {
-				$options = array_slice($options, 0, $args['limits']['limit_number']);
-			}
-
 			$custom_attribute_slug = null;
 
 			foreach ($args['product']->get_attributes() as $key => $value) {
@@ -400,7 +394,13 @@ class SwatchesFrontend {
 				return [];
 			}
 
-			foreach ($options as $future_element) {
+			foreach ($options as $key => $future_element) {
+				$is_limited = false;
+
+				if ($args['limit'] > 0 && $key >= $args['limit']) {
+					$is_limited = true;
+				}
+
 				$term_status = $this->get_term_status(
 					$future_element,
 					$custom_attribute_slug,
@@ -422,6 +422,7 @@ class SwatchesFrontend {
 					'is_selected' => $is_selected,
 					'is_out_of_stock' => $is_out_of_stock,
 					'is_invalid' => $term_status === 'invalid',
+					'is_limited' => $is_limited,
 
 					'element_atts' => [],
 					'element_type' => ''
@@ -468,15 +469,6 @@ class SwatchesFrontend {
 	public function render_single_attribute($attribute_name, $options, $args) {
 		$product = $args['product'];
 
-		$limits = [
-			'limit_number_of_swatches' => 'no',
-			'limit_number' => 0
-		];
-
-		if (isset($args['limits'])) {
-			$limits = $args['limits'];
-		}
-
 		$conf = new SwatchesConfig();
 
 		$type = $conf->get_attribute_type($attribute_name, [
@@ -490,28 +482,28 @@ class SwatchesFrontend {
 		];
 
 		if ($type === 'color') {
-			$html_attr['data-swatches-shape'] = blocksy_get_theme_mod(
+			$html_attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod(
 				'color_swatch_shape',
 				'round'
 			);
 		}
 
 		if ($type === 'image') {
-			$html_attr['data-swatches-shape'] = blocksy_get_theme_mod(
+			$html_attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod(
 				'image_swatch_shape',
 				'round'
 			);
 		}
 
 		if ($type === 'button') {
-			$html_attr['data-swatches-shape'] = blocksy_get_theme_mod(
+			$html_attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod(
 				'button_swatch_shape',
 				'round'
 			);
 		}
 
 		if ($type === 'mixed') {
-			$html_attr['data-swatches-shape'] = blocksy_get_theme_mod(
+			$html_attr['data-swatches-shape'] = blc_theme_functions()->blocksy_get_theme_mod(
 				'mixed_swatch_shape',
 				'round'
 			);
@@ -542,7 +534,6 @@ class SwatchesFrontend {
 						'options' => $options,
 						'attribute' => $attribute_name,
 						'product' => $product,
-						'limits' => $limits
 					]
 				)
 			);

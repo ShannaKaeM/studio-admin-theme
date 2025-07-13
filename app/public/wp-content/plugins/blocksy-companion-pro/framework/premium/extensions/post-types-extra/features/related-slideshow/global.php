@@ -1,12 +1,15 @@
 <?php
 
 // related slideshow columns
-if (blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') === 'slider') {
-	$related_slideshow_columns = blocksy_get_theme_mod($prefix . '_related_posts_slideshow_columns', [
-		'desktop' => 3,
-		'tablet' => 2,
-		'mobile' => 1,
-	]);
+if (blc_theme_functions()->blocksy_get_theme_mod($prefix . '_related_posts_slideshow', 'default') === 'slider') {
+	$related_slideshow_columns = blc_theme_functions()->blocksy_get_theme_mod(
+		$prefix . '_related_posts_slideshow_columns',
+		[
+			'desktop' => 3,
+			'tablet' => 2,
+			'mobile' => 1,
+		]
+	);
 
 	$related_slideshow_columns = blocksy_expand_responsive_value(
 		$related_slideshow_columns

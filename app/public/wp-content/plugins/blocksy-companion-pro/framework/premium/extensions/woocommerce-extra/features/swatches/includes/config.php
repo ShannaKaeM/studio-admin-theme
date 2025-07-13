@@ -60,10 +60,20 @@ class SwatchesConfig {
 			'product' => null
 		]);
 
+		global $blocksy_is_quick_view;
+
 		// Automatically compute meta field of the current product, if
 		// we are on a product page.
 		if (
-			blocksy_manager()->screen->is_product()
+			(
+				(
+					blc_theme_functions()->blocksy_manager()
+					&&
+					blc_theme_functions()->blocksy_manager()->screen->is_product()
+				)
+				||
+				$blocksy_is_quick_view
+			)
 			&&
 			! $args['product']
 		) {
@@ -109,6 +119,7 @@ class SwatchesConfig {
 			'is_selected' => false,
 			'is_out_of_stock' => false,
 			'is_invalid' => false,
+			'is_limited' => false,
 
 			'element_atts' => [],
 			'element_type' => ''

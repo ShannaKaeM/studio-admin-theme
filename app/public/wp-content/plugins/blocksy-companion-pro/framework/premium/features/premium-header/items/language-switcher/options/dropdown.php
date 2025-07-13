@@ -3,16 +3,16 @@
 $top_level_common_options = blocksy_get_options(
 	dirname(__FILE__) . '/common.php',
 	[
-		'sync_id' => $sync_id,
-		'prefix' => 'top_level'
+		'sync_id' => $sync_id
 	],
 	false
 );
 
-$common_options = blocksy_get_options(
+$dropdown_options = blocksy_get_options(
 	dirname(__FILE__) . '/common.php',
 	[
-		'sync_id' => $sync_id
+		'sync_id' => $sync_id,
+		'prefix' => 'dropdown'
 	],
 	false
 );
@@ -23,9 +23,9 @@ $general_options = [
 	[
 		blocksy_rand_md5() => [
 			'type' => 'ct-condition',
-			'condition' => [ 'top_level_language_type/custom_icon' => true ],
+			'condition' => [ 'language_type/custom_icon' => true ],
 			'options' => [
-				'top_level_custom_icon' => [
+				'custom_icon' => [
 					'type' => 'icon-picker',
 					'label' => __('Icon', 'blocksy-companion'),
 					'design' => 'inline',
@@ -64,7 +64,7 @@ $bottom_options = [
 		'type' => 'tab',
 		'options' => [
 
-			$common_options,
+			$dropdown_options,
 
 			'ls_dropdown_offset' => [
 				'label' => __( 'Dropdown Top Offset', 'blocksy-companion' ),
@@ -339,7 +339,7 @@ $design_options = [
 
 	blocksy_rand_md5() => [
 		'type' => 'ct-condition',
-		'condition' => [ 'top_level_language_type/custom_icon' => true ],
+		'condition' => [ 'language_type/custom_icon' => true ],
 		'options' => [
 
 			blocksy_rand_md5() => [

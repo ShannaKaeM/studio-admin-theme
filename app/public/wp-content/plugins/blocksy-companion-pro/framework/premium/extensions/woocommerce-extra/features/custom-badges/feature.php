@@ -59,12 +59,12 @@ class CustomBadges {
 		add_filter(
 			'blocksy:woocommerce:product-card:badges',
 			function ($badges) {
-				$has_new_badge = blocksy_get_theme_mod('woo_has_new_custom_badge', [
+				$has_new_badge = blc_theme_functions()->blocksy_get_theme_mod('woo_has_new_custom_badge', [
 					'archive' => false,
 					'single' => false,
 				]);
 
-				$has_featured_badge = blocksy_get_theme_mod(
+				$has_featured_badge = blc_theme_functions()->blocksy_get_theme_mod(
 					'woo_has_featured_custom_badge',
 					[
 						'archive' => false,
@@ -100,12 +100,12 @@ class CustomBadges {
 		);
 
 		add_filter('blocksy:woocommerce:single:after-sale-badge', function ($badges) {
-			$has_new_badge = blocksy_get_theme_mod('woo_has_new_custom_badge', [
+			$has_new_badge = blc_theme_functions()->blocksy_get_theme_mod('woo_has_new_custom_badge', [
 				'archive' => false,
 				'single' => false,
 			]);
 
-			$has_featured_badge = blocksy_get_theme_mod(
+			$has_featured_badge = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_has_featured_custom_badge',
 				[
 					'archive' => false,
@@ -161,9 +161,9 @@ class CustomBadges {
 			'span',
 			[
 				'class' => 'ct-woo-badge-featured',
-				'data-shape' => blocksy_get_theme_mod('sale_badge_shape', 'type-2'),
+				'data-shape' => blc_theme_functions()->blocksy_get_theme_mod('sale_badge_shape', 'type-2'),
 			],
-			blocksy_get_theme_mod(
+			blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_has_featured_custom_badge_label',
 				__('HOT', 'blocksy-companion')
 			)
@@ -185,7 +185,7 @@ class CustomBadges {
 
 		$time_delta = $timestamp_now - $timestamp_created;
 		$duration =
-			blocksy_get_theme_mod('woo_has_new_custom_badge_duration', 14) *
+			blc_theme_functions()->blocksy_get_theme_mod('woo_has_new_custom_badge_duration', 14) *
 			24 *
 			60 *
 			60;
@@ -195,9 +195,9 @@ class CustomBadges {
 				'span',
 				[
 					'class' => 'ct-woo-badge-new',
-					'data-shape' => blocksy_get_theme_mod('sale_badge_shape', 'type-2'),
+					'data-shape' => blc_theme_functions()->blocksy_get_theme_mod('sale_badge_shape', 'type-2'),
 				],
-				blocksy_get_theme_mod(
+				blc_theme_functions()->blocksy_get_theme_mod(
 					'woo_has_new_custom_badge_label',
 					__('NEW', 'blocksy-companion')
 				)

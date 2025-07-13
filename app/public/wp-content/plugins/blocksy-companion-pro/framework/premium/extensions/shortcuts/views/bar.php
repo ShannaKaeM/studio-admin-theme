@@ -6,7 +6,7 @@ if (! isset($only_item)) {
 	$only_item = null;
 }
 
-$items = blocksy_get_theme_mod('shortcuts_bar_items', [
+$items = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_items', [
 	[
 		'id' => 'home',
 		'enabled' => true,
@@ -159,9 +159,9 @@ foreach ($items as $single_item) {
 		if (
 			! is_user_logged_in()
 			&&
-			blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
+			blc_theme_functions()->blocksy_get_theme_mod('product_wishlist_display_for', 'logged_users') === 'all_users'
 		) {
-			$maybe_page_id = blocksy_get_theme_mod('woocommerce_wish_list_page');
+			$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_wish_list_page');
 
 			if (! empty($maybe_page_id)) {
 				$maybe_permalink = get_permalink($maybe_page_id);
@@ -198,21 +198,21 @@ foreach ($items as $single_item) {
 				! is_product_tag()
 			)
 			||
-			blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
+			blc_theme_functions()->blocksy_get_theme_mod('has_woo_offcanvas_filter', 'no') === 'no'
 		) {
 			continue;
 		}
 
 		$link = '#';
 
-		$ariaExpanded = blocksy_get_theme_mod(
+		$ariaExpanded = blc_theme_functions()->blocksy_get_theme_mod(
 			'filter_panel_behaviour',
 			'no'
 		) === 'no' ? 'false' : 'true';
 
-		$filter_ajax_reveal = blocksy_get_theme_mod('filter_ajax_reveal', 'no');
+		$filter_ajax_reveal = blc_theme_functions()->blocksy_get_theme_mod('filter_ajax_reveal', 'no');
 
-		if (blocksy_get_theme_mod(
+		if (blc_theme_functions()->blocksy_get_theme_mod(
 			'filter_panel_behaviour',
 			'no'
 		) === 'yes') {
@@ -221,7 +221,7 @@ foreach ($items as $single_item) {
 
 		$has_filter_ajax_reveal = $filter_ajax_reveal === 'yes';
 
-		if (blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-2') {
+		if (blc_theme_functions()->blocksy_get_theme_mod('woocommerce_filter_type', 'type-1') === 'type-2') {
 			$shortcut_attrs = [
 				'class' => 'ct-shortcut-toggle-filter-panel' . (! $has_filter_ajax_reveal ? ' ct-expandable-trigger' : ''),
 				'data-behaviour' => 'drop-down',
@@ -244,7 +244,7 @@ foreach ($items as $single_item) {
 	) {
 		$link = '#';
 
-		$maybe_page_id = blocksy_get_theme_mod('woocommerce_compare_page');
+		$maybe_page_id = blc_theme_functions()->blocksy_get_theme_mod('woocommerce_compare_page');
 
 		if (!empty($maybe_page_id)) {
 			$maybe_permalink = get_permalink($maybe_page_id);
@@ -254,9 +254,9 @@ foreach ($items as $single_item) {
 			}
 		}
 
-		if ( blocksy_get_theme_mod('compare_table_placement', 'modal') === 'modal' ) {
+		if (blc_theme_functions()->blocksy_get_theme_mod('compare_table_placement', 'modal') === 'modal') {
 			$shortcut_attrs = [
-				'data-behaviour' => blocksy_get_theme_mod('compare_table_placement', 'modal'),
+				'data-behaviour' => blc_theme_functions()->blocksy_get_theme_mod('compare_table_placement', 'modal'),
 			];
 		}
 	}
@@ -272,7 +272,7 @@ foreach ($items as $single_item) {
 				$item_i18n_id_prefix . ':link'
 			),
 			'data-shortcut' => $single_item['id'] !== 'custom_link' ? $single_item['id'] : $single_item['id'] . ':' . substr($single_item['__id'], 0, 1),
-			'data-label' => blocksy_get_theme_mod('shortcuts_label_position', 'bottom'),
+			'data-label' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_label_position', 'bottom'),
 			'aria-label' => $label
 		],
 		$shortcut_attrs
@@ -375,7 +375,7 @@ foreach ($items as $single_item) {
 		$label_class = 'ct-label';
 
 		$label_class .= ' ' . blocksy_visibility_classes(
-			blocksy_get_theme_mod(
+			blc_theme_functions()->blocksy_get_theme_mod(
 				'shortcuts_label_visibility',
 				[
 					'desktop' => false,
@@ -391,7 +391,7 @@ foreach ($items as $single_item) {
 			$additional_output = '<span class="ct-icon-container">' . $count_output . $icon . '</span>';
 		}
 
-		$tooltip_visibility = blocksy_get_theme_mod(
+		$tooltip_visibility = blc_theme_functions()->blocksy_get_theme_mod(
 			'shortcuts_tooltip_visibility',
 			[
 				'desktop' => false,
@@ -480,7 +480,7 @@ if (empty($items_output)) {
 }
 
 $class .= ' ' . blocksy_visibility_classes(
-	blocksy_get_theme_mod('shortcuts_bar_visibility', [
+	blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_visibility', [
 		'desktop' => true,
 		'tablet' => true,
 		'mobile' => true,
@@ -496,7 +496,7 @@ if ($only_item) {
 
 <div
 	class="<?php echo esc_attr(trim($class)) ?>"
-	data-type="<?php echo blocksy_get_theme_mod('shortcuts_bar_type', 'type-1') ?>"
+	data-type="<?php echo blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_type', 'type-1') ?>"
 	<?php
 		if (
 			is_customize_preview()

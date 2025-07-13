@@ -15,7 +15,7 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 			&&
 			isset($option_ids[$place])
 			&&
-			blocksy_get_theme_mod($option_ids[$place], 'yes') === 'yes'
+			blc_theme_functions()->blocksy_get_theme_mod($option_ids[$place], 'yes') === 'yes'
 		);
 	}
 
@@ -43,11 +43,17 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 	if (
 		$product->is_type('variable')
 		&&
-		blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'yes'
+		blc_theme_functions()->blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'yes'
+		&&
+		blc_theme_functions()->blocksy_manager()
+		&&
+		function_exists('blocksy_has_product_card_specific_layer')
+		&&
+		blocksy_has_product_card_specific_layer('product_swatches')
 	) {
 		$maybe_current_variation = null;
 
-		$maybe_current_variation = blocksy_manager()
+		$maybe_current_variation = blc_theme_functions()->blocksy_manager()
 			->woocommerce
 			->retrieve_product_default_variation($product);
 
@@ -90,7 +96,7 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 					continue;
 				}
 
-				if (blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'no') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'no') {
 					if (! isset($item['attributes'])) {
 						$is_liked = true;
 					}
@@ -100,10 +106,14 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 
 				$is_liked = true;
 
-				if (isset($item['attributes'])) {
+				if (
+					isset($item['attributes'])
+					&&
+					blc_theme_functions()->blocksy_manager()
+				) {
 					$maybeAttrs = [];
 
-					$maybe_current_variation = blocksy_manager()
+					$maybe_current_variation = blc_theme_functions()->blocksy_manager()
 						->woocommerce
 						->retrieve_product_default_variation($product);
 
@@ -136,7 +146,7 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 		</svg>'
 	);
 
-	$shop_cards_type = blocksy_get_theme_mod('shop_cards_type', 'type-1');
+	$shop_cards_type = blc_theme_functions()->blocksy_get_theme_mod('shop_cards_type', 'type-1');
 
 	if (
 		$place === 'archive'
@@ -196,6 +206,32 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 		return '';
 	}
 
+	$additional_params = [];
+
+	if (
+		blc_theme_functions()->blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'yes'
+		&&
+		$product->is_type('variable')
+		&&
+		(
+			(
+				$place === 'archive'
+				&&
+				function_exists('blocksy_has_product_card_specific_layer')
+				&&
+				blocksy_has_product_card_specific_layer('product_swatches')
+			)
+			||
+			$place === 'single'
+			||
+			$place === 'quick-view'
+		)
+	) {
+		$additional_params = [
+			'data-variable' => '',
+		];
+	}
+
 	return blocksy_action_button(
 		[
 			'button_html_attributes' => array_merge(
@@ -204,9 +240,7 @@ function blocksy_output_add_to_wish_list($place, $attributes = []) {
 					'aria-label' => __('Add to wishlist', 'blocksy-companion'),
 					'data-button-state' => $is_disabled ? 'disabled' : ($is_liked ? 'active' : ''),
 				],
-				blocksy_get_theme_mod('has_variations_wishlist', 'no') === 'yes' ? [
-					'data-variable' => ''
-				] : []
+				$additional_params
 			),
 			'html_tag' => 'button',
 			'icon' => $icon,

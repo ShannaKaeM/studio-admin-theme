@@ -20,19 +20,21 @@ class Checkout {
 
 		add_action('wp', function () {
 			if (
-				! isset(blocksy_manager()->woocommerce)
+				! blc_theme_functions()->blocksy_manager()
 				||
-				! isset(blocksy_manager()->woocommerce->checkout)
+				! isset(blc_theme_functions()->blocksy_manager()->woocommerce)
 				||
-				! blocksy_manager()->woocommerce->checkout->has_custom_checkout()
+				! isset(blc_theme_functions()->blocksy_manager()->woocommerce->checkout)
+				||
+				! blc_theme_functions()->blocksy_manager()->woocommerce->checkout->has_custom_checkout()
 			) {
 				return;
 			}
 
 			if (
-				blocksy_get_theme_mod('blocksy_has_image_toggle', 'no') !== 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('blocksy_has_image_toggle', 'no') !== 'yes'
 				&&
-				blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') !== 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') !== 'yes'
 			) {
 				return;
 			}
@@ -63,7 +65,7 @@ class Checkout {
 				0
 			);
 
-			if (blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') === 'yes') {
+			if (blc_theme_functions()->blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') === 'yes') {
 				add_action(
 					'woocommerce_checkout_cart_item_quantity',
 					[$this, 'render_quantity_in_checkout'],
@@ -108,7 +110,7 @@ class Checkout {
 	}
 
 	public function render_quantity_in_checkout ($product_quantity, $cart_item, $cart_item_key) {
-		if (blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') !== 'yes') {
+		if (blc_theme_functions()->blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') !== 'yes') {
 			return $product_quantity;
 		}
 
@@ -127,6 +129,15 @@ class Checkout {
 		);
 
 		if (! $product->is_sold_individually()) {
+			// https://codecanyon.net/item/b2bking-the-ultimate-woocommerce-b2b-plugin/26689576 integration
+			$callback = function($args) use ($cart_item) {
+				$args['input_value'] = $cart_item['quantity'];
+
+				return $args;
+			};
+
+			add_filter('woocommerce_quantity_input_args', $callback, 999, 1);
+
 			$product_quantity = woocommerce_quantity_input(
 				[
 					'input_name' => 'shipping_method_qty_' . $product_id,
@@ -136,6 +147,8 @@ class Checkout {
 				$product,
 				false
 			);
+
+			remove_filter('woocommerce_quantity_input_args', $callback, 999, 1);
 
 			$product_quantity .= blocksy_html_tag(
 				'input',

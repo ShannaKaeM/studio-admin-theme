@@ -82,6 +82,16 @@ class FiltersBlock {
 					'imageFit' => 'contain',
 				]);
 
+				// migrate to native brands
+				if ($attributes['taxonomy'] === 'product_brands') {
+					$attributes['taxonomy'] = 'product_brand';
+				}
+
+				if ($attributes['type'] === 'brands') {
+					$attributes['type'] = 'categories';
+					$attributes['taxonomy'] = 'product_brand';
+				}
+
 				$filter = Filters::get_filter_instance('taxonomies_filter');
 
 				if ($attributes['type'] === 'attributes') {
@@ -223,19 +233,19 @@ class FiltersBlock {
 			'attributes_tax' => $attribute_taxonomies,
 			'product_taxonomies' => $product_taxonomies,
 
-			'ct_color_swatch_shape' => blocksy_get_theme_mod(
+			'ct_color_swatch_shape' => blc_theme_functions()->blocksy_get_theme_mod(
 				'color_swatch_shape',
 				'round'
 			),
-			'ct_image_swatch_shape' => blocksy_get_theme_mod(
+			'ct_image_swatch_shape' => blc_theme_functions()->blocksy_get_theme_mod(
 				'image_swatch_shape',
 				'round'
 			),
-			'ct_button_swatch_shape' => blocksy_get_theme_mod(
+			'ct_button_swatch_shape' => blc_theme_functions()->blocksy_get_theme_mod(
 				'button_swatch_shape',
 				'round'
 			),
-			'ct_mixed_swatch_shape' => blocksy_get_theme_mod(
+			'ct_mixed_swatch_shape' => blc_theme_functions()->blocksy_get_theme_mod(
 				'mixed_swatch_shape',
 				'round'
 			),

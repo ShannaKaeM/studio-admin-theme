@@ -1,3 +1,140 @@
+2.1.3: 2025-07-10
+- Improvement: Advanced Posts block - properly compute the spacing option
+- Improvement: Customizer import/export feature - safely unserialize data on import
+- Improvement: Dynamic Data block - small accessibility improvement when the block is used as a featured image
+- Improvement: Free Shipping Bar - make sure the module is outputted correctly if multiple "free shipping" methods are used in WooCommerce
+- Improvement: Introduce PHP filter to disable SVG sanitization
+- Improvement: Suggested Products - make sure the CSS assets are loaded correctly on the cart page
+- Fix: Variation swatches - Safari browser visual issue with the image ratio
+
+2.1.2: 2025-07-03
+- Improvement: Cart suggested products - make sure the slider layout CSS doesn't conflict with the cart form layout on mobile
+- Improvement: Correctly respect Loco Translate custom translation locations
+- Improvement: Languages header element - accessibility improvements
+- Improvement: Product Waitlist - better and smarter support for variable products on backorder
+- Improvement: Variation Swatches - add type option for out of stock swatches
+- Improvement: Variation Swatches - limit options does not work if they are in the default state and the "+ / -" buttons are used
+- Fix: Additional actions in Quick View do not have the correct CSS styles applied to them when the `[products]` shortcode is used
+- Fix: Custom product attributes set as "select" type do not display in the Quick View modal
+- Fix: Variation Swatches - make sure the limit default is respected everywhere
+
+2.1.1: 2025-06-26
+- Improvement: Advanced posts block - make sure it doesn't inherit the mega-menu shadow property when placed in dropdown via content blocks
+- Improvement: Language header element - make sure the dropdown inner elements spacing is applied only when needed
+- Improvement: Quick view module - make sure the product slider works properly
+- Improvement: Shop filters - properly apply attributes query when the product attributes lookup table is enabled
+- Improvement: Sticky header - better calculations for sticky position of rows hidden on mobile devices
+- Improvement: Sticky header - proper offset when store notice is enabled
+- Improvement: Suggested Products module - add support for the cart page
+- Improvement: Suggested Products module - make sure the dynamic height works properly inside offcanvas
+- Improvement: Suggested products module - ensure the slider scripts are initialized when the mini-cart actually opens
+- Improvement: Variation Swatches - add option to limit the number of displayed swatches on the single product pages
+- Improvement: WooCommerce Thank You Pages - make sure the `woocommerce_thankyou` action is present all the time
+- Improvement: WooCommerce custom quantity input - make sure everything works properly when product is removed from the checkout page
+- Fix: Filters canvas - properly fetch filter canvas content when the panel opens
+
+2.1.0: 2025-06-05
+- Improvement: Breadcrumbs block - make sure the editor preview respects the context
+- Improvement: Compare modal - make sure the heading column respects the modal background option
+- Improvement: Filters canvas - don't show/enable the "Auto Close Panel" option if archive "Ajax Filtering" option is off
+- Improvement: Make AJAX pagination for WooCommerce work with browser back/forward buttons
+- Improvement: Make sure the Added to Cart Popup module respects the shipping tax option
+- Improvement: Newsletter subscribe - integration with Email Octopus
+- Improvement: Offcanvas cart - properly re-enable scroll lock on iOS when cart is closed
+- Improvement: Render HTML tags for the "Dynamic Data" block in the editor preview for before/after options
+- Improvement: Support for product attributes in the dynamic data block
+- Improvement: Video thumbnails - add option to play the video on mouse hover
+
+2.0.99: 2025-05-22
+- Improvement: Advanced Search block - make sure the additional CSS classes are outputted in frontend
+- Improvement: Ensure proper slider markup when there are no suggested products in the mini cart container
+- Improvement: Make sure Dynamic Data block renders on front end inside the Single Product block by WooCommerce
+- Improvement: Mega menu - don't closes the menu options when clicking outside the modal without saving
+- Improvement: Pop-up content block - add possibility to relaunch the popup by hours and minutes
+- Improvement: Popup content block - allow multiple buttons that match selector in additional close triggers
+- Improvement: Shop Extra Filters - improve performance of the check that ensures presence of the taxonomies lookup table
+- Improvement: Shop filters - retrieve the correct terms structure from the core option
+- Improvement: Single product - layer for displaying product attributes table
+- Improvement: Trending posts/products - make sure the "Product Status" option work properly when used with "Trending From" option
+- Fix: Make sure wishlist works properly with variable products when those have a predefined variation
+
+2.0.98: 2025-05-01
+- Improvement: Added to cart popup - better detection of the inserted cart items
+- Improvement: Advanced taxonomies block does not display anything if an image has not been assigned to a term
+- Improvement: Better integration with EWWW Image Optimization plugin and Advanced Reviews lightbox
+- Improvement: Mare sure the "Content" Gutenberg block can be inserted into Content Blocks single templates
+- Improvement: Optimise blc_get_content_blocks() helper to persist only post IDs statically
+- Improvement: Product Waitlist - make sure email templates preview functionality works properly
+- Improvement: Shortcuts Bar - smarter check for compare, waitlist and wishlist extensions presence
+
+2.0.97: 2025-04-24
+- Improvement: Correctly check for Blocksy theme presence in WP CLI context
+- Improvement: Popup content block - better integration with Ninja Forms and "close on submit" option
+- Improvement: Product Brands - ensure metabox save logic doesn't affect other taxonomies
+- Improvement: Size Guide and Product Tabs - add edit with Elementor support
+- Fix: Translations for the premium version are not loaded correctly
+
+2.0.96: 2025-04-17
+- Improvement: Advanced Posts block - Better generation of unique ID to avoid clashes
+- Improvement: Content blocks - make sure "Dynamic Content Preview" option works properly for archive templates
+- Improvement: Correct handle skip-themes flag in WP CLI when detecting presence of Blocksy theme
+- Improvement: Correctly respect terms order from WooCommerce in the Shop Filter block
+- Improvement: Custom Fonts - better defaults checking to ensure fonts get saved correctly
+- Improvement: Header language element - improved compatibility with WeGlot
+- Improvement: Product brands - use native WooCommerce taxonomy
+- Fix: Cookies Consent popup does not render if header is disabled on a certain page
+- Fix: Custom sidebars overrides "Filters Canvas" widget area even if "Filter Canvas" is selected as the widget area source
+- Fix: Products with custom attributes that are pre-selected do not show their chosen attribute label when the page is first loaded
+
+2.0.95: 2025-04-04
+- Improvement: Added to cart popup - better integration with WPML Multicurrency plugin
+- Improvement: Minor accessibility improvements
+- Fix: Advanced posts block doesn't apply column CSS on front-end
+- Fix: Correctly load related products slider CSS
+- Fix: Fix FOUC issues for Advanced Posts and Advanced Taxonomies blocks in some specific situations
+
+2.0.94: 2025-04-03
+- Improvement: Content blocks - rework integration with Ultimate Blocks plugin
+- Improvement: Ensure permalinks are regenerated properly when WP Toolkit checks for updates
+- Improvement: Improve post type selection logic in search and search box header elements
+- Improvement: Language switcher - add label position option
+- Improvement: Shop filters - better compatibility with Polylang plugin
+- Fix: Conditions module - ensure stability of post searching
+- Fix: White label - deactivating extension clears out all the white label data
+
+2.0.93: 2025-03-27
+- Improvement: Better integration with WooCommerce Product Bundles plugin and Variation Swatches
+- Improvement: Color mode switch - better integration with WPRocket's dynamic cookies
+- Improvement: Contacts element - correctly apply alignment option when the element is duplicated in footer
+- Improvement: Custom thank you pages - add translation support for Polylang plugin
+- Improvement: Ensure shop filters work correctly on some specific WPML multilingual setups
+- Improvement: Functionality to import/export menus created with the Advanced Menu extension
+- Improvement: Make sure advanced search block respects the products taxonomy filter criteria option
+- Improvement: Optimize users search retrieval in conditions module on sites with a height amount of users
+
+2.0.92: 2025-03-13
+- Improvement: Account drop down custom link url string support
+- Improvement: Account header element - bring back the tablet/mobile dropdown functionality only for main header rows
+- Improvement: Better integration with B2B King plugin and checkout quantity inputs
+- Improvement: Better integration with WooCommerce Product Bundles plugin and Variation Swatches
+- Improvement: Header language element - better compatibility with TranslatePress
+- Improvement: Mare sure Product Reviews archive star rating respect the horizontal alignment option
+- Improvement: Quick View - correctly apply spacing between elements if the last entry in the description is not a paragraph
+- Improvement: Safer calling of theme functions in the companion plugin
+- Improvement: Safer checking of cross-sell products on the checkout page for assets enqueue
+- Improvement: Shop extra extensions - better integration with WooCommerce native import/export functionality
+- Improvement: Variations swatches - make sure preselected variation doesn't interact with related products variations
+- Fix: Fix infinite loop when Advanced Posts + Dynamic Data + Custom Fields are used together
+- Fix: Multiple Advanced Posts blocks on a single page, scoped by category, load incorrect posts when using pagination
+- Fix: Removing access to custom fields makes any Dynamic Data block uneditable
+
+2.0.91: 2025-02-27
+- Improvement: Compare table modal - add text message when modal is empty
+- Improvement: Make sure Czech translations are correctly loaded for the pro version
+- Improvement: Related posts and products - improve CSS structure when "Slider" mode is enabled
+- Fix: Waitlist - fix pagination for admin table
+- Fix: Wishlist table - remove button not working on mobile devices
+
 2.0.90: 2025-02-21
 - Fix: Floating cart - make sure AJAX add to cart is working properly
 

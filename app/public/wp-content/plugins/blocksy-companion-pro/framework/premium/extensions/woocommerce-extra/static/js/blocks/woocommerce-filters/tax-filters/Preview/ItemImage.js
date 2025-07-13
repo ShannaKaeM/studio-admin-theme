@@ -13,7 +13,7 @@ const ItemImage = ({ taxItem, attributes }) => {
 
 	if (
 		type === 'categories' &&
-		taxonomy === 'product_brands' &&
+		taxonomy === 'product_brand' &&
 		!showItemsRendered
 	) {
 		return null
@@ -21,7 +21,7 @@ const ItemImage = ({ taxItem, attributes }) => {
 
 	if (
 		type === 'categories' &&
-		taxonomy !== 'product_brands' &&
+		taxonomy !== 'product_brand' &&
 		!showTaxonomyImages
 	) {
 		return null

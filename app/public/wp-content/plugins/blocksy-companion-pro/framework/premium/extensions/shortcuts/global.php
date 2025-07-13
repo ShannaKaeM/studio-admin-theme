@@ -1,11 +1,11 @@
 <?php
 
-$type = blocksy_get_theme_mod('shortcuts_bar_type', 'type-1');
-$interaction = blocksy_get_theme_mod('shortcuts_interaction', 'none');
+$type = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_type', 'type-1');
+$interaction = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_interaction', 'none');
 
 // Container height
 $container_height = blocksy_expand_responsive_value(
-	blocksy_get_theme_mod('shortcuts_container_height', 70)
+	blc_theme_functions()->blocksy_get_theme_mod('shortcuts_container_height', 70)
 );
 
 if ($type === 'type-2') {
@@ -14,7 +14,7 @@ if ($type === 'type-2') {
 	$container_height['mobile'] = intval($container_height['mobile']) + 30;
 }
 
-$shortcuts_bar_visibility = blocksy_get_theme_mod('shortcuts_bar_visibility', [
+$shortcuts_bar_visibility = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_visibility', [
 	'desktop' => true,
 	'tablet' => true,
 	'mobile' => true,
@@ -45,7 +45,7 @@ blocksy_output_responsive([
 
 // Container max width
 if ($type === 'type-2' || is_customize_preview()) {
-	$container_width = blocksy_get_theme_mod('shortcuts_container_width', '100%');
+	$container_width = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_container_width', '100%');
 
 	if ($container_width !== '100%') {
 		blocksy_output_responsive([
@@ -61,7 +61,7 @@ if ($type === 'type-2' || is_customize_preview()) {
 }
 
 // Icon size
-$icon_size = blocksy_get_theme_mod('shortcuts_icon_size', 15);
+$icon_size = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_icon_size', 15);
 
 if ($icon_size !== 15) {
 	blocksy_output_responsive([
@@ -75,7 +75,7 @@ if ($icon_size !== 15) {
 }
 
 blocksy_output_font_css([
-	'font_value' => blocksy_get_theme_mod( 'shortcuts_font',
+	'font_value' => blc_theme_functions()->blocksy_get_theme_mod( 'shortcuts_font',
 		blocksy_typography_default_values([
 			'size' => '12px',
 			'variation' => 'n5',
@@ -89,7 +89,7 @@ blocksy_output_font_css([
 ]);
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod('shortcuts_font_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_font_color'),
 	'default' => [
 		'default' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 		'hover' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
@@ -112,7 +112,7 @@ blocksy_output_colors([
 ]);
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod('shortcuts_icon_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_icon_color'),
 	'default' => [
 		'default' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 		'hover' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
@@ -135,7 +135,7 @@ blocksy_output_colors([
 ]);
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod('shortcuts_item_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_item_color'),
 	'default' => [
 		'default' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 		'hover' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
@@ -158,7 +158,7 @@ blocksy_output_colors([
 ]);
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod('shortcuts_cart_badge_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_cart_badge_color'),
 	'default' => [
 		'background' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 		'text' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
@@ -181,7 +181,7 @@ blocksy_output_colors([
 ]);
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod('shortcuts_wishlist_badge_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_wishlist_badge_color'),
 	'default' => [
 		'background' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 		'text' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
@@ -204,7 +204,7 @@ blocksy_output_colors([
 ]);
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod('shortcuts_compare_badge_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_compare_badge_color'),
 	'default' => [
 		'background' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 		'text' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
@@ -230,7 +230,7 @@ blocksy_output_border([
 	'css' => $css,
 	'selector' => '.ct-shortcuts-bar-items',
 	'variableName' => 'shortcuts-divider',
-	'value' => blocksy_get_theme_mod('shortcuts_divider'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod('shortcuts_divider'),
 	'skip_none' => true,
 	'default' => [
 		'width' => 1,
@@ -241,9 +241,9 @@ blocksy_output_border([
 	],
 ]);
 
-$divider_height = blocksy_get_theme_mod( 'shortcuts_divider_height', 40 );
+$divider_height = blc_theme_functions()->blocksy_get_theme_mod( 'shortcuts_divider_height', 40 );
 
-$divider_style = blocksy_get_theme_mod('shortcuts_divider', [
+$divider_style = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_divider', [
 	'width' => 1,
 	'style' => 'dashed',
 	'color' => [
@@ -274,7 +274,7 @@ blocksy_output_background_css([
 	'css' => $css,
 	'tablet_css' => $tablet_css,
 	'mobile_css' => $mobile_css,
-	'value' => blocksy_get_theme_mod(
+	'value' => blc_theme_functions()->blocksy_get_theme_mod(
 		'shortcuts_container_background',
 		blocksy_background_default_value([
 			'backgroundColor' => [
@@ -288,7 +288,7 @@ blocksy_output_background_css([
 ]);
 
 
-$shortcuts_container_blur = blocksy_get_theme_mod('shortcuts_container_blur', 0);
+$shortcuts_container_blur = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_container_blur', 0);
 
 if($shortcuts_container_blur !== 0) {
 	blocksy_output_responsive([
@@ -310,7 +310,7 @@ blocksy_output_box_shadow([
 	'mobile_css' => $mobile_css,
 	'selector' => '.ct-shortcuts-bar-items',
 	'should_skip_output' => false,
-	'value' => blocksy_get_theme_mod(
+	'value' => blc_theme_functions()->blocksy_get_theme_mod(
 		'shortcuts_container_shadow',
 		blocksy_box_shadow_value([
 			'enable' => true,
@@ -334,7 +334,7 @@ if ($type === 'type-2') {
 		'mobile_css' => $mobile_css,
 		'selector' => '.ct-shortcuts-bar-items',
 		'property' => 'theme-border-radius',
-		'value' => blocksy_get_theme_mod(
+		'value' => blc_theme_functions()->blocksy_get_theme_mod(
 			'shortcuts_container_border_radius',
 			blocksy_spacing_value()
 		),

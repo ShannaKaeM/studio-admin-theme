@@ -13,7 +13,6 @@ $options = [
 		'design' => 'block',
 		'view' => 'text',
 		'divider' => 'top',
-		'disableRevertButton' => true,
 		'value' => [
 			'icon' => true,
 			'label' => true,
@@ -50,8 +49,22 @@ $options = [
 					'id' => $sync_id
 				]
 			],
+
+			$prefix . 'language_label_position' => [
+				'type' => 'ct-radio',
+				'label' => __( 'Label Position', 'blocksy-companion' ),
+				'value' => 'right',
+				'view' => 'text',
+				'divider' => 'top',
+				'design' => 'block',
+				'responsive' => [ 'tablet' => 'skip' ],
+				'choices' => [
+					'left' => __( 'Left', 'blocksy-companion' ),
+					'right' => __( 'Right', 'blocksy-companion' ),
+					'bottom' => __( 'Bottom', 'blocksy-companion' ),
+				],
+			],
 		],
-	]
+	],
 
 ];
-

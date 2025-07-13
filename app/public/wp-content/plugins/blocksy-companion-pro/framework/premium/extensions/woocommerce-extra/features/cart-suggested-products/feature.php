@@ -3,6 +3,12 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class CartSuggestedProducts {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		add_action('wp', function () {
 			$prefixes = [
@@ -15,9 +21,9 @@ class CartSuggestedProducts {
 
 			foreach ($prefixes as $prefix) {
 				if (
-					blocksy_get_theme_mod($prefix . '_products', 'yes') === 'yes'
+					blc_theme_functions()->blocksy_get_theme_mod($prefix . '_products', 'yes') === 'yes'
 					&&
-					blocksy_get_theme_mod($prefix . '_products_source', 'related') === 'recent'
+					blc_theme_functions()->blocksy_get_theme_mod($prefix . '_products_source', 'related') === 'recent'
 				) {
 					$need_to_track = true;
 					break;
@@ -35,7 +41,11 @@ class CartSuggestedProducts {
 		});
 
 		add_filter('blocksy:frontend:dynamic-js-chunks', function ($chunks) {
-			if (blocksy_get_theme_mod('checkout_suggested_products', 'yes') !== 'yes') {
+			if (
+				blc_theme_functions()->blocksy_get_theme_mod('checkout_suggested_products', 'yes') !== 'yes'
+				&&
+				blc_theme_functions()->blocksy_get_theme_mod('cart_suggested_products', 'yes') !== 'yes'
+			) {
 				return $chunks;
 			}
 
@@ -60,7 +70,7 @@ class CartSuggestedProducts {
 		});
 
 		add_filter('blocksy:general:ct-scripts-localizations', function($data) {
-			if (!function_exists('get_plugin_data')) {
+			if (! function_exists('get_plugin_data')) {
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
@@ -68,45 +78,33 @@ class CartSuggestedProducts {
 
 			$render = new \Blocksy_Header_Builder_Render();
 
-			if (
-				! $render->contains_item('cart')
-				||
-				blocksy_get_theme_mod('mini_cart_suggested_products', 'yes') === 'no'
-			) {
-				return $data;
-			}
-
-			$data['dynamic_styles_selectors'][] = [
-				'selector' => '.ct-header-cart, #woo-cart-panel',
-				'url' => add_query_arg(
-					'ver',
-					$plugin_data['Version'],
-					blocksy_cdn_url(
-						BLOCKSY_URL .
-							'framework/premium/extensions/woocommerce-extra/static/bundle/suggested-products.min.css'
-					)
-				)
-			];
-
-			return $data;
-		});
-
-		add_filter('blocksy:general:ct-scripts-localizations', function ($data) {
-			if (!function_exists('get_plugin_data')) {
-				require_once ABSPATH . 'wp-admin/includes/plugin.php';
-			}
-
-			$plugin_data = get_plugin_data(BLOCKSY__FILE__);
-
 			$storage = new Storage();
 			$settings = $storage->get_settings();
+
+			if (
+				$render->contains_item('cart')
+				&&
+				blc_theme_functions()->blocksy_get_theme_mod('mini_cart_suggested_products', 'yes') !== 'no'
+			) {
+				$data['dynamic_styles_selectors'][] = [
+					'selector' => '.ct-header-cart, #woo-cart-panel',
+					'url' => add_query_arg(
+						'ver',
+						$plugin_data['Version'],
+						blocksy_cdn_url(
+							BLOCKSY_URL .
+							'framework/premium/extensions/woocommerce-extra/static/bundle/suggested-products.min.css'
+						)
+					)
+				];
+			}
 
 			if (
 				isset($settings['features']['added-to-cart-popup'])
 				&&
 				$settings['features']['added-to-cart-popup']
 				&&
-				blocksy_get_theme_mod('cart_popup_suggested_products', 'yes') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('cart_popup_suggested_products', 'yes') === 'yes'
 			) {
 				$data['dynamic_styles']['suggested_products'] = add_query_arg(
 					'ver',
@@ -138,9 +136,17 @@ class CartSuggestedProducts {
 			$should_load_styles = false;
 
 			if (
+				is_cart()
+				&&
+				blc_theme_functions()->blocksy_get_theme_mod('cart_suggested_products', 'yes') === 'yes'
+			) {
+				$should_load_styles = true;
+			}
+
+			if (
 				is_checkout()
 				&&
-				blocksy_get_theme_mod('checkout_suggested_products', 'yes') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('checkout_suggested_products', 'yes') === 'yes'
 			) {
 				$should_load_styles = true;
 			}
@@ -164,6 +170,24 @@ class CartSuggestedProducts {
 		add_action('blocksy:woo:checkout:order-review', function() {
 			echo $this->render_checkout();
 		}, 20);
+
+		add_action('wp', function() {
+			$position = blc_theme_functions()->blocksy_get_theme_mod('cart_suggested_position', 'totals');
+			$hook = 'blocksy:woo:cart:cart-totals';
+
+
+			if ($position === 'below') {
+				$hook = 'blocksy:woocommerce:cart:before-cross-sells';
+			}
+
+			if ($position === 'table') {
+				$hook = 'woocommerce_after_cart_table';
+			}
+
+			add_action($hook, function() {
+				echo $this->render_cart();
+			}, 5);
+		});
 
 		add_filter(
 			'blocksy:ext:woocommerce-extra:added-to-cart:suggested-products',
@@ -262,8 +286,29 @@ class CartSuggestedProducts {
 		return $content;
 	}
 
+	public function render_cart() {
+		$content = '';
+		$added_products = [];
+
+		foreach (WC()->cart->get_cart() as $cart_item) {
+			$added_products[] = $cart_item['product_id'];
+		}
+
+		if (! empty($added_products)) {
+			$content = blocksy_render_view(
+				dirname(__FILE__) . '/views/suggested-products.php',
+				[
+					'added_products' => $added_products,
+					'prefix' => 'cart_suggested_'
+				]
+			);
+		}
+
+		return $content;
+	}
+
 	public function header_cart_item_fragment($fragments) {
-		if (blocksy_get_theme_mod('mini_cart_suggested_products', 'yes') === 'yes') {
+		if (blc_theme_functions()->blocksy_get_theme_mod('mini_cart_suggested_products', 'yes') === 'yes') {
 			$fragments['[class*="ct-suggested-products--mini-cart"]'] = $this->render_mini_cart();
 		}
 

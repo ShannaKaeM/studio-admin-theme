@@ -141,6 +141,16 @@ registerBlockType('blocksy/woocommerce-filters', {
 			Blocksy: Ajax Category Filter
 		</div>
 	),
+
+	deprecated: [
+		{
+			isEligible: ({ taxonomy }) => taxonomy === 'product_brands',
+
+			migrate: () => ({
+				taxonomy: 'product_brand',
+			}),
+		},
+	],
 })
 
 wp.blocks.registerBlockVariation('blocksy/widgets-wrapper', {

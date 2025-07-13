@@ -18,7 +18,8 @@ const changeCounter = (el, value, messsage) => {
 const toggleFormVisibility = (el, data) => {
 	if (
 		!data ||
-		data.is_in_stock ||
+		data.blocksy_stock_quantity > 0 ||
+		(data.is_in_stock && !data.backorders_allowed) ||
 		(data.backorders_allowed &&
 			ct_localizations.blc_ext_waitlist.waitlist_allow_backorders ===
 				'no')
@@ -255,8 +256,6 @@ registerDynamicChunk('blocksy_ext_woo_extra_waitlist', {
 
 			return
 		}
-
-		// console.log('sync', el, { event, eventData })
 
 		if (event.type === 'reset_data' || event.type === 'found_variation') {
 			toggleFormVisibility(el, eventData)

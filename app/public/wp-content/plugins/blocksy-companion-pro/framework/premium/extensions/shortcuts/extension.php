@@ -66,7 +66,7 @@ class BlocksyExtensionShortcuts {
 
 				$shortcuts_flag = '';
 
-				if (blocksy_get_theme_mod('shortcuts_interaction', 'none') === 'scroll') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('shortcuts_interaction', 'none') === 'scroll') {
 					$shortcuts_flag = 'scroll:yes';
 				}
 
@@ -98,10 +98,16 @@ class BlocksyExtensionShortcuts {
 
 			$has_cart = false;
 
-			$items = blocksy_get_theme_mod('shortcuts_bar_items', []);
+			$items = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_items', []);
 
 			foreach ($items as $item) {
-				if ($item['id'] === 'cart' && $item['enabled']) {
+				if (
+					class_exists('WooCommerce')
+					&&
+					$item['id'] === 'cart'
+					&&
+					$item['enabled']
+				) {
 					$has_cart = true;
 				}
 			}
@@ -123,7 +129,7 @@ class BlocksyExtensionShortcuts {
 		add_filter(
 			'blocksy:translations-manager:all-translation-keys',
 			function ($all_keys) {
-				$shortcuts_bar_items = blocksy_get_theme_mod(
+				$shortcuts_bar_items = blc_theme_functions()->blocksy_get_theme_mod(
 					'shortcuts_bar_items',
 					'__EMPTY__'
 				);
@@ -166,7 +172,7 @@ class BlocksyExtensionShortcuts {
 	}
 
 	public function has_shortcuts_bar() {
-		$items = blocksy_get_theme_mod('shortcuts_bar_items', [
+		$items = blc_theme_functions()->blocksy_get_theme_mod('shortcuts_bar_items', [
 			[
 				'id' => 'home',
 				'enabled' => true,
@@ -227,7 +233,7 @@ class BlocksyExtensionShortcuts {
 			];
 		}
 
-		$conditions = blocksy_get_theme_mod(
+		$conditions = blc_theme_functions()->blocksy_get_theme_mod(
 			'shortcuts_bar_conditions',
 			$initial_conditions
 		);

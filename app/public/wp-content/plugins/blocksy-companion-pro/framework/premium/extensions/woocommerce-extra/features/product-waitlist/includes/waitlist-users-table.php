@@ -272,6 +272,18 @@ class Waitlist_Users_Table extends \WP_List_Table {
 	public function prepare_items() {
 		$user_id = get_current_user_id();
 
+		if (isset($_REQUEST['wp_screen_options'])) {
+			if (
+				isset($_REQUEST['wp_screen_options']['option'])
+				&&
+				isset($_REQUEST['wp_screen_options']['value'])
+				&&
+				$_REQUEST['wp_screen_options']['option'] === 'blocksy_waitlist_per_page'
+			) {
+				update_user_meta($user_id, 'blocksy_waitlist_per_page', $_REQUEST['wp_screen_options']['value']);
+			}
+		}
+
 		$items = $this->table_data();
 
 		$columns = $this->get_columns();
@@ -291,9 +303,16 @@ class Waitlist_Users_Table extends \WP_List_Table {
 
 		usort($data, [$this, 'sort_data']);
 
-		$per_page = ! empty(get_user_meta($user_id, 'waitlist_per_page', true)) ? get_user_meta($user_id, 'waitlist_per_page', true) : 20;
+		$per_page = ! empty(get_user_meta($user_id, 'blocksy_waitlist_per_page', true)) ? get_user_meta($user_id, 'blocksy_waitlist_per_page', true) : 20;
 		$current_page = $this->get_pagenum();
-		$total_items  = count($data);
+
+		global $wpdb;
+
+		$product_id = isset($_REQUEST['product_id']) ? sanitize_text_field(wp_unslash($_REQUEST['product_id'])) : false; // phpcs:ignore.
+
+		$total_items = $wpdb->get_var(//phpcs:ignore
+			"SELECT COUNT(*) FROM $wpdb->blocksy_waitlists WHERE $wpdb->blocksy_waitlists.`confirmed` = 1 AND $wpdb->blocksy_waitlists.`product_id` = $product_id"
+		);
 
 		$this->set_pagination_args(
 			[
@@ -333,26 +352,19 @@ class Waitlist_Users_Table extends \WP_List_Table {
 
 		$where_query_text = ! empty($where_query) ? ' WHERE ' . implode(' AND ', $where_query) : '';
 
-		if (! wp_cache_get('blocksy_waitlist_users_table_data')) {
-			wp_cache_set(
-				'blocksy_waitlist_users_table_data',
-				$wpdb->get_results(//phpcs:ignore;
-					"SELECT
-						$wpdb->blocksy_waitlists.`user_id`,
-						$wpdb->blocksy_waitlists.`user_email`,
-						$wpdb->blocksy_waitlists.`unsubscribe_token`,
-						$wpdb->blocksy_waitlists.`confirmed`,
-						$wpdb->blocksy_waitlists.`created_date_gmt` as `created_date`,
-						$wpdb->blocksy_waitlists.`state`
-					FROM $wpdb->blocksy_waitlists"
-					. $where_query_text .
-					' LIMIT 50;',
-					ARRAY_A
-				)
-			);
-		}
-
-		$data = wp_cache_get('blocksy_waitlist_users_table_data');
+		$data = $wpdb->get_results(//phpcs:ignore;
+			"SELECT
+				$wpdb->blocksy_waitlists.`user_id`,
+				$wpdb->blocksy_waitlists.`user_email`,
+				$wpdb->blocksy_waitlists.`unsubscribe_token`,
+				$wpdb->blocksy_waitlists.`confirmed`,
+				$wpdb->blocksy_waitlists.`created_date_gmt` as `created_date`,
+				$wpdb->blocksy_waitlists.`state`
+			FROM $wpdb->blocksy_waitlists"
+			. $where_query_text .
+			' LIMIT 50;',
+			ARRAY_A
+		);
 
 		foreach ($data as $value) {
 			if ($value['state'] === 'failed') {

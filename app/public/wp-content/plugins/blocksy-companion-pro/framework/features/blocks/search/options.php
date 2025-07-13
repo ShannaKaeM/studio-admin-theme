@@ -17,12 +17,20 @@ if (class_exists('WooCommerce')) {
 	$cpt_options['product'] = true;
 }
 
-$all_cpts = blocksy_manager()->post_types->get_supported_post_types();
+$all_cpts = [];
+
+if (blc_theme_functions()->blocksy_manager()) {
+	$all_cpts = blc_theme_functions()->blocksy_manager()->post_types->get_supported_post_types();
+}
 
 if (function_exists('is_bbpress')) {
 	$all_cpts[] = 'forum';
 	$all_cpts[] = 'topic';
 	$all_cpts[] = 'reply';
+}
+
+if (class_exists('Tribe__Events__Main')) {
+	$all_cpts[] = 'tribe_events';
 }
 
 foreach ($all_cpts as $single_cpt) {
@@ -37,7 +45,16 @@ foreach ($all_cpts as $single_cpt) {
 	$cpt_options[$single_cpt] = false;
 }
 
-$is_pro = function_exists('blc_fs') && blc_fs()->can_use_premium_code();
+foreach ($cpt_choices as $cpt => $value) {
+	$post_type_object = get_post_type_object($cpt);
+
+	if ($post_type_object && isset($post_type_object->show_in_rest) && $post_type_object->show_in_rest) {
+		continue;
+	}
+
+	unset($cpt_choices[$cpt]);
+	unset($cpt_options[$cpt]);
+}
 
 $options = [
 

@@ -94,6 +94,10 @@ class SwatchElementRender {
 			$class[] = 'active';
 		}
 
+		if ($this->element_descriptor['is_limited']) {
+			$class[] = 'ct-limited';
+		}
+
 		if ($this->element_descriptor['is_out_of_stock']) {
 			$woocommerce_hide_out_of_stock_items = get_option(
 				'woocommerce_hide_out_of_stock_items'
@@ -157,7 +161,8 @@ class SwatchElementRender {
 				'ratio' => '1/1',
 				'size' => 'thumbnail',
 				'tag_name' => 'span',
-				'class' => 'ct-swatch'
+				'class' => 'ct-swatch',
+				'img_atts' => ['class' => 'ct-swatch-content'],
 			]
 		);
 	}
@@ -205,10 +210,14 @@ class SwatchElementRender {
 
 		return blocksy_html_tag(
 			'span',
-			[
-				'class' => 'ct-swatch',
-				'style' => $color_css
-			],
+			['class' => 'ct-swatch'],
+			blocksy_html_tag(
+				'span',
+				[
+					'class' => 'ct-swatch-content',
+					'style' => $color_css
+				],
+			)
 		);
 	}
 
@@ -231,7 +240,11 @@ class SwatchElementRender {
 		return blocksy_html_tag(
 			'span',
 			['class' => 'ct-swatch'],
-			$button_label
+			blocksy_html_tag(
+				'span',
+				['class' => 'ct-swatch-content'],
+				$button_label
+			)
 		);
 	}
 }

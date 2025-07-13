@@ -27,6 +27,8 @@ class BlocksyExtensionWoocommerceExtraPreBoot {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
 
+		blc_get_ext('woocommerce-extra')->boot_features();
+
 		do_action('blocksy:dynamic-css:refresh-caches');
 
 		return $this->ext_data([

@@ -34,8 +34,8 @@ const Preview = ({ attributes }) => {
 						}}
 					/>
 
-					<input type="range" value={10} />
-					<input type="range" value={100} />
+					<input type="range" value={10} readOnly />
+					<input type="range" value={100} readOnly />
 				</div>
 
 				{showPrices ? (

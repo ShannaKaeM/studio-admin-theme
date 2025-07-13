@@ -25,7 +25,7 @@ class TaxonomiesProductsLookupHooks {
 		add_action(
 			'woocommerce_product_import_inserted_product_object',
 			[$this, 'index_on_csv_import'],
-			10, 2
+			20, 2
 		);
 
 		add_action('woocommerce_after_set_term_order', [$this, 'woocommerce_after_set_term_order'], 10, 3);

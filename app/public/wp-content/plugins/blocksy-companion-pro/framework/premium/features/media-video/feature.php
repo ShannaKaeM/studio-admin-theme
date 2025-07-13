@@ -64,60 +64,52 @@ class MediaVideo {
 			);
 
 			if ($maybe_old_meta) {
-                if (
-                    strpos($maybe_old_meta, 'youtube') !== false
-                    ||
-                    strpos($maybe_old_meta, 'youtu.be') !== false
-                ) {
-                    wp_send_json_success(
-                        [
-                            'meta' => [
-                                'media_video_youtube_url' => $maybe_old_meta,
-                                'media_video_source' => 'youtube'
-                            ],
-                        ]
-                    );
+				if (
+					strpos($maybe_old_meta, 'youtube') !== false
+					||
+					strpos($maybe_old_meta, 'youtu.be') !== false
+				) {
+					wp_send_json_success([
+						'meta' => [
+							'media_video_youtube_url' => $maybe_old_meta,
+							'media_video_source' => 'youtube'
+						],
+					]);
 
-                    return;
-                }
+					return;
+				}
 
-                if ( strpos($maybe_old_meta, 'vimeo') !== false ) {
-                    wp_send_json_success(
-                        [
-                            'meta' => [
-                                'media_video_vimeo_url' => $maybe_old_meta,
-                                'media_video_source' => 'vimeo'
-                            ],
-                        ]
-                    );
+				if (strpos($maybe_old_meta, 'vimeo') !== false) {
+					wp_send_json_success([
+						'meta' => [
+							'media_video_vimeo_url' => $maybe_old_meta,
+							'media_video_source' => 'vimeo'
+						]
+					]);
 
-                    return;
-                }
+					return;
+				}
 
-                $maybe_old_attachment = attachment_url_to_postid($maybe_old_meta);
+				$maybe_old_attachment = attachment_url_to_postid($maybe_old_meta);
 
-                if ( $maybe_old_attachment ) {
-                    wp_send_json_success(
-                        [
-                            'meta' => [
-                                'media_video_upload' => $maybe_old_meta,
-                                'media_video_source' => 'upload'
-                            ],
-                        ]
-                    );
+				if ($maybe_old_attachment) {
+					wp_send_json_success( [
+						'meta' => [
+							'media_video_upload' => $maybe_old_meta,
+							'media_video_source' => 'upload'
+						],
+					]);
 
-                    return;
-                }
+					return;
+				}
 			}
 
 			$maybe_new_meta = blocksy_get_post_options($_GET['attachment_id']);
 
 			if ($maybe_new_meta) {
-				wp_send_json_success(
-					[
-						'meta' => $maybe_new_meta,
-					]
-				);
+				wp_send_json_success([
+					'meta' => $maybe_new_meta,
+				]);
 			}
 
 			return;

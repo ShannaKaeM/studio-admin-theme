@@ -158,6 +158,7 @@ class OffcanvasCart {
 					'id' => 'woo-cart-panel',
 					'class' => $class,
 					'data-behaviour' => $behavior,
+					'role' => 'dialog',
 					'aria-label' => __('Shopping cart panel', 'blocksy-companion'),
 					'inert' => ''
 				],

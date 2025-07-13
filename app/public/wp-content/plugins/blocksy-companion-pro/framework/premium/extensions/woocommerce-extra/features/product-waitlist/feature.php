@@ -3,6 +3,12 @@
 namespace Blocksy\Extensions\WoocommerceExtra;
 
 class ProductWaitlist {
+	public function get_dynamic_styles_data($args) {
+		return [
+			'path' => dirname(__FILE__) . '/dynamic-styles.php'
+		];
+	}
+
 	public function __construct() {
 		new ProductWaitlistDb();
 		new ProductWaitlistLayer();
@@ -34,9 +40,9 @@ class ProductWaitlist {
 				if (!function_exists('get_plugin_data')) {
 					require_once ABSPATH . 'wp-admin/includes/plugin.php';
 				}
-	
+
 				$plugin_data = get_plugin_data(BLOCKSY__FILE__);
-	
+
 				$data['dynamic_styles']['waitlist'] = add_query_arg(
 					'ver',
 					$plugin_data['Version'],
@@ -45,10 +51,10 @@ class ProductWaitlist {
 							'framework/premium/extensions/woocommerce-extra/static/bundle/single-product-waitlist.min.css',
 					)
 				);
-				
+
 				$data['blc_ext_waitlist'] = [
 					'user_logged_in' => is_user_logged_in() ? 'yes' : 'no',
-					'waitlist_allow_backorders' => blocksy_get_theme_mod('waitlist_allow_backorders', 'no'),
+					'waitlist_allow_backorders' => blc_theme_functions()->blocksy_get_theme_mod('waitlist_allow_backorders', 'no'),
 					'list' => array_map(function ($item) {
 						return $item->subscription_id;
 					}, $waitlist),
@@ -72,7 +78,7 @@ class ProductWaitlist {
 			10,
 			2
 		);
-		
+
 		add_action(
 			'wp_enqueue_scripts',
 			function () {
@@ -226,6 +232,8 @@ class ProductWaitlist {
 					'waitlist_users' => $count_data['waitlist_users'],
 					'waitlist_users_message' => $count_data['message'],
 				];
+
+				$result['blocksy_stock_quantity'] = $variation->get_stock_quantity();
 
 				return $result;
             },

@@ -19,11 +19,11 @@ class ProductWaitlistLayer {
 			'render_layer',
 		]);
 
-        add_action(
+		add_action(
 			'blocksy:woocommerce:quick-view:add-to-cart:after',
-            [$this, 'render_quick_view_layer'],
-            10
-        );
+			[$this, 'render_quick_view_layer'],
+			10
+		);
 
 		add_shortcode('blocksy_waitlist', [
 			$this,
@@ -34,7 +34,7 @@ class ProductWaitlistLayer {
 			if ('blocksy_waitlist' === $tag) {
 				wp_enqueue_style('blocksy-ext-woocommerce-extra-product-waitlist-styles');
 			}
-			
+
 			return $output;
 		}, 10, 3);
 	}
@@ -84,7 +84,7 @@ class ProductWaitlistLayer {
 			(
 				$product->get_stock_status() === 'onbackorder'
 				&&
-				blocksy_get_theme_mod('waitlist_allow_backorders', 'no') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('waitlist_allow_backorders', 'no') === 'yes'
 			)
 		) {
 			$need_to_show = true;
@@ -95,9 +95,13 @@ class ProductWaitlistLayer {
 		}
 
 		if ($product->is_type('variable')) {
-			$maybe_current_variation = blocksy_manager()
-				->woocommerce
-				->retrieve_product_default_variation($product);
+			$maybe_current_variation = null;
+
+			if (blc_theme_functions()->blocksy_manager()) {
+				$maybe_current_variation = blc_theme_functions()->blocksy_manager()
+					->woocommerce
+					->retrieve_product_default_variation($product);
+			}
 
 			if ($maybe_current_variation) {
 				$product_id = $maybe_current_variation->get_id();
@@ -108,7 +112,7 @@ class ProductWaitlistLayer {
 					(
 						$maybe_current_variation->get_stock_status() === 'onbackorder'
 						&&
-						blocksy_get_theme_mod('waitlist_allow_backorders', 'no') === 'yes'
+						blc_theme_functions()->blocksy_get_theme_mod('waitlist_allow_backorders', 'no') === 'yes'
 					)
 				) {
 					$need_to_show = true;
@@ -130,7 +134,7 @@ class ProductWaitlistLayer {
 						&&
 						$variation['backorders_allowed']
 						&&
-						blocksy_get_theme_mod('waitlist_allow_backorders', 'no') === 'no'
+						blc_theme_functions()->blocksy_get_theme_mod('waitlist_allow_backorders', 'no') === 'no'
 					)
 					||
 					(
@@ -158,7 +162,7 @@ class ProductWaitlistLayer {
 	}
 
 	public static function get_content() {
-		$waitlist_user_visibility = blocksy_get_theme_mod('waitlist_user_visibility', 'no');
+		$waitlist_user_visibility = blc_theme_functions()->blocksy_get_theme_mod('waitlist_user_visibility', 'no');
 
 		if (
 			$waitlist_user_visibility === 'yes'
@@ -168,7 +172,7 @@ class ProductWaitlistLayer {
 			return;
 		}
 
-		$waitlist_conditions = blocksy_get_theme_mod('waitlist_conditions', [
+		$waitlist_conditions = blc_theme_functions()->blocksy_get_theme_mod('waitlist_conditions', [
 			[
 				'type' => 'include',
 				'rule' => 'everywhere',

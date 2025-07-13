@@ -25,9 +25,13 @@ class SwatchesLoopVariableProduct {
 					return $descriptor;
 				}
 
-				$maybe_current_variation = blocksy_manager()
-					->woocommerce
-					->retrieve_product_default_variation($product);
+				$maybe_current_variation = null;
+
+				if (blc_theme_functions()->blocksy_manager()) {
+					$maybe_current_variation = blc_theme_functions()->blocksy_manager()
+						->woocommerce
+						->retrieve_product_default_variation($product);
+				}
 
 				if ($maybe_current_variation) {
 					$descriptor['container_attr'][
@@ -59,9 +63,13 @@ class SwatchesLoopVariableProduct {
 					return $price;
 				}
 
-				$maybe_current_variation = blocksy_manager()
-					->woocommerce
-					->retrieve_product_default_variation($product);
+				$maybe_current_variation = null;
+
+				if (blc_theme_functions()->blocksy_manager()) {
+					$maybe_current_variation = blc_theme_functions()->blocksy_manager()
+						->woocommerce
+						->retrieve_product_default_variation($product);
+				}
 
 				if ($maybe_current_variation) {
 					return blocksy_html_tag(
@@ -179,7 +187,7 @@ class SwatchesLoopVariableProduct {
 
 		$default_product_layout = blocksy_get_woo_archive_layout_defaults();
 
-		$render_layout_config = blocksy_get_theme_mod(
+		$render_layout_config = blc_theme_functions()->blocksy_get_theme_mod(
 			'woo_card_layout',
 			$default_product_layout
 		);
@@ -215,9 +223,13 @@ class SwatchesLoopVariableProduct {
 			return $link;
 		}
 
-		$maybe_current_variation = blocksy_manager()
-			->woocommerce
-			->retrieve_product_default_variation($product);
+		$maybe_current_variation = null;
+
+		if (blc_theme_functions()->blocksy_manager()) {
+			$maybe_current_variation = blc_theme_functions()->blocksy_manager()
+				->woocommerce
+				->retrieve_product_default_variation($product);
+		}
 
 		if (! $maybe_current_variation) {
 			return $link;

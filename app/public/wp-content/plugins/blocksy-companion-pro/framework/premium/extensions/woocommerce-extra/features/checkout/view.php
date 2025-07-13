@@ -13,7 +13,7 @@ foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
 		||
 		! $_product->exists()
 		||
-		floatval($cart_item['quantity']) === 0
+		intval($cart_item['quantity']) === 0
 		||
 		! apply_filters(
 			'woocommerce_checkout_cart_item_visible',
@@ -27,10 +27,10 @@ foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
 
     $thumbnail = '';
 
-	if (blocksy_get_theme_mod('blocksy_has_image_toggle', 'no') === 'yes') {
+	if (blc_theme_functions()->blocksy_get_theme_mod('blocksy_has_image_toggle', 'no') === 'yes') {
 
-		$image_size = blocksy_get_theme_mod('checkout_image_size', 'woocommerce_thumbnail');
-		$image_ratio = blocksy_get_theme_mod('checkout_image_ratio', '1/1');
+		$image_size = blc_theme_functions()->blocksy_get_theme_mod('checkout_image_size', 'woocommerce_thumbnail');
+		$image_ratio = blc_theme_functions()->blocksy_get_theme_mod('checkout_image_ratio', '1/1');
 
 		if (function_exists('blocksy_media')) {
 			$thumbnail = blocksy_media([
@@ -82,7 +82,7 @@ foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
 
 	$has_simple_quantity = strpos($quantity, 'product-quantity') !== false;
 
-	if (blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') === 'yes') {
+	if (blc_theme_functions()->blocksy_get_theme_mod('blocksy_has_quantity_toggle', 'no') === 'yes') {
 		$content =
 		$cart_item_name_wrapper .
 		$cart_item_data .

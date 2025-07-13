@@ -51,6 +51,16 @@ function blc_get_capabilities() {
 	return $capabilities;
 }
 
+function blc_theme_functions() {
+	static $theme_functions = null;
+
+	if ($theme_functions === null) {
+		$theme_functions = new Blocksy\ThemeFunctions();
+	}
+
+	return $theme_functions;
+}
+
 function blc_can_use_premium_code() {
 	return !! class_exists('Blocksy\Premium');
 }
@@ -279,50 +289,6 @@ function blc_safe_sprintf($format, ...$args) {
 	return $result;
 }
 
-function blc_get_terms($get_terms_args, $args = []) {
-	$args = wp_parse_args($args, [
-		'all_languages' => false
-	]);
-
-	if (! $args['all_languages']) {
-		return get_terms($get_terms_args);
-	}
-
-	global $sitepress;
-
-	if (function_exists('PLL')) {
-		remove_filter(
-			'terms_clauses',
-			[PLL()->terms, 'terms_clauses'],
-			10, 3
-		);
-	}
-
-	if ($sitepress) {
-		remove_filter('get_terms_args', array($sitepress, 'get_terms_args_filter'), 10, 2);
-		remove_filter('get_term', array($sitepress, 'get_term_adjust_id'), 1, 1);
-		remove_filter('terms_clauses', array($sitepress, 'terms_clauses'), 10, 3);
-
-		$all_terms = get_terms($get_terms_args);
-
-		add_filter('terms_clauses', array($sitepress, 'terms_clauses'), 10, 3);
-		add_filter('get_term', array($sitepress, 'get_term_adjust_id'), 1, 1);
-		add_filter('get_terms_args', array($sitepress, 'get_terms_args_filter' ), 10, 2);
-	} else {
-		$all_terms = get_terms($get_terms_args);
-	}
-
-	if (function_exists('PLL')) {
-		add_filter(
-			'terms_clauses',
-			[PLL()->terms, 'terms_clauses'],
-			10, 3
-		);
-	}
-
-	return $all_terms;
-}
-
 function blc_request_remote_url($url, $args = []) {
 	$request = new \Blocksy\RequestRemoteUrl();
 	return $request->request($url, $args);
@@ -348,11 +314,7 @@ function blc_get_jed_locale_data($domain) {
 		$locale[$domain]['']['plural_forms'] = $translations->headers['Plural-Forms'];
 	}
 
-	foreach ($translations->entries as $msgid => $entry) {
-		$locale[$domain][$entry->key()] = $entry->translations;
-	}
-
-	foreach (blc_get_json_translation_files('blocksy-companion') as $file_path) {
+	foreach (blc_get_json_translation_files($domain) as $file_path) {
 		$parsed_json = json_decode(
 			call_user_func(
 				'file' . '_get_contents',
@@ -376,6 +338,10 @@ function blc_get_jed_locale_data($domain) {
 
 			$locale[$domain][$msgid] = $entry;
 		}
+	}
+
+	foreach ($translations->entries as $msgid => $entry) {
+		$locale[$domain][$entry->key()] = [$translations->translate($entry->key())];
 	}
 
 	return $locale[$domain];
@@ -434,4 +400,20 @@ function blc_get_json_translation_files($domain) {
 	}
 
 	return $result;
+}
+
+function blc_debug_log($message, $object = null) {
+	if (
+		! defined('WP_DEBUG')
+		||
+		! WP_DEBUG
+	) {
+		return;
+	}
+
+	if (is_null($object)) {
+		error_log($message);
+	} else {
+		error_log($message . ': ' . print_r($object, true));
+	}
 }

@@ -78,7 +78,7 @@ const Edit = ({ attributes, setAttributes }) => {
 		if (attributes.type === 'brands') {
 			setAttributes({
 				type: 'categories',
-				taxonomy: 'product_brands',
+				taxonomy: 'product_brand',
 			})
 		}
 
@@ -363,7 +363,7 @@ const Edit = ({ attributes, setAttributes }) => {
 						attributes.showTaxonomyImages) ||
 					(attributes.showItemsRendered &&
 						attributes.type === 'categories' &&
-						attributes.taxonomy === 'product_brands') ? (
+						attributes.taxonomy === 'product_brand') ? (
 						<PanelBody>
 							<ToggleControl
 								label={__('Show Tooltip', 'blocksy-companion')}

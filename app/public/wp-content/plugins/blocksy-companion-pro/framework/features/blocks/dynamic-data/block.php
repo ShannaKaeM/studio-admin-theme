@@ -11,16 +11,17 @@ class DynamicData {
 			]
 		);
 
-		add_filter('blocksy:gutenberg-blocks-data', function ($data) {
+		add_filter('blocksy:block-editor:localized_data', function ($data) {
 			$options = blocksy_akg(
 				'options',
-				blocksy_get_variables_from_file(
+				blc_theme_functions()->blocksy_get_variables_from_file(
 					dirname(__FILE__) . '/options.php',
 					['options' => []]
 				)
 			);
 
 			$options_name = 'dynamic-data';
+
 			$data[$options_name] = $options;
 
 			return $data;
@@ -62,7 +63,13 @@ class DynamicData {
 		add_action(
 			'wp_ajax_blocksy_blocks_retrieve_dynamic_data_descriptor',
 			function () {
-				if (! current_user_can('manage_options')) {
+				$blocksy_manager = blc_theme_functions()->blocksy_manager();
+
+				if (
+					! current_user_can('manage_options')
+					||
+					! $blocksy_manager
+				) {
 					wp_send_json_error();
 				}
 
@@ -70,7 +77,7 @@ class DynamicData {
 
 				// TODO: remove tmp override
 				if (! isset($data['post_id'])) {
-					$potential_post_types = blocksy_manager()->post_types->get_all();
+					$potential_post_types = $blocksy_manager->post_types->get_all();
 
 					$fields = [];
 
@@ -157,7 +164,7 @@ class DynamicData {
 					&&
 					$data['field_id'] === 'brands'
 				) {
-					$brands = get_the_terms($data['post_id'], 'product_brands');
+					$brands = get_the_terms($data['post_id'], 'product_brand');
 
 					$brands_result = [];
 
@@ -167,11 +174,21 @@ class DynamicData {
 							'blocksy_taxonomy_meta_options'
 						);
 
+
 						if (empty($term_atts)) {
 							$term_atts = [[]];
 						}
 
 						$term_atts = $term_atts[0];
+
+						$maybe_image_id = isset($term->term_id) ? get_term_meta($term->term_id, 'thumbnail_id', true) : '';
+
+						if (! empty($maybe_image_id)) {
+							$term_atts['icon_image'] = [
+								'attachment_id' => $maybe_image_id,
+								'url' => wp_get_attachment_image_url($maybe_image_id, 'full')
+							];
+						}
 
 						$maybe_image = blocksy_akg('icon_image', $term_atts, '');
 
@@ -191,6 +208,68 @@ class DynamicData {
 						'post_id' => $data['post_id'],
 						'post_type' => $post_type,
 						'field_data' => $brands_result
+					]);
+				}
+
+				if (
+					$data['field_provider'] === 'woo'
+					&&
+					$data['field_id'] === 'attributes'
+				) {
+					if (
+						! $data['post_id']
+						||
+						! $data['attribute']
+					) {
+						wp_send_json_error();
+					}
+
+					$product = wc_get_product($data['post_id']);
+
+					if (! $product) {
+						wp_send_json_error();
+					}
+
+					$attributes = $product->get_attributes();
+					$taxonomy_name = wc_attribute_taxonomy_name($data['attribute']);
+
+					if (
+						! $attributes
+						||
+						! isset($attributes[sanitize_title($taxonomy_name)])
+					) {
+						wp_send_json_error();
+					}
+
+					$attribute = $attributes[sanitize_title($taxonomy_name)];
+
+					
+
+					if (! $attribute) {
+						wp_send_json_error();
+					}
+
+					$terms = $attribute->get_terms();
+					$terms_result = [];
+
+					if ($terms) {
+						foreach ($terms as $term) {
+
+							$terms_result[] = [
+								'term_id' => $term->term_id,
+								'name' => $term->name,
+								'slug' => $term->slug,
+								
+							];
+
+							
+						}
+					}
+
+					wp_send_json_success([
+						'post_id' => $data['post_id'],
+						'post_type' => $post_type,
+						'field_data' => $terms_result
 					]);
 				}
 
@@ -345,7 +424,8 @@ class DynamicData {
 		$post_id = get_the_ID();
 
 		$maybe_special_post_id = blocksy_get_special_post_id([
-			'context' => 'local'
+			'context' => 'local',
+			'block_context' => $block->context,
 		]);
 
 		$old_post = null;

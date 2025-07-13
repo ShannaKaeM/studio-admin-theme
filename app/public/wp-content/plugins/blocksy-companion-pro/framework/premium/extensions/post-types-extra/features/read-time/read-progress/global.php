@@ -1,6 +1,6 @@
 <?php
 
-$has_read_progress = blocksy_get_theme_mod(
+$has_read_progress = blc_theme_functions()->blocksy_get_theme_mod(
 	$prefix . '_has_read_progress',
 	'no'
 );
@@ -9,7 +9,10 @@ if ($has_read_progress === 'no') {
 	return;
 }
 
-$bar_height = blocksy_get_theme_mod($prefix . '_read_progress_height', 3);
+$bar_height = blc_theme_functions()->blocksy_get_theme_mod(
+	$prefix . '_read_progress_height',
+	3
+);
 
 if ($bar_height !== 3) {
 	$css->put(
@@ -19,7 +22,7 @@ if ($bar_height !== 3) {
 }
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod($prefix . '_progress_bar_filled_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod($prefix . '_progress_bar_filled_color'),
 	'default' => [
 		'default' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 	],
@@ -37,7 +40,7 @@ blocksy_output_colors([
 
 
 blocksy_output_colors([
-	'value' => blocksy_get_theme_mod($prefix . '_progress_bar_background_color'),
+	'value' => blc_theme_functions()->blocksy_get_theme_mod($prefix . '_progress_bar_background_color'),
 	'default' => [
 		'default' => [ 'color' => Blocksy_Css_Injector::get_skip_rule_keyword('DEFAULT') ],
 	],

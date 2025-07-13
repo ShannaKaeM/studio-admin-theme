@@ -1,11 +1,8 @@
 [data-swatches-type='button'] {
 
 	.ct-swatch {
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		min-width: var(--swatch-size);
-		padding: 0 calc(var(--swatch-size) / 3.5);
+		padding: 2px calc(var(--swatch-size) / 3.5);
 		font-size: calc(var(--swatch-size) / 2.5);
 		font-weight: 600;
 		line-height: 1;

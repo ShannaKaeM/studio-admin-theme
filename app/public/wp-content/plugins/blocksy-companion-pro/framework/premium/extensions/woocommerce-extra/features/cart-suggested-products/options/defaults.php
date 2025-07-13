@@ -41,4 +41,18 @@ $options = [
 
 		'products_image_width' => '100px',
 	],
+
+
+	'cart_suggested_' => [
+		'products_columns' => [
+			'desktop' => 1,
+			'tablet' => 1,
+			'mobile' => 1,
+			'__changed' => ['tablet', 'mobile']
+		],
+
+		'products_show_add_to_cart' => 'yes',
+
+		'products_image_width' => '25%',
+	],
 ];

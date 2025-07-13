@@ -9,7 +9,6 @@ $autoload = [
 	'ShippingProgress' => 'features/shipping-progress/feature.php',
 	'SkuSearch' => 'features/sku-search/feature.php',
 	'Brands' => 'features/brands/feature.php',
-	'BrandsImportExport' => 'features/brands/brands-import-export.php',
 	'CustomBadges' => 'features/custom-badges/feature.php',
 	'ProductSaleCountdown' => 'features/product-sale-countdown/feature.php',
 	'Checkout' => 'features/checkout/feature.php',
@@ -32,6 +31,7 @@ $autoload = [
 	'AddedToCartPopup' => 'features/added-to-cart-popup/feature.php',
 
 	'SKULayer' => 'features/sku-layer.php',
+	'AttributesLayer' => 'features/attributes-layer.php',
 
 	'Swatches' => 'features/swatches/feature.php',
 	'SwatchesApi' => 'features/swatches/includes/swatches-api.php',
@@ -69,7 +69,7 @@ $autoload = [
 	'FiltersTaxonomiesProductsLookupStore' => 'features/filters/includes/taxonomies-products-lookup-store.php',
 	'TaxonomiesProductsLookupHooks' => 'features/filters/includes/taxonomies-products-lookup-hooks.php',
 
-	'ImportExport' => 'includes/woo-import-export.php',
+	'WooTermsImportExport' => 'includes/woo-terms-import-export.php',
 	'WooHelpers' => 'includes/woo-helpers.php',
 
 	'ArchiveCard' => 'features/archive-card/feature.php',

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Blocksy Companion Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-11-19 18:27:01+0000\n"
+"PO-Revision-Date: 2025-04-24 23:06:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -72,7 +72,7 @@ msgstr "WooCommerce : Ajouté au panier"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:294
 msgid "Upsell Products"
-msgstr ""
+msgstr "Produits ventes complémentaires"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:295
 msgid "Cross-sell Products"
@@ -132,7 +132,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/customizer-options.php:108
 msgid "Choose where you want this Waitlist Form to be displayed."
-msgstr ""
+msgstr "Choisissez où vous souhaitez que ce formulaire de liste d’attente soit affiché."
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/customizer-options.php:160
 msgid "Message Font"
@@ -178,7 +178,7 @@ msgstr "Liste d’attente pour %s"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-dashboard.php:213
 msgid "Invalid email"
-msgstr "E-mail invalid"
+msgstr "E-mail invalide"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-dashboard.php:229
 msgid "You are already on the waitlist"
@@ -210,7 +210,7 @@ msgstr "Votre abonnement à la liste d’attente a bien été confirmé."
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-table.php:11
 msgid "Search Products"
-msgstr ""
+msgstr "Recherche produits"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:14
 msgid "Export Subscribers"
@@ -218,11 +218,11 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:63
 msgid "Guest"
-msgstr ""
+msgstr "Invité"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:75
 msgid "Edit this customer"
-msgstr ""
+msgstr "Modifier ce client"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:76
 msgid "Edit"
@@ -231,76 +231,76 @@ msgstr "Modifier"
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:115,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:182
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:123
 msgid "View"
-msgstr ""
+msgstr "Voir"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:153
 msgid "%s ago"
-msgstr ""
+msgstr "il y a %s"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:169
 msgid "Is registered"
-msgstr ""
+msgstr "Est inscrit/inscrite"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/waitlist-users-table.php:170
 msgid "Date created"
-msgstr ""
+msgstr "Date de création"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/back-in-stock.php:8
 msgid "Waitlist - Back in Stock Notification"
-msgstr ""
+msgstr "Liste d’attente - Notification de retour en stock"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/back-in-stock.php:9
 msgid "This email is sent when a product is back in stock"
-msgstr ""
+msgstr "Cet e-mail est envoyé lorsqu’un produit est de nouveau en stock"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/back-in-stock.php:10
 msgid "A product you are waiting for is back in stock"
-msgstr ""
+msgstr "Un produit que vous attendez est de nouveau en stock"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/back-in-stock.php:11
 msgid "Good news! The product you have been waiting for is now back in stock!"
-msgstr ""
+msgstr "Bonne nouvelle ! Le produit que vous attendiez est de nouveau en stock !"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/confirm-subscription.php:8
 msgid "Waitlist - Confirm Subscription"
-msgstr ""
+msgstr "Liste d'attente - Confirmation de l'abonnement"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/confirm-subscription.php:9
 msgid "This email is sent when a user subscribes to a product stock alert and should confirm their subscription"
-msgstr ""
+msgstr "Cet e-mail est envoyé lorsqu’un utilisateur s’abonne à une alerte de stock de produit et doit confirmer son abonnement."
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/confirm-subscription.php:10
 msgid "Confirm waitlist subscription"
-msgstr ""
+msgstr "Confirmer l'inscription sur la liste d'attente"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/confirm-subscription.php:11
 msgid "Get notified when {product_title} is back in stock"
-msgstr ""
+msgstr "Notification lorsque {product_title} est de nouveau en stock"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/subscription-confirmed.php:8
 msgid "Waitlist - Subscription Confirmed"
-msgstr ""
+msgstr "Liste d'attente - Inscription confirmé"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/subscription-confirmed.php:9
 msgid "This email is sent after a user confirmed the subscription to a product stock alert"
-msgstr ""
+msgstr "Cet e-mail est envoyé après que l'utilisateur a confirmé l'inscription à une alerte sur le stock produit."
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/subscription-confirmed.php:10
 msgid "Waitlist subscription confirmed"
-msgstr ""
+msgstr "Inscription sur liste d'attente confirmée"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/subscription-confirmed.php:11
 msgid "You will be notified when {product_title} is back in stock"
-msgstr ""
+msgstr "Vous serez informé lorsque {product_title} est de nouveau en stock"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/waitlist-email.php:35,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/emails/waitlist-email.php:139
 msgid "Customer"
-msgstr ""
+msgstr "Client/cliente"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/views/form.php:27
 msgid "Enter your email"
@@ -337,15 +337,15 @@ msgstr "Oui"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/views/table-single-product-row.php:65
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/views/table.php:21
 msgid "You don't have any products in your waitlist yet."
-msgstr ""
+msgstr "Vous n’avez pas encore de produits dans votre liste d’attente."
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/includes/views/table.php:42
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmé"
 
 #. translators: %s User name.
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-back-in-stock.php:19,
@@ -378,7 +378,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-confirm-subscription.php:66
 msgid "Confirm Subscription"
-msgstr ""
+msgstr "Confirmer l’abonnement"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-confirm-subscription.php:70,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-confirm-subscription.php:26
@@ -393,7 +393,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-confirm-subscription.php:78,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-subscription-confirmed.php:66
 msgid "unsubscribe"
-msgstr ""
+msgstr "se désinscrire"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/waitlist-subscription-confirmed.php:26,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-subscription-confirmed.php:15
@@ -403,20 +403,20 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-back-in-stock.php:28,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-confirm-subscription.php:17
 msgid "Product:"
-msgstr ""
+msgstr "Produit :"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-back-in-stock.php:29,
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-confirm-subscription.php:18
 msgid "Price:"
-msgstr ""
+msgstr "Prix :"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-back-in-stock.php:30
 msgid "Add to cart:"
-msgstr ""
+msgstr "Ajouter au panier :"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-confirm-subscription.php:19
 msgid "Product link:"
-msgstr ""
+msgstr "Lien du produit :"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-waitlist/templates/emails/plain/waitlist-confirm-subscription.php:23
 msgid "Click the link below to confirm your subscription. Once confirmed, we will notify you when the item is back in stock."
@@ -451,23 +451,23 @@ msgstr "Afficher une fenêtre surgissante de confirmation avec des recommandatio
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:15
 msgid "Trigger Popup On"
-msgstr ""
+msgstr "Déclencheur de la fenêtre surgissante"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:26
 msgid "Product Page"
-msgstr ""
+msgstr "Page produit"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:91
 msgid "Description Length"
-msgstr ""
+msgstr "Longueur de la description"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:102
 msgid "Cart Button"
-msgstr ""
+msgstr "Bouton panier"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:112
 msgid "Checkout Button"
-msgstr ""
+msgstr "Bouton de validation de commande"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:121
 msgid "Continue Shopping Button"
@@ -475,11 +475,11 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:140
 msgid "Shipping Info"
-msgstr ""
+msgstr "Information sur la livraison"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:149
 msgid "Tax Info"
-msgstr ""
+msgstr "Information sur les taxes"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:158
 msgid "Total Info"
@@ -487,7 +487,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:264
 msgid "Suggested Products"
-msgstr ""
+msgstr "Produits suggérés"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:292,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/views/suggested-products.php:51
@@ -504,7 +504,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:382
 msgid "Products Visibility"
-msgstr ""
+msgstr "Visibilité des produits"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:516
 msgid "Popup Options"
@@ -549,15 +549,15 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/views/added-product.php:245
 msgid "Cart Total"
-msgstr ""
+msgstr "Total du panier"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/views/product-actions.php:24
 msgid "View Cart"
-msgstr ""
+msgstr "Voir le panier"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/views/product-actions.php:34
 msgid "Checkout"
-msgstr ""
+msgstr "Commande"
 
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/views/product-actions.php:44
 msgid "Continue Shopping"
@@ -585,15 +585,15 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:28
 msgid "Colors"
-msgstr ""
+msgstr "Couleurs"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:50
 msgid "Color 1"
-msgstr ""
+msgstr "Couleur 1"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:58
 msgid "Color 2"
-msgstr ""
+msgstr "Couleur 2"
 
 #: framework/features/blocks/share-box/options.php:110,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:88
@@ -602,7 +602,7 @@ msgstr "Infobulle"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:108
 msgid "Tooltip Text"
-msgstr ""
+msgstr "Texte de l’infobulle"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:111
 msgid "{term_name}"
@@ -618,15 +618,15 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/woo-tab-options.php:174
 msgid "here"
-msgstr ""
+msgstr "ici"
 
 #: framework/premium/features/premium-header/items/contacts/options.php:21
 msgid "Item Visibility"
-msgstr ""
+msgstr "Visibilité de l’élément"
 
 #: framework/premium/features/premium-header/items/language-switcher/options.php:36
 msgid "Hide Missing Language"
-msgstr ""
+msgstr "Masquer les langues manquantes"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/filter-types/taxonomies.php:52
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Preview.js:94
@@ -635,20 +635,20 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/filter-types/taxonomies.php:472
 msgid "Collapse"
-msgstr ""
+msgstr "Replier"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/filter-types/taxonomies.php:473
 msgid "Expand"
-msgstr ""
+msgstr "Déplier"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/filter-presenter.php:64
 msgid "category"
-msgstr ""
+msgstr "catégorie"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/filter-presenter.php:108
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Preview.js:32
 msgid "Find by %s"
-msgstr ""
+msgstr "Recherche par %s"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/taxonomies-products-lookup-table.php:434
 msgid "Regenerate the product taxonomies lookup table"
@@ -664,7 +664,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/taxonomies-products-lookup-table.php:459
 msgid "Regenerate"
-msgstr ""
+msgstr "Regénérer"
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/taxonomies-products-lookup-table.php:453
 msgid "Filling in progress (%d)"
@@ -697,7 +697,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/filters/includes/taxonomies-products-lookup-table.php:488
 msgid "Abort"
-msgstr ""
+msgstr "Annuler"
 
 #: framework/extensions/newsletter-subscribe/admin-static/js/newsletter-block/Edit.js:158
 msgid "Container Border Color"
@@ -717,56 +717,56 @@ msgstr "Plus d’informations sur comment générer une clé d’API pour Brevo 
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:834
 msgid "Hide Documentation Links"
-msgstr ""
+msgstr "Masquer les liens de documentation"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:842
 msgid "Hide Video Links"
-msgstr ""
+msgstr "Masquer les liens vidéo"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/active-filters/index.js:104
 msgid "Display the currently active filters."
-msgstr ""
+msgstr "Afficher les filtres actuellement actifs."
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/active-filters/index.js:47
 msgid "Category 1"
-msgstr ""
+msgstr "Catégorie 1"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/active-filters/index.js:53
 msgid "Category 2"
-msgstr ""
+msgstr "Catégorie 2"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/active-filters/index.js:66
 msgid "Attribute 1"
-msgstr ""
+msgstr "Attribut 1"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/active-filters/index.js:72
 msgid "Attribute 2"
-msgstr ""
+msgstr "Attribut 2"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/ct-order/OrderOverview.js:12
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/price-filter/index.js:10
 msgid "Filter by Price Controls"
-msgstr ""
+msgstr "Filtrer par le contrôle des prix"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/price-filter/index.js:106
 msgid "Filter by Price"
-msgstr ""
+msgstr "Filtrer par prix"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/price-filter/index.js:11
 msgid "Widget for filtering the WooCommerce products by price."
-msgstr ""
+msgstr "Widget pour filtrer les produits WooCommerce par prix."
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/price-filter/index.js:58
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Edit.js:473
 msgid "Show Tooltip"
-msgstr ""
+msgstr "Afficher l'infobulle"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/price-filter/index.js:70
 msgid "Show Prices"
-msgstr ""
+msgstr "Afficher les prix"
 
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Disabled.js:6
 msgid "Please select a valid taxonomy."
@@ -1390,11 +1390,11 @@ msgstr "Options de paramètres"
 
 #: static/js/editor/components/ToolsPanel/ToolsPanelHeader.js:46
 msgid "All options are currently hidden"
-msgstr "Toutes les options sont actuellement masquées"
+msgstr "Toutes les options sont actuellement cachées"
 
 #: static/js/editor/components/ToolsPanel/ToolsPanelHeader.js:82
 msgid "All options reset"
-msgstr "Réinitialisation de toutes les options"
+msgstr "Réinitialiser toutes les options"
 
 #: static/js/editor/components/ToolsPanel/ToolsPanelHeader.js:87
 msgid "Reset all"
@@ -1586,7 +1586,7 @@ msgstr "Aucune extension à installer."
 
 #: framework/features/demo-install/widgets-import.php:36
 msgid "Sorry, you don't have permission to install widgets."
-msgstr "Désolé, vous n’avez pas les droits nécessaires pour installer des widgets."
+msgstr "D��solé, vous n’avez pas les droits nécessaires pour installer des widgets."
 
 #: framework/features/demo-install/widgets-import.php:79,
 #: framework/features/demo-install/widgets-import.php:73
@@ -1684,7 +1684,7 @@ msgstr "Commentaires multiples"
 
 #: framework/features/blocks/dynamic-data/options.php:120
 msgid "Separator"
-msgstr "Separateur"
+msgstr "Séparateur"
 
 #: framework/features/blocks/dynamic-data/options.php:132
 msgid "Author Field"
@@ -1760,31 +1760,31 @@ msgstr ""
 
 #: framework/features/blocks/share-box/options.php:43
 msgid "Reddit"
-msgstr ""
+msgstr "Reddit"
 
 #: framework/features/blocks/share-box/options.php:49
 msgid "Hacker News"
-msgstr ""
+msgstr "Hacker News"
 
 #: framework/features/blocks/share-box/options.php:67
 msgid "Telegram"
-msgstr ""
+msgstr "Telegram"
 
 #: framework/features/blocks/share-box/options.php:73
 msgid "Viber"
-msgstr ""
+msgstr "Viber"
 
 #: framework/features/blocks/share-box/options.php:79
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #: framework/features/blocks/share-box/options.php:85
 msgid "Flipboard"
-msgstr ""
+msgstr "Flipboard"
 
 #: framework/features/blocks/share-box/options.php:91
 msgid "Line"
-msgstr ""
+msgstr "Line"
 
 #: framework/features/conditions/rules/archive-loop.php:6
 msgid "Archive Item with Taxonomy ID"
@@ -1937,7 +1937,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/custom-thank-you-page/select.php:18
 msgid "Choose page"
-msgstr ""
+msgstr "Choisissez une page"
 
 #: framework/premium/extensions/woocommerce-extra/features/custom-thank-you-page/select.php:33
 msgid "Choose a custom thank you page for this product."
@@ -1949,19 +1949,19 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/floating-cart/options.php:87
 msgid "Product Price & Stock Visibility"
-msgstr ""
+msgstr "Prix des produits et visibilité des stocks"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:42
 msgid "Trigger Icon Type"
-msgstr ""
+msgstr "Type d’icône du déclencheur"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:77
 msgid "Trigger Visibility"
-msgstr ""
+msgstr "Visibilité du déclencheur"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:107
 msgid "Trigger Label"
-msgstr ""
+msgstr "Libellé du déclencheur"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:233
 msgid "Panel Default State"
@@ -1969,23 +1969,23 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:240
 msgid "Closed"
-msgstr ""
+msgstr "Fermé"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:241
 msgid "Opened"
-msgstr ""
+msgstr "Ouvert"
 
 #: framework/premium/extensions/woocommerce-extra/features/offcanvas-filters/options.php:488
 msgid "Panel AJAX Reveal"
-msgstr ""
+msgstr "Révélation AJAX du panneau"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-gallery/feature.php:140
 msgid "Autoplay Gallery"
-msgstr ""
+msgstr "Lecture automatique de la galerie"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-gallery/feature.php:152
 msgid "Delay (in seconds)"
-msgstr ""
+msgstr "Délai (en secondes)"
 
 #: framework/premium/extensions/woocommerce-extra/features/product-gallery/feature.php:219
 msgid "Columns Spacing"
@@ -2007,7 +2007,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/feature.php:372,
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:160
 msgid "Add {items} more items to get free shipping!"
-msgstr ""
+msgstr "Ajoutez {items} articles supplémentaires pour bénéficier de la livraison gratuite !"
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:52
 msgid "Count Criteria"
@@ -2034,7 +2034,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:90
 msgid "Amount of items the client has to buy in order to get free shipping."
-msgstr ""
+msgstr "Nombre d'articles que le client doit acheter pour bénéficier de la gratuité des frais de port."
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:168
 msgid "You can use dynamic code tags such as {items} inside this option."
@@ -2693,12 +2693,12 @@ msgstr "Afficher les variations en ligne"
 #: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:736,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:833
 msgid "Swatches"
-msgstr ""
+msgstr "Échantillons"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:16,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:250
 msgid "Color Swatches"
-msgstr ""
+msgstr "Échantillons de couleur"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:20,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:74,
@@ -2712,7 +2712,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:135,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:189
 msgid "Round"
-msgstr ""
+msgstr "Rond"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:33,
 #: framework/premium/extensions/woocommerce-extra/features/swatches/options.php:87,
@@ -2823,7 +2823,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/size-guide/options.php:30
 msgid "Choose where you want this size guide to be displayed."
-msgstr ""
+msgstr "Choisissez où vous souhaitez que ce guide des tailles soit affiché."
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:243
 msgid "Sorry, no products matched your selection. Please choose a different combination."
@@ -2835,7 +2835,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:76
 msgid "Amount the client has to reach in order to get free shipping."
-msgstr ""
+msgstr "Montant à atteindre pour bénéficier de la gratuité des frais de port."
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:104
 msgid "The calculation method will be based on WooCommerce zones."
@@ -2856,7 +2856,7 @@ msgstr "Message par défaut"
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:143
 msgid "You can use dynamic code tags such as {price} inside this option."
-msgstr ""
+msgstr "Vous pouvez utiliser des balises de code dynamique telles que {price} dans cette option."
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:174
 msgid "Success Message"
@@ -2907,12 +2907,12 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/feature.php:382,
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:176
 msgid "Congratulations! You got free shipping 🎉"
-msgstr ""
+msgstr "Félicitations ! Vous avez bénéficié de la livraison gratuite 🎉"
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/feature.php:359,
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:135
 msgid "Add {price} more to get free shipping!"
-msgstr ""
+msgstr "Ajoutez {prix} de plus pour bénéficier de la livraison gratuite !"
 
 #: framework/premium/extensions/woocommerce-extra/features/shipping-progress/options.php:15
 msgid "Show In Cart Page"
@@ -3123,7 +3123,7 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/custom-tabs/options.php:11
 msgid "Choose where you want this product tab to be displayed."
-msgstr ""
+msgstr "Choisissez où vous souhaitez que cet onglet de produit soit affiché."
 
 #: framework/premium/extensions/woocommerce-extra/features/custom-tabs/options.php:27
 msgid "Tab Order"
@@ -3582,7 +3582,7 @@ msgstr ""
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:344,
 #: framework/premium/extensions/woocommerce-extra/features/related-slideshow/general-options.php:75
 msgid "Autoplay"
-msgstr ""
+msgstr "Lecture automatique"
 
 #: framework/premium/extensions/post-types-extra/features/related-slideshow/feature.php:112,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:356,
@@ -3631,11 +3631,11 @@ msgstr ""
 
 #: framework/premium/extensions/color-mode-switch/header-items/color-mode-switcher/options.php:136
 msgid "Light"
-msgstr ""
+msgstr "Clair"
 
 #: framework/premium/extensions/color-mode-switch/header-items/color-mode-switcher/options.php:137
 msgid "Dark"
-msgstr ""
+msgstr "Sombre"
 
 #: framework/premium/extensions/color-mode-switch/header-items/color-mode-switcher/options.php:138
 msgid "OS Aware"
@@ -3717,7 +3717,7 @@ msgstr ""
 
 #: framework/premium/features/content-blocks/options/popup.php:54
 msgid "Choose where you want this popup to be displayed."
-msgstr ""
+msgstr "Choisissez où vous souhaitez que cette fenêtre surgissante soit affichée"
 
 #: framework/premium/features/content-blocks/options/popup.php:78
 msgid "On element click"
@@ -3750,7 +3750,7 @@ msgstr ""
 #: framework/premium/features/content-blocks/options/hook.php:41,
 #: framework/premium/features/content-blocks/options/nothing_found.php:35
 msgid "Choose where you want this content block to be displayed."
-msgstr ""
+msgstr "Choisissez où vous souhaitez que ce bloc de contenu soit affiché."
 
 #: framework/premium/features/content-blocks/options/hook.php:283
 msgid "Select a post/page to preview it's content inside the editor while building the hook."
@@ -3868,7 +3868,7 @@ msgstr ""
 #: framework/premium/features/content-blocks/options/header.php:36,
 #: framework/premium/features/content-blocks/options/single.php:16
 msgid "Choose where you want this template to be displayed."
-msgstr ""
+msgstr "Choisissez où vous souhaitez que ce modèle soit affiché."
 
 #: framework/premium/features/content-blocks/options/archive.php:17
 msgid "Add Replace Condition"
@@ -3891,7 +3891,7 @@ msgstr ""
 
 #: framework/premium/features/content-blocks/options/hook.php:40
 msgid "Content Block Display Conditions"
-msgstr ""
+msgstr "Conditions d’affichage des blocs de contenus"
 
 #. translators: placeholder here means the actual URL.
 #: framework/premium/features/media-video/options.php:77
@@ -4106,11 +4106,11 @@ msgstr ""
 
 #: framework/premium/features/local-gravatars.php:34
 msgid "Store Gravatars Locally"
-msgstr ""
+msgstr "Stocker les Gravatars localement"
 
 #: framework/premium/features/local-gravatars.php:39
 msgid "Store and load Gravatars locally for increased privacy and performance."
-msgstr ""
+msgstr "Stockez et chargez les Gravatars localement pour plus de confidentialité et de performance."
 
 #: framework/premium/features/premium-header.php:314,
 #: framework/premium/features/socials.php:13,
@@ -4232,7 +4232,7 @@ msgstr "Ombre de conteneur"
 
 #: framework/extensions/trending/customizer.php:588
 msgid "Module Title Font"
-msgstr "Police de titre du module"
+msgstr "Police du titre du module"
 
 #: framework/extensions/trending/customizer.php:596
 msgid "Module Title Color"
@@ -4240,7 +4240,7 @@ msgstr "Couleur du titre du module"
 
 #: framework/extensions/trending/customizer.php:647
 msgid "Posts Title Font"
-msgstr "Police de titre des publications"
+msgstr "Police du titre des publications"
 
 #: framework/extensions/trending/customizer.php:656
 msgid "Posts Title Font Color"
@@ -4794,11 +4794,11 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/view.php:45
 msgid "Close quick view"
-msgstr ""
+msgstr "Fermer la vue rapide"
 
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/helpers.php:45
 msgid "Quick view toggle"
-msgstr ""
+msgstr "Ouvrir/fermer la vue rapide"
 
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/helpers.php:32
 msgid "Quick view icon"
@@ -6243,11 +6243,11 @@ msgstr ""
 
 #: framework/premium/extensions/woocommerce-extra/extension.php:138
 msgid "Quick view price before"
-msgstr ""
+msgstr "Visualisation rapide du prix avant"
 
 #: framework/premium/extensions/woocommerce-extra/extension.php:143
 msgid "Quick view price after"
-msgstr ""
+msgstr "Visualisation rapide du prix après"
 
 #: framework/premium/extensions/woocommerce-extra/extension.php:148
 msgid "Quick view summary before"
@@ -6680,11 +6680,11 @@ msgstr ""
 
 #: framework/premium/features/content-blocks/hooks-manager.php:620
 msgid "Before shop loop item price"
-msgstr ""
+msgstr "Prix de l'article avant la boucle de magasin"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:625
 msgid "After shop loop item price"
-msgstr ""
+msgstr "Prix de l'article après la boucle de magasin"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:640
 msgid "After shop loop"
@@ -6958,11 +6958,11 @@ msgstr "Pied de page"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:985
 msgid "Footer before"
-msgstr ""
+msgstr "Avant le pied de page"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:993
 msgid "Footer after"
-msgstr ""
+msgstr "Après le pied de page"
 
 #: framework/premium/features/content-blocks/hooks-manager.php:1009
 msgid "Custom Hook (%s)"
@@ -7043,7 +7043,7 @@ msgstr "Informations de contact"
 #: framework/premium/features/premium-header/items/contacts/options.php:88,
 #: framework/premium/features/premium-header/items/contacts/view.php:35
 msgid "Address:"
-msgstr "Adresse :"
+msgstr "Adresse :"
 
 #: framework/features/blocks/contact-info/options.php:59,
 #: framework/features/blocks/contact-info/options.php:146,
@@ -7447,7 +7447,7 @@ msgstr "Arrière-plan de la modale"
 #: framework/features/header/items/account/options.php:1691,
 #: framework/premium/extensions/woocommerce-extra/features/quick-view/options.php:437
 msgid "Modal Backdrop"
-msgstr "Contexte de la modale"
+msgstr "Arrière-plan de la modale"
 
 #: framework/features/blocks/contact-info/options.php:13,
 #: framework/features/header/items/account/options.php:2059,
@@ -7654,7 +7654,7 @@ msgstr "Haut et bas"
 #: framework/premium/features/content-blocks/options/nothing_found.php:123,
 #: framework/premium/features/content-blocks/options/single.php:114
 msgid "Only Top"
-msgstr ""
+msgstr "Uniquement en haut"
 
 #: framework/premium/features/content-blocks/options/404.php:108,
 #: framework/premium/features/content-blocks/options/archive.php:185,
@@ -7664,7 +7664,7 @@ msgstr ""
 #: framework/premium/features/content-blocks/options/nothing_found.php:126,
 #: framework/premium/features/content-blocks/options/single.php:117
 msgid "Only Bottom"
-msgstr ""
+msgstr "Uniquement en bas"
 
 #: framework/premium/features/content-blocks/options/hook.php:60
 msgid "Location & Priority"
@@ -7674,21 +7674,21 @@ msgstr "Emplacement & priorité"
 #: framework/premium/features/content-blocks/options/hook.php:100
 #: framework/premium/static/js/options/MultipleLocationsSelect.js:76
 msgid "Custom Hook"
-msgstr ""
+msgstr "Point d’accroche personnalisé"
 
 #: framework/premium/extensions/woocommerce-extra/features/swatches/feature.php:730
 msgid "Mixed"
-msgstr ""
+msgstr "Mixte"
 
 #: framework/premium/features/content-blocks/options/popup.php:438,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:628
 msgid "Popup Position"
-msgstr ""
+msgstr "Position de la fenêtre surgissante"
 
 #: framework/premium/features/content-blocks/options/popup.php:384,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:573
 msgid "Popup Size"
-msgstr ""
+msgstr "Taille de la fenêtre surgissante"
 
 #: framework/premium/features/content-blocks/options/popup.php:390,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:580
@@ -7698,28 +7698,28 @@ msgstr "Petite taille"
 #: framework/premium/features/content-blocks/options/popup.php:391,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:581
 msgid "Medium Size"
-msgstr ""
+msgstr "Taille moyenne"
 
 #: framework/premium/features/content-blocks/options/popup.php:392,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:582
 msgid "Large Size"
-msgstr ""
+msgstr "Taille grande"
 
 #: framework/premium/features/content-blocks/options/popup.php:393,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:583
 msgid "Custom Size"
-msgstr ""
+msgstr "Taille personnalisée"
 
 #: framework/premium/features/content-blocks/options/popup.php:403,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:593
 msgid "Max Width"
-msgstr ""
+msgstr "Largeur max"
 
 #: framework/premium/features/content-blocks/options/popup.php:419,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:609
 #: framework/premium/extensions/woocommerce-extra/static/js/blocks/woocommerce-filters/tax-filters/Edit.js:510
 msgid "Max Height"
-msgstr ""
+msgstr "Hauteur max"
 
 #: framework/premium/features/content-blocks/options/popup.php:339,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:525
@@ -7759,7 +7759,7 @@ msgstr ""
 #: framework/premium/features/content-blocks/options/popup.php:355,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:542
 msgid "Animation Speed"
-msgstr ""
+msgstr "Vitesse d’animation"
 
 #: framework/premium/features/content-blocks/options/popup.php:372,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:560
@@ -7782,15 +7782,15 @@ msgstr ""
 
 #: framework/premium/features/content-blocks/options/popup.php:129
 msgid "Scroll Direction"
-msgstr ""
+msgstr "Direction du défilement"
 
 #: framework/premium/features/content-blocks/options/popup.php:134
 msgid "Scroll Down"
-msgstr ""
+msgstr "Défilement bas"
 
 #: framework/premium/features/content-blocks/options/popup.php:135
 msgid "Scroll Up"
-msgstr ""
+msgstr "Défilement haut"
 
 #: framework/premium/features/content-blocks/options/popup.php:140
 msgid "Scroll Distance"
@@ -7842,15 +7842,15 @@ msgstr ""
 
 #: framework/premium/features/content-blocks/options/popup.php:588
 msgid "Hidden"
-msgstr ""
+msgstr "Caché"
 
 #: framework/premium/features/content-blocks/options/popup.php:589
 msgid "Visible"
-msgstr ""
+msgstr "Visible"
 
 #: framework/premium/features/content-blocks/options/popup.php:590
 msgid "Scroll"
-msgstr ""
+msgstr "Défilement"
 
 #: framework/premium/features/content-blocks/options/popup.php:592
 msgid "Control what happens to the content that is too big to fit into the popup."
@@ -7858,15 +7858,15 @@ msgstr ""
 
 #: framework/premium/features/content-blocks/options/popup.php:596
 msgid "Close Button"
-msgstr ""
+msgstr "Bouton Fermer"
 
 #: framework/premium/features/content-blocks/options/popup.php:604
 msgid "Inside"
-msgstr ""
+msgstr "À l’intérieur"
 
 #: framework/premium/features/content-blocks/options/popup.php:605
 msgid "Outside"
-msgstr ""
+msgstr "À l’extérieur"
 
 #: framework/premium/features/content-blocks/options/popup.php:679,
 #: framework/premium/extensions/woocommerce-extra/features/added-to-cart-popup/customizer-options.php:720,
@@ -7890,11 +7890,11 @@ msgstr "Comportement de filtrage"
 
 #: framework/premium/extensions/post-types-extra/features/filtering/customizer.php:67
 msgid "Instant Reload"
-msgstr ""
+msgstr "Rechargement Instantané"
 
 #: framework/premium/extensions/post-types-extra/features/filtering/customizer.php:68
 msgid "Page Reload"
-msgstr ""
+msgstr "Rechargement de Page"
 
 #: framework/premium/extensions/post-types-extra/features/filtering/customizer.php:103
 msgid "Items Horizontal Spacing"
@@ -7918,7 +7918,7 @@ msgstr ""
 
 #: framework/premium/extensions/post-types-extra/features/filtering/customizer.php:284
 msgid "Button Padding"
-msgstr ""
+msgstr "Marge interne du bouton"
 
 #: framework/premium/extensions/post-types-extra/features/read-time/read-progress/customizer.php:4
 msgid "Read Progress"
@@ -7926,7 +7926,7 @@ msgstr "Progression de lecture"
 
 #: framework/premium/extensions/post-types-extra/features/read-time/read-progress/customizer.php:24
 msgid "Indicator Height"
-msgstr ""
+msgstr "Hauteur de l’indicateur"
 
 #: framework/premium/extensions/post-types-extra/features/read-time/read-progress/customizer.php:34
 msgid "Auto Hide"
@@ -8263,7 +8263,7 @@ msgstr ""
 
 #: framework/premium/extensions/sidebars/static/js/main.js:60
 msgid "Sidebar name"
-msgstr ""
+msgstr "Nom de la colonne latérale"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:108
 msgid "Advanced"
@@ -8271,35 +8271,35 @@ msgstr "Avancé"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:123
 msgid "Agency Details"
-msgstr ""
+msgstr "Détails de l’agence"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:131
 msgid "Agency Name"
-msgstr ""
+msgstr "Nom de l’agence"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:159
 msgid "Agency URL"
-msgstr ""
+msgstr "URL de l’agence"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:187
 msgid "Agency Support/Contact Form URL"
-msgstr ""
+msgstr "URL du formulaire de support/contact de l'agence"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:220
 msgid "Theme Details"
-msgstr ""
+msgstr "Détails du thème"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:228
 msgid "Theme Name"
-msgstr ""
+msgstr "Nom du thème"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:256
 msgid "Theme Description"
-msgstr ""
+msgstr "Description du thème"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:286
 msgid "Theme Screenshot URL"
-msgstr ""
+msgstr "URL de la capture d’écran du thème"
 
 #: framework/premium/extensions/white-label/dashboard-static/js/EditSettings.js:384
 msgid "You can insert the link to a self hosted image or upload one. The recommended image size is 1200px wide by 900px tall."

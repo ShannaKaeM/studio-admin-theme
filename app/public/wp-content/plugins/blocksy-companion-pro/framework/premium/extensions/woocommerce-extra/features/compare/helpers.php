@@ -41,7 +41,7 @@ function blocksy_output_add_to_compare($place, $attributes = []) {
 
 	if ($place !== 'single') {
 		if ($place && isset($option_ids[$place])) {
-			if (blocksy_get_theme_mod($option_ids[$place], 'yes') === 'no') {
+			if (blc_theme_functions()->blocksy_get_theme_mod($option_ids[$place], 'yes') === 'no') {
 				return '';
 			}
 		} else {
@@ -85,7 +85,7 @@ function blocksy_output_add_to_compare($place, $attributes = []) {
 		</svg>'
 	);
 
-	$shop_cards_type = blocksy_get_theme_mod('shop_cards_type', 'type-1');
+	$shop_cards_type = blc_theme_functions()->blocksy_get_theme_mod('shop_cards_type', 'type-1');
 
 	if ($place === 'archive' && $shop_cards_type === 'type-3') {
 		$content .=

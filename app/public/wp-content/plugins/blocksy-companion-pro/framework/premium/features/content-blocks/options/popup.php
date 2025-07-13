@@ -235,12 +235,14 @@ $options = [
 						'options' => [
 							'days_after_close_value' => [
 								'label' => __( 'Days After Close', 'blocksy-companion' ),
-								'type' => 'ct-number',
-								'design' => 'inline',
-								'value' => 14,
-								'min' => 0,
-								'max' => 1000,
-								'desc' => __('Set after how many days the popup will relaunch.', 'blocksy-companion'),
+								'type' => 'ct-timer',
+								'design' => 'block',
+								'value' => [
+									'days' => 14,
+									'hours' => 0,
+									'minutes' => 0,
+								],
+								'desc' => __('Number of days before the popup will automatically relaunch again.', 'blocksy-companion'),
 							],
 
 							blocksy_rand_md5() => [
@@ -266,12 +268,15 @@ $options = [
 														'popup_custom_close_strategy' => 'button_click'
 													]
 												],
-												'type' => 'ct-number',
-												'design' => 'inline',
-												'value' => 30,
-												'min' => 1,
-												'max' => 1000,
-												'desc' => __('Set after how many days the popup will relaunch if the additional close trigger is met.', 'blocksy-companion'),
+												'type' => 'ct-timer',
+												'design' => 'block',
+												'divider' => 'top',
+												'value' => [
+													'days' => 30,
+													'hours' => 0,
+													'minutes' => 0,
+												],
+												'desc' => __('Days before the popup relaunches after the additional close trigger is activated.', 'blocksy-companion'),
 											]
 
 										],

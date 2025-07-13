@@ -1,6 +1,6 @@
 import { createElement, useState } from '@wordpress/element'
-import Overlay from '../../../../../../static/js/helpers/Overlay'
 import { __, sprintf } from 'ct-i18n'
+import { Overlay } from 'blocksy-options'
 
 import { humanizeVariations } from '../../../custom-fonts/dashboard-static/js/helpers'
 

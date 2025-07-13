@@ -2,7 +2,7 @@
 
 namespace Blocksy\Extensions\WoocommerceExtra;
 
-class Waitlist_Table extends \WP_List_Table {	
+class Waitlist_Table extends \WP_List_Table {
 	protected function extra_tablenav($which) {
 		?>
 		<div class="alignleft actions has-searchbox">
@@ -13,7 +13,7 @@ class Waitlist_Table extends \WP_List_Table {
 			?>
 		</div>
 		<?php
-		
+
 		do_action('manage_posts_extra_tablenav', $which);
 	}
 
@@ -301,7 +301,7 @@ class Waitlist_Table extends \WP_List_Table {
 			foreach ($users_emails as $users_email) {
 				try {
 					$product_id = $variation_id ? $variation_id : $product_id;
-					
+
 					ProductWaitlistDb::unsubscribe_by_product($product_id, $users_email);
 				} catch (Exception $e) {
 					continue;
@@ -367,6 +367,24 @@ class Waitlist_Table extends \WP_List_Table {
 	}
 
 	public function prepare_items() {
+		if (isset($_REQUEST['wp_screen_options'])) {
+			$user_id = get_current_user_id();
+
+			if (
+				isset($_REQUEST['wp_screen_options']['option'])
+				&&
+				isset($_REQUEST['wp_screen_options']['value'])
+				&&
+				$_REQUEST['wp_screen_options']['option'] === 'blocksy_waitlist_per_page'
+			) {
+				update_user_meta(
+					$user_id,
+					'blocksy_waitlist_per_page',
+					$_REQUEST['wp_screen_options']['value']
+				);
+			}
+		}
+
 		$columns = $this->get_columns();
 		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
@@ -375,18 +393,42 @@ class Waitlist_Table extends \WP_List_Table {
 		$data = $this->table_data();
 		usort($data, [$this, 'sort_data']);
 
-		$per_page = ! empty(get_user_meta($user_id, 'waitlist_per_page', true)) ? get_user_meta($user_id, 'waitlist_per_page', true) : 20;
-		$current_page = $this->get_pagenum();
-		$total_items = count($data);
+		$per_page = 20;
 
-		$this->set_pagination_args(
-			[
-				'total_items' => $total_items,
-				'per_page' => $per_page,
-			]
+		$blocksy_waitlist_per_page = get_user_meta(
+			$user_id,
+			'blocksy_waitlist_per_page',
+			true
 		);
 
-		$data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+		if (! empty($blocksy_waitlist_per_page)) {
+			$per_page = $blocksy_waitlist_per_page;
+		}
+
+		$current_page = $this->get_pagenum();
+
+		global $wpdb;
+
+		list($where_query_text, $join_clause) = $this->build_query();
+
+		$total_items = $wpdb->get_var(
+			"SELECT COUNT(*) as total_count
+			FROM (
+				SELECT
+					$wpdb->blocksy_waitlists.`subscription_id`
+				FROM $wpdb->blocksy_waitlists
+				$join_clause
+				$where_query_text
+				GROUP BY
+					$wpdb->blocksy_waitlists.`product_id`,
+					$wpdb->blocksy_waitlists.`variation_id`
+			) as subquery;"
+		);
+
+		$this->set_pagination_args([
+			'total_items' => $total_items,
+			'per_page' => $per_page,
+		]);
 
 		$this->_column_headers = [$columns, $hidden, $sortable];
 		$this->items = $data;
@@ -397,56 +439,91 @@ class Waitlist_Table extends \WP_List_Table {
 	private function table_data() {
 		global $wpdb;
 
+		list($where_query_text, $join_clause) = $this->build_query();
+
+        $user_id = get_current_user_id();
+
+		$blocksy_waitlist_per_page = get_user_meta(
+			$user_id,
+			'blocksy_waitlist_per_page',
+			true
+		);
+
+		$per_page = 20;
+
+		if (! empty($blocksy_waitlist_per_page)) {
+			$per_page = $blocksy_waitlist_per_page;
+		}
+
+        $offset = ($this->get_pagenum() - 1) * $per_page;
+
+		$waitlists = $wpdb->get_results(// phpcs:ignore
+			"SELECT
+				$wpdb->blocksy_waitlists.`subscription_id`,
+				$wpdb->blocksy_waitlists.`product_id`,
+				$wpdb->blocksy_waitlists.`variation_id`,
+				COUNT($wpdb->blocksy_waitlists.`user_id`) as `user_count`,
+				SUM(CASE WHEN $wpdb->blocksy_waitlists.`state` = 'new' THEN 1 ELSE 0 END) AS new_count,
+				SUM(CASE WHEN $wpdb->blocksy_waitlists.`state` = 'pending' THEN 1 ELSE 0 END) AS pending_count,
+				SUM(CASE WHEN $wpdb->blocksy_waitlists.`state` = 'failed' THEN 1 ELSE 0 END) AS failed_count,
+				$wpdb->blocksy_waitlists.`created_date_gmt` as `created_date`
+			FROM $wpdb->blocksy_waitlists
+			$join_clause
+			$where_query_text
+			GROUP BY
+				$wpdb->blocksy_waitlists.`product_id`,
+				$wpdb->blocksy_waitlists.`variation_id`
+			LIMIT $per_page OFFSET $offset;",
+			ARRAY_A
+		);
+
+		$waitlists = array_filter($waitlists, function ($waitlist) {
+			if ($waitlist['variation_id']) {
+				$product = wc_get_product($waitlist['variation_id']);
+			} else {
+				$product = wc_get_product($waitlist['product_id']);
+			}
+
+			return !!$product;
+		});
+
+		return $waitlists;
+	}
+
+	private function build_query() {
+		global $wpdb;
+
 		$where_query = [];
-		$search = isset($_REQUEST['s']) ? sanitize_text_field(wp_unslash($_REQUEST['s'])) : false; // phpcs:ignore.
+
+		$search = false;
+
+		if (isset($_REQUEST['s'])) {
+			$search = sanitize_text_field(wp_unslash($_REQUEST['s']));
+		}
 
 		if ($search) {
-			$where_query[] = $wpdb->prepare("$wpdb->posts.`post_title` LIKE %s", '%' . $wpdb->esc_like($search) . '%');
-		}
-
-		$where_query[] = $wpdb->prepare("$wpdb->blocksy_waitlists.`confirmed` = %d", 1);
-
-		$where_query_text = ! empty($where_query) ? ' WHERE ' . implode(' AND ', $where_query) : '';
-
-		if (! wp_cache_get('blocksy_waitlist_table_data')) {
-			$waitlists = $wpdb->get_results(//phpcs:ignore;
-				"SELECT
-					$wpdb->blocksy_waitlists.`subscription_id`,
-					$wpdb->blocksy_waitlists.`product_id`,
-					$wpdb->blocksy_waitlists.`variation_id`,
-					COUNT($wpdb->blocksy_waitlists.`user_id`) as `user_count`,
-					SUM(CASE WHEN $wpdb->blocksy_waitlists.`state` = 'new' THEN 1 ELSE 0 END) AS new_count,
-					SUM(CASE WHEN $wpdb->blocksy_waitlists.`state` = 'pending' THEN 1 ELSE 0 END) AS pending_count,
-					SUM(CASE WHEN $wpdb->blocksy_waitlists.`state` = 'failed' THEN 1 ELSE 0 END) AS failed_count,
-					$wpdb->blocksy_waitlists.`created_date_gmt` as `created_date`
-				FROM $wpdb->blocksy_waitlists
-				INNER JOIN $wpdb->posts
-					ON $wpdb->posts.`ID` = $wpdb->blocksy_waitlists.`product_id`"
-				. $where_query_text .
-				" GROUP BY
-					$wpdb->blocksy_waitlists.`product_id`,
-					$wpdb->blocksy_waitlists.`variation_id`
-				LIMIT 50;",
-				ARRAY_A
-			);
-
-			$waitlists = array_filter($waitlists, function ($waitlist) {
-				if ($waitlist['variation_id']) {
-					$product = wc_get_product($waitlist['variation_id']);
-				} else {
-					$product = wc_get_product($waitlist['product_id']);
-				}
-	
-				return !!$product;
-			});
-
-			wp_cache_set(
-				'blocksy_waitlist_table_data',
-				$waitlists
+			$where_query[] = $wpdb->prepare(
+				"$wpdb->posts.`post_title` LIKE %s",
+				'%' . $wpdb->esc_like($search) . '%'
 			);
 		}
 
-		return wp_cache_get('blocksy_waitlist_table_data');
+		$where_query[] = $wpdb->prepare(
+			"$wpdb->blocksy_waitlists.`confirmed` = %d",
+			1
+		);
+
+		$where_query_text = '';
+
+		if (! empty($where_query)) {
+			$where_query_text = ' WHERE ' . implode(' AND ', $where_query);
+		}
+
+		// Join clause (common between queries)
+		$join_clause = "INNER JOIN $wpdb->posts
+						ON $wpdb->posts.`ID` = $wpdb->blocksy_waitlists.`product_id`";
+
+		return [$where_query_text, $join_clause];
 	}
 
 	private function sort_data($a, $b) {

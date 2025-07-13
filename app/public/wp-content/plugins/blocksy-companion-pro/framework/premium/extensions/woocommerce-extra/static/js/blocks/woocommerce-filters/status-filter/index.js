@@ -172,7 +172,7 @@ registerBlockType('blocksy/woocommerce-status-filter', {
 		)
 	},
 	save: function () {
-		return <div>Blocksy: Price Filter</div>
+		return <div>Blocksy: Status Filter</div>
 	},
 })
 

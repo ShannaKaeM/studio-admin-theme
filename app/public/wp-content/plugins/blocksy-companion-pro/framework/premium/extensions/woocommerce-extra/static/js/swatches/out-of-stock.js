@@ -36,13 +36,20 @@ const getRelevantVariations = async (form, args = {}) => {
 		...args,
 	}
 
-	let productId = form.closest('[class*="post-"]')
+	// More often than not, the product ID will be set on the form itself.
+	let productId = parseFloat(form.dataset.product_id)
 
-	if (productId) {
-		productId = [...productId.classList].find((c) => c.match(/^post-/))
+	if (!productId) {
+		const maybeClosestPost = form.closest('[class*="post-"]')
 
-		if (productId) {
-			productId = parseFloat(productId.split('-')[1])
+		if (maybeClosestPost) {
+			const matchingClass = [...maybeClosestPost.classList].find((c) =>
+				c.match(/^post-/)
+			)
+
+			if (matchingClass) {
+				productId = parseFloat(matchingClass.split('-')[1])
+			}
 		}
 	}
 
@@ -51,8 +58,15 @@ const getRelevantVariations = async (form, args = {}) => {
 		return []
 	}
 
-	if (variations[productId]) {
-		return variations[productId]
+	let cacheKey = productId
+
+	// Woo Bundled Products (official extension)
+	if (form.dataset.bundled_item_id) {
+		cacheKey = form.dataset.bundled_item_id
+	}
+
+	if (variations[cacheKey]) {
+		return variations[cacheKey]
 	}
 
 	// Product has a lot of variations, starting to load them via AJAX
@@ -67,22 +81,22 @@ const getRelevantVariations = async (form, args = {}) => {
 
 		const result = await response.json()
 
-		variations[productId] = {
+		variations[cacheKey] = {
 			fast_variations_data: result.data.variations_data,
 		}
 
-		return variations[productId]
+		return variations[cacheKey]
 	}
 
 	// All variations are available. Just populating the cache to skip
 	// further JSON parsing calls.
 	const allVariations = JSON.parse(form.dataset.product_variations)
 
-	variations[productId] = {
+	variations[cacheKey] = {
 		all_variations: allVariations,
 	}
 
-	return variations[productId]
+	return variations[cacheKey]
 }
 
 const markAsOutOfStock = (swatch) => {

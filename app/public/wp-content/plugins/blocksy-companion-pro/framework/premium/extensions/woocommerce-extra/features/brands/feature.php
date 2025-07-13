@@ -4,39 +4,6 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 
 class Brands {
 	public function __construct() {
-		new \Blocksy\Extensions\WoocommerceExtra\BrandsImportExport();
-
-		add_filter(
-			'pre_option_wc_feature_woocommerce_brands_enabled',
-			function() {
-				return 'no';
-			}
-		);
-
-		add_action(
-			'wp_enqueue_scripts',
-			function () {
-				if (!function_exists('get_plugin_data')) {
-					require_once ABSPATH . 'wp-admin/includes/plugin.php';
-				}
-
-				$data = get_plugin_data(BLOCKSY__FILE__);
-
-				if (is_admin()) {
-					return;
-				}
-
-				wp_enqueue_style(
-					'blocksy-ext-woocommerce-extra-product-brands-styles',
-					BLOCKSY_URL .
-						'framework/premium/extensions/woocommerce-extra/static/bundle/product-brands.min.css',
-					['blocksy-ext-woocommerce-extra-styles'],
-					$data['Version']
-				);
-			},
-			50
-		);
-
 		add_action('admin_init', function () {
 			add_filter(
 				'manage_edit-product_brands_columns',
@@ -73,32 +40,36 @@ class Brands {
 
 					$term_atts = $term_atts[0];
 
+					$maybe_image_id = isset($id) ? get_term_meta($id, 'thumbnail_id', true) : '';
+
+					if (! empty($maybe_image_id)) {
+						$term_atts['icon_image'] = [
+							'attachment_id' => $maybe_image_id,
+							'url' => wp_get_attachment_image_url($maybe_image_id, 'full')
+						];
+					}
+
 					$maybe_image = blocksy_akg('icon_image', $term_atts, '');
 
-					$brand_iamge = blocksy_html_tag(
-						'img',
-						[
-							'src' => wc_placeholder_img_src(),
+					$brand_iamge = blocksy_html_tag('img', [
+						'src' => wc_placeholder_img_src(),
+						'alt' => 'Thumbnail',
+						'class' => 'wp-post-image',
+						'height' => 150,
+						'width' => 150,
+					]);
+
+					if (! empty($maybe_image) && is_array($maybe_image)) {
+						$brand_iamge = blocksy_html_tag('img', [
+							'src' => wp_get_attachment_image_url(
+								$maybe_image['attachment_id'],
+								'thumbnail'
+							),
 							'alt' => 'Thumbnail',
 							'class' => 'wp-post-image',
 							'height' => 150,
 							'width' => 150,
-						],
-						''
-					);
-
-					if (! empty($maybe_image) && is_array($maybe_image)) {
-						$brand_iamge = blocksy_html_tag(
-							'img',
-							[
-								'src' => wp_get_attachment_image_url($maybe_image['attachment_id'], 'thumbnail'),
-								'alt' => 'Thumbnail',
-								'class' => 'wp-post-image',
-								'height' => 150,
-								'width' => 150,
-							],
-							''
-						);
+						]);
 					}
 
 					return $columns . $brand_iamge;
@@ -106,55 +77,6 @@ class Brands {
 				10, 3
 			);
 		});
-
-		add_action('current_screen', function () {
-			if (function_exists('add_settings_field')) {
-				add_settings_field(
-					'blocksy_woocommerce_extra_product_brands_slug',
-					__('Product brands base', 'blocksy-companion'),
-					function () {
-						$storage = new Storage();
-						$settings = $storage->get_settings();
-
-						echo blocksy_html_tag(
-							'input',
-							[
-								'name' => 'blocksy_woocommerce_extra_product_brands_slug',
-								'type' => 'text',
-								'class' => 'regular-text code',
-								'value' => $settings['product-brands-slug'],
-								'placeholder' => __('brand', 'blocksy-companion')
-							]
-						);
-					},
-					'permalink',
-					'optional'
-				);
-			}
-
-			if (
-				is_admin()
-				&&
-				isset($_POST['blocksy_woocommerce_extra_product_brands_slug'])
-				&&
-				wp_verify_nonce(
-					wp_unslash($_POST['wc-permalinks-nonce']),
-					'wc-permalinks'
-				)
-			) {
-				$storage = new Storage();
-				$settings = $storage->get_settings();
-
-				$settings['product-brands-slug'] = wc_sanitize_permalink(
-					$_POST['blocksy_woocommerce_extra_product_brands_slug']
-				);
-
-				update_option(
-					'blocksy_ext_woocommerce_extra_settings',
-					$settings
-				);
-			}
-		}, 100);
 
 		add_action('woocommerce_after_register_taxonomy', [$this, 'register_brand_meta']);
 
@@ -203,30 +125,6 @@ class Brands {
 		);
 
 		add_action(
-			'blocksy:woocommerce:brands:layer',
-			function($attributes) {
-				$brands = get_the_terms(get_the_ID(), 'product_brands');
-
-				if (!$brands || !is_array($brands)) {
-					return;
-				}
-
-				if (!count($brands)) {
-					return;
-				}
-
-				echo blocksy_html_tag(
-					'div',
-					[
-						'class' => 'ct-product-brands',
-						'style' => '--product-brand-logo-size:' . $attributes['brands_size'] . 'px;--product-brands-gap:' . $attributes['brands_gap'] . 'px;'
-					],
-					$this->render_brands_grid($brands)
-				);
-			}
-		);
-
-		add_action(
 			'blocksy:woocommerce:compare:custom:layer',
 			[$this, 'product_card_render']
 		);
@@ -248,7 +146,7 @@ class Brands {
 		add_action(
 			'wp',
 			function() {
-				if (blocksy_get_theme_mod('has_woo_brands_tab', 'no') === 'yes') {
+				if (blc_theme_functions()->blocksy_get_theme_mod('has_woo_brands_tab', 'no') === 'yes') {
 					add_filter(
 						'woocommerce_product_tabs',
 						[$this, 'brands_custom_product_tab']
@@ -260,10 +158,10 @@ class Brands {
 		add_action(
 			'woocommerce_product_duplicate',
 			function ($duplicate, $product) {
-				$terms = get_the_terms($product->get_id(), 'product_brands');
+				$terms = get_the_terms($product->get_id(), 'product_brand');
 
 				if (! is_wp_error($terms)) {
-					wp_set_object_terms($duplicate->get_id(), wp_list_pluck($terms, 'term_id'), 'product_brands');
+					wp_set_object_terms($duplicate->get_id(), wp_list_pluck($terms, 'term_id'), 'product_brand');
 				}
 			},
 			999,
@@ -284,7 +182,7 @@ class Brands {
 						$product_id = $post['id'];
 
 						$terms = [];
-						$brands = get_the_terms($product_id, 'product_brands');
+						$brands = get_the_terms($product_id, 'product_brand');
 
 						if (! $brands) {
 							$brands = [];
@@ -312,7 +210,7 @@ class Brands {
 						$terms = [];
 
 						foreach ($value as $brand) {
-							$brand = get_term_by('id', $brand['id'], 'product_brands');
+							$brand = get_term_by('id', $brand['id'], 'product_brand');
 
 							if (! $brand) {
 								continue;
@@ -321,7 +219,7 @@ class Brands {
 							$terms[] = $brand->term_id;
 						}
 
-						wp_set_object_terms($object->get_id(), $terms, 'product_brands');
+						wp_set_object_terms($object->get_id(), $terms, 'product_brand');
 
 						return $value;
 					}
@@ -388,7 +286,7 @@ class Brands {
 				$product = wc_get_product($product->get_parent_id());
 			}
 
-			$brands = get_the_terms($product->get_id(), 'product_brands');
+			$brands = get_the_terms($product->get_id(), 'product_brand');
 
 			if (! $brands) {
 				$brands = [];
@@ -416,7 +314,7 @@ class Brands {
 			$product = wc_get_product($product->get_parent_id());
 		}
 
-		$current_product_brands = get_the_terms($product->get_id(), 'product_brands');
+		$current_product_brands = get_the_terms($product->get_id(), 'product_brand');
 
 		if (! $current_product_brands) {
 			$current_product_brands = [];
@@ -445,7 +343,7 @@ class Brands {
 
 	public function restrict_coupon_by_brand_form($coupon_id, $coupon) {
 
-		$brands = get_terms('product_brands', 'orderby=name&hide_empty=0');
+		$brands = get_terms('product_brand', 'orderby=name&hide_empty=0');
 
 		$include_html = blocksy_html_tag(
 			'p',
@@ -560,10 +458,10 @@ class Brands {
 		echo $include_html . $exlude_html;
 	}
 
-	public function brands_custom_product_tab( $tabs ) {
+	public function brands_custom_product_tab($tabs) {
 		global $product;
 
-		$brands = get_the_terms($product->get_id(), 'product_brands');
+		$brands = get_the_terms($product->get_id(), 'product_brand');
 
 		if (!$brands || !is_array($brands)) {
 			return $tabs;
@@ -574,7 +472,7 @@ class Brands {
 		}
 
 		$tabs['specific_product_tab'] = array(
-			'title' => blocksy_get_theme_mod('use_brand_name_for_tab_title', 'no') === 'no' ? __( 'About Brands', 'blocksy-companion' ) : blc_safe_sprintf(
+			'title' => blc_theme_functions()->blocksy_get_theme_mod('use_brand_name_for_tab_title', 'no') === 'no' ? __( 'About Brands', 'blocksy-companion' ) : blc_safe_sprintf(
 					__('About %s', 'blocksy-companion'),
 					$brands[0]->name
 				),
@@ -585,27 +483,27 @@ class Brands {
 		return $tabs;
 	}
 
-	//Add content to a custom product tab
+	// Add content to a custom product tab
 	public function brands_custom_product_tab_render() {
-		$brands = get_the_terms(get_the_ID(), 'product_brands');
+		$brands = get_the_terms(get_the_ID(), 'product_brand');
 
-		if (!$brands || !is_array($brands)) {
+		if (! $brands || ! is_array($brands)) {
 			return;
 		}
 
-		if (!count($brands)) {
+		if (! count($brands)) {
 			return;
 		}
 
 		$output = '';
 
-		$tabs_type = blocksy_get_theme_mod('woo_tabs_type', 'type-1');
+		$tabs_type = blc_theme_functions()->blocksy_get_theme_mod('woo_tabs_type', 'type-1');
 
-		if ( $tabs_type === 'type-4' ) {
+		if ($tabs_type === 'type-4') {
 			$output .= blocksy_html_tag(
 				'h2',
 				[],
-				blocksy_get_theme_mod('use_brand_name_for_tab_title', 'no') === 'no'
+				blc_theme_functions()->blocksy_get_theme_mod('use_brand_name_for_tab_title', 'no') === 'no'
 					? __('About Brands', 'blocksy-companion')
 					: blc_safe_sprintf(
 						__('About %s', 'blocksy-companion'),
@@ -802,43 +700,8 @@ class Brands {
 		$storage = new Storage();
 		$settings = $storage->get_settings();
 
-		register_taxonomy('product_brands', ['product'], [
-			'label'                 => '',
-			'labels'                => [
-				'name'              => __('Brands', 'blocksy-companion'),
-				'singular_name'     => __('Brand', 'blocksy-companion'),
-				'search_items'      => __('Search Brands', 'blocksy-companion'),
-				'all_items'         => __('All Brands', 'blocksy-companion'),
-				'parent_item'       => __('Parent Brand', 'blocksy-companion'),
-				'parent_item_colon' => __('Parent Brand:', 'blocksy-companion'),
-				'view_item '        => __('View Brand', 'blocksy-companion'),
-				'edit_item'         => __('Edit Brand', 'blocksy-companion'),
-				'update_item'       => __('Update Brand', 'blocksy-companion'),
-				'add_new_item'      => __('Add New Brand', 'blocksy-companion'),
-				'new_item_name'     => __('New Brand Name', 'blocksy-companion'),
-				'menu_name'         => __('Brands', 'blocksy-companion'),
-			],
-			'hierarchical'          => true,
-			'show_ui' => true,
-			'show_admin_column' => true,
-			'query_var' => true,
-			'show_in_rest' => true,
-			'rewrite' => [
-				'slug' => $settings['product-brands-slug'],
-				'with_front' => false,
-				'hierarchical' => true,
-			],
-		]);
-
-		add_action(
-			'product_brands_edit_form',
-			[$this, 'term_options']
-		);
-
-		add_action(
-			'product_brands_add_form',
-			[$this, 'term_options']
-		);
+		add_action('product_brand_edit_form', [$this, 'term_options']);
+		add_action('product_brand_add_form', [$this, 'term_options']);
 
 		add_action('edited_term', [$this, 'save_term_meta'], 10, 3);
 		add_action('create_term', [$this, 'save_term_meta'], 10, 3);
@@ -857,11 +720,13 @@ class Brands {
 				&&
 				current_user_can($taxonomy->cap->edit_terms)
 			)
+			||
+			$taxonomy->name !== 'product_brand'
 		) {
 			return;
 		}
 
-		$values = [];
+		$values = [];	
 
 		if (isset($_POST['blocksy_taxonomy_meta_options'][blocksy_post_name()])) {
 			$values = json_decode(
@@ -875,6 +740,16 @@ class Brands {
 				true
 			);
 		}
+
+		update_term_meta(
+			$term_id,
+			'thumbnail_id',
+			sanitize_text_field(wp_unslash(
+				isset($values['icon_image']['attachment_id']) ? $values['icon_image']['attachment_id'] : ''
+			))
+		);
+
+		unset($values['icon_image']);
 
 		update_term_meta(
 			$term_id,
@@ -897,6 +772,15 @@ class Brands {
 
 		if (! $values[0]) {
 			$values[0] = [];
+		}
+
+		$maybe_image_id = isset($term->term_id) ? get_term_meta($term->term_id, 'thumbnail_id', true) : '';
+
+		if (! empty($maybe_image_id)) {
+			$values[0]['icon_image'] = [
+				'attachment_id' => $maybe_image_id,
+				'url' => wp_get_attachment_image_url($maybe_image_id, 'full')
+			];
 		}
 
 		$options = [
@@ -962,6 +846,15 @@ class Brands {
 
 			$term_atts = $term_atts[0];
 
+			$maybe_image_id = isset($brand->term_id) ? get_term_meta($brand->term_id, 'thumbnail_id', true) : '';
+
+			if (! empty($maybe_image_id)) {
+				$term_atts['icon_image'] = [
+					'attachment_id' => $maybe_image_id,
+					'url' => wp_get_attachment_image_url($maybe_image_id, 'full')
+				];
+			}
+
 			$maybe_image = blocksy_akg('icon_image', $term_atts, '');
 
 			if (
@@ -996,7 +889,7 @@ class Brands {
 			return;
 		}
 
-		$brands = get_the_terms(get_the_ID(), 'product_brands');
+		$brands = get_the_terms(get_the_ID(), 'product_brand');
 
 		if (!$brands || !is_array($brands)) {
 			return;
@@ -1038,7 +931,7 @@ class Brands {
 			return;
 		}
 
-		$brands = get_the_terms(get_the_ID(), 'product_brands');
+		$brands = get_the_terms(get_the_ID(), 'product_brand');
 
 		if (!$brands || !is_array($brands)) {
 			return;

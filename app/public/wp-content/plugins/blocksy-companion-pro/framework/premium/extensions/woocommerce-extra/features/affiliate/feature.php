@@ -29,14 +29,14 @@ class AffiliateProduct {
 			global $product;
 
 			if (
-				blocksy_get_theme_mod('woo_archive_affiliate_title_link', 'no') === 'no'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_archive_affiliate_title_link', 'no') === 'no'
 				||
-				!$product->is_type('external')
+				! $product->is_type('external')
 			) {
 				return $args;
 			}
 
-			$open_in_new_tab = blocksy_get_theme_mod(
+			$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_archive_affiliate_title_link_new_tab',
 				'no'
 			) === 'yes' ? '_blank' : '_self';
@@ -49,12 +49,12 @@ class AffiliateProduct {
 
 		add_filter('woocommerce_loop_add_to_cart_args', function($args) {
 			$product = $this->get_product($args['attributes']);
-			
+
 			if (! $product) {
 				return $args;
 			}
 
-			$open_in_new_tab = blocksy_get_theme_mod(
+			$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_archive_affiliate_button_link_new_tab',
 				'no'
 			) === 'yes' ? '_blank' : '_self';
@@ -77,7 +77,7 @@ class AffiliateProduct {
 				30
 			);
 
-			$open_in_new_tab = blocksy_get_theme_mod(
+			$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 				'woo_single_affiliate_button_link_new_tab',
 				'no'
 			) === 'yes' ? '_blank' : '_self';
@@ -113,11 +113,11 @@ class AffiliateProduct {
 			}
 
 			if (
-				blocksy_get_theme_mod('woo_single_affiliate_image_link', 'no') === 'yes'
+				blc_theme_functions()->blocksy_get_theme_mod('woo_single_affiliate_image_link', 'no') === 'yes'
 				&&
 				$product->is_type('external')
 			) {
-				$open_in_new_tab = blocksy_get_theme_mod(
+				$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 					'woo_single_affiliate_image_link_new_tab',
 					'no'
 				) === 'yes' ? '_blank' : '_self';
@@ -138,7 +138,7 @@ class AffiliateProduct {
 
 	public function add_product_image_click_event_directives($block_content, $block, $instance) {
 		$product = wc_get_product($instance->context['postId']);
-					
+
 		if (
 			! $product
 			||
@@ -148,8 +148,8 @@ class AffiliateProduct {
 		}
 
 		$is_link = $instance->attributes['showProductLink'] ?? false;
-		$has_affiliate_link = blocksy_get_theme_mod('woo_archive_affiliate_image_link', 'no') === 'yes';
-		
+		$has_affiliate_link = blc_theme_functions()->blocksy_get_theme_mod('woo_archive_affiliate_image_link', 'no') === 'yes';
+
 		if (
 			! $is_link
 			||
@@ -158,27 +158,27 @@ class AffiliateProduct {
 			return $block_content;
 		}
 
-		$open_in_new_tab = blocksy_get_theme_mod(
+		$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 			'woo_archive_affiliate_image_link_new_tab',
 			'no'
 		) === 'yes' ? '_blank' : '_self';
 
 		$p = new \WP_HTML_Tag_Processor($block_content);
 		$is_anchor = $p->next_tag(['tag_name' => 'a']);
-		
+
 		if ($is_anchor) {
 			$p->set_attribute('href', $product->get_product_url());
 			$p->set_attribute('target', $open_in_new_tab);
 		}
-		
-		$block_content = $p->get_updated_html();		
+
+		$block_content = $p->get_updated_html();
 
 		return $block_content;
 	}
 
 	public function add_product_title_click_event_directives($block_content, $block, $instance) {
 		$product = wc_get_product($instance->context['postId']);
-					
+
 		if (
 			! $product
 			||
@@ -190,7 +190,7 @@ class AffiliateProduct {
 		$namespace = $instance->attributes['__woocommerceNamespace'] ?? '';
 		$is_product_title_block = 'woocommerce/product-query/product-title' === $namespace;
 		$is_link = $instance->attributes['isLink'] ?? false;
-		
+
 		if (! $is_link) {
 			return $block_content;
 		}
@@ -215,7 +215,7 @@ class AffiliateProduct {
 		if (! $product) {
 			if (! isset($attributes['data-product_id'])) {
 				return false;
-			} 
+			}
 
 			$product = wc_get_product($attributes['data-product_id']);
 		}

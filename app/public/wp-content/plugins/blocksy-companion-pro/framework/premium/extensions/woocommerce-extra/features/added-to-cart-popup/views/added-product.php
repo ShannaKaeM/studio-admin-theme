@@ -26,11 +26,11 @@ if ($display_descriptor['show_image']) {
 	];
 
 	if (
-		blocksy_get_theme_mod('woo_archive_affiliate_image_link', 'no') === 'yes'
+		blc_theme_functions()->blocksy_get_theme_mod('woo_archive_affiliate_image_link', 'no') === 'yes'
 		&&
 		$product->get_type() === 'external'
 	) {
-		$open_in_new_tab = blocksy_get_theme_mod(
+		$open_in_new_tab = blc_theme_functions()->blocksy_get_theme_mod(
 			'woo_archive_affiliate_image_link_new_tab',
 			'no'
 		) === 'yes' ? '_blank' : '_self';
@@ -60,11 +60,11 @@ if ($display_descriptor['show_image']) {
 		'no_image_type' => 'woo',
 		'attachment_id' => $gallery_images[0],
 		'post_id' => $product->get_id(),
-		'size' => blocksy_get_theme_mod(
+		'size' => blc_theme_functions()->blocksy_get_theme_mod(
 			'added_to_cart_popup_image_size',
 			'medium'
 		),
-		'ratio' => blocksy_get_theme_mod(
+		'ratio' => blc_theme_functions()->blocksy_get_theme_mod(
 			'added_to_cart_popup_image_ratio',
 			'3/4'
 		),
@@ -107,7 +107,7 @@ if ($display_descriptor['show_description']) {
 	}
 
 	$description = blocksy_entry_excerpt([
-		'length' => intval(blocksy_get_theme_mod('added_to_cart_popup_description_length', 20)),
+		'length' => intval(blc_theme_functions()->blocksy_get_theme_mod('added_to_cart_popup_description_length', 20)),
 		'source' => 'custom',
 		'custom_exceprt' => $product_description,
 		'skip_container' => true
@@ -124,7 +124,7 @@ if ($display_descriptor['show_description']) {
 
 $item_data = [];
 
-if ($cart_item['data']->is_type('variation') && is_array($cart_item['variation'])) {
+if ($product->is_type('variation') && is_array($cart_item['variation'])) {
 	foreach ($cart_item['variation'] as $name => $value) {
 		if ('' === $value) {
 			continue;
@@ -216,6 +216,23 @@ if (
 	||
 	$display_descriptor['show_total']
 ) {
+
+	$shipping_total = wc_price(WC()->cart->get_shipping_total());
+
+	if (
+		(float) WC()->cart->get_shipping_tax() > 0
+		&&
+		WC()->cart->display_prices_including_tax()
+	) {
+		$shipping_total = blocksy_html_tag(
+			'span',
+			[],
+			wc_price(
+				WC()->cart->get_shipping_total() + WC()->cart->get_shipping_tax()
+			) . ' ' . WC()->countries->inc_tax_or_vat()
+		);
+	}
+
 	$product_totals = blocksy_html_tag(
 		'ul',
 		[
@@ -227,7 +244,7 @@ if (
 				[
 					'class' => 'ct-added-to-cart-popup-shipping',
 				],
-				__('Shipping Cost', 'blocksy-companion') . ' ' . wc_price(WC()->cart->get_shipping_total())
+				__('Shipping Cost', 'blocksy-companion') . ' ' . $shipping_total
 			) : ''
 		) .
 		(

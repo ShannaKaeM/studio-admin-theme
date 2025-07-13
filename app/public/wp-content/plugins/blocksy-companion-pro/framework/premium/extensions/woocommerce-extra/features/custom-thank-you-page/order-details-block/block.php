@@ -4,24 +4,24 @@ namespace Blocksy\Extensions\WoocommerceExtra;
 
 class OrderDetailsBlock {
 	public function __construct() {
-        add_action('init', [$this, 'blocksy_woo_order_block']);
+		add_action('init', [$this, 'blocksy_woo_order_block']);
 		add_action('enqueue_block_editor_assets', [$this, 'enqueue_admin']);
-    }
+	}
 
-    public function enqueue_admin() {
-        $data = get_plugin_data(BLOCKSY__FILE__);
+	public function enqueue_admin() {
+		$data = get_plugin_data(BLOCKSY__FILE__);
 
 		wp_enqueue_script(
 			'blocksy/woo-ordery',
 			BLOCKSY_URL .
 				'framework/premium/extensions/woocommerce-extra/static/bundle/woocommerce-order.js',
 			['wp-blocks', 'wp-element', 'wp-block-editor'],
-            $data['Version'],
-            true
+			$data['Version'],
+			true
 		);
 	}
 
-    public function blocksy_woo_order_block() {
+	public function blocksy_woo_order_block() {
 		register_block_type('blocksy/woo-order', [
 			'render_callback' => function ($attributes, $content, $block) {
 
@@ -31,8 +31,8 @@ class OrderDetailsBlock {
 						'showOrderOverview' => true,
 						'showOrderDetails' => true,
 						'showCustomerDetails' => true,
-                        'className' => '',
-                        'style' => []
+						'className' => '',
+						'style' => []
 					]
 				);
 

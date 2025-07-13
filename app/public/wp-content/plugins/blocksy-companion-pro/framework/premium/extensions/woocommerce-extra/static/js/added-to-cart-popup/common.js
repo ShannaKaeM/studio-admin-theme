@@ -37,8 +37,6 @@ export const fetchAddToCartPopupContent = async (content) => {
 
 		const popup = document.querySelector('#ct-added-to-cart-popup')
 
-		setTimeout(() => ctEvents.trigger('ct:flexy:update'))
-
 		popup.unmount = () => {
 			whenTransitionEnds(popup, () => {
 				popup.remove()

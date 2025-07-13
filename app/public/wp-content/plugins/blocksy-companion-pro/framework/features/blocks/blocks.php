@@ -15,18 +15,6 @@ class Blocks {
 	}
 
 	public function mount() {
-		register_block_pattern_category('blocksy', [
-			'label' => _x(
-				'Blocksy',
-				'Block pattern category',
-				'blocksy-companion'
-			),
-			'description' => __(
-				'Patterns that contain buttons and call to actions.',
-				'blocksy-companion'
-			),
-		]);
-
 		add_action('enqueue_block_editor_assets', function () {
 			if (! function_exists('get_plugin_data')) {
 				require_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -36,6 +24,7 @@ class Blocks {
 
 			$deps = [
 				'wp-blocks',
+				'wp-editor',
 				'wp-core-data',
 				'wp-element',
 				'wp-block-editor',
@@ -64,19 +53,6 @@ class Blocks {
 				BLOCKSY_URL . '/static/bundle/blocks/blocks.js',
 				$deps,
 				$data['Version']
-			);
-
-			$data = [
-				'breadcrumb_home_item' => blocksy_get_theme_mod('breadcrumb_home_item', 'text'),
-				'breadcrumb_home_text' => blocksy_get_theme_mod('breadcrumb_home_text', __('Home Page Text', 'blocksy-companion')),
-				'breadcrumb_separator' => blocksy_get_theme_mod('breadcrumb_separator', 'type-1'),
-				'breadcrumb_page_title' => blocksy_get_theme_mod('breadcrumb_page_title', 'yes') === 'yes',
-			];
-
-			wp_localize_script(
-				'blocksy/gutenberg-blocks',
-				'blc_blocks_data',
-				$data
 			);
 		});
 

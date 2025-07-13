@@ -152,7 +152,7 @@ class ProductWaitlistDashboard {
 			[
 				'label' => esc_html__('Number of items per page', 'blocksy-companion'),
 				'default' => 20,
-				'option' => 'waitlist_per_page',
+				'option' => 'blocksy_waitlist_per_page',
 			]
 		);
 	}
@@ -176,7 +176,6 @@ class ProductWaitlistDashboard {
 		wp_enqueue_style('woocommerce_admin_styles');
 
 		$list_table->prepare_items();
-
 		?>
 			<div class="wrap">
 				<h1 class="wp-heading-inline"><?php echo $table_title; ?></h1>
@@ -258,7 +257,7 @@ class ProductWaitlistDashboard {
 			]);
 		}
 
-		$need_confirmation = blocksy_get_theme_mod('waitlist_user_confirmation', [
+		$need_confirmation = blc_theme_functions()->blocksy_get_theme_mod('waitlist_user_confirmation', [
 			'logged_in' => true,
 			'logged_out' => true,
 		]);
