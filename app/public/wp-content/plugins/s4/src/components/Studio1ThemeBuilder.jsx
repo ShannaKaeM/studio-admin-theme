@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-import { useStudio1Store } from '../hooks/useStudio1Store.js';
+import React from 'react';
 import { useThemeConfig } from '../hooks/useThemeConfig.js';
-import { ComponentVariablesTable } from '../components/ComponentVariablesTable.jsx';
 import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
-import { ColorBook } from '../components/ColorBook.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
-  const { config, updateConfig } = useStudio1Store();
-  const { config: themeConfig, exportConfig, importConfig, resetToDefault, syncNewComponents } = useThemeConfig();
-  const [activeTab, setActiveTab] = useState('scopes');
-  const [expandedSection, setExpandedSection] = useState('colors');
+  const { exportConfig, importConfig } = useThemeConfig();
   
   const handleExport = () => {
     const configJson = exportConfig();
@@ -43,8 +37,8 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
       {/* Dashboard Header */}
       <header className="dashboard-header">
         <div>
-          <h2 className="dashboard-title">Studio1 Design System</h2>
-          <p className="dashboard-subtitle">The One Element System • Real-time updates</p>
+          <h2 className="dashboard-title">Studio1 1Block Builder</h2>
+          <p className="dashboard-subtitle">Create and organize your 1Blocks with complete creative freedom</p>
         </div>
         <div className="dashboard-actions">
           <button onClick={handleExport} className="ui-button ui-button--primary ui-button--small">
@@ -64,27 +58,8 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
         </div>
       </header>
 
-      {/* Tab Navigation */}
-      <nav className="dashboard-tabs">
-        <button
-          onClick={() => setActiveTab('colors')}
-          className={`dashboard-tab dashboard-tab--secondary ${activeTab === 'colors' ? 'dashboard-tab--active' : ''}`}
-        >
-          🎨 Color Book
-        </button>
-        <button
-          onClick={() => setActiveTab('scopes')}
-          className={`dashboard-tab ${activeTab === 'scopes' ? 'dashboard-tab--active' : ''}`}
-        >
-          🎭 Elements
-        </button>
-      </nav>
-
-      {/* Tab Content */}
-      <main className="dashboard-content">
-        {activeTab === 'colors' && <ColorBook />}
-        {activeTab === 'scopes' && <ScopesBuilder />}
-      </main>
+      {/* Direct to ScopesBuilder - No Tabs */}
+      <ScopesBuilder />
     </div>
   );
 }

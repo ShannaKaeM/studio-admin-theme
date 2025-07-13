@@ -2,13 +2,14 @@
 /* STUDIO1 - THE ONE ELEMENT SYSTEM          */
 /* ============================================ */
 
-/* LAYER 1: COLOR BOOK FOUNDATION */
+/* LAYER 1: STUDIO1 FOUNDATION */
 :root {
     /* ============================================ */
-    /* COLOR BOOK SINGLE BASE SYSTEM              */
+    /* STUDIO1 BASE SYSTEM                       */
     /* ============================================ */
     
-    --base-color: hsl(0, 0%, 50%);  
+    --base-color: hsl(0, 0%, 50%); 
+    color: var(--base-color); 
     
     /* Typography */
     --font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -44,7 +45,7 @@
     --one-font-variant: normal;
     --one-line-height: 1.4;
     --one-letter-spacing: 0;
-    --one-color: var(--base-color);
+    --one-color: hsla(0, 0%, 20%, 1);
     --one-text-align: left;
     --one-text-transform: none;
     --one-text-decoration: none;
@@ -54,7 +55,7 @@
     --one-vertical-align: baseline;
 
     /* === BACKGROUND === */
-    --one-background: transparent;
+    --one-background: hsla(0, 0%, 100%, 1);
     --one-background-image: none;
     --one-background-size: cover;
     --one-background-position: center;
@@ -65,7 +66,7 @@
     --one-border: none;
     --one-border-width: 0;
     --one-border-style: solid;
-    --one-border-color: transparent;
+    --one-border-color: hsla(0, 0%, 80%, 1);
     --one-border-radius: 0;
     --one-border-top: none;
     --one-border-right: none;

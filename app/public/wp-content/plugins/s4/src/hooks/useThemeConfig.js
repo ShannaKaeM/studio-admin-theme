@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 
-// Default Studio1 theme configuration
+// Clean default Studio1 theme configuration - completely empty to start
 const defaultConfig = {
   theme: {
     name: "Studio1 - The One Element System",
@@ -8,70 +8,19 @@ const defaultConfig = {
     description: "Revolutionary unified element system with ultimate flexibility"
   },
   colors: {
-    // No predefined color scales - only Color Book base color
+    // Empty - no predefined colors
   },
-  // Color Book - HSLA adjustment system
   colorBook: {
     baseColor: "hsl(0, 0%, 50%)",  // Single foundation color
     presets: {
-      // Color presets will be defined here
-      // Each preset modifies H/S/L/A of the base color
+      // Empty - users create their own color presets
     }
   },
   components: {
-    // Studio1 components using .one element system with base color foundation
-    "theme-builder": {
-      "--one-background": "var(--base-color)",
-      "--one-border": "1px solid var(--base-color)",
-      "--one-padding": "1.5rem",
-      "--one-color": "var(--base-color)"
-    },
-    "nav-tab": {
-      "--one-background": "var(--base-color)",
-      "--one-border": "1px solid var(--base-color)",
-      "--one-padding": "0.75rem 1rem",
-      "--one-color": "var(--base-color)",
-      "--one-font-weight": "500"
-    },
-    "nav-tab-active": {
-      "--one-background": "var(--base-color)",  // Will be modified by Color Book presets
-      "--one-color": "var(--base-color)",
-      "--one-border": "1px solid var(--base-color)"
-    },
-    "color-card": {
-      "--one-background": "var(--base-color)",
-      "--one-border": "1px solid var(--base-color)",
-      "--one-padding": "1rem",
-      "--one-border-radius": "0.5rem",
-      "--one-color": "var(--base-color)"
-    },
-    "input-field": {
-      "--one-background": "var(--base-color)",
-      "--one-border": "1px solid var(--base-color)",
-      "--one-padding": "0.5rem 0.75rem",
-      "--one-border-radius": "0.25rem",
-      "--one-color": "var(--base-color)",
-      "--one-font-size": "0.875rem"
-    },
-    "button-primary": {
-      "--one-background": "var(--base-color)",  // Will be modified by Color Book presets
-      "--one-border": "1px solid var(--base-color)",
-      "--one-padding": "0.75rem 1.5rem",
-      "--one-border-radius": "0.375rem",
-      "--one-color": "var(--base-color)",
-      "--one-font-weight": "600"
-    },
-    "button-secondary": {
-      "--one-background": "var(--base-color)",
-      "--one-border": "1px solid var(--base-color)",
-      "--one-padding": "0.75rem 1.5rem",
-      "--one-border-radius": "0.375rem",
-      "--one-color": "var(--base-color)",
-      "--one-font-weight": "500"
-    }
+    // Empty - no predefined components, users create their own
   },
   scopes: {
-    // Users create their own 1boxes - complete creative freedom
+    // Empty - complete creative freedom, users create their own 1Blocks
   }
 };
 
@@ -172,7 +121,8 @@ export function useThemeConfig() {
             .join('\n');
           
           if (scopeRules) {
-            return `[data-scope="${scopeName}"] .one {\n${scopeRules}\n}`;
+            // Fixed: Apply styles directly to elements with both data-scope and .one class
+            return `.one[data-scope="${scopeName}"] {\n${scopeRules}\n}`;
           }
         }
         
@@ -220,6 +170,17 @@ export function useThemeConfig() {
         [componentName]: newStyles
       }
     }));
+  };
+
+  const deleteComponent = (componentName) => {
+    setConfig(prev => {
+      const newComponents = { ...prev.components };
+      delete newComponents[componentName];
+      return {
+        ...prev,
+        components: newComponents
+      };
+    });
   };
 
 
@@ -358,6 +319,7 @@ export function useThemeConfig() {
     customOverrides,
     getComponentStyles,
     updateComponent,
+    deleteComponent,
     updateScopeBaseProperties,
     createNewScope,
     deleteScope,

@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Studio1 - The One Element System
- * Plugin URI: https://studio1.design
+ * Plugin Name: S4 Design System
+ * Plugin URI: https://s4.design
  * Description: Revolutionary unified element system with ultimate flexibility. One class, infinite possibilities.
  * Version: 1.0.0
- * Author: Studio1 Team
+ * Author: S4 Team
  * License: MIT
  */
 
@@ -90,10 +90,10 @@ class Studio1Plugin {
     
     public function add_admin_menu() {
         add_menu_page(
-            'Studio1 - The One Element System',
-            'Studio1',
+            'S4 - The One Element System',
+            'S4',
             'manage_options',
-            'studio1-dashboard',
+            's4-dashboard',
             array($this, 'admin_page'),
             'dashicons-art',
             30

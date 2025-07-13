@@ -5,29 +5,29 @@
 
 ---
 
-## 🎯 **MAJOR PHILOSOPHY BREAKTHROUGH: 1BOX CREATIVE FREEDOM**
+## 🎯 **MAJOR PHILOSOPHY BREAKTHROUGH: 1BLOCK CREATIVE FREEDOM**
 
 ### **Revolutionary Philosophy Shift Complete (July 13, 2025)**
-The most significant conceptual breakthrough yet - moving from prescriptive patterns to **complete user creative freedom** with the "1Box" universal element system.
+The most significant conceptual breakthrough yet - moving from prescriptive patterns to **complete user creative freedom** with the "1Block" universal element system.
 
 ### **User's Vision Realized**
 > *"I don't want to lock users into anything but what I would rather do is provide them ways to craft their own themes presets base components etc... users can create any block type they want and name it anything they want"*
 
 ### **From Complex to Simple**
 - **From**: Prescriptive base text scopes with forced inheritance patterns
-- **To**: Universal 1Box system where users create any element with complete freedom
+- **To**: Universal 1Block system where users create any element with complete freedom
 - **Result**: No lock-in, unlimited creativity, users craft their own design systems
 
-### **✅ 1Box System Architecture Complete**
+### **✅ 1Block System Architecture Complete**
 
 **Simplified Creation Workflow**:
 ```javascript
 const handleCreateNewScope = () => {
-  const scopeName = prompt('Enter 1box name (e.g., "hero", "button", "sidebar", "my-custom-element"):');
+  const scopeName = prompt('Enter 1Block name (e.g., "hero", "button", "sidebar", "my-custom-element"):');
   if (scopeName && scopeName.trim()) {
     const cleanName = scopeName.trim().toLowerCase().replace(/\s+/g, '-');
     
-    // Create new 1box with minimal defaults - users have complete freedom
+    // Create new 1Block with minimal defaults - users have complete freedom
     createNewScope(cleanName, {
       '--one-display': 'block',
       '--one-font-family': 'var(--font-family)'
@@ -47,19 +47,19 @@ const handleCreateNewScope = () => {
 - ✅ **Self-Directed Design Systems** - Users craft their own themes and components
 
 ### **Interface Transformation**
-- ✅ **"1Box Builder"** - Clean terminology reflecting creative freedom
+- ✅ **"1Block Builder"** - Clean terminology reflecting creative freedom
 - ✅ **📦 Universal Icons** - Consistent visual language for all elements
 - ✅ **Simplified Prompts** - Single input for element naming and creation
 - ✅ **No Complex Toggles** - Removed confusing base/element mode switching
 
-### **🏆 MAJOR BENCHMARK ACHIEVEMENT: 1BOX CREATIVE FREEDOM SYSTEM**
+### **🏆 MAJOR BENCHMARK ACHIEVEMENT: 1BLOCK CREATIVE FREEDOM SYSTEM**
 
 **Date**: July 13, 2025  
-**Significance**: Revolutionary philosophy shift from prescriptive patterns to complete user creative freedom
+**Significance**: Revolutionary philosophy shift from prescriptive patterns to complete user creative freedom with 1Block system
 
 **What This Means for Studio1**:
 - 🎯 **Ultimate User Empowerment** - No artificial limitations or forced patterns
-- 🎯 **Universal Element System** - Any 1box can be anything (hero, button, sidebar, custom)
+- 🎯 **Universal Element System** - Any 1Block can be anything (hero, button, sidebar, custom)
 - 🎯 **Self-Directed Design** - Users craft their own themes, presets, and component systems
 - 🎯 **Future-Proof Architecture** - Foundation ready for AI-assisted content and layout transformations
 - 🎯 **Competitive Differentiation** - First design system offering complete creative freedom
@@ -68,7 +68,7 @@ const handleCreateNewScope = () => {
 ```javascript
 // Complete creative freedom - users create any element
 scopes: {
-  // Users create their own 1boxes - complete creative freedom
+  // Users create their own 1Blocks - complete creative freedom
 }
 
 // Minimal defaults preserve user control
@@ -79,7 +79,19 @@ createNewScope(cleanName, {
 });
 ```
 
-**This 1Box system positions Studio1 as the ultimate creative freedom platform for web design! 🚀**
+**This 1Block system positions Studio1 as the ultimate creative freedom platform for web design! 🚀**
+
+---
+
+## 📋 **IMPORTANT WORKFLOW PREFERENCES**
+
+### **Git Commit Workflow**
+- ✅ **User-Initiated Commits Only** - Never initiate commits after task completion
+- ✅ **Local + GitHub Sync** - Always commit to both local and remote repositories together
+- ✅ **Explicit Control** - User decides when it's the right time to commit changes
+- ✅ **Complete When Ready** - Tasks are complete when code is written, commits happen when user initiates
+
+**Workflow**: Complete task → Stage changes → Wait for user to initiate commit to both local and GitHub
 
 ---
 
@@ -93,9 +105,9 @@ Earlier in the development session, we implemented a complex scope inheritance a
 The development journey moved through multiple phases:
 1. **Complex Inheritance System** - Base scopes with forced inheritance patterns
 2. **Inline Toggle Architecture** - Base/element switching within scope editor  
-3. **🎯 FINAL: 1Box Creative Freedom** - Universal elements with complete user control
+3. **🎯 FINAL: 1Block Creative Freedom** - Universal elements with complete user control
 
-**Key Learning**: Users want creative freedom, not prescriptive patterns. The final 1Box system removes all artificial limitations and gives users complete control to craft their own design systems.
+**Key Learning**: Users want creative freedom, not prescriptive patterns. The final 1Block system removes all artificial limitations and gives users complete control to craft their own design systems.
 
 ---
 
