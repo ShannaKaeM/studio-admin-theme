@@ -71,18 +71,7 @@ const defaultConfig = {
     }
   },
   scopes: {
-    // Base scope - Foundation for all text elements
-    "text": {
-      baseProperties: {
-        "--one-display": "block",
-        "--one-font-family": "var(--font-family)",
-        "--one-color": "hsl(0, 0%, 80%)",  // Dark text for light theme
-        "--one-line-height": "1.5",
-        "--one-margin": "0"
-      },
-      isBaseScope: true,
-      description: "Foundation scope for all text elements"
-    }
+    // Users create their own 1boxes - complete creative freedom
   }
 };
 

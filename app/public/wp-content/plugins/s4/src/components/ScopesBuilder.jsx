@@ -99,26 +99,18 @@ export function ScopesBuilder() {
   };
 
   const handleCreateNewScope = () => {
-    const elementType = prompt('Choose element type:\n1. Text (title, subtitle, body, etc.)\n\nEnter "text":');
-    
-    if (elementType && elementType.trim().toLowerCase() === 'text') {
-      const scopeName = prompt('Enter text element name (e.g., "title", "subtitle", "body"):');
-      if (scopeName && scopeName.trim()) {
-        const cleanName = scopeName.trim().toLowerCase().replace(/\s+/g, '-');
-        
-        // Auto-inherit from base text scope (excluding color to allow inheritance)
-        const textProperties = scopes.text?.baseProperties || {};
-        const { '--one-color': removedColor, ...inheritedProperties } = textProperties;
-        createNewScope(cleanName, {
-          ...inheritedProperties,  // Inherit foundation properties (except color)
-          '--one-font-size': '1rem',  // Default size, can be customized
-          '--one-font-weight': '400'  // Default weight, can be customized
-          // Color will inherit from base text scope naturally
-        });
-        setSelectedScope(cleanName);
-      }
-    } else if (elementType && elementType.trim()) {
-      alert('Only "text" element type is available for now. More types coming soon!');
+    const scopeName = prompt('Enter 1box name (e.g., "hero", "button", "sidebar", "my-custom-element"):');
+    if (scopeName && scopeName.trim()) {
+      const cleanName = scopeName.trim().toLowerCase().replace(/\s+/g, '-');
+      
+      // Create new 1box with minimal defaults - users have complete freedom
+      createNewScope(cleanName, {
+        '--one-display': 'block',
+        '--one-font-family': 'var(--font-family)'
+        // Color automatically inherited from .one global default
+        // Users can add any properties they want
+      });
+      setSelectedScope(cleanName);
     }
   };
 
@@ -128,8 +120,8 @@ export function ScopesBuilder() {
       <div className="scopes-builder-sidebar">
         {/* Sidebar Header */}
         <div className="scopes-builder-sidebar-header">
-          <h2>Element Builder</h2>
-          <p>Create design elements with styling</p>
+          <h2>1Box Builder</h2>
+          <p>Create any element with complete freedom</p>
         </div>
 
         {/* Scopes List */}
@@ -200,7 +192,7 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
           color: 'var(--ui-neutral-200)',
           margin: 0
         }}>
-          All Elements ({Object.keys(scopes).length})
+          Your 1Boxes ({Object.keys(scopes).length})
         </h3>
       </div>
 
@@ -217,48 +209,31 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
                   color: 'var(--ui-neutral-100)', 
                   marginBottom: '0.25rem' 
                 }}>
-                  {scopeConfig.isBaseScope ? '🏗️' : '🎭'} {scopeName}
-                  {scopeConfig.isBaseScope && (
-                    <span style={{ 
-                      fontSize: '0.625rem',
-                      background: 'var(--ui-neutral-600)',
-                      color: 'white',
-                      padding: '0.125rem 0.375rem',
-                      borderRadius: '0.25rem',
-                      marginLeft: '0.5rem'
-                    }}>
-                      GLOBAL
-                    </span>
-                  )}
+                  📦 {scopeName}
                 </div>
                 <div style={{ 
                   fontSize: '0.75rem', 
                   color: 'var(--ui-neutral-400)' 
                 }}>
-                  {scopeConfig.isBaseScope 
-                    ? `Global foundation - edit in Base Settings tab`
-                    : (scopeConfig.description || `${Object.keys(scopeConfig.baseProperties || {}).length} properties`)
-                  }
+                  {scopeConfig.description || `${Object.keys(scopeConfig.baseProperties || {}).length} properties`}
                 </div>
               </div>
             </button>
-            {!scopeConfig.isBaseScope && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const confirmed = confirm(`Delete element "${scopeName}"? This action cannot be undone.`);
-                  if (confirmed) {
-                    onDeleteScope(scopeName);
-                    if (selectedScope === scopeName) {
-                      setSelectedScope(null);
-                    }
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const confirmed = confirm(`Delete 1box "${scopeName}"? This action cannot be undone.`);
+                if (confirmed) {
+                  onDeleteScope(scopeName);
+                  if (selectedScope === scopeName) {
+                    setSelectedScope(null);
                   }
-                }}
-                className="scope-delete-button"
-              >
-                ✕
-              </button>
-            )}
+                }
+              }}
+              className="scope-delete-button"
+            >
+              ✕
+            </button>
           </li>
         ))}
       </ul>
@@ -268,7 +243,7 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
         className="ui-button ui-button--primary"
         style={{ width: '100%' }}
       >
-        + Add New Element
+        + Add New 1Box
       </button>
     </div>
   );
@@ -276,132 +251,71 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
 
 // Scope Editor Component
 function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove, buildColorOptions }) {
-  const [editMode, setEditMode] = useState('element'); // 'element' or 'base'
-  
-  // Check if this scope has a corresponding base scope
-  const hasBaseScope = scope !== 'text'; // text elements have a base, text itself IS the base
-  
   return (
     <div>
       <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-          <h1 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: '600', 
-            color: 'var(--ui-neutral-100)', 
-            margin: 0 
-          }}>
-            🎭 {scope}
-          </h1>
-          
-          {hasBaseScope && (
-            <div style={{ display: 'flex', gap: '0.25rem', background: 'var(--ui-neutral-50)', borderRadius: '0.25rem', padding: '0.25rem' }}>
-              <button
-                onClick={() => setEditMode('element')}
-                style={{
-                  padding: '0.375rem 0.75rem',
-                  border: 'none',
-                  borderRadius: '0.125rem',
-                  fontSize: '0.75rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  background: editMode === 'element' ? 'var(--ui-primary)' : 'transparent',
-                  color: editMode === 'element' ? 'white' : 'var(--ui-neutral-400)'
-                }}
-              >
-                🎭 Element
-              </button>
-              <button
-                onClick={() => setEditMode('base')}
-                style={{
-                  padding: '0.375rem 0.75rem',
-                  border: 'none',
-                  borderRadius: '0.125rem',
-                  fontSize: '0.75rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  background: editMode === 'base' ? 'var(--ui-primary)' : 'transparent',
-                  color: editMode === 'base' ? 'white' : 'var(--ui-neutral-400)'
-                }}
-              >
-                🏗️ Base
-              </button>
-            </div>
-          )}
-        </div>
-        
+        <h1 style={{ 
+          fontSize: '1.5rem', 
+          fontWeight: '600', 
+          color: 'var(--ui-neutral-100)', 
+          margin: '0 0 0.5rem 0' 
+        }}>
+          📦 {scope}
+        </h1>
         <p style={{ 
           color: 'var(--ui-neutral-400)', 
           fontSize: '0.875rem',
           margin: 0
         }}>
-          {hasBaseScope && editMode === 'base' 
-            ? `Edit the global foundation that all text elements inherit`
-            : `Edit the styling properties for this ${scope} element`
-          }
+          Edit the styling properties for this 1box. You have access to all 80+ CSS properties.
         </p>
       </div>
 
-      {hasBaseScope && editMode === 'base' ? (
-        <BaseEditorInline 
-          textBaseProperties={textBaseProperties}
-          updateScopeBaseProperties={updateScopeBaseProperties}
-          buildColorOptions={buildColorOptions}
-        />
-      ) : (
-        <>
-          <PropertyEditor
-            title={`${scope} Properties`}
-            properties={baseProperties}
-            onPropertyChange={onBasePropertyChange}
-            onPropertyRemove={onBasePropertyRemove}
-            addButtonText="Add Property"
-            buildColorOptions={buildColorOptions}
-          />
+      <PropertyEditor
+        title={`${scope} Properties`}
+        properties={baseProperties}
+        onPropertyChange={onBasePropertyChange}
+        onPropertyRemove={onBasePropertyRemove}
+        addButtonText="Add Property"
+        buildColorOptions={buildColorOptions}
+      />
 
-          {/* Live Preview */}
-          <div className="scope-preview">
-            <div className="scope-preview-title">Live Preview</div>
-            
-            <div style={{ 
-              background: 'var(--ui-neutral-50)', 
-              padding: '1.5rem', 
-              borderRadius: 'var(--ui-border-radius)', 
-              border: '1px solid var(--ui-base-600)' 
-            }}>
-              <div style={{ 
-                fontSize: '0.75rem', 
-                color: 'var(--ui-base-600)', 
-                marginBottom: '0.5rem', 
-                fontFamily: 'monospace' 
-              }}>
-                &lt;div data-scope="{scope}"&gt;
-              </div>
-              
-              <div 
-                data-scope={scope}
-                className="one"
-                style={{ margin: '1rem 0' }}
-              >
-                <div className="one">
-                  {scope === 'eyebrow' && 'Sample Eyebrow Text'}
-                  {scope === 'title' && 'Sample Title Text'}
-                  {scope === 'description' && 'Sample description text content for testing the base scope styling.'}
-                  {!['eyebrow', 'title', 'description'].includes(scope) && `Sample ${scope} content for testing`}
-                </div>
-              </div>
-              
-              <div style={{ 
-                fontSize: '0.75rem', 
-                color: 'var(--ui-base-600)', 
-                fontFamily: 'monospace' 
-              }}>
-                &lt;/div&gt;
-              </div>
-            </div>
+      {/* Live Preview */}
+      <div className="scope-preview">
+        <div className="scope-preview-title">Live Preview</div>
+        
+        <div style={{ 
+          background: 'var(--ui-neutral-50)', 
+          padding: '1.5rem', 
+          borderRadius: 'var(--ui-border-radius)', 
+          border: '1px solid var(--ui-base-600)' 
+        }}>
+          <div style={{ 
+            fontSize: '0.75rem', 
+            color: 'var(--ui-base-600)', 
+            marginBottom: '0.5rem', 
+            fontFamily: 'monospace' 
+          }}>
+            &lt;div data-scope="{scope}" class="one"&gt;
           </div>
-        </>
-      )}
+          
+          <div 
+            data-scope={scope}
+            className="one"
+            style={{ margin: '1rem 0' }}
+          >
+            Sample {scope} content for testing your styling
+          </div>
+          
+          <div style={{ 
+            fontSize: '0.75rem', 
+            color: 'var(--ui-base-600)', 
+            fontFamily: 'monospace' 
+          }}>
+            &lt;/div&gt;
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

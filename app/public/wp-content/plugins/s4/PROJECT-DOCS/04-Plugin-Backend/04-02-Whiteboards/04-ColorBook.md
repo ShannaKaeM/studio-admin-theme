@@ -17,26 +17,21 @@
 ## **CORE SCOPES THAT NEED PRESET COLORS**
 
 ### **Typography Scopes**
-- `eyebrow`  (already exists)
-- `title`  (already exists) 
-- `subtitle`  (already exists)
+- `pretitle`
+- `title` 
+- `subtitle` 
+- `description`
 - `body-text`
 - `caption`
 - `label`
-- `link`
 - `code`
+- `quote`
+- `helper`
 
-### **Interactive Elements**
-- `button-primary`
-- `button-secondary` 
-- `button-tertiary`
-- `button-ghost`
-- `button-danger`
-- `link-primary`
-- `link-secondary`
+- `button`
+- `link`
 
 ### **Layout & Container Scopes**
-- `container`
 - `card`
 - `panel`
 - `sidebar`
@@ -120,4 +115,4 @@
 **Option B**: Build preset system with existing 3 scopes, add more scopes later
 **Option C**: Create just essential scopes (buttons, containers, forms) then preset system
 
-**Your call on direction!** <¯
+**Your call on direction!** <ï¿½
