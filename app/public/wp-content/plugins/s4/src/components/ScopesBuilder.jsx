@@ -66,6 +66,7 @@ export function ScopesBuilder() {
       { key: 'color4', label: 'Base', default: 'var(--color4-100)' }
     ];
 
+    console.log('Color variations available:', colorVariations);
     const options = [];
 
     coreColors.forEach(coreColor => {
@@ -327,6 +328,7 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
 
   const addNewProperty = () => {
     if (selectedProperty && selectedValue) {
+      console.log('Adding property:', selectedProperty, '=', selectedValue);
       onPropertyChange(selectedProperty, selectedValue);
       setSelectedProperty('');
       setSelectedValue('');
@@ -373,7 +375,11 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
               {availableValues.map(item => {
                 // Handle both object format (colors) and string format (other values)
                 if (typeof item === 'object') {
-                  return <option key={item.value} value={item.value}>{item.label}</option>;
+                  return (
+                    <option key={item.value} value={item.value}>
+                      {item.label} ({item.value})
+                    </option>
+                  );
                 } else {
                   return <option key={item} value={item}>{item}</option>;
                 }

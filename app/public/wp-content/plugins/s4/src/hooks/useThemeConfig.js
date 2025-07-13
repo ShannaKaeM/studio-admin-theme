@@ -8,115 +8,83 @@ const defaultConfig = {
     description: "Revolutionary unified element system with ultimate flexibility"
   },
   colors: {
-    brand: {
-      color1: {
-        50: "hsl(337, 35%, 95%)",
-        100: "hsl(337, 35%, 90%)",
-        200: "hsl(337, 35%, 80%)",
-        300: "hsl(337, 35%, 70%)",
-        400: "hsl(337, 35%, 60%)",
-        500: "hsl(337, 35%, 52%)",
-        600: "hsl(337, 35%, 45%)",
-        700: "hsl(337, 35%, 35%)",
-        800: "hsl(337, 35%, 25%)",
-        900: "hsl(337, 35%, 15%)",
-        950: "hsl(337, 35%, 8%)"
-      },
-      color2: {
-        50: "hsl(29, 44%, 95%)",
-        100: "hsl(29, 44%, 90%)",
-        200: "hsl(29, 44%, 80%)",
-        300: "hsl(29, 44%, 70%)",
-        400: "hsl(29, 44%, 60%)",
-        500: "hsl(29, 44%, 53%)",
-        600: "hsl(29, 44%, 45%)",
-        700: "hsl(29, 44%, 35%)",
-        800: "hsl(29, 44%, 25%)",
-        900: "hsl(29, 44%, 15%)",
-        950: "hsl(29, 44%, 8%)"
-      },
-      color3: {
-        50: "hsl(0, 0%, 97%)",
-        100: "hsl(0, 0%, 93%)",
-        200: "hsl(0, 0%, 85%)",
-        300: "hsl(0, 0%, 73%)",
-        400: "hsl(0, 0%, 58%)",
-        500: "hsl(0, 0%, 46%)",
-        600: "hsl(0, 0%, 36%)",
-        700: "hsl(0, 0%, 28%)",
-        800: "hsl(0, 0%, 18%)",
-        900: "hsl(0, 0%, 11%)",
-        950: "hsl(0, 0%, 4%)"
-      },
-      color4: {
-        50: "hsl(0, 0%, 100%)",
-        100: "hsl(0, 0%, 98%)",
-        200: "hsl(0, 0%, 95%)",
-        300: "hsl(0, 0%, 90%)",
-        400: "hsl(0, 0%, 80%)",
-        500: "hsl(0, 0%, 70%)",
-        600: "hsl(0, 0%, 60%)",
-        700: "hsl(0, 0%, 50%)",
-        800: "hsl(0, 0%, 40%)",
-        900: "hsl(0, 0%, 20%)",
-        950: "hsl(0, 0%, 10%)"
-      }
+    // Grayscale foundation - single base color system
+    grayscale: {
+      50: "hsl(0, 0%, 97%)",
+      100: "hsl(0, 0%, 93%)",
+      200: "hsl(0, 0%, 85%)",
+      300: "hsl(0, 0%, 73%)",
+      400: "hsl(0, 0%, 58%)",
+      500: "hsl(0, 0%, 50%)",  // Base foundation color
+      600: "hsl(0, 0%, 42%)",
+      700: "hsl(0, 0%, 35%)",
+      800: "hsl(0, 0%, 25%)",
+      900: "hsl(0, 0%, 15%)",
+      950: "hsl(0, 0%, 8%)"
+    }
+  },
+  // Color Book - HSLA adjustment system
+  colorBook: {
+    baseColor: "hsl(0, 0%, 50%)",  // Single foundation color
+    presets: {
+      // Color presets will be defined here
+      // Each preset modifies H/S/L/A of the base color
     }
   },
   components: {
-    // Studio1 components using .one element system with --one- variables
+    // Studio1 components using .one element system with grayscale foundation
     "theme-builder": {
-      "--one-background": "var(--color3-950)",
-      "--one-border": "1px solid var(--color3-800)",
+      "--one-background": "var(--grayscale-950)",
+      "--one-border": "1px solid var(--grayscale-800)",
       "--one-padding": "1.5rem",
-      "--one-color": "var(--color4-100)"
+      "--one-color": "var(--grayscale-100)"
     },
     "nav-tab": {
-      "--one-background": "var(--color3-900)",
-      "--one-border": "1px solid var(--color3-700)",
+      "--one-background": "var(--grayscale-900)",
+      "--one-border": "1px solid var(--grayscale-700)",
       "--one-padding": "0.75rem 1rem",
-      "--one-color": "var(--color4-300)",
+      "--one-color": "var(--grayscale-300)",
       "--one-font-weight": "500"
     },
     "nav-tab-active": {
-      "--one-background": "var(--color1-500)",
-      "--one-color": "var(--color4-50)",
-      "--one-border": "1px solid var(--color1-400)"
+      "--one-background": "var(--grayscale-500)",  // Will be modified by Color Book presets
+      "--one-color": "var(--grayscale-50)",
+      "--one-border": "1px solid var(--grayscale-600)"
     },
     "color-card": {
-      "--one-background": "var(--color3-900)",
-      "--one-border": "1px solid var(--color3-700)",
+      "--one-background": "var(--grayscale-900)",
+      "--one-border": "1px solid var(--grayscale-700)",
       "--one-padding": "1rem",
       "--one-border-radius": "0.5rem",
-      "--one-color": "var(--color4-200)"
+      "--one-color": "var(--grayscale-200)"
     },
     "input-field": {
-      "--one-background": "var(--color3-800)",
-      "--one-border": "1px solid var(--color3-600)",
+      "--one-background": "var(--grayscale-800)",
+      "--one-border": "1px solid var(--grayscale-600)",
       "--one-padding": "0.5rem 0.75rem",
       "--one-border-radius": "0.25rem",
-      "--one-color": "var(--color4-100)",
+      "--one-color": "var(--grayscale-100)",
       "--one-font-size": "0.875rem"
     },
     "button-primary": {
-      "--one-background": "var(--color1-500)",
-      "--one-border": "1px solid var(--color1-400)",
+      "--one-background": "var(--grayscale-500)",  // Will be modified by Color Book presets
+      "--one-border": "1px solid var(--grayscale-600)",
       "--one-padding": "0.75rem 1.5rem",
       "--one-border-radius": "0.375rem",
-      "--one-color": "var(--color4-50)",
+      "--one-color": "var(--grayscale-50)",
       "--one-font-weight": "600"
     },
     "button-secondary": {
-      "--one-background": "var(--color3-700)",
-      "--one-border": "1px solid var(--color3-600)",
+      "--one-background": "var(--grayscale-700)",
+      "--one-border": "1px solid var(--grayscale-600)",
       "--one-padding": "0.75rem 1.5rem",
       "--one-border-radius": "0.375rem",
-      "--one-color": "var(--color4-200)",
+      "--one-color": "var(--grayscale-200)",
       "--one-font-weight": "500"
     }
   },
   scopes: {
-    // Individual scopes with styling baked in
+    // Individual scopes with grayscale foundation - Color Book will modify these
     "eyebrow": {
       baseProperties: {
         "--one-display": "block",
@@ -124,7 +92,7 @@ const defaultConfig = {
         "--one-font-size": "0.875rem",
         "--one-font-weight": "500",
         "--one-line-height": "1.3",
-        "--one-color": "var(--color3-800)",
+        "--one-color": "var(--grayscale-800)",  // Will be modified by Color Book
         "--one-text-transform": "uppercase",
         "--one-letter-spacing": "0.05em",
         "--one-margin": "0",
@@ -138,7 +106,7 @@ const defaultConfig = {
         "--one-font-size": "2.5rem",
         "--one-font-weight": "700",
         "--one-line-height": "1.1",
-        "--one-color": "var(--color3-800)",
+        "--one-color": "var(--grayscale-800)",  // Will be modified by Color Book
         "--one-margin": "0",
         "--one-margin-bottom": "1rem"
       }
@@ -150,17 +118,11 @@ const defaultConfig = {
         "--one-font-size": "1.125rem",
         "--one-font-weight": "400",
         "--one-line-height": "1.5",
-        "--one-color": "var(--color3-800)",
+        "--one-color": "var(--grayscale-800)",  // Will be modified by Color Book
         "--one-margin": "0",
         "--one-margin-bottom": "1rem"
       }
     }
-  },
-  colorVariations: {
-    // Custom color variations will be saved here
-    // color1: { "Dark Primary": "hsl(337, 35%, 35%)", "Light Primary": "hsl(337, 35%, 70%)" }
-    // color2: { "Dark Secondary": "hsl(29, 44%, 35%)" }
-    // etc.
   }
 };
 
@@ -210,25 +172,21 @@ export function useThemeConfig() {
   const cssVariables = useMemo(() => {
     const variables = {};
     
-    // Color variables - convert to Studio1 naming convention
-    Object.entries(config.colors.brand).forEach(([colorName, scale]) => {
-      Object.entries(scale).forEach(([weight, value]) => {
-        variables[`--${colorName}-${weight}`] = value;
-      });
-    });
-
-    // Custom color variations - inject as CSS custom properties
-    Object.entries(config.colorVariations || {}).forEach(([coreColor, variations]) => {
-      Object.entries(variations).forEach(([variationName, variationValue]) => {
-        // Convert variation name to CSS-friendly format
-        // "Primary Dark" → "primary-dark"
-        const cssName = variationName.toLowerCase().replace(/\s+/g, '-');
-        variables[`--${coreColor}-${cssName}`] = variationValue;
-      });
+    // Grayscale foundation variables
+    Object.entries(config.colors.grayscale || {}).forEach(([weight, value]) => {
+      variables[`--grayscale-${weight}`] = value;
     });
     
+    // Color Book base color
+    if (config.colorBook?.baseColor) {
+      variables[`--base-color`] = config.colorBook.baseColor;
+    }
+
+    // Color Book presets - will be implemented here
+    // TODO: Add Color Book preset system
+    
     return variables;
-  }, [config.colors, config.colorVariations]);
+  }, [config.colors, config.colorBook]);
 
   // Apply CSS variables and component styles to document
   useEffect(() => {
@@ -308,14 +266,14 @@ export function useThemeConfig() {
     return component[variant] || component;
   };
 
-  const updateColorScale = (colorName, newScale) => {
+  const updateGrayscaleColor = (weight, newColor) => {
     setConfig(prev => ({
       ...prev,
       colors: {
         ...prev.colors,
-        brand: {
-          ...prev.colors.brand,
-          [colorName]: newScale
+        grayscale: {
+          ...prev.colors.grayscale,
+          [weight]: newColor
         }
       }
     }));
@@ -368,48 +326,41 @@ export function useThemeConfig() {
     });
   };
 
-  const createColorVariation = (coreColor, variationName, hslValue) => {
+  // Color Book functions
+  const updateBaseColor = (newBaseColor) => {
     setConfig(prev => ({
       ...prev,
-      colorVariations: {
-        ...prev.colorVariations,
-        [coreColor]: {
-          ...(prev.colorVariations?.[coreColor] || {}),
-          [variationName]: hslValue
+      colorBook: {
+        ...prev.colorBook,
+        baseColor: newBaseColor
+      }
+    }));
+  };
+
+  const createColorPreset = (presetName, hslaAdjustments) => {
+    setConfig(prev => ({
+      ...prev,
+      colorBook: {
+        ...prev.colorBook,
+        presets: {
+          ...prev.colorBook.presets,
+          [presetName]: hslaAdjustments
         }
       }
     }));
   };
 
-  const updateColorVariations = (coreColor, variations) => {
+  const deleteColorPreset = (presetName) => {
     setConfig(prev => ({
       ...prev,
-      colorVariations: {
-        ...(prev.colorVariations || {}),
-        [coreColor]: variations
-      }
-    }));
-  };
-
-  const deleteColorVariation = (coreColor, variationName) => {
-    setConfig(prev => ({
-      ...prev,
-      colorVariations: {
-        ...(prev.colorVariations || {}),
-        [coreColor]: Object.fromEntries(
-          Object.entries(prev.colorVariations?.[coreColor] || {})
-            .filter(([name]) => name !== variationName)
+      colorBook: {
+        ...prev.colorBook,
+        presets: Object.fromEntries(
+          Object.entries(prev.colorBook.presets || {})
+            .filter(([name]) => name !== presetName)
         )
       }
     }));
-  };
-
-  const updateBaseColors = (newBaseColors) => {
-    // Only inject base colors directly into CSS - don't touch the existing scales
-    document.documentElement.style.setProperty('--color1', newBaseColors.color1);
-    document.documentElement.style.setProperty('--color2', newBaseColors.color2);
-    document.documentElement.style.setProperty('--color3', newBaseColors.color3);
-    document.documentElement.style.setProperty('--color4', newBaseColors.color4);
   };
 
 
@@ -463,15 +414,15 @@ export function useThemeConfig() {
     cssVariables,
     customOverrides,
     getComponentStyles,
-    updateColorScale,
+    updateGrayscaleColor,
     updateComponent,
     updateScopeBaseProperties,
     createNewScope,
     deleteScope,
-    createColorVariation,
-    updateColorVariations,
-    deleteColorVariation,
-    updateBaseColors,
+    // Color Book functions
+    updateBaseColor,
+    createColorPreset,
+    deleteColorPreset,
     addCustomOverride,
     removeCustomOverride,
     exportConfig,

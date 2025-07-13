@@ -93,7 +93,20 @@ export function BaseColorEditor() {
       color4: `hsl(${hue4}, ${saturation4}%, ${lightness4}%)`
     };
     
+    console.log('Saving base colors:', newBaseColors);
     updateBaseColors(newBaseColors);
+    
+    // Verify the colors were applied
+    setTimeout(() => {
+      const applied = {
+        color1: getComputedStyle(document.documentElement).getPropertyValue('--color1'),
+        color2: getComputedStyle(document.documentElement).getPropertyValue('--color2'),
+        color3: getComputedStyle(document.documentElement).getPropertyValue('--color3'),
+        color4: getComputedStyle(document.documentElement).getPropertyValue('--color4')
+      };
+      console.log('Applied colors:', applied);
+    }, 100);
+    
     alert('Base colors updated! All components will inherit these new colors.');
   };
 
@@ -169,7 +182,11 @@ function ColorEditor({ number, label, description, hue, saturation, lightness, s
         <div className="color-editor-preview">
           <div 
             className="color-editor-swatch" 
-            style={{ background: currentColor }}
+            style={{ 
+              background: currentColor,
+              minWidth: '120px',
+              minHeight: '120px'
+            }}
           ></div>
           <div className="color-editor-variable">
             --{number}
@@ -238,6 +255,16 @@ function ColorEditor({ number, label, description, hue, saturation, lightness, s
           {/* Current Values */}
           <div className="color-editor-value">
             {currentColor}
+          </div>
+          
+          {/* Debug info */}
+          <div style={{ 
+            fontSize: '0.75rem', 
+            color: 'var(--ui-neutral-400)', 
+            marginTop: '0.5rem',
+            fontFamily: 'monospace'
+          }}>
+            Debug: H{hue} S{saturation}% L{lightness}%
           </div>
         </div>
       </div>
