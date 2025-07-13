@@ -6,7 +6,7 @@ const CSS_PROPERTIES = {
   typography: [
     '--one-font-family', '--one-font-size', '--one-font-weight', '--one-line-height',
     '--one-letter-spacing', '--one-text-align', '--one-text-transform', '--one-text-decoration',
-    '--one-color'
+    '--one-color', '--one-caret-color'
   ],
   layout: [
     '--one-display', '--one-position', '--one-width', '--one-height', '--one-max-width',
@@ -18,21 +18,65 @@ const CSS_PROPERTIES = {
     '--one-padding', '--one-padding-top', '--one-padding-right', '--one-padding-bottom', '--one-padding-left'
   ],
   appearance: [
-    '--one-background', '--one-border', '--one-border-color', '--one-border-radius', '--one-box-shadow',
+    '--one-background-color', '--one-border', '--one-border-color', '--one-outline-color', '--one-border-radius', '--one-box-shadow',
     '--one-opacity', '--one-transform', '--one-transition'
+  ],
+  svg: [
+    '--one-fill', '--one-stroke', '--one-stroke-width'
+  ],
+  interaction: [
+    '--one-cursor', '--one-user-select', '--one-pointer-events', '--one-accent-color'
   ]
 };
 
-const getCommonValues = (property, buildColorOptions) => {
+const getCommonValues = (property) => {
   const staticValues = {
-    '--one-font-size': ['0.75rem', '0.875rem', '1rem', '1.125rem', '1.25rem', '1.5rem', '2rem', '2.5rem', '3rem'],
-    '--one-font-weight': ['300', '400', '500', '600', '700', '800'],
-    '--one-line-height': ['1', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6'],
+    // Typography values
+    '--one-font-size': ['0.75rem', '0.875rem', '1rem', '1.125rem', '1.25rem', '1.5rem', '1.75rem', '2rem', '2.25rem', '2.5rem', '3rem', '3.5rem', '4rem'],
+    '--one-font-weight': ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+    '--one-line-height': ['1', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.75', '2'],
+    '--one-letter-spacing': ['normal', '-0.05em', '-0.025em', '0', '0.025em', '0.05em', '0.1em', '0.15em'],
     '--one-text-transform': ['none', 'uppercase', 'lowercase', 'capitalize'],
-    '--one-display': ['block', 'flex', 'grid', 'inline', 'inline-block', 'none'],
-    '--one-flex-direction': ['row', 'column', 'row-reverse', 'column-reverse'],
-    '--one-justify-content': ['flex-start', 'center', 'flex-end', 'space-between', 'space-around'],
-    '--one-align-items': ['flex-start', 'center', 'flex-end', 'stretch']
+    '--one-text-align': ['left', 'center', 'right', 'justify'],
+    '--one-font-style': ['normal', 'italic', 'oblique'],
+    
+    // Layout values
+    '--one-display': ['block', 'inline', 'inline-block', 'flex', 'inline-flex', 'grid', 'inline-grid', 'none'],
+    '--one-position': ['static', 'relative', 'absolute', 'fixed', 'sticky'],
+    '--one-overflow': ['visible', 'hidden', 'scroll', 'auto'],
+    '--one-visibility': ['visible', 'hidden', 'collapse'],
+    
+    // Spacing values
+    '--one-padding': ['0', '0.25rem', '0.5rem', '0.75rem', '1rem', '1.25rem', '1.5rem', '2rem', '2.5rem', '3rem'],
+    '--one-margin': ['0', 'auto', '0.25rem', '0.5rem', '0.75rem', '1rem', '1.25rem', '1.5rem', '2rem', '2.5rem', '3rem'],
+    '--one-gap': ['0', '0.25rem', '0.5rem', '0.75rem', '1rem', '1.25rem', '1.5rem', '2rem', '2.5rem', '3rem'],
+    
+    // Flexbox values
+    '--one-flex-direction': ['row', 'row-reverse', 'column', 'column-reverse'],
+    '--one-flex-wrap': ['nowrap', 'wrap', 'wrap-reverse'],
+    '--one-justify-content': ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly'],
+    '--one-align-items': ['stretch', 'flex-start', 'flex-end', 'center', 'baseline'],
+    '--one-align-content': ['stretch', 'flex-start', 'flex-end', 'center', 'space-between', 'space-around'],
+    
+    // Grid values
+    '--one-grid-template-columns': ['1fr', '1fr 1fr', '1fr 1fr 1fr', '1fr 2fr', '2fr 1fr', 'repeat(auto-fit, minmax(200px, 1fr))', 'repeat(auto-fill, minmax(150px, 1fr))'],
+    '--one-grid-template-rows': ['auto', '1fr', '1fr 1fr', 'repeat(3, 1fr)', 'repeat(auto, minmax(100px, auto))'],
+    '--one-justify-items': ['stretch', 'start', 'end', 'center'],
+    '--one-place-items': ['stretch', 'start', 'end', 'center'],
+    
+    // Border values
+    '--one-border-style': ['none', 'solid', 'dashed', 'dotted', 'double', 'groove', 'ridge'],
+    '--one-border-width': ['0', '1px', '2px', '3px', '4px', '5px'],
+    '--one-border-radius': ['0', '0.125rem', '0.25rem', '0.375rem', '0.5rem', '0.75rem', '1rem', '1.5rem', '50%'],
+    
+    // Common sizing values
+    '--one-width': ['auto', '100%', '50%', '33.333%', '25%', '20%', '16.667%', 'fit-content', 'max-content', 'min-content'],
+    '--one-height': ['auto', '100%', '100vh', '50vh', 'fit-content', 'max-content', 'min-content'],
+    '--one-max-width': ['none', '100%', '20rem', '24rem', '28rem', '32rem', '36rem', '42rem', '48rem', '56rem', '64rem', '72rem'],
+    
+    // Effects values
+    '--one-opacity': ['0', '0.25', '0.5', '0.75', '1'],
+    '--one-cursor': ['auto', 'default', 'pointer', 'text', 'not-allowed', 'grab', 'grabbing']
   };
 
   // Return static values for non-color properties
@@ -40,11 +84,7 @@ const getCommonValues = (property, buildColorOptions) => {
     return staticValues[property];
   }
 
-  // Return dynamic color options for color properties
-  if (property === '--one-color' || property === '--one-background' || property === '--one-border-color') {
-    return buildColorOptions(property);
-  }
-
+  // Color properties will use text inputs (no dropdowns)
   return null;
 };
 
@@ -79,6 +119,8 @@ export function ScopesBuilder() {
     grid: false,
     background: false,
     border: false,
+    appearance: false,
+    svg: false,
     effects: false,
     interaction: false
   });
@@ -227,33 +269,6 @@ export function ScopesBuilder() {
     return allProps[category] || [];
   };
 
-  // Build dynamic color options from color variations only
-  const buildColorOptions = (propertyType) => {
-    console.log('Color variations available:', colorVariations);
-    const options = [];
-
-    // Add any color variations from Color Creator (if they exist)
-    Object.entries(colorVariations).forEach(([colorKey, variations]) => {
-      Object.entries(variations).forEach(([varName, varColor]) => {
-        options.push({
-          label: `Custom: ${varName}`,
-          value: varColor,
-          group: 'Custom Colors'
-        });
-      });
-    });
-
-    // Add special options for certain properties
-    if (propertyType === '--one-background') {
-      options.push({
-        label: 'Transparent',
-        value: 'transparent',
-        group: 'Special'
-      });
-    }
-
-    return options;
-  };
 
   // Collection Management Functions
   const handleCreateCollection = () => {
@@ -324,31 +339,7 @@ export function ScopesBuilder() {
     }
   };
 
-  const getPresetProperties = (preset) => {
-    const presets = {
-      text: {
-        '--one-font-size': '1rem',
-        '--one-line-height': '1.5',
-        '--one-margin': '0'
-      },
-      button: {
-        '--one-display': 'inline-flex',
-        '--one-align-items': 'center',
-        '--one-justify-content': 'center',
-        '--one-padding': '0.75rem 1.5rem',
-        '--one-border-radius': '0.375rem',
-        '--one-cursor': 'pointer',
-        '--one-font-weight': '500'
-      },
-      layout: {
-        '--one-display': 'flex',
-        '--one-flex-direction': 'column',
-        '--one-gap': '1rem',
-        '--one-padding': '1rem'
-      }
-    };
-    return presets[preset] || {};
-  };
+  // Removed legacy preset system - users create 1Blocks with complete creative freedom
 
   return (
     <div className="dashboard-layout">
@@ -465,6 +456,8 @@ export function ScopesBuilder() {
               { key: 'grid', icon: '⚏', label: 'Grid' },
               { key: 'background', icon: '🖼️', label: 'Background' },
               { key: 'border', icon: '⬜', label: 'Border' },
+              { key: 'appearance', icon: '🎨', label: 'Appearance' },
+              { key: 'svg', icon: '🖼️', label: 'SVG & Graphics' },
               { key: 'effects', icon: '✨', label: 'Effects' },
               { key: 'interaction', icon: '👆', label: 'Interaction' }
             ].map(({ key, icon, label }) => (
@@ -478,27 +471,61 @@ export function ScopesBuilder() {
                 </button>
                 {expandedCategories[key] && (
                   <div className="accordion-content">
-                    {getBasicProperties(key).map(prop => (
-                      <div key={prop} className="property-item">
-                        <label>{prop}</label>
-                        <input 
-                          type="text" 
-                          placeholder="Enter value..." 
-                          value={currentBaseProperties[prop] || ''}
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              const updatedProperties = { ...currentBaseProperties, [prop]: e.target.value };
-                              updateScopeBaseProperties(selectedScope, updatedProperties);
-                            } else {
-                              const updatedProperties = { ...currentBaseProperties };
-                              delete updatedProperties[prop];
-                              updateScopeBaseProperties(selectedScope, updatedProperties);
-                            }
-                          }}
-                          className="property-value-input"
-                        />
-                      </div>
-                    ))}
+                    {getBasicProperties(key).map(prop => {
+                      const availableValues = getCommonValues(prop);
+                      return (
+                        <div key={prop} className="property-item">
+                          <label>{prop.replace('--one-', '')}</label>
+                          {availableValues ? (
+                            <select
+                              value={currentBaseProperties[prop] || ''}
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  const updatedProperties = { ...currentBaseProperties, [prop]: e.target.value };
+                                  updateScopeBaseProperties(selectedScope, updatedProperties);
+                                } else {
+                                  const updatedProperties = { ...currentBaseProperties };
+                                  delete updatedProperties[prop];
+                                  updateScopeBaseProperties(selectedScope, updatedProperties);
+                                }
+                              }}
+                              className="property-value-select"
+                            >
+                              <option value="">Default</option>
+                              {availableValues.map(item => {
+                                // Handle both object format (colors) and string format (other values)
+                                if (typeof item === 'object') {
+                                  return (
+                                    <option key={item.value} value={item.value}>
+                                      {item.label}
+                                    </option>
+                                  );
+                                } else {
+                                  return <option key={item} value={item}>{item}</option>;
+                                }
+                              })}
+                            </select>
+                          ) : (
+                            <input 
+                              type="text" 
+                              placeholder="Enter value..." 
+                              value={currentBaseProperties[prop] || ''}
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  const updatedProperties = { ...currentBaseProperties, [prop]: e.target.value };
+                                  updateScopeBaseProperties(selectedScope, updatedProperties);
+                                } else {
+                                  const updatedProperties = { ...currentBaseProperties };
+                                  delete updatedProperties[prop];
+                                  updateScopeBaseProperties(selectedScope, updatedProperties);
+                                }
+                              }}
+                              className="property-value-input"
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -654,7 +681,7 @@ function ScopesTab({ scopes, selectedScope, setSelectedScope, onCreateNewScope, 
 }
 
 // Scope Editor Component
-function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove, buildColorOptions }) {
+function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBasePropertyRemove }) {
   return (
     <div>
       <div style={{ marginBottom: '1.5rem' }}>
@@ -681,7 +708,6 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
         onPropertyChange={onBasePropertyChange}
         onPropertyRemove={onBasePropertyRemove}
         addButtonText="Add Property"
-        buildColorOptions={buildColorOptions}
       />
 
       {/* Live Preview */}
@@ -725,7 +751,7 @@ function ScopeEditor({ scope, baseProperties, onBasePropertyChange, onBaseProper
 }
 
 // Property Editor Component
-function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove, addButtonText, buildColorOptions }) {
+function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove, addButtonText }) {
   const [selectedCategory, setSelectedCategory] = useState('typography');
   const [selectedProperty, setSelectedProperty] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
@@ -768,7 +794,7 @@ function PropertyEditor({ title, properties, onPropertyChange, onPropertyRemove,
         </select>
 
         {(() => {
-          const availableValues = getCommonValues(selectedProperty, buildColorOptions);
+          const availableValues = getCommonValues(selectedProperty);
           return availableValues ? (
             <select
               value={selectedValue}
@@ -909,7 +935,7 @@ function BaseElementMessage({ scope }) {
 }
 
 // Base Editor Inline Component
-function BaseEditorInline({ textBaseProperties = {}, updateScopeBaseProperties, buildColorOptions }) {
+function BaseEditorInline({ textBaseProperties = {}, updateScopeBaseProperties }) {
   const safeTextBaseProperties = textBaseProperties || {};
   
   return (
@@ -951,7 +977,6 @@ function BaseEditorInline({ textBaseProperties = {}, updateScopeBaseProperties, 
           updateScopeBaseProperties('text', updatedProperties);
         }}
         addButtonText="Add Base Property"
-        buildColorOptions={buildColorOptions}
       />
     </div>
   );

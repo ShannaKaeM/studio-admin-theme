@@ -1,43 +1,38 @@
 import { create } from 'zustand';
 
-// Studio1 Store - Clean V2.0 State Management
+/**
+ * Studio1 Store - UI State + WordPress Integration Only
+ * 
+ * PURPOSE: UI state management + WordPress backend integration
+ * SCOPE: Tab navigation, loading states, WordPress config data
+ * SEPARATION: Works independently of useThemeConfig (user content management)
+ * 
+ * Uses Zustand for Daniel's R2WC boilerplate compatibility
+ */
 export const useStudio1Store = create((set, get) => ({
-  // Configuration state
-  config: {
-    brand: {
-      color1: 'hsl(337, 35%, 52%)',
-      color2: 'hsl(29, 44%, 53%)',
-      color3: 'hsl(0, 0%, 50%)',
-      color4: 'hsl(0, 0%, 70%)'
-    },
-    theme: 'dark',
-    typography: {
-      'font-family': 'system-ui, -apple-system, sans-serif'
-    }
-  },
-  
-  // UI state
+  // UI state for future tab system
+  activeTab: 'scopes', // Default to scopes (current single page)
   isLoaded: false,
-  activeTab: 'dashboard',
+  
+  // WordPress integration config (received from WP backend)
+  wpConfig: {},
   
   // Actions
   initializeStore: (wpConfig) => {
-    set((state) => ({
-      config: { ...state.config, ...wpConfig },
-      isLoaded: true
-    }));
-  },
-  
-  updateConfig: (newConfig) => {
-    set((state) => ({
-      config: { ...state.config, ...newConfig }
-    }));
+    set({ 
+      wpConfig: wpConfig || {},
+      isLoaded: true 
+    });
   },
   
   setActiveTab: (tab) => {
     set({ activeTab: tab });
   },
   
-  // Get current config
-  getConfig: () => get().config
+  // Get WordPress config for integration purposes
+  getWpConfig: () => get().wpConfig,
+  
+  // Get current UI state
+  getActiveTab: () => get().activeTab,
+  getIsLoaded: () => get().isLoaded
 }));

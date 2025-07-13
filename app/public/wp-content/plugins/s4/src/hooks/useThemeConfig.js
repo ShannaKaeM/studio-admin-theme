@@ -20,6 +20,11 @@ const defaultConfig = {
 
 /**
  * Custom hook for managing Studio1 theme configuration
+ * 
+ * PURPOSE: User content management (scopes, components, export/import)
+ * SCOPE: User-created 1Blocks, localStorage persistence, CSS injection
+ * SEPARATION: Works independently of useStudio1Store (UI + WordPress integration)
+ * 
  * Integrates with CSS custom properties and .one element system
  */
 export function useThemeConfig() {

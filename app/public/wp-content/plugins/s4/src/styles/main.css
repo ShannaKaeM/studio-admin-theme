@@ -43,7 +43,6 @@
     --one-font-variant: normal;
     --one-line-height: 1.4;
     --one-letter-spacing: 0;
-    --one-color: hsla(0, 0%, 10%, 1);
     --one-text-align: left;
     --one-text-transform: none;
     --one-text-decoration: none;
@@ -51,25 +50,33 @@
     --one-white-space: normal;
     --one-text-overflow: ellipsis;
     --one-vertical-align: baseline;
+    --one-color: hsl(0, 0%, 20%);
+    --one-caret-color: hsl(0, 0%, 20%);
 
     /* === BACKGROUND === */
-    --one-background: hsla(0, 0%, 90%, 1);
     --one-background-image: none;
     --one-background-size: cover;
     --one-background-position: center;
     --one-background-repeat: no-repeat;
     --one-background-attachment: scroll;
+    --one-background-color: hsl(0, 0%, 90%);
 
     /* === BORDER === */
     --one-border: none;
     --one-border-width: 0;
     --one-border-style: solid;
-    --one-border-color: hsla(0, 0%, 10%, 1);
     --one-border-radius: 0;
     --one-border-top: none;
     --one-border-right: none;
     --one-border-bottom: none;
     --one-border-left: none;
+    --one-border-color: hsl(0, 0%, 70%);
+    --one-outline-color: hsl(0, 0%, 70%);
+
+    /* === SVG & GRAPHICS === */
+    --one-fill: hsl(0, 0%, 20%);
+    --one-stroke: hsl(0, 0%, 70%);
+    --one-stroke-width: 1px;
 
     /* === SHADOW & EFFECTS === */
     --one-box-shadow: none;
@@ -113,6 +120,7 @@
     --one-user-select: auto;
     --one-pointer-events: auto;
     --one-touch-action: auto;
+    --one-accent-color: hsl(0, 0%, 20%);
 
     /* === ANIMATION === */
     --one-transition: none;
@@ -156,7 +164,6 @@
     font-variant: var(--one-font-variant);
     line-height: var(--one-line-height);
     letter-spacing: var(--one-letter-spacing);
-    color: var(--one-color);
     text-align: var(--one-text-align);
     text-transform: var(--one-text-transform);
     text-decoration: var(--one-text-decoration);
@@ -164,9 +171,11 @@
     white-space: var(--one-white-space);
     text-overflow: var(--one-text-overflow);
     vertical-align: var(--one-vertical-align);
+    color: var(--one-color);
+    caret-color: var(--one-caret-color);
     
     /* Background */
-    background: var(--one-background);
+    background: var(--one-background-color);
     background-image: var(--one-background-image);
     background-size: var(--one-background-size);
     background-position: var(--one-background-position);
@@ -178,11 +187,17 @@
     border-width: var(--one-border-width);
     border-style: var(--one-border-style);
     border-color: var(--one-border-color);
+    outline-color: var(--one-outline-color);
     border-radius: var(--one-border-radius);
     border-top: var(--one-border-top);
     border-right: var(--one-border-right);
     border-bottom: var(--one-border-bottom);
     border-left: var(--one-border-left);
+    
+    /* SVG & Graphics */
+    fill: var(--one-fill);
+    stroke: var(--one-stroke);
+    stroke-width: var(--one-stroke-width);
     
     /* Shadow & Effects */
     box-shadow: var(--one-box-shadow);
@@ -226,6 +241,7 @@
     user-select: var(--one-user-select);
     pointer-events: var(--one-pointer-events);
     touch-action: var(--one-touch-action);
+    accent-color: var(--one-accent-color);
     
     /* Animation */
     transition: var(--one-transition);

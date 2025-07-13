@@ -292,22 +292,13 @@ register_deactivation_hook(__FILE__, function() {
 
 // Activation hook
 register_activation_hook(__FILE__, function() {
-    // Set default configuration
-    $default_config = array(
+    // Set minimal configuration - NO DEFAULTS
+    $minimal_config = array(
         'version' => STUDIO1_VERSION,
-        'initialized' => true,
-        'brand' => array(
-            'color1' => 'hsl(337, 35%, 52%)',
-            'color2' => 'hsl(29, 44%, 53%)', 
-            'color3' => 'hsl(0, 0%, 46%)',
-            'color4' => 'hsl(0, 0%, 100%)'
-        ),
-        'typography' => array(
-            'font-family' => 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-        )
+        'initialized' => true
     );
     
-    add_option('studio1_theme_config', $default_config);
+    add_option('studio1_theme_config', $minimal_config);
 });
 
 // Deactivation hook

@@ -4,14 +4,14 @@ import { Studio1ThemeBuilder } from './components/Studio1ThemeBuilder';
 import uiComponentsCSS from './styles/ui-components.css?inline';
 
 export function ShadowApp({ isAdmin = false, isFrontend = false }) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const { initializeStore, config } = useStudio1Store();
+  const { initializeStore, getIsLoaded, getWpConfig } = useStudio1Store();
+  const isLoaded = getIsLoaded();
+  const wpConfig = getWpConfig();
   
   useEffect(() => {
     // Initialize the store with WordPress data
-    const wpConfig = window.studio1Config || {};
-    initializeStore(wpConfig);
-    setIsLoaded(true);
+    const config = window.studio1Config || {};
+    initializeStore(config);
   }, [initializeStore]);
   
   if (!isLoaded) {
@@ -23,7 +23,7 @@ export function ShadowApp({ isAdmin = false, isFrontend = false }) {
         '--one-justify-content': 'center'
       }}>
         <div className="one" style={{
-          '--one-color': 'var(--color4-300)',
+          '--one-color': 'var(--ui-muted-text)',
           '--one-font-size': '1rem'
         }}>
           Loading Studio1 Design System...
@@ -41,7 +41,7 @@ export function ShadowApp({ isAdmin = false, isFrontend = false }) {
     }}>
       {/* Inject CSS variables and UI components into shadow DOM */}
       <style>{uiComponentsCSS}</style>
-      <style>{generateCSSVariables(config)}</style>
+      <style>{generateCSSVariables(wpConfig)}</style>
       
       <Studio1ThemeBuilder isAdmin={isAdmin} isFrontend={isFrontend} />
       
@@ -51,24 +51,18 @@ export function ShadowApp({ isAdmin = false, isFrontend = false }) {
   );
 }
 
-function generateCSSVariables(config) {
-  if (!config) return '';
+function generateCSSVariables(wpConfig) {
+  if (!wpConfig || Object.keys(wpConfig).length === 0) return '';
   
   let css = ':host {\n';
   
-  // Brand colors
-  if (config.brand) {
-    Object.entries(config.brand).forEach(([key, value]) => {
-      css += `  --brand-${key}: ${value};\n`;
-    });
-  }
-  
-  // Typography
-  if (config.typography) {
-    Object.entries(config.typography).forEach(([key, value]) => {
-      css += `  --brand-${key}: ${value};\n`;
-    });
-  }
+  // Generate CSS variables from any WordPress config data
+  // This is for future WordPress integration - currently empty is fine
+  Object.entries(wpConfig).forEach(([key, value]) => {
+    if (typeof value === 'string') {
+      css += `  --wp-${key}: ${value};\n`;
+    }
+  });
   
   css += '}\n';
   return css;
