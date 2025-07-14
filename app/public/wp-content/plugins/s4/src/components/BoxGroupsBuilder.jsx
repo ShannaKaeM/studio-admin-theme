@@ -41,6 +41,9 @@ export function BoxGroupsBuilder() {
     appearance: false
   });
 
+  // Code view state
+  const [showCodeView, setShowCodeView] = useState(false);
+
   // Persist collections to localStorage
   useEffect(() => {
     try {
@@ -187,6 +190,85 @@ export function BoxGroupsBuilder() {
 
   const currentBoxGroup = boxGroups[selectedBoxGroup];
 
+  // Generate HTML/CSS code for selected box group
+  const generateCode = (boxGroup) => {
+    if (!boxGroup || !boxGroup.items || boxGroup.items.length === 0) {
+      return { html: '', css: '' };
+    }
+
+    // Helper to get scope properties
+    const getScopeProps = (scopeName) => {
+      const scope = config.scopes?.[scopeName];
+      return scope?.baseProperties || {};
+    };
+
+    // Generate CSS
+    const cssRules = [];
+    
+    // Add box group wrapper CSS
+    const wrapperProps = Object.entries(boxGroup.gridProperties)
+      .map(([prop, value]) => `  ${prop.replace('--one-', '')}: ${value};`)
+      .join('\n');
+    
+    if (wrapperProps) {
+      cssRules.push(`.${boxGroup.name} {\n${wrapperProps}\n}`);
+    }
+
+    // Add individual scope CSS
+    boxGroup.items.forEach(scopeName => {
+      const props = getScopeProps(scopeName);
+      const cssProps = Object.entries(props)
+        .map(([prop, value]) => `  ${prop.replace('--one-', '')}: ${value};`)
+        .join('\n');
+      
+      if (cssProps) {
+        cssRules.push(`.one[data-scope="${scopeName}"] {\n${cssProps}\n}`);
+      }
+    });
+
+    // Generate HTML with proper nesting
+    let html = '';
+    const hasCardBox = boxGroup.items.includes('card-box');
+    const hasImageBox = boxGroup.items.includes('image-box');
+    const hasContentBox = boxGroup.items.includes('content-box');
+    const hasTextBox = boxGroup.items.includes('text-box');
+    const hasButton = boxGroup.items.includes('button');
+
+    if (hasCardBox) {
+      html = `<div class="one ${boxGroup.name}" data-scope="card-box">`;
+      
+      if (hasImageBox) {
+        html += `\n  <div class="one" data-scope="image-box">\n    <!-- Image content -->\n  </div>`;
+      }
+      
+      if (hasContentBox) {
+        html += `\n  <div class="one" data-scope="content-box">`;
+        
+        if (hasTextBox) {
+          html += `\n    <div class="one" data-scope="text-box">\n      <h3>Card Title</h3>\n      <p>Card description text goes here.</p>\n    </div>`;
+        }
+        
+        if (hasButton) {
+          html += `\n    <div class="one" data-scope="button">Learn More</div>`;
+        }
+        
+        html += `\n  </div>`;
+      }
+      
+      html += `\n</div>`;
+    } else {
+      // Fallback: list all items
+      html = boxGroup.items.map(scopeName => 
+        `<div class="one" data-scope="${scopeName}"><!-- ${scopeName} content --></div>`
+      ).join('\n');
+    }
+
+    return {
+      html: html,
+      css: cssRules.join('\n\n')
+    };
+  };
+
   return (
     <div className="dashboard-layout">
       {/* Left Side Controls - 400px */}
@@ -283,7 +365,117 @@ export function BoxGroupsBuilder() {
         {/* Box Group Property Editor */}
         {selectedBoxGroup && showPropertyEditor && currentBoxGroup && (
           <div className="control-section property-editor">
-            <h3>✏️ Edit: {currentBoxGroup.name}</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3>✏️ Edit: {currentBoxGroup.name}</h3>
+              <button
+                onClick={() => setShowCodeView(!showCodeView)}
+                className="ui-button ui-button--secondary ui-button--small"
+                style={{ marginLeft: '1rem' }}
+              >
+                {showCodeView ? 'Hide Code' : '👁️ View Code'}
+              </button>
+            </div>
+
+            {/* Code View Panel */}
+            {showCodeView && (
+              <div className="control-section" style={{ 
+                marginBottom: '1rem',
+                backgroundColor: 'var(--ui-cards)',
+                border: '1px solid var(--ui-borders)',
+                borderRadius: '0.375rem'
+              }}>
+                <div style={{ 
+                  padding: '1rem 1.5rem', 
+                  borderBottom: '1px solid var(--ui-borders)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <h4 style={{ 
+                    margin: 0, 
+                    color: 'var(--ui-heading-text)',
+                    fontSize: '1rem',
+                    fontWeight: '600'
+                  }}>
+                    Generated Code
+                  </h4>
+                  <button
+                    onClick={() => {
+                      const code = generateCode(currentBoxGroup);
+                      const fullCode = `<!-- HTML -->\n${code.html}\n\n/* CSS */\n${code.css}`;
+                      navigator.clipboard.writeText(fullCode);
+                      alert('Code copied to clipboard!');
+                    }}
+                    className="ui-button ui-button--primary ui-button--small"
+                  >
+                    📋 Copy Code
+                  </button>
+                </div>
+                
+                {(() => {
+                  const generatedCode = generateCode(currentBoxGroup);
+                  return (
+                    <div style={{ padding: '1.5rem' }}>
+                      {/* HTML Section */}
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <h5 style={{ 
+                          margin: '0 0 0.75rem 0',
+                          color: 'var(--ui-heading-text)',
+                          fontSize: '0.875rem',
+                          fontWeight: '600',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
+                        }}>
+                          HTML
+                        </h5>
+                        <pre style={{
+                          backgroundColor: 'var(--ui-base-900)',
+                          color: '#e5e7eb',
+                          padding: '1rem',
+                          borderRadius: '0.25rem',
+                          fontSize: '0.8rem',
+                          lineHeight: '1.5',
+                          overflow: 'auto',
+                          margin: 0,
+                          border: '1px solid var(--ui-borders)',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {generatedCode.html || '<!-- No HTML generated - add 1Blocks to this box group -->'}
+                        </pre>
+                      </div>
+
+                      {/* CSS Section */}
+                      <div>
+                        <h5 style={{ 
+                          margin: '0 0 0.75rem 0',
+                          color: 'var(--ui-heading-text)',
+                          fontSize: '0.875rem',
+                          fontWeight: '600',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
+                        }}>
+                          CSS
+                        </h5>
+                        <pre style={{
+                          backgroundColor: 'var(--ui-base-900)',
+                          color: '#e5e7eb',
+                          padding: '1rem',
+                          borderRadius: '0.25rem',
+                          fontSize: '0.8rem',
+                          lineHeight: '1.5',
+                          overflow: 'auto',
+                          margin: 0,
+                          border: '1px solid var(--ui-borders)',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {generatedCode.css || '/* No CSS generated - add 1Blocks to this box group */'}
+                        </pre>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
             
             {/* Add 1Blocks Section */}
             <div className="accordion-section">
