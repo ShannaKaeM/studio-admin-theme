@@ -441,7 +441,7 @@
 
 .dynamic-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     align-items: start;
 }
@@ -512,11 +512,23 @@
     border-radius: 0.25rem;
     transition: var(--ui-transition);
     font-size: 0.75rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .delete-block-btn:hover {
     background: var(--ui-borders);
     color: var(--ui-muted-text);
+}
+
+/* Block action buttons container */
+.block-actions {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
 }
 
 /* Accordion Property Editor Styles */
@@ -610,7 +622,7 @@
     }
     
     .dynamic-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem;
     }
 }

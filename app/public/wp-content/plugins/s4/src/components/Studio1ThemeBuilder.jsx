@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useThemeConfig } from '../hooks/useThemeConfig.js';
 import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
+import { BoxGroupsBuilder } from '../components/BoxGroupsBuilder.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
   const { exportConfig, importConfig } = useThemeConfig();
+  const [activeTab, setActiveTab] = useState('1blocks');
   
   const handleExport = () => {
     const configJson = exportConfig();
@@ -58,9 +60,27 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
         </div>
       </header>
 
-      {/* Direct to ScopesBuilder - No Tabs */}
-      <ScopesBuilder />
+      {/* Tab Navigation */}
+      <nav className="dashboard-tabs">
+        <button 
+          className={`dashboard-tab ${activeTab === '1blocks' ? 'dashboard-tab--active' : ''}`}
+          onClick={() => setActiveTab('1blocks')}
+        >
+          📦 1Blocks
+        </button>
+        <button 
+          className={`dashboard-tab ${activeTab === 'boxgroups' ? 'dashboard-tab--active' : ''}`}
+          onClick={() => setActiveTab('boxgroups')}
+        >
+          🏗️ Box Groups
+        </button>
+      </nav>
+
+      {/* Tab Content */}
+      {activeTab === '1blocks' && <ScopesBuilder />}
+      {activeTab === 'boxgroups' && <BoxGroupsBuilder />}
     </div>
   );
 }
+
 

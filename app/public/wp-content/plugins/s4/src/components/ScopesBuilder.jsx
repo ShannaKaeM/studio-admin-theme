@@ -89,7 +89,7 @@ const getCommonValues = (property) => {
 };
 
 export function ScopesBuilder() {
-  const { config, updateScopeBaseProperties, createNewScope, deleteScope, resetToDefault } = useThemeConfig();
+  const { config, updateScopeBaseProperties, createNewScope, deleteScope, resetToDefault, createBaseTestScopes } = useThemeConfig();
   const [selectedScope, setSelectedScope] = useState(null);
   
   // Collection Management with localStorage persistence
@@ -109,6 +109,11 @@ export function ScopesBuilder() {
   const [showCreate1Block, setShowCreate1Block] = useState(false);
   const [newBlockName, setNewBlockName] = useState('');
   const [showPropertyEditor, setShowPropertyEditor] = useState(false);
+  
+  // Move/Rearrange functionality
+  const [showMoveDialog, setShowMoveDialog] = useState(false);
+  const [blockToMove, setBlockToMove] = useState(null);
+  const [targetCollection, setTargetCollection] = useState('');
   
   // Accordion states for property categories
   const [expandedCategories, setExpandedCategories] = useState({
@@ -144,6 +149,25 @@ export function ScopesBuilder() {
   const collectionScopes = Object.entries(scopes).filter(([scopeName]) => 
     currentCollectionBlocks.includes(scopeName)
   );
+
+  // Helper function to check if scope has text properties
+  const hasTextProperties = (scopeName) => {
+    const scope = scopes[scopeName];
+    if (!scope || !scope.baseProperties) return false;
+    
+    // Exclude wrapper elements that contain text but don't display text themselves
+    const wrapperElements = ['text-box', 'card-box', 'content-box', 'image-box', 'three-col-grid', 'container'];
+    if (wrapperElements.includes(scopeName)) return false;
+    
+    const textProperties = [
+      '--one-font-family', '--one-font-size', '--one-font-weight', '--one-line-height',
+      '--one-letter-spacing', '--one-text-align', '--one-text-transform', '--one-text-decoration',
+      '--one-color', '--one-caret-color', '--one-text-shadow', '--one-white-space',
+      '--one-text-overflow', '--one-vertical-align', '--one-font-style', '--one-font-variant'
+    ];
+    
+    return Object.keys(scope.baseProperties).some(prop => textProperties.includes(prop));
+  };
 
   // Toggle accordion function
   const toggleCategory = (category) => {
@@ -339,6 +363,43 @@ export function ScopesBuilder() {
     }
   };
 
+  // Move 1Block between collections
+  const handleMoveBlock = () => {
+    if (blockToMove && targetCollection && targetCollection !== selectedCollection) {
+      setCollections(prev => {
+        // Remove from current collection
+        const sourceCollection = selectedCollection;
+        const newCollections = { ...prev };
+        
+        newCollections[sourceCollection] = {
+          ...newCollections[sourceCollection],
+          blocks: newCollections[sourceCollection].blocks.filter(b => b !== blockToMove)
+        };
+        
+        // Add to target collection (avoid duplicates)
+        if (!newCollections[targetCollection].blocks.includes(blockToMove)) {
+          newCollections[targetCollection] = {
+            ...newCollections[targetCollection],
+            blocks: [...newCollections[targetCollection].blocks, blockToMove]
+          };
+        }
+        
+        return newCollections;
+      });
+      
+      // Reset move dialog
+      setShowMoveDialog(false);
+      setBlockToMove(null);
+      setTargetCollection('');
+    }
+  };
+
+  const startMoveBlock = (blockName) => {
+    setBlockToMove(blockName);
+    setTargetCollection('');
+    setShowMoveDialog(true);
+  };
+
   // Removed legacy preset system - users create 1Blocks with complete creative freedom
 
   return (
@@ -408,12 +469,33 @@ export function ScopesBuilder() {
         <div className="control-section">
           <h3>📦 Create 1Block</h3>
           {!showCreate1Block ? (
-            <button 
-              onClick={() => setShowCreate1Block(true)}
-              className="ui-button ui-button--primary"
-            >
-              + New 1Block
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <button 
+                onClick={() => setShowCreate1Block(true)}
+                className="ui-button ui-button--primary"
+              >
+                + New 1Block
+              </button>
+              {Object.keys(collections).length > 1 && (
+                <button 
+                  onClick={() => {
+                    createBaseTestScopes();
+                    // Add base scopes to current collection
+                    const baseScopes = ['button', 'text-box', 'card-box', 'content-box', 'image-box', 'three-col-grid', 'container'];
+                    setCollections(prev => ({
+                      ...prev,
+                      [selectedCollection]: {
+                        ...prev[selectedCollection],
+                        blocks: [...new Set([...prev[selectedCollection].blocks, ...baseScopes])]
+                      }
+                    }));
+                  }}
+                  className="ui-button ui-button--secondary ui-button--small"
+                >
+                  🚀 Create Base Test Scopes
+                </button>
+              )}
+            </div>
           ) : (
             <div className="create-form">
               <input
@@ -566,35 +648,50 @@ export function ScopesBuilder() {
                         data-scope={blockName}
                         className="one"
                       >
-                        {blockName}
+                        {hasTextProperties(blockName) ? blockName : ''}
                       </div>
                     </div>
                     <div className="block-info">
                       <span className="block-name">{blockName}</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const confirmed = confirm(`Delete 1Block "${blockName}"? This action cannot be undone.`);
-                          if (confirmed) {
-                            deleteScope(blockName);
-                            // Remove from collection
-                            setCollections(prev => ({
-                              ...prev,
-                              [selectedCollection]: {
-                                ...prev[selectedCollection],
-                                blocks: prev[selectedCollection].blocks.filter(b => b !== blockName)
+                      <div className="block-actions">
+                        {Object.keys(collections).length > 1 && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              startMoveBlock(blockName);
+                            }}
+                            className="delete-block-btn"
+                            title="Move to another collection"
+                          >
+                            📁
+                          </button>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const confirmed = confirm(`Delete 1Block "${blockName}"? This action cannot be undone.`);
+                            if (confirmed) {
+                              deleteScope(blockName);
+                              // Remove from collection
+                              setCollections(prev => ({
+                                ...prev,
+                                [selectedCollection]: {
+                                  ...prev[selectedCollection],
+                                  blocks: prev[selectedCollection].blocks.filter(b => b !== blockName)
+                                }
+                              }));
+                              if (selectedScope === blockName) {
+                                setSelectedScope(null);
+                                setShowPropertyEditor(false);
                               }
-                            }));
-                            if (selectedScope === blockName) {
-                              setSelectedScope(null);
-                              setShowPropertyEditor(false);
                             }
-                          }
-                        }}
-                        className="delete-block-btn"
-                      >
-                        ✕
-                      </button>
+                          }}
+                          className="delete-block-btn"
+                          title="Delete 1Block"
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -603,6 +700,73 @@ export function ScopesBuilder() {
           )}
         </div>
       </div>
+
+      {/* Move Dialog */}
+      {showMoveDialog && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'var(--ui-cards)',
+            padding: '1.5rem',
+            borderRadius: 'var(--ui-border-radius)',
+            border: '1px solid var(--ui-borders)',
+            minWidth: '300px'
+          }}>
+            <h3 style={{ 
+              color: 'var(--ui-secondary-text)', 
+              margin: '0 0 1rem 0',
+              fontSize: '1rem'
+            }}>
+              Move "{blockToMove}" to Collection
+            </h3>
+            
+            <select
+              value={targetCollection}
+              onChange={(e) => setTargetCollection(e.target.value)}
+              className="property-select"
+              style={{ marginBottom: '1rem', width: '100%' }}
+            >
+              <option value="">Select target collection...</option>
+              {Object.entries(collections)
+                .filter(([key]) => key !== selectedCollection)
+                .map(([key, collection]) => (
+                  <option key={key} value={key}>{collection.name}</option>
+                ))
+              }
+            </select>
+            
+            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  setShowMoveDialog(false);
+                  setBlockToMove(null);
+                  setTargetCollection('');
+                }}
+                className="ui-button ui-button--secondary ui-button--small"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleMoveBlock}
+                disabled={!targetCollection}
+                className="ui-button ui-button--primary ui-button--small"
+              >
+                Move
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -289,6 +289,113 @@ export function useThemeConfig() {
     }));
   };
 
+  const createBaseTestScopes = () => {
+    // Create base test scopes for development
+    const baseScopes = {
+      "button": {
+        baseProperties: {
+          "--one-display": "inline-block",
+          "--one-font-family": "var(--font-family)",
+          "--one-font-size": "1rem",
+          "--one-font-weight": "500",
+          "--one-line-height": "1.4",
+          "--one-color": "hsl(0, 0%, 100%)",
+          "--one-background-color": "hsl(220, 80%, 50%)",
+          "--one-border": "none",
+          "--one-border-radius": "0.375rem",
+          "--one-padding": "0.75rem 1.5rem",
+          "--one-cursor": "pointer",
+          "--one-text-align": "center",
+          "--one-text-decoration": "none",
+          "--one-margin": "auto 0 0 0",
+          "--one-align-self": "flex-start"
+        }
+      },
+      "text-box": {
+        baseProperties: {
+          "--one-display": "block",
+          "--one-font-family": "var(--font-family)",
+          "--one-font-size": "1rem",
+          "--one-font-weight": "400",
+          "--one-line-height": "1.6",
+          "--one-color": "hsl(0, 0%, 20%)",
+          "--one-padding": "0",
+          "--one-margin": "0 0 1rem 0",
+          "--one-background-color": "transparent",
+          "--one-border": "none",
+          "--one-border-radius": "0",
+          "--one-flex": "1"
+        }
+      },
+      "card-box": {
+        baseProperties: {
+          "--one-display": "flex",
+          "--one-flex-direction": "column",
+          "--one-background-color": "hsl(0, 0%, 100%)",
+          "--one-border": "1px solid hsl(0, 0%, 85%)",
+          "--one-border-radius": "0.75rem",
+          "--one-padding": "0",
+          "--one-margin": "0",
+          "--one-box-shadow": "0 1px 3px rgba(0, 0, 0, 0.1)",
+          "--one-width": "100%",
+          "--one-max-width": "24rem",
+          "--one-overflow": "hidden"
+        }
+      },
+      "content-box": {
+        baseProperties: {
+          "--one-display": "flex",
+          "--one-flex-direction": "column",
+          "--one-background-color": "transparent",
+          "--one-border": "none",
+          "--one-border-radius": "0",
+          "--one-padding": "1.5rem",
+          "--one-margin": "0",
+          "--one-width": "100%",
+          "--one-flex": "1"
+        }
+      },
+      "three-col-grid": {
+        baseProperties: {
+          "--one-display": "grid",
+          "--one-grid-template-columns": "1fr 1fr 1fr",
+          "--one-gap": "1rem",
+          "--one-width": "100%"
+        }
+      },
+      "container": {
+        baseProperties: {
+          "--one-display": "block",
+          "--one-max-width": "1200px",
+          "--one-margin": "0 auto",
+          "--one-padding": "0 1rem",
+          "--one-width": "100%"
+        }
+      },
+      "image-box": {
+        baseProperties: {
+          "--one-display": "block",
+          "--one-width": "100%",
+          "--one-height": "200px",
+          "--one-border-radius": "0",
+          "--one-overflow": "hidden",
+          "--one-background-color": "hsl(0, 0%, 95%)",
+          "--one-border": "none",
+          "--one-margin": "0",
+          "--one-padding": "0"
+        }
+      }
+    };
+
+    setConfig(prev => ({
+      ...prev,
+      scopes: {
+        ...prev.scopes,
+        ...baseScopes
+      }
+    }));
+  };
+
   return {
     config,
     cssVariables,
@@ -305,7 +412,8 @@ export function useThemeConfig() {
     exportConfig,
     importConfig,
     resetToDefault,
-    syncNewComponents
+    syncNewComponents,
+    createBaseTestScopes
   };
 }
 
