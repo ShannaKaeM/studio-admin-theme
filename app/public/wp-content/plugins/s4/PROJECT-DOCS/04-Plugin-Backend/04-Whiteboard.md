@@ -148,34 +148,6 @@ breakpointPatterns: {
 
 ---
 
-## 📋 **CORE SCOPE FOUNDATION LIST**
-
-*Single Elements - molecules*
-
-### **Text Elements**
-- `pretitle` (eyebrow/kicker)
-- `title` (main heading)
-- `subtitle` (secondary heading)
-- `description` (lead text)
-- `body` (regular text)
-- `label` (small text)
-- `quote` 
-- `code`
-
-- `icon` (icons/graphics)n
-- `button` (buttons)o
-
-### **Boxes**
-- `section` (top-level page sections) - 
-- `container` -primary section containers header, footer, sidebar, main content etc.
-- `wrapper` -primary content wrappers inside of containers ie cards forms, accordians, tabs etc. 
-- `box-group` groupeings of a single element type.ie text-box nav-box, button-box etc. 
-- `box` single element box. ie image, video etc. form field etc.
-
-
-Layouts are generic and agnostic but we will need a naming convension for them like bento 2 col 3 col half page etc.
-
-### **Composable Components**
 
 
 
@@ -183,14 +155,3 @@ Layouts are generic and agnostic but we will need a naming convension for them l
 
 
 
-
-
-### **Key Strategy Notes**
-✅ **One button style** - presets handle variations  
-✅ **Pattern-driven discovery** - build patterns first to find what we actually need  
-✅ **Flexible naming** - users can rename everything  
-✅ **Hierarchical structure** - section > container > card/wrapper > content elements
-
----
-
-**Current Session Goal**: Review and refine core scope list, then build pattern library with graphic representations to discover final element needs.

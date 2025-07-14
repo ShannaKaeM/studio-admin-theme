@@ -1,12 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useThemeConfig } from '../hooks/useThemeConfig.js';
-import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
-import { BoxGroupsBuilder } from '../components/BoxGroupsBuilder.jsx';
 import { PatternCreator } from '../components/PatternCreator.jsx';
+import { PatternWorkspace } from '../components/PatternWorkspace.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
   const { exportConfig, importConfig } = useThemeConfig();
-  const [activeTab, setActiveTab] = useState('1blocks');
+  
+  // Theme toggle state
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('studio1-ui-theme') || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  // Sidebar collapse state
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Pattern state for communication between sidebar and workspace
+  const [selectedPattern, setSelectedPattern] = useState(null);
+  const [patterns, setPatterns] = useState({});
+  
+  // Apply theme to document and persist to localStorage
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('studio1-ui-theme', theme);
+    } catch (error) {
+      console.warn('Failed to save theme preference:', error);
+    }
+  }, [theme]);
+  
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
   
   const handleExport = () => {
     const configJson = exportConfig();
@@ -44,6 +72,20 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
           <p className="dashboard-subtitle">Create and organize your 1Blocks with complete creative freedom</p>
         </div>
         <div className="dashboard-actions">
+          <div 
+            className="theme-toggle" 
+            data-theme={theme}
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+          >
+            <div className="theme-toggle-track">
+              <span className={`theme-toggle-icon ${theme === 'dark' ? 'active' : ''}`}>🌙</span>
+              <span className={`theme-toggle-icon ${theme === 'light' ? 'active' : ''}`}>☀️</span>
+            </div>
+            <div className="theme-toggle-thumb">
+              {theme === 'dark' ? '🌙' : '☀️'}
+            </div>
+          </div>
           <button onClick={handleExport} className="ui-button ui-button--primary ui-button--small">
             Export
           </button>
@@ -61,32 +103,43 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
         </div>
       </header>
 
-      {/* Tab Navigation */}
-      <nav className="dashboard-tabs">
-        <button 
-          className={`dashboard-tab ${activeTab === '1blocks' ? 'dashboard-tab--active' : ''}`}
-          onClick={() => setActiveTab('1blocks')}
-        >
-          📦 1Blocks
-        </button>
-        <button 
-          className={`dashboard-tab ${activeTab === 'boxgroups' ? 'dashboard-tab--active' : ''}`}
-          onClick={() => setActiveTab('boxgroups')}
-        >
-          🏗️ Box Groups
-        </button>
-        <button 
-          className={`dashboard-tab ${activeTab === 'patterns' ? 'dashboard-tab--active' : ''}`}
-          onClick={() => setActiveTab('patterns')}
-        >
-          🎨 Patterns
-        </button>
-      </nav>
+      {/* Main Content - Clean workspace */}
+      <div className={`dashboard-layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        {/* Collapsible Sidebar with Pattern Studio */}
+        <div className={`dashboard-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+          {/* Sidebar Header with Collapse Toggle */}
+          <div className="sidebar-header">
+            <div className="dashboard-tab dashboard-tab--active">
+              🎨 Pattern Studio
+            </div>
+            <button 
+              className="sidebar-toggle"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {sidebarCollapsed ? '→' : '←'}
+            </button>
+          </div>
+          
+          {/* Pattern Creator Sidebar Content */}
+          {!sidebarCollapsed && (
+            <PatternCreator 
+              selectedPattern={selectedPattern}
+              setSelectedPattern={setSelectedPattern}
+              patterns={patterns}
+              setPatterns={setPatterns}
+            />
+          )}
+        </div>
 
-      {/* Tab Content */}
-      {activeTab === '1blocks' && <ScopesBuilder />}
-      {activeTab === 'boxgroups' && <BoxGroupsBuilder />}
-      {activeTab === 'patterns' && <PatternCreator />}
+        {/* Clean Interactive Workspace */}
+        <div className="dashboard-preview workspace">
+          <PatternWorkspace 
+            selectedPattern={selectedPattern}
+            patterns={patterns}
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -10,38 +10,72 @@
 /* ============================================ */
 
 :root {
-    /* Brand Colors - Primary actions and accents */
-    --ui-primary: hsl(78, 35%, 46%);         /* Base primary - main action buttons */
-    --ui-primary-light: hsl(78, 35%, 64%);   /* Light primary - backgrounds and highlights */
-    --ui-primary-dark: hsl(78, 35%, 34%);    /* Dark primary - borders and accents */
-    --ui-primary-darker: hsl(78, 35%, 24%);  /* Darker primary - deep shadows */
-    --ui-primary-hover: hsl(78, 35%, 34%);   /* Hover state - interactive feedback */
+    /* UI Dashboard Colors - Pink/Orange HSL */
+    --ui-primary: hsl(331, 35%, 52%);        /* Base primary - main action buttons (Pink) */
+    --ui-primary-light: hsl(331, 35%, 70%);  /* Light primary - backgrounds and highlights */
+    --ui-primary-dark: hsl(331, 35%, 40%);   /* Dark primary - borders and accents */
+    --ui-primary-darker: hsl(331, 35%, 30%); /* Darker primary - deep shadows */
+    --ui-primary-hover: hsl(331, 35%, 40%);  /* Hover state - interactive feedback */
     
-    --ui-secondary: hsl(180, 38%, 43%);      /* Base secondary - accent elements */
-    --ui-secondary-light: hsl(180, 38%, 61%); /* Light secondary - soft highlights */
-    --ui-secondary-dark: hsl(180, 38%, 31%);  /* Dark secondary - subtle borders */
-    --ui-secondary-darker: hsl(180, 38%, 21%); /* Darker secondary - deep accents */
-    --ui-secondary-hover: hsl(180, 38%, 31%);  /* Hover state - accent interactions */
+    --ui-secondary: hsl(29, 44%, 52%);       /* Base secondary - accent elements (Orange) */
+    --ui-secondary-light: hsl(29, 44%, 70%); /* Light secondary - soft highlights */
+    --ui-secondary-dark: hsl(29, 44%, 40%);  /* Dark secondary - subtle borders */
+    --ui-secondary-darker: hsl(29, 44%, 30%);/* Darker secondary - deep accents */
+    --ui-secondary-hover: hsl(29, 44%, 40%); /* Hover state - accent interactions */
     
-    /* Semantic text colors */
-    --ui-primary-text: hsl(0, 0%, 95%);     /* Primary text - headings and labels */
-    --ui-secondary-text: hsl(0, 0%, 90%);   /* Secondary text - important content */
-    --ui-body-text: hsl(0, 0%, 80%);        /* Body text - main readable content */
-    --ui-muted-text: hsl(0, 0%, 60%);       /* Muted text - descriptions and hints */
-    --ui-metadata-text: hsl(0, 0%, 40%);    /* Metadata text - subtle and placeholders */
-    
-    /* Semantic background colors */
-    --ui-borders: hsl(0, 0%, 30%);          /* Border color - dividers and outlines */
-    --ui-cards: hsl(0, 0%, 20%);            /* Card background - panels and sections */
-    --ui-dashboard: hsl(0, 0%, 15%);        /* Dashboard background - sidebar and nav */
-    --ui-content: hsl(0, 0%, 12%);          /* Content background - main areas */
-    --ui-site-background: hsl(0, 0%, 8%);   /* Site background - app container */
+    /* Component Element Colors - Green/Aqua HSL Only */
+    --element-primary: hsl(84, 35%, 46%);    /* Sage green for primary elements */
+    --element-secondary: hsl(180, 38%, 43%); /* Aqua teal for secondary elements */
     
     /* UI Component Tokens */
     --ui-border-radius: 0.375rem;
     --ui-transition: all 0.2s ease;
     --ui-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     --ui-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================ */
+/* DARK THEME (DEFAULT)                       */
+/* ============================================ */
+
+:root,
+:root[data-theme="dark"] {
+    /* Semantic text colors - Dark Theme */
+    --ui-primary-text: hsl(0, 0%, 95%);     /* Primary text - headings and labels */
+    --ui-secondary-text: hsl(0, 0%, 90%);   /* Secondary text - important content */
+    --ui-body-text: hsl(0, 0%, 80%);        /* Body text - main readable content */
+    --ui-muted-text: hsl(0, 0%, 60%);       /* Muted text - descriptions and hints */
+    --ui-metadata-text: hsl(0, 0%, 40%);    /* Metadata text - subtle and placeholders */
+    
+    /* Semantic background colors - Dark Theme */
+    --ui-borders: hsl(0, 0%, 30%);          /* Border color - dividers and outlines */
+    --ui-cards: hsl(0, 0%, 20%);            /* Card background - panels and sections */
+    --ui-dashboard: hsl(0, 0%, 15%);        /* Dashboard background - sidebar and nav */
+    --ui-content: hsl(0, 0%, 12%);          /* Content background - main areas */
+    --ui-site-background: hsl(0, 0%, 8%);   /* Site background - app container */
+}
+
+/* ============================================ */
+/* LIGHT THEME                                */
+/* ============================================ */
+
+:root[data-theme="light"] {
+    /* Semantic text colors - Light Theme */
+    --ui-primary-text: hsl(0, 0%, 15%);     /* Primary text - headings and labels */
+    --ui-secondary-text: hsl(0, 0%, 25%);   /* Secondary text - important content */
+    --ui-body-text: hsl(0, 0%, 35%);        /* Body text - main readable content */
+    --ui-muted-text: hsl(0, 0%, 55%);       /* Muted text - descriptions and hints */
+    --ui-metadata-text: hsl(0, 0%, 65%);    /* Metadata text - subtle and placeholders */
+    
+    /* Semantic background colors - Light Theme */
+    --ui-borders: hsl(0, 0%, 85%);          /* Border color - dividers and outlines */
+    --ui-cards: hsl(0, 0%, 98%);            /* Card background - panels and sections */
+    --ui-dashboard: hsl(0, 0%, 96%);        /* Dashboard background - sidebar and nav */
+    --ui-content: hsl(0, 0%, 100%);         /* Content background - main areas */
+    --ui-site-background: hsl(0, 0%, 94%);  /* Site background - app container */
+    
+    /* Light theme shadow adjustments */
+    --ui-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 /* ============================================ */
@@ -870,52 +904,7 @@
     font-family: monospace;
 }
 
-/* Original scope classes for ScopesBuilder (keep separate) */
-.scope-item {
-    background: var(--ui-cards);
-    border: 1px solid var(--ui-borders);
-    border-radius: var(--ui-border-radius);
-    padding: 1rem;
-    cursor: pointer;
-    transition: var(--ui-transition);
-}
-
-.scope-item:hover {
-    border-color: var(--ui-primary);
-    background: var(--ui-borders);
-}
-
-.scope-item.selected {
-    border-color: var(--ui-primary);
-    background: var(--ui-primary);
-    box-shadow: 0 0 0 1px var(--ui-primary);
-}
-
-.scope-item.selected .scope-name,
-.scope-item.selected .scope-description,
-.scope-item.selected .scope-metadata {
-    color: var(--ui-primary-text);
-}
-
-.scope-name {
-    font-weight: 600;
-    color: var(--ui-primary-text);
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-}
-
-.scope-description {
-    color: var(--ui-secondary-text);
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-}
-
-.scope-metadata {
-    font-size: 0.75rem;
-    color: var(--ui-secondary-text);
-    font-family: monospace;
-}
+/* Removed: Dead scope classes from deleted ScopesBuilder component */
 
 .pattern-preview {
     margin-top: 1rem;
@@ -1059,4 +1048,596 @@
 .empty-state li {
     margin-bottom: 0.5rem;
     line-height: 1.4;
+}
+
+/* ============================================ */
+/* THEME TOGGLE COMPONENT                     */
+/* ============================================ */
+
+.theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: var(--ui-cards);
+    border: 1px solid var(--ui-borders);
+    border-radius: var(--ui-border-radius);
+    padding: 0.25rem;
+    cursor: pointer;
+    transition: var(--ui-transition);
+    min-width: 4rem;
+    height: 2rem;
+}
+
+.theme-toggle:hover {
+    border-color: var(--ui-primary);
+}
+
+.theme-toggle-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+}
+
+.theme-toggle-thumb {
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--ui-primary);
+    border-radius: calc(var(--ui-border-radius) - 0.125rem);
+    transition: var(--ui-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--ui-primary-text);
+    box-shadow: var(--ui-shadow);
+}
+
+.theme-toggle[data-theme="light"] .theme-toggle-thumb {
+    transform: translateX(2rem);
+}
+
+.theme-toggle-icon {
+    font-size: 0.75rem;
+    color: var(--ui-muted-text);
+    transition: var(--ui-transition);
+    z-index: 1;
+}
+
+.theme-toggle-icon.active {
+    color: var(--ui-primary-text);
+}
+
+/* ============================================ */
+/* COLLAPSIBLE SIDEBAR & WORKSPACE           */
+/* ============================================ */
+
+/* Sidebar Header */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--ui-borders);
+    background: var(--ui-dashboard);
+}
+
+.sidebar-toggle {
+    background: var(--ui-cards);
+    border: 1px solid var(--ui-borders);
+    color: var(--ui-body-text);
+    border-radius: var(--ui-border-radius);
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: var(--ui-transition);
+    font-size: 0.875rem;
+    min-width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle:hover {
+    background: var(--ui-borders);
+    border-color: var(--ui-primary);
+}
+
+/* Collapsible Sidebar States */
+.dashboard-layout.sidebar-collapsed {
+    grid-template-columns: 60px 1fr;
+}
+
+.dashboard-sidebar.collapsed {
+    width: 60px;
+    min-width: 60px;
+}
+
+.dashboard-sidebar.collapsed .sidebar-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.dashboard-sidebar.collapsed .dashboard-tab {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* Clean Workspace */
+.dashboard-preview.workspace {
+    padding: 0;
+    background: var(--ui-content);
+    overflow: hidden;
+}
+
+.pattern-workspace {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.workspace-content {
+    padding: 2rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+.workspace-empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--ui-muted-text);
+}
+
+.workspace-empty-state div:first-child {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.workspace-empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ui-body-text);
+    margin-bottom: 0.5rem;
+}
+
+.workspace-empty-state p {
+    color: var(--ui-muted-text);
+    font-size: 1rem;
+}
+
+/* Clean White Canvas */
+.clean-canvas {
+    width: 100%;
+    height: 100vh;
+    background: white;
+    position: relative;
+}
+
+/* ============================================ */
+/* VISUAL PATTERN BUILDER                     */
+/* ============================================ */
+
+.pattern-builder {
+    width: 100%;
+    height: 100vh;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.builder-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fafafa;
+}
+
+.toolbar-info {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.builder-canvas {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+}
+
+.grid-canvas {
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+    background: white;
+    background-image: 
+        linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+        linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+    cursor: crosshair;
+}
+
+.pattern-block {
+    position: absolute;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: move;
+    transition: all 0.2s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+}
+
+/* Resize cursors for pattern blocks */
+.pattern-block::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background: var(--ui-primary);
+    border-radius: 2px;
+    cursor: nw-resize;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.pattern-block.selected::after {
+    opacity: 1;
+}
+
+.pattern-block:hover::after {
+    opacity: 0.7;
+}
+
+.pattern-block:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pattern-block.selected {
+    border-color: var(--ui-primary);
+    box-shadow: 0 0 0 1px var(--ui-primary);
+}
+
+.block-content {
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.block-delete {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: #ef4444;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.block-delete:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+.properties-panel {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    z-index: 10;
+}
+
+.properties-panel h3 {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.property-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.property-controls label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.size-info {
+    font-size: 0.75rem;
+    color: #888;
+    padding: 0.5rem;
+    background: #f9f9f9;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+/* ============================================ */
+/* TEXT ELEMENTS - REALISTIC SIZING          */
+/* ============================================ */
+
+.pretitle-element {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--element-primary);
+    padding: 0.5rem;
+    background: hsl(84, 35%, 95%);
+    border-left: 3px solid var(--element-primary);
+}
+
+.title-element {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--element-secondary);
+    padding: 1rem;
+    background: hsl(180, 38%, 95%);
+    border-left: 4px solid var(--element-secondary);
+}
+
+.subtitle-element {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--element-primary);
+    padding: 0.75rem;
+    background: hsl(84, 35%, 95%);
+    border-left: 3px solid var(--element-primary);
+}
+
+.description-element {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--element-secondary);
+    padding: 1rem;
+    background: hsl(180, 38%, 95%);
+    border-left: 3px solid var(--element-secondary);
+}
+
+.body-element {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #555;
+    padding: 1rem;
+    background: #fcfcfc;
+    border: 1px solid #e8e8e8;
+}
+
+.label-element {
+    font-size: 0.625rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    padding: 0.25rem 0.5rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.quote-element {
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--element-primary);
+    padding: 1rem;
+    background: hsl(84, 35%, 95%);
+    border-left: 4px solid var(--element-primary);
+    position: relative;
+}
+
+.quote-element::before {
+    content: '"';
+    font-size: 3rem;
+    color: var(--element-primary);
+    position: absolute;
+    top: -0.5rem;
+    left: 0.5rem;
+    opacity: 0.3;
+}
+
+.code-element {
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.875rem;
+    color: #e5e5e5;
+    background: #2a2a2a;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border-left: 3px solid var(--element-secondary);
+}
+
+/* ============================================ */
+/* INTERACTIVE ELEMENTS                       */
+/* ============================================ */
+
+.button-element {
+    background: var(--element-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.button-element:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.icon-element {
+    font-size: 2rem;
+    color: var(--element-secondary);
+    background: hsl(180, 38%, 95%);
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid var(--element-secondary);
+}
+
+/* ============================================ */
+/* LAYOUT CONTAINERS                          */
+/* ============================================ */
+
+.container-element {
+    background: hsl(180, 38%, 95%);
+    border: 2px solid var(--element-secondary);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--element-secondary);
+    font-weight: 600;
+}
+
+.wrapper-element {
+    background: hsl(84, 35%, 95%);
+    border: 2px solid var(--element-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--element-primary);
+    font-weight: 600;
+}
+
+.box-group-element {
+    background: hsl(180, 38%, 95%);
+    border: 1px solid var(--element-secondary);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--element-secondary);
+    font-weight: 600;
+}
+
+.box-element {
+    background: hsl(84, 35%, 95%);
+    border: 2px dashed var(--element-primary);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--element-primary);
+    font-weight: 600;
+}
+
+/* ============================================ */
+/* NAVIGATION ELEMENTS                        */
+/* ============================================ */
+
+.header-element {
+    background: linear-gradient(135deg, var(--element-secondary), var(--element-primary));
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-element {
+    background: var(--element-primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-element {
+    background: var(--element-secondary);
+    color: white;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-element {
+    background: linear-gradient(135deg, var(--element-primary), var(--element-secondary));
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

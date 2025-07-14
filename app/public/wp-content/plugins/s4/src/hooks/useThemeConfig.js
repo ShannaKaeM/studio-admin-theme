@@ -165,26 +165,6 @@ export function useThemeConfig() {
 
   // Removed updateGrayscaleColor - no longer needed
 
-  const updateComponent = (componentName, newStyles) => {
-    setConfig(prev => ({
-      ...prev,
-      components: {
-        ...prev.components,
-        [componentName]: newStyles
-      }
-    }));
-  };
-
-  const deleteComponent = (componentName) => {
-    setConfig(prev => {
-      const newComponents = { ...prev.components };
-      delete newComponents[componentName];
-      return {
-        ...prev,
-        components: newComponents
-      };
-    });
-  };
 
 
   const updateScopeBaseProperties = (scopeName, newBaseProperties) => {
@@ -200,46 +180,10 @@ export function useThemeConfig() {
     }));
   };
 
-  const createNewScope = (scopeName, baseProperties = {}) => {
-    setConfig(prev => ({
-      ...prev,
-      scopes: {
-        ...prev.scopes,
-        [scopeName]: {
-          baseProperties: baseProperties
-        }
-      }
-    }));
-  };
-
-  const deleteScope = (scopeName) => {
-    setConfig(prev => {
-      const newScopes = { ...prev.scopes };
-      delete newScopes[scopeName];
-      return {
-        ...prev,
-        scopes: newScopes
-      };
-    });
-  };
 
   // Color management - now handled directly in scopes and components
 
 
-  const addCustomOverride = (selector, styles) => {
-    setCustomOverrides(prev => ({
-      ...prev,
-      [selector]: styles
-    }));
-  };
-
-  const removeCustomOverride = (selector) => {
-    setCustomOverrides(prev => {
-      const newOverrides = { ...prev };
-      delete newOverrides[selector];
-      return newOverrides;
-    });
-  };
 
   const exportConfig = () => {
     return JSON.stringify(config, null, 2);
@@ -268,152 +212,16 @@ export function useThemeConfig() {
     setCustomOverrides({});
   };
 
-  const clearOldColorVariations = () => {
-    // Clear old color variations from localStorage
-    localStorage.removeItem('studio1-color-variations');
-    // Remove only color variations from config, keep everything else
-    setConfig(prev => ({
-      ...prev,
-      colorVariations: {}  // Only clear color variations, keep scopes and other config
-    }));
-  };
-
-  const syncNewComponents = () => {
-    // Merge new components from default config without losing custom edits
-    setConfig(prev => ({
-      ...prev,
-      components: {
-        ...defaultConfig.components,
-        ...prev.components
-      }
-    }));
-  };
-
-  const createBaseTestScopes = () => {
-    // Create base test scopes for development
-    const baseScopes = {
-      "button": {
-        baseProperties: {
-          "--one-display": "inline-block",
-          "--one-font-family": "var(--font-family)",
-          "--one-font-size": "1rem",
-          "--one-font-weight": "500",
-          "--one-line-height": "1.4",
-          "--one-color": "hsl(0, 0%, 100%)",
-          "--one-background-color": "hsl(220, 80%, 50%)",
-          "--one-border": "none",
-          "--one-border-radius": "0.375rem",
-          "--one-padding": "0.75rem 1.5rem",
-          "--one-cursor": "pointer",
-          "--one-text-align": "center",
-          "--one-text-decoration": "none",
-          "--one-margin": "auto 0 0 0",
-          "--one-align-self": "flex-start"
-        }
-      },
-      "text-box": {
-        baseProperties: {
-          "--one-display": "block",
-          "--one-font-family": "var(--font-family)",
-          "--one-font-size": "1rem",
-          "--one-font-weight": "400",
-          "--one-line-height": "1.6",
-          "--one-color": "hsl(0, 0%, 20%)",
-          "--one-padding": "0",
-          "--one-margin": "0 0 1rem 0",
-          "--one-background-color": "transparent",
-          "--one-border": "none",
-          "--one-border-radius": "0",
-          "--one-flex": "1"
-        }
-      },
-      "card-box": {
-        baseProperties: {
-          "--one-display": "flex",
-          "--one-flex-direction": "column",
-          "--one-background-color": "hsl(0, 0%, 100%)",
-          "--one-border": "1px solid hsl(0, 0%, 85%)",
-          "--one-border-radius": "0.75rem",
-          "--one-padding": "0",
-          "--one-margin": "0",
-          "--one-box-shadow": "0 1px 3px rgba(0, 0, 0, 0.1)",
-          "--one-width": "100%",
-          "--one-max-width": "24rem",
-          "--one-overflow": "hidden"
-        }
-      },
-      "content-box": {
-        baseProperties: {
-          "--one-display": "flex",
-          "--one-flex-direction": "column",
-          "--one-background-color": "transparent",
-          "--one-border": "none",
-          "--one-border-radius": "0",
-          "--one-padding": "1.5rem",
-          "--one-margin": "0",
-          "--one-width": "100%",
-          "--one-flex": "1"
-        }
-      },
-      "three-col-grid": {
-        baseProperties: {
-          "--one-display": "grid",
-          "--one-grid-template-columns": "1fr 1fr 1fr",
-          "--one-gap": "1rem",
-          "--one-width": "100%"
-        }
-      },
-      "container": {
-        baseProperties: {
-          "--one-display": "block",
-          "--one-max-width": "1200px",
-          "--one-margin": "0 auto",
-          "--one-padding": "0 1rem",
-          "--one-width": "100%"
-        }
-      },
-      "image-box": {
-        baseProperties: {
-          "--one-display": "block",
-          "--one-width": "100%",
-          "--one-height": "200px",
-          "--one-border-radius": "0",
-          "--one-overflow": "hidden",
-          "--one-background-color": "hsl(0, 0%, 95%)",
-          "--one-border": "none",
-          "--one-margin": "0",
-          "--one-padding": "0"
-        }
-      }
-    };
-
-    setConfig(prev => ({
-      ...prev,
-      scopes: {
-        ...prev.scopes,
-        ...baseScopes
-      }
-    }));
-  };
 
   return {
     config,
     cssVariables,
     customOverrides,
     getComponentStyles,
-    updateComponent,
-    deleteComponent,
     updateScopeBaseProperties,
-    createNewScope,
-    deleteScope,
-    clearOldColorVariations,
-    addCustomOverride,
-    removeCustomOverride,
     exportConfig,
     importConfig,
-    resetToDefault,
-    syncNewComponents,
-    createBaseTestScopes
+    resetToDefault
   };
 }
 
