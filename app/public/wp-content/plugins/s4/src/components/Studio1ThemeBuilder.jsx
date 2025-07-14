@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useThemeConfig } from '../hooks/useThemeConfig.js';
 import { ScopesBuilder } from '../components/ScopesBuilder.jsx';
 import { BoxGroupsBuilder } from '../components/BoxGroupsBuilder.jsx';
+import { PatternCreator } from '../components/PatternCreator.jsx';
 
 export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
   const { exportConfig, importConfig } = useThemeConfig();
@@ -74,11 +75,18 @@ export function Studio1ThemeBuilder({ isAdmin = false, isFrontend = false }) {
         >
           🏗️ Box Groups
         </button>
+        <button 
+          className={`dashboard-tab ${activeTab === 'patterns' ? 'dashboard-tab--active' : ''}`}
+          onClick={() => setActiveTab('patterns')}
+        >
+          🎨 Patterns
+        </button>
       </nav>
 
       {/* Tab Content */}
       {activeTab === '1blocks' && <ScopesBuilder />}
       {activeTab === 'boxgroups' && <BoxGroupsBuilder />}
+      {activeTab === 'patterns' && <PatternCreator />}
     </div>
   );
 }
